@@ -43,7 +43,7 @@
 
         // add extra CSS file and font-awesome CSS file
         $("head").append("<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css'>")
-                 .append("<link rel='stylesheet' type='text/css' href='https://rawgit.com/soscripted/sox/master/sox.css' />");
+            .append("<link rel='stylesheet' type='text/css' href='https://rawgit.com/soscripted/sox/master/sox.css' />");
         $("body").append($settingsDialog);
 
         loadFeatures(); //load all the features in the settings dialog
@@ -103,7 +103,7 @@
     };
 
     function isAvailable() {
-        //        return ~GM_getValue("sox-featureOptions", -1) ? false : true;
+        //return ~GM_getValue("sox-featureOptions", -1) ? false : true;
         return (GM_getValue(SOX_SETTINGS, -1) == -1 ? false : true);
     }
 
@@ -121,8 +121,12 @@
     }
 
     function isDeprecated() { //checks whether the saved settings contain a deprecated feature
+        //TODO: add function names to an array and loop instead of || .. || .. ||
         settings = getSettings();
-        if (settings.indexOf('answerCountSidebar') != -1 || settings.indexOf('highlightClosedQuestions') != -1 || settings.indexOf('unHideAnswer') != -1 || settings.indexOf('flaggingPercentages') != -1) {
+        if (settings.indexOf('answerCountSidebar') != -1 ||
+            settings.indexOf('highlightClosedQuestions') != -1 ||
+            settings.indexOf('unHideAnswer') != -1 ||
+            settings.indexOf('flaggingPercentages') != -1) {
             return true;
         }
     }

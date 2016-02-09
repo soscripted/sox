@@ -1,19 +1,25 @@
 var features = { //ALL the functions must go in here
 
-    grayOutVotes: function() { // For graying out votes AND vote count:
+    grayOutVotes: function() {
+        // Description: Grays out votes AND vote count
+
         if ($('.deleted-answer').length) {
             $('.deleted-answer .vote-down-off, .deleted-answer .vote-up-off, .deleted-answer .vote-count-post').css('opacity', '0.5');
         }
     },
 
-    moveBounty: function() { // For moving bounty to the top:
+    moveBounty: function() {
+        // Description: For moving bounty to the top
+
         if ($('.bounty-notification').length) {
             $('.bounty-notification').insertAfter('.question .fw');
             $('.question .bounty-notification .votecell').remove();
         }
     },
 
-    dragBounty: function() { // For draggable bounty window:
+    dragBounty: function() {
+        // Description: Makes the bounty window draggable
+
         $('.bounty-notification').click(function() {
             setTimeout(function() {
                 $('#start-bounty-popup').draggable().css('cursor', 'move');
@@ -21,19 +27,25 @@ var features = { //ALL the functions must go in here
         });
     },
 
-    renameChat: function() { // For renaming Chat tabs:
-        if (window.location.href.indexOf('chat.') > -1) {
+    renameChat: function() {
+        // Description: Renames Chat tabs to prepend 'Chat' before the room name
+
+        if (~window.location.href.indexOf('chat.') > -1) {
             document.title = 'Chat - ' + document.title;
         }
     },
 
-    exclaim: function() { // For remvoving exclamation mark:
+    exclaim: function() {
+        // Description: Removes exclamation marks
+
         var old = $("td.comment-actions > div > div > div.message-text");
         var newText = old.text().replace("!", ".");
         old.html(newText);
     },
 
-    employeeStar: function() { // For looking for employees:
+    employeeStar: function() {
+        // Description: Adds an star next to users that *might* be a Stack Overflow Employee
+
         var employees = ["Jeff Atwood", "Joel Spolsky", "Jarrod Dixon", "Geoff Dalgas", "David Fullerton", "Korneel Bouman", "Robert Cartaino", "Kevin Montrose",
             "MandyK", "Marc Gravell", "balpha", "Matt Sherman", "Danny Miller", "Jason Punyon", "NickC", "Kyle Brandt", "Jin", "Tall Jeff", "Zypher",
             "Nick Craver", "Nick Larsen", "Shog9", "Greg", "Alex Miller", "GuyZee", "abby hairboat", "samthebrand", "Laura", "Grace Note", "Dimitar Stanimiroff",
@@ -59,17 +71,20 @@ var features = { //ALL the functions must go in here
         });
     },
 
-    bulletReplace: function() { // For replacing disclosure bullets with normal ones:
+    bulletReplace: function() {
+        // Description: Replaces disclosure bullets with normal ones
         $('.dingus').each(function() {
             $(this).html('&#x25cf;');
         });
     },
 
-    addEllipsis: function() { // For adding ellipsis to long names:
+    addEllipsis: function() {
+        // Description: Adds an ellipsis to long names
         $('.user-info .user-details').css('text-overflow', 'ellipsis');
     },
 
-    moveCommentsLink: function() { // For adding the 'show x more comments' link before the commnents:
+    moveCommentsLink: function() {
+        // Description: Adds the 'show x more comments' link before the commnents
         $('.js-show-link.comments-link').each(function() {
             var $this2 = $(this);
             $("<tr><td></td><td>" + $this2.clone().wrap('<div>').parent().html() + "</td></tr>").insertBefore($(this).parent().closest('tr')).click(function() {
@@ -340,7 +355,7 @@ var features = { //ALL the functions must go in here
     },
 
     editComment: function() { // For adding checkboxes when editing to add pre-defined edit reasons
-        var div = "<div id='dialogEditReasons' class='SOOF-centered wmd-prompt-dialog'><span id='closeDialogEditReasons' style='float:right;'>Close</span><span id='resetEditReasons' style='float:left;'>Reset</span>  \
+        var div = "<div id='dialogEditReasons' class='sox-centered wmd-prompt-dialog'><span id='closeDialogEditReasons' style='float:right;'>Close</span><span id='resetEditReasons' style='float:left;'>Reset</span>  \
                         <h2>View/Remove Edit Reasons</h2>																														\
                         <div id='currentValues'></div>																															\
                         <br />																																					\
@@ -511,7 +526,7 @@ var features = { //ALL the functions must go in here
                 'vertical-align': 'middle'
             };
 
-        $('body').append("<div id='quickCommentShortcuts' class='SOOF-centered wmd-prompt-dialog' style='display:none;'><table></table></div>");
+        $('body').append("<div id='quickCommentShortcuts' class='sox-centered wmd-prompt-dialog' style='display:none;'><table></table></div>");
         $('#quickCommentShortcuts').css('width', '100%').css('position', 'absolute').draggable();
         $('body').append("<div id='quickCommentShortcutsReminder' class='quickCommentShortcutsReminder' style='display:none;'></div>");
 
@@ -734,7 +749,7 @@ var features = { //ALL the functions must go in here
     },*/
 
     linkQuestionAuthorName: function() { //For adding a button to the editor toolbar to insert a link to a post and automatically add the author's name
-        var div = "<div id='addLinkAuthorName' class='wmd-prompt-dialog SOOF-centered' style='display:none'> \
+        var div = "<div id='addLinkAuthorName' class='wmd-prompt-dialog sox-centered' style='display:none'> \
             <h5>Insert hyperlink with author's name</h5> \
             <br /> \
             <input id='link' placeholder='http://example.com/ \"optional title\"' size='50'> \
@@ -849,7 +864,7 @@ var features = { //ALL the functions must go in here
 
     addHotText: function() { //Part of isQuestionHot
         $('#feed').html('<p>In the top 30 most recent hot network questions!</p>');
-        $('#question-header').prepend("<div title='this question is in the top 30 most recent hot network questions!' class='SOOF-hot'>HOT<div>");
+        $('#question-header').prepend("<div title='this question is in the top 30 most recent hot network questions!' class='sox-hot'>HOT<div>");
     },
 
     isQuestionHot: function() { //For adding some text to questions that are in the 30 most recent hot network questions
@@ -1341,7 +1356,7 @@ Toggle SBS?</div></li>';
     scrollToTop: function() { //https://github.com/shu8/Stack-Overflow-Optional-Features/pull/34
         if ($(location).attr('hostname').indexOf('chat.') == -1) { // don't show scrollToTop button while in chat.
             var $scroll = $("<div/>", {
-                    id: "soof-scrollToTop",
+                    id: "sox-scrollToTop",
                     click: function(e) {
                         e.preventDefault();
                         $('html, body').animate({
@@ -1355,14 +1370,14 @@ Toggle SBS?</div></li>';
                 })).appendTo("div.container");
 
             if ($(window).scrollTop() < 200) {
-                $('#soof-scrollToTop').hide();
+                $('#sox-scrollToTop').hide();
             }
 
             $(window).scroll(function() {
                 if ($(this).scrollTop() > 200) {
-                    $('#soof-scrollToTop').fadeIn();
+                    $('#sox-scrollToTop').fadeIn();
                 } else {
-                    $('#soof-scrollToTop').fadeOut();
+                    $('#sox-scrollToTop').fadeOut();
                 }
             });
         }
