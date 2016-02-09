@@ -1,0 +1,329 @@
+#SOOF-settings-dialog {
+    position: fixed;
+    display: none;
+    height: 100%;
+    width: 400px;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    background-color: #fff;
+    border-right: solid 1px #aaa;
+}
+#SOOF-settings-dialog-title{
+    padding: 10px;
+    height: 30px;
+}
+
+#SOOF-settings-dialog-title a {
+    float: right;
+    margin-right: 5px;
+    cursor: pointer;
+}
+
+#SOOF-settings-dialog-title h3 {
+    display: inline;
+}
+
+#SOOF-settings-dialog-features {
+    height: calc(100vh - 110px);
+    overflow-y: auto;
+    padding: 0 10px 10px 10px;
+}
+#SOOF-settings-dialog-features h3 {
+    margin-top: 10px;
+    padding-bottom: 2px;
+    border-bottom: 1px solid black;
+}
+
+#SOOF-settings-dialog-close { 
+	float: right;
+}
+
+#SOOF-settings-dialog-close a {
+    padding: 3px 6px 2px 6px;
+    font-size: 16px;
+    font-weight: normal;
+    color: #fff !important;
+    background-color: #222;
+    font-family: Arial,Helvetica,sans-serif;
+    line-height: 1;
+}
+
+#SOOF-settings-dialog-actions {
+    height: 40px;
+    padding: 0 10px;
+}
+#SOOF-settings-dialog-save {
+    margin-left: 5px;
+    float: right;
+} 
+#SOOF-settings-dialog-reset {
+    float: right;
+    padding: 14px;
+}
+
+
+
+/* -------- soof Features CSS ------- */
+
+#soof-scrollToTop{
+    position:fixed;
+    right: 0; bottom: 0; 
+    background-color: rgba(200,200,200, .7); 
+    width: 40px; height: 40px; 
+    text-align: center;
+}
+
+
+/*--------------OLD:-------------*/
+
+
+/*Main centered divs, SE-style:*/
+.SOOF-centered {
+    width:400px;
+    z-index:1001;
+    top:102px;
+    left:615.5px;
+    display:inline-block;
+    margin-top:-95.5px;
+    margin-left:-216px;
+    overflow:auto;
+    height:90%;   
+}
+
+/*Specifically for quickCommentShortcuts -- the div's too wide! https://github.com/shu8/Stack-Overflow-Optional-Features/issues/36*/
+#quickCommentShortcuts.SOOF-centered {
+    width: 75%;
+    height:90%;   
+    z-index:1001;
+    top:20%;
+    left:14%;
+    display:inline-block;
+    overflow:auto;
+}
+
+/*standOutDupeCloseMigrated:*/
+.duplicate, .closed, .migrated, .onhold{
+    color: #FFF;
+    padding: 2px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+.duplicate {background: #FA0;}
+.closed {background: #F00;}
+.migrated {background: #19F;}
+.onhold {background: #808080;}
+
+/*metaNewQuestionAlert: */
+.diamondOn {
+    font-size: 1.7em;
+    vertical-align: top;
+    padding-top: 6px !important; /*!important because the 'links-container' class has a different value which I need to overide*/
+    color: rgb(30, 126, 203);
+
+}
+         
+.diamondOff{
+    font-size: 1.7em;
+    vertical-align: top;
+    padding-top: 6px !important; /*!important because the 'links-container' class has a different value which I need to overide*/
+    color: rgb(136, 136, 136);
+}
+         
+@keyframes pulse {
+    0% {
+        -ms-transform: scale(1, 1);
+        -webkit-transform: scale(1, 1);
+        transform: scale(1, 1)
+    }
+    50% {
+        -ms-transform: scale(1.1, 1.15);
+        -webkit-transform: scale(1.1, 1.15);
+        transform: scale(1.1, 1.15)
+    }
+    100% {
+        -ms-transform: scale(1, 1);
+        -webkit-transform: scale(1, 1);
+        transform: scale(1, 1)
+    }
+}
+@-webkit-keyframes pulse {
+    0% {
+        -ms-transform: scale(1, 1);
+        -webkit-transform: scale(1, 1);
+        transform: scale(1, 1)
+    }
+    50% {
+        -ms-transform: scale(1.1, 1.15);
+        -webkit-transform: scale(1.1, 1.15);
+        transform: scale(1.1, 1.15)
+    }
+    100% {
+        -ms-transform: scale(1, 1);
+        -webkit-transform: scale(1, 1);
+        transform: scale(1, 1)
+    }
+}
+
+.diamondOn:hover, .diamondOff:hover {
+    -webkit-animation-name: pulse;
+    -webkit-animation-duration: .5s;
+    animation-name: pulse;
+    animation-duration: .5s
+}
+
+/*addHotText:*/
+.SOOF-hot {
+     float:right; 
+     -ms-transform: rotate(30deg); 
+     -webkit-transform: rotate(30deg); 
+     transform: rotate(30deg); 
+     font-size: xx-large; 
+     color: red;
+}
+         
+/*quickCommentShortcutsMain:*/
+.quickCommentShortcutsReminder {
+    height: 40%;
+    width: 13%;
+    left: 0;
+    top: 10%;
+    position: fixed;
+    background-color: gray;
+    color: white;
+    text-align: center;
+    overflow: auto;
+}
+         
+/*fixedTopbar (by @UnicornsAreVeryVeryYummy - http://stackapps.com/users/33746/unicorns-are-very-very-yummy):*/
+.links {
+	position: fixed;
+	z-index: 10001;
+	width: 100px;
+	height: 310px;
+	line-height: 19.2px;
+	display: block;
+	-moz-box-shadow: 0 0 4px #ccc;
+	-webkit-box-shadow: 0 0 4px #ccc;
+	box-shadow: 0 0 4px #ccc;
+	font-family: Ubuntu, Arial, "libra sans", sans-serif;
+	font-weight: 300;
+	top: 50%;
+	margin-top: -155px;
+}
+
+.linksList {
+	-moz-box-sizing: border-box;
+	background: none repeat scroll 0 0 #fff;
+	margin: 0 auto;
+	width: 100px;
+	height: 310px;
+	position: fixed;
+	z-index: 10001;
+	top: 50%;
+	margin-top: -155px;
+}
+
+li.activeSite {
+	border-right: 3px solid #dd4814;
+}
+
+ul.siteLink {
+	list-style: none;
+	list-style-type: none;
+}
+
+li.siteLink {
+	display: block;
+}
+
+.stickyToolbar {
+	position: fixed;
+	top: 0px;
+	left: 50%;
+	margin-left: -515px;
+	z-index: 1000;
+}
+         
+/*Side by Side Editing (SBS, addSBSBtn, startSBS): https://github.com/szego/SE-Answers_scripts/blob/side-by-side/editing-and-toggling/side-by-side-editing.user.js:*/
+#sidebar.sbs-on {                               
+    display: none !important;                   
+}                                               
+                                                
+#content.sbs-on {                               
+    width: 1360px !important;                   
+}                                               
+                                                
+.draft-saved.sbs-on {                           
+    margin-left: 35px !important;               
+}                                               
+                                                
+.draft-discarded.sbs-on {                       
+    margin-left: 35px !important;               
+}                                               
+                                                
+.draft-saved.sbs-on.sbs-newq {                  
+    margin-left: 40px !important;               
+    height: 15px !important;                    
+    float: left !important;                     
+}                                               
+                                                
+.draft-discarded.sbs-on.sbs-newq {              
+    margin-left: 40px !important;               
+    height: 15px !important;                    
+    float: left !important;                     
+}                                               
+                                                
+.votecell.sbs-on {                              
+    display: none !important;                   
+}                                               
+                                                
+.hide-preview.sbs-on {                          
+    margin-left: 35px !important;               
+}                                               
+                                                
+.edit-comment-p1.sbs-on {                       
+    float: left !important;                     
+}                                               
+                                                
+.edit-comment-p2.sbs-on {                       
+    float: left !important;                     
+    margin-left: 10px !important;               
+}                                               
+         
+.post-editor.sbs-on {                           
+    width: 1360px !important;                   
+}                                               
+         
+.wmd-button-bar.sbs-on {                        
+    float: none !important;                     
+}                                               
+                                                
+.wmd-container.sbs-on {                         
+    float: left !important;                     
+}                                               
+                                                
+.wmd-preview.sbs-on {                           
+    clear: none !important;                     
+    float: right !important;                    
+}                                               
+                                                
+.wmd-preview.sbs-on.sbs-newq {                  
+    margin-top: 10px !important;                
+}                                               
+                                                
+.tag-editor-p.sbs-on.sbs-newq {                 
+    float: left !important;                     
+}                                               
+                                                
+.form-item.sbs-on.sbs-newq {                    
+    float: left !important;                     
+}             
+
+/* For linkedPostsInline; https://github.com/shu8/Stack-Overflow-Optional-Features/issues/48 */
+.loaded-body-shub .post-text {
+    overflow-wrap: break-word;
+    width: 630px;
+    padding: 10px;
+}
