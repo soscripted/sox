@@ -11,7 +11,7 @@ SOHelper = {
 
     getSiteName: function(type) {
         $location = $(location).attr('href');
-        return (type == 'api' ? $location.split('/')[2].split('.')[0] : $('div.modal-content.current-site-container > ul > li > a').text().trim());
+        return (type == 'api' ? $location.split('/')[2].split('.')[0] : $(".current-site-link").text().trim());
     },
 
     getSiteType: function() {
@@ -84,11 +84,11 @@ SOHelper = {
             "vote down": 125,
             "vote up": 15
         };
-        if (!SEUserscripts.isLoggedIn) {
+        if (!SOHelper.isLoggedIn) {
             return
         }
-        rep = SEUserscripts.getReputation();
-        repNeeded = (SEUserscripts.getSiteType() == 'graduated' ? graduatedPrivs[priv] : betaPrivs[priv])
+        rep = SOHelper.getReputation();
+        repNeeded = (SOHelper.getSiteType() == 'graduated' ? graduatedPrivs[priv] : betaPrivs[priv])
         return (rep > repNeeded ? true : false)
     }
 }
