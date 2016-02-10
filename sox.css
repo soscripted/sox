@@ -1,3 +1,4 @@
+/* -------- sox settings dialog  ------- */
 #sox-settings-dialog {
     position: fixed;
     display: none;
@@ -65,7 +66,7 @@
 
 
 
-/* -------- sox Features CSS ------- */
+/* -------- sox features ------- */
 
 #sox-scrollToTop{
     position:fixed;
@@ -304,7 +305,7 @@ li.siteLink {
     float: left !important;
 }
 
-.wmd-preview.sbs-on {                           
+.wmd-preview.sbs-on {
     clear: none !important;
     float: right !important;
 }
