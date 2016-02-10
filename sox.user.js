@@ -13,6 +13,7 @@
 // @match        *://*.askubuntu.com/*
 // @match        *://*.stackapps.com/*
 // @match        *://*.mathoverflow.net/*
+// @exclude      *://data.stackexchange.com/*
 // @require      https://code.jquery.com/jquery-2.1.4.min.js
 // @require      https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js
 // @require      https://cdn.rawgit.com/timdown/rangyinputs/master/rangyinputs-jquery-src.js
