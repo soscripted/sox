@@ -18,8 +18,8 @@
 // @require      https://cdn.rawgit.com/timdown/rangyinputs/master/rangyinputs-jquery-src.js
 // @require      https://cdn.rawgit.com/jeresig/jquery.hotkeys/master/jquery.hotkeys.js
 // @require      https://cdn.rawgit.com/camagu/jquery-feeds/master/jquery.feeds.js
-// @require      https://rawgit.com/soscripted/sox/master/sox.helpers.js
-// @require      https://rawgit.com/soscripted/sox/master/sox.features.js
+// @require      https://rawgit.com/soscripted/sox/master/sox.helpers.js?v=02092016a
+// @require      https://rawgit.com/soscripted/sox/master/sox.features.js?v=02092016a
 // @resource     settingsDialog https://rawgit.com/soscripted/sox/master/sox-dialog.html
 // @grant        GM_setValue
 // @grant        GM_getValue
@@ -31,20 +31,25 @@
     const SOX = "Stack Overflow Extras";
     const SOX_SETTINGS = "SOXSETTINGS";
 
-
     var $settingsDialog = $(GM_getResourceText("settingsDialog")),
-        $soxSettingsDialog = $settingsDialog.find("#sox-settings-dialog"),
-        $soxSettingsDialogFeatures = $settingsDialog.find("#sox-settings-dialog-features"),
-        $soxSettingsSave = $settingsDialog.find("#sox-settings-dialog-save"),
-        $soxSettingsReset = $settingsDialog.find("#sox-settings-dialog-reset"),
-        $soxSettingsClose = $settingsDialog.find("#sox-settings-dialog-close");
+        $soxSettingsDialog,
+        $soxSettingsDialogFeatures,
+        $soxSettingsSave,
+        $soxSettingsReset,
+        $soxSettingsClose;
 
     sox.init = function() {
 
-        // add extra CSS file and font-awesome CSS file
+        // add sox CSS file and font-awesome CSS file
         $("head").append("<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css'>")
-            .append("<link rel='stylesheet' type='text/css' href='https://rawgit.com/soscripted/sox/master/sox.css' />");
+                 .append("<link rel='stylesheet' type='text/css' href='https://rawgit.com/soscripted/sox/master/sox.css' />");
         $("body").append($settingsDialog);
+
+        $soxSettingsDialog = $("#sox-settings-dialog");
+        $soxSettingsDialogFeatures = $soxSettingsDialog.find("#sox-settings-dialog-features");
+        $soxSettingsSave = $soxSettingsDialog.find("#sox-settings-dialog-save");
+        $soxSettingsReset = $soxSettingsDialog.find("#sox-settings-dialog-reset");
+        $soxSettingsClose = $soxSettingsDialog.find("#sox-settings-dialog-close");
 
         loadFeatures(); //load all the features in the settings dialog
 
@@ -89,15 +94,21 @@
                 reset();
             } else {
                 for (i = 0; i < extras.length; ++i) {
-                    console.log(extras[i]);
-                    $('#sox-settings-dialog #' + extras[i]).prop('checked', true);
+                    //console.log(extras[i]);
+                    $soxSettingsDialogFeatures.find("#" + extras[i]).prop('checked', true);
+                    //$('#sox-settings-dialog #' + extras[i]).prop('checked', true);
                     features[extras[i]](); //Call the functions that were chosen
                 }
             }
         } else {
             // no settings found, mark all inputs as checked and display settings dialog
             $soxSettingsDialogFeatures.find("input").prop("checked", true);
-            $soxSettingsDialog.show(); //not working -- why!?
+
+            setTimeout(function(){
+                $soxSettingsDialog.show();
+            }, 500);
+
+            //$soxSettingsDialog.delay(800).show(); //not working -- why!?
         }
 
     };
