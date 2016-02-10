@@ -1500,7 +1500,7 @@ Toggle SBS?</div></li>';
         var $topbar = $(".topbar"),
             $links = $topbar.find(".topbar-menu-links"),
             $searchbar = $topbar.find(".search-container"),
-            $search = $("<a href='/search' title='Search '" + SOHelper.getSiteName() +"><i class='fa fa-search'></i></a>");
+            $search = $("<a href='/search' title='Search " + SOHelper.getSiteName() +"''><i class='fa fa-search'></i></a>");
 
         $searchbar.remove();
         $links.append($search);
