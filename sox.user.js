@@ -2,7 +2,7 @@
 // @name         Stack Overflow Extras (SOX)
 // @namespace    https://github.com/soscripted/sox
 // @version      DEV
-// @description  Adds a bunch of optional features to sites in the Stack Overflow Network.
+// @description  Adds a bunch of optional features to sites in the Stack Exchange Network.
 // @contributor  ᴉʞuǝ (stackoverflow.com/users/1454538/)
 // @contributor  ᔕᖺᘎᕊ (stackexchange.com/users/4337810/)
 // @updateURL    https://rawgit.com/soscripted/sox/master/sox.user.js
@@ -58,7 +58,7 @@
                 id: "soxSettingsButton",
                 class: "topbar-icon",
                 style: "background-image: none; padding: 10px 0 0 10px; font-size: 14px; color: #999;",
-                title: "Change sox Settings",
+                title: "Change SOX Settings",
                 click: function(e) {
                     e.preventDefault();
                     $("#sox-settings-dialog").toggle();
@@ -94,9 +94,7 @@
                 reset();
             } else {
                 for (i = 0; i < extras.length; ++i) {
-                    //console.log(extras[i]);
                     $soxSettingsDialogFeatures.find("#" + extras[i]).prop('checked', true);
-                    //$('#sox-settings-dialog #' + extras[i]).prop('checked', true);
                     features[extras[i]](); //Call the functions that were chosen
                 }
             }
@@ -134,11 +132,11 @@
     function isDeprecated() { //checks whether the saved settings contain a deprecated feature
         //TODO: add function names to an array and loop instead of || .. || .. ||
         settings = getSettings();
-        if (settings.indexOf('answerCountSidebar') != -1 ||
-            settings.indexOf('highlightClosedQuestions') != -1 ||
-            settings.indexOf('unHideAnswer') != -1 ||
-            settings.indexOf('flaggingPercentages') != -1) {
-            return true;
+        var deprecatedFeatures = ['answerCountSidebar', 'highlightClosedQuestions', 'unHideAnswer', 'flaggingPercentages'];
+        for (i=0; i<deprecatedFeatures; i++) {
+            if (settings.indexOf(deprecatedFeatures[i]) != -1) {
+                return true;
+            }
         }
     }
 
