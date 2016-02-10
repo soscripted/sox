@@ -141,41 +141,41 @@ var features = { //ALL the functions must go in here
 
             ubuntuLinks.parentElement.removeChild(ubuntuLinks);
             remove.parentElement.removeChild(remove);
-            newUbuntuLinks.className = "links";
-            linksWrapper.className = "linksList";
-            listOfSites.className = "siteLink";
+            newUbuntuLinks.className = "fixedTopbar-links";
+            linksWrapper.className = "fixedTopbar-linksList";
+            listOfSites.className = "fixedTopbar-siteLink";
             ubuntuHome.innerHTML = "<a href=\"http://www.ubuntu.com\">Ubuntu</a>";
-            ubuntuHome.className = "siteLink";
+            ubuntuHome.className = "fixedTopbar-siteLink";
             ubuntuCommunity.innerHTML = "<a href=\"http://community.ubuntu.com/\">Community</a>";
-            ubuntuCommunity.className = "siteLink";
+            ubuntuCommunity.className = "fixedTopbar-siteLink";
             askubuntu.innerHTML = "<a href=\"http://askubuntu.com\">Ask!</a>";
-            askubuntu.className = "activeSite siteLink";
+            askubuntu.className = "fixedTopbar-activeSite fixedTopbar-siteLink";
             developer.innerHTML = "<a href=\"http://developer.ubuntu.com\">Developer</a>";
-            developer.className = "siteLink";
+            developer.className = "fixedTopbar-siteLink";
             design.innerHTML = "<a href=\"http://design.ubuntu.com\">Design</a>";
-            design.className = "siteLink";
+            design.className = "fixedTopbar-siteLink";
             discourse.innerHTML = "<a href=\"http://discourse.ubuntu.com\">Discourse</a>";
-            discourse.className = "siteLink";
+            discourse.className = "fixedTopbar-siteLink";
             hardware.innerHTML = "<a href=\"http://www.ubuntu.com/certification\">Hardware</a>";
-            hardware.className = "siteLink";
+            hardware.className = "fixedTopbar-siteLink";
             insights.innerHTML = "<a href=\"http://insights.ubuntu.com/\">Insights</a>";
-            insights.className = "siteLink";
+            insights.className = "fixedTopbar-siteLink";
             juju.innerHTML = "<a href=\"http://juju.ubuntu.com\">Juju</a>";
-            juju.className = "siteLink";
+            juju.className = "fixedTopbar-siteLink";
             shop.innerHTML = "<a href=\"http://shop.ubuntu.com\">Shop</a>";
-            shop.className = "siteLink";
+            shop.className = "fixedTopbar-siteLink";
             apps.innerHTML = "<a href=\"http://apps.ubuntu.com\">Apps</a>";
-            apps.className = "siteLink";
+            apps.className = "fixedTopbar-siteLink";
             help.innerHTML = "<a href=\"https://help.ubuntu.com\">Help</a>";
-            help.className = "siteLink";
+            help.className = "fixedTopbar-siteLink";
             forum.innerHTML = "<a href=\"http://ubuntuforums.org\">Forum</a>";
-            forum.className = "siteLink";
+            forum.className = "fixedTopbar-siteLink";
             launchpad.innerHTML = "<a href=\"http://launchpad.net\">Launchpad</a>";
-            launchpad.className = "siteLink";
+            launchpad.className = "fixedTopbar-siteLink";
             MAAS.innerHTML = "<a href=\"http://maas.ubuntu.com\">MAAS</a>";
-            MAAS.className = "siteLink";
+            MAAS.className = "fixedTopbar-siteLink";
             canonical.innerHTML = "<a href=\"http://canonical\">Canonical</a>";
-            canonical.className = "siteLink";
+            canonical.className = "fixedTopbar-siteLink";
             listOfSites.appendChild(ubuntuHome);
             listOfSites.appendChild(ubuntuCommunity);
             listOfSites.appendChild(askubuntu);
@@ -196,11 +196,11 @@ var features = { //ALL the functions must go in here
             newUbuntuLinks.appendChild(linksWrapper);
             document.body.appendChild(newUbuntuLinks);
             var toolbar = document.getElementsByClassName('topbar')[0];
-            toolbar.className += " stickyToolbar";
+            toolbar.className += " fixedTopbar-stickyToolbar";
             var line = document.createElement('div');
             line.innerHTML = "<br><br>";
             toolbar.parentElement.insertBefore(line, toolbar);
-        } else if (!SOHelper.isOnChat) { //for all the normal, unannoying sites, excluding chat ;)
+        } else if (!SOHelper.isOnChat()) { //for all the normal, unannoying sites, excluding chat ;)
             $('.topbar').css({
                 'position': 'fixed',
                 'z-index': '1001'
@@ -1034,7 +1034,7 @@ var features = { //ALL the functions must go in here
             lastQuestions = {};
         var apiLink = "https://api.stackexchange.com/2.2/questions?pagesize=5&order=desc&sort=activity&site=" + metaName;
 
-        $('.topbar-links').prepend('<span id="mod-extra-icon" class="reputation links-container diamondOff">♦</span>');
+        $('.topbar-links').prepend('<span id="mod-extra-icon" class="reputation links-container metaNewQuestionAlert-diamondOff">♦</span>');
         $('.js-topbar-dialog-corral').prepend('<div class="topbar-dialog help-dialog dno" id="newMetaQuestionsDialog" style="top: 34px; left: 380px; display: none; overflow: auto;">\
 <div class="modal-content" id="newMetaQuestionsList" style="max-height:none"><span id="closeNewQuestionList" style="float:right">x</span>\
 <ul>\
@@ -1070,10 +1070,10 @@ No new meta questions!</span>\
             var latestQuestion = json.items[0].title;
             if (latestQuestion == lastQuestions[metaName]) {
                 //if you've already seen the stuff
-                $('#mod-extra-icon').removeClass('diamondOn').addClass('diamondOff');
+                $('#mod-extra-icon').removeClass('metaNewQuestionAlert-diamondOn').addClass('metaNewQuestionAlert-diamondOff');
             } else {
                 $('#newMetaQuestionsList ul').text("");
-                $('#mod-extra-icon').removeClass('diamondOff').addClass('diamondOn');
+                $('#mod-extra-icon').removeClass('metaNewQuestionAlert-diamondOff').addClass('metaNewQuestionAlert-diamondOn');
 
                 for (i = 0; i < json.items.length; i++) {
                     var title = json.items[i].title,
@@ -1118,7 +1118,7 @@ No new meta questions!</span>\
             $that = $(this);
             $.each(questions, function(key, val) { //loop through object of questions closed/dupes/migrated
                 if ($that.attr('id').split('-')[2] == key) {
-                    $that.find('.summary a:eq(0)').after("&nbsp;<span class='" + val + "'>&nbsp;" + val + "&nbsp;</span>"); //add appropiate message
+                    $that.find('.summary a:eq(0)').after("&nbsp;<span class='standOutDupeCloseMigrated-" + val + "'>&nbsp;" + val + "&nbsp;</span>"); //add appropiate message
                 }
             });
         });
@@ -1481,7 +1481,7 @@ Toggle SBS?</div></li>';
                 $that = $(this);
                 id = features.getIdFromUrl($(this).next().attr('href'));
                 $.get("http://" + $(location).attr('hostname') + "/posts/" + id + "/body", function(d) {
-                    var div = "<div class='loaded-body-shub' style='background-color: #ffffcc;'>" + d + "</div>";
+                    var div = "<div class='linkedPostsInline-loaded-body-shub' style='background-color: #ffffcc;'>" + d + "</div>";
                     $that.next().after(div);
                 });
             }
