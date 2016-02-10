@@ -29,6 +29,14 @@ SOHelper = {
     isOnUserProfile: function() {
         return ($(location).attr('href').indexOf('/users/') > -1 ? true : false);
     },
+    
+    isOnChat: function() {
+        if($('#jplayer').length && location.href.indexOf('chat.') > -1) {
+            return true;
+        } else {
+            return false;
+        }
+    },
 
     hasPriv: function(priv) {
         graduatedPrivs = {
