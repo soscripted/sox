@@ -30,7 +30,7 @@ var features = { //ALL the functions must go in here
     renameChat: function() {
         // Description: Renames Chat tabs to prepend 'Chat' before the room name
 
-        if (~window.location.href.indexOf('chat.') > -1) {
+        if (~window.location.href.indexOf('chat.')) {
             document.title = 'Chat - ' + document.title;
         }
     },
