@@ -1495,5 +1495,13 @@ Toggle SBS?</div></li>';
     },
     hideCommunityBulletin: function() {
         $("#sidebar .community-bulletin").remove();
+    },
+    hideSearchBar: function() {
+        var $links = $(".topbar-menu-links"),
+            $searchbar = $topbar.find(".search-container"),
+            $search = $("<a href='/search'><i class='fa fa-search'></i></a>");
+
+        $searchbar.remove();
+        $links.append($search);
     }
 };

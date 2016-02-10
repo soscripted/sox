@@ -190,7 +190,8 @@
             ["metaNewQuestionAlert", "Add an extra mod diamond to the topbar that alerts you if there is a new question posted on the child-meta of the current site"],
             ["hideHotNetworkQuestions", "Hide the Hot Network Questions module"],
             ["hideHireMe", "Hide the Looking for a Job module"],
-            ["hideCommunityBulletin", "Hide the Community Bulletin module"]
+            ["hideCommunityBulletin", "Hide the Community Bulletin module"],
+            ["hideSearchBar", "Replaces the searchbar with an link to the search page"]
         ]);
 
         addCategory("Flags");
