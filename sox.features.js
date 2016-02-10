@@ -1442,7 +1442,9 @@ Toggle SBS?</div></li>';
         }
     },
 
-    getIdFromUrl: function(url) { //Part of linkedPostsInline
+
+    //TODO: make this an internal function of linkedPostsInline
+    getIdFromUrl: function(url) { //Part of
         if (url.indexOf('/a/') > -1) { //eg. http://meta.stackexchange.com/a/26764/260841
             return url.split('/a/')[1].split('/')[0];
 
@@ -1487,20 +1489,31 @@ Toggle SBS?</div></li>';
     },
 
     hideHotNetworkQuestions: function() {
+        // Description: Hides the Hot Network Questions module from the sidebar
+
         $("#hot-network-questions").remove();
     },
 
     hideHireMe: function() {
+        // Description: Hides the Looking for a Job module from the sidebar
+
         $("#hireme").remove();
     },
     hideCommunityBulletin: function() {
+        // Description: Hides the Community Bulletin module from the sidebar
+
         $("#sidebar .community-bulletin").remove();
     },
     hideSearchBar: function() {
+        // Description: Replaces the searchbox with a button that takes you to the search page
+
         var $topbar = $(".topbar"),
             $links = $topbar.find(".topbar-menu-links"),
             $searchbar = $topbar.find(".search-container"),
-            $search = $("<a href='/search' title='Search " + SOHelper.getSiteName() +"''><i class='fa fa-search'></i></a>");
+            $search = $("<a/>", {
+                href: "/search",
+                title:"Search " + SOHelper.getSiteName()
+            }).append($("<i/>", {class:"fa fa-search"}));
 
         $searchbar.remove();
         $links.append($search);
