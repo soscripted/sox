@@ -95,19 +95,16 @@
                 reset();
             } else {
                 for (i = 0; i < extras.length; ++i) {
-                    $soxSettingsDialogFeatures.find("#" + extras[i]).prop('checked', true);
+                    $soxSettingsDialogFeatures.find("#" + extras[i]).prop('checked', true); //check the boxes that have been saved
                     features[extras[i]](); //Call the functions that were chosen
                 }
             }
         } else {
             // no settings found, mark all inputs as checked and display settings dialog
             $soxSettingsDialogFeatures.find("input").prop("checked", true);
-
             setTimeout(function(){
                 $soxSettingsDialog.show();
             }, 500);
-
-            //$soxSettingsDialog.delay(800).show(); //not working -- why!?
         }
 
     };
@@ -131,7 +128,6 @@
     }
 
     function isDeprecated() { //checks whether the saved settings contain a deprecated feature
-        //TODO: add function names to an array and loop instead of || .. || .. ||
         settings = getSettings();
         var deprecatedFeatures = ['answerCountSidebar', 'highlightClosedQuestions', 'unHideAnswer', 'flaggingPercentages'];
         for (i=0; i<deprecatedFeatures; i++) {
