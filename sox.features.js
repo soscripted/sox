@@ -474,6 +474,7 @@ var features = { //ALL the functions must go in here
     },
 
     unspoil: function() { // For adding a button to reveal all spoilers in a post
+        //TODO: only add link of spoilers exist in the post?
         $('#answers div[id*="answer"], div[id*="question"]').each(function() {
             $(this).find('.post-menu').append('<span class="lsep">|</span><a id="showSpoiler-' + $(this).attr("id") + '" href="javascript:void(0)">unspoil</span>');
         });

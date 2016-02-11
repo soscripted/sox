@@ -2,7 +2,7 @@
 // @name         Stack Overflow Extras (SOX)
 // @namespace    https://github.com/soscripted/sox
 // @version      DEV
-// @description  Adds a bunch of optional features to sites in the Stack Exchange Network.
+// @description  Adds a bunch of optional features to sites in the Stack Overflow / Stack Exchange Network.
 // @contributor  ᴉʞuǝ (stackoverflow.com/users/1454538/)
 // @contributor  ᔕᖺᘎᕊ (stackexchange.com/users/4337810/)
 // @updateURL    https://rawgit.com/soscripted/sox/master/sox.user.js
@@ -19,8 +19,8 @@
 // @require      https://cdn.rawgit.com/timdown/rangyinputs/master/rangyinputs-jquery-src.js
 // @require      https://cdn.rawgit.com/jeresig/jquery.hotkeys/master/jquery.hotkeys.js
 // @require      https://cdn.rawgit.com/camagu/jquery-feeds/master/jquery.feeds.js
-// @require      https://rawgit.com/soscripted/sox/master/sox.helpers.js?v=02092016a
-// @require      https://rawgit.com/soscripted/sox/master/sox.features.js?v=02092016a
+// @require      https://rawgit.com/soscripted/sox/master/sox.helpers.js
+// @require      https://rawgit.com/soscripted/sox/master/sox.features.js
 // @resource     settingsDialog https://rawgit.com/soscripted/sox/master/sox-dialog.html
 // @grant        GM_setValue
 // @grant        GM_getValue
