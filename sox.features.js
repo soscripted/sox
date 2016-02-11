@@ -113,7 +113,8 @@ var features = { //ALL the functions must go in here
          });
      },*/
 
-    fixedTopbar: function() { // For making the topbar fixed (always stay at top of screen)
+    fixedTopbar: function() {
+        // Description: For making the topbar fixed (always stay at top of screen)
         if ($(location).attr('hostname') == 'askubuntu.com') { //AskUbuntu is annoying. UnicornsAreVeryVeryYummy made the below code for AskUbuntu: https://github.com/shu8/Stack-Overflow-Optional-Features/issues/11 Thanks!
             var head = document.getElementsByTagName('head')[0],
                 ubuntuLinks = document.getElementsByClassName('nav-global')[0],
@@ -215,7 +216,8 @@ var features = { //ALL the functions must go in here
         $("#badge-card-next .percent").after($("#badge-card-next .label").css("z-index", 0)).css("position", "absolute");
     },
 
-    highlightQuestions: function() { // For highlighting only the tags of favorite questions
+    highlightQuestions: function() {
+        // Description: For highlighting only the tags of favorite questions
         setTimeout(function() { //Need delay to make sure the CSS is applied
             if (window.location.href.indexOf('superuser') > -1) { //superuser
                 var betterCSS = {
@@ -247,13 +249,15 @@ var features = { //ALL the functions must go in here
         }, 300);
     },
 
-    displayName: function() { // For displaying username next to avatar on topbar
+    displayName: function() {
+        // Description: For displaying username next to avatar on topbar
         var uname = SOHelper.getUsername();
         var insertme = "<span class='reputation links-container' style='color:white;' title='" + uname + "'>" + uname + "</span>";
         $(insertme).insertBefore('.gravatar-wrapper-24');
     },
 
-    colorAnswerer: function() { // For highlighting the names of answerers on comments
+    colorAnswerer: function() {
+        // Description: For highlighting the names of answerers on comments
         $('.answercell').each(function(i, obj) {
             var x = $(this).find('.user-details a').text();
             $('.answer .comment-user').each(function() {
@@ -278,7 +282,8 @@ var features = { //ALL the functions must go in here
         $('[id^="wmd-input"]').surroundSelectedText("<kbd>", "</kbd>");
     },
 
-    kbdAndBullets: function() { // For adding buttons to the markdown toolbar to surround selected test with KBD or convert selection into a markdown list
+    kbdAndBullets: function() {
+        // Description: For adding buttons to the markdown toolbar to surround selected test with KBD or convert selection into a markdown list
         var kbdBtn = "<li class='wmd-button' title='surround selected text with <kbd> tags' style='left: 400px;'><span id='wmd-kbd-button' style='background-image: none;'>kbd</span></li>";
         var listBtn = "<li class='wmd-button' title='add dashes (\"-\") before every line to make a bullet point list' style='left: 425px;'><span id='wmd-bullet-button' style='background-image:none;'>&#x25cf;</span></li>";
 
@@ -354,7 +359,8 @@ var features = { //ALL the functions must go in here
         features.addCheckboxes();
     },
 
-    editComment: function() { // For adding checkboxes when editing to add pre-defined edit reasons
+    editComment: function() {
+        // Description: For adding checkboxes when editing to add pre-defined edit reasons
         var div = "<div id='dialogEditReasons' class='sox-centered wmd-prompt-dialog'><span id='closeDialogEditReasons' style='float:right;'>Close</span><span id='resetEditReasons' style='float:left;'>Reset</span>  \
                         <h2>View/Remove Edit Reasons</h2>																														\
                         <div id='currentValues'></div>																															\
@@ -444,7 +450,8 @@ var features = { //ALL the functions must go in here
         });
     },
 
-    shareLinksMarkdown: function() { // For changing the 'share' button link to the format [name](link)
+    shareLinksMarkdown: function() {
+        // Description: For changing the 'share' button link to the format [name](link)
         $('.short-link').click(function() {
             setTimeout(function() {
                 var link = $('.share-tip input').val();
@@ -454,7 +461,8 @@ var features = { //ALL the functions must go in here
         });
     },
 
-    commentShortcuts: function() { // For adding support in comments for Ctrl+K,I,B to add code backticks, italicise, bolden selection
+    commentShortcuts: function() {
+        // Description: For adding support in comments for Ctrl+K,I,B to add code backticks, italicise, bolden selection
         $('.js-add-link.comments-link').click(function() {
             setTimeout(function() {
                 $('.comments textarea').bind('keydown', 'ctrl+k', function(e) {
@@ -473,10 +481,12 @@ var features = { //ALL the functions must go in here
         });
     },
 
-    unspoil: function() { // For adding a button to reveal all spoilers in a post
-        //TODO: only add link of spoilers exist in the post?
+    unspoil: function() {
+        // Description: For adding a button to reveal all spoilers in a post
         $('#answers div[id*="answer"], div[id*="question"]').each(function() {
-            $(this).find('.post-menu').append('<span class="lsep">|</span><a id="showSpoiler-' + $(this).attr("id") + '" href="javascript:void(0)">unspoil</span>');
+            if($(this).find('.spoiler').length) {
+                $(this).find('.post-menu').append('<span class="lsep">|</span><a id="showSpoiler-' + $(this).attr("id") + '" href="javascript:void(0)">unspoil</span>');
+            }
         });
         $('a[id*="showSpoiler"]').click(function() {
             var x = $(this).attr('id').split(/-(.+)?/)[1];
@@ -516,7 +526,8 @@ var features = { //ALL the functions must go in here
         $('#quickCommentShortcuts table').append("<tr><th>Name</th><th>Shortcut</th><th>Text</th><th>Delete?</th><th>Edit?</th></tr>");
     },
 
-    quickCommentShortcutsMain: function() { // For adding shortcuts to insert pre-defined text into comment fields
+    quickCommentShortcutsMain: function() {
+        // Description: For adding shortcuts to insert pre-defined text into comment fields
         var sitename = SOHelper.getSiteName(),
             siteurl = 'http://' + $(location).attr('hostname'),
             op = $('.post-signature.owner .user-info .user-details a').text(),
@@ -689,7 +700,8 @@ var features = { //ALL the functions must go in here
         });
     },
 
-    spoilerTip: function() { // For adding some text to spoilers to tell people to hover over it
+    spoilerTip: function() {
+        // Description: For adding some text to spoilers to tell people to hover over it
         $('.spoiler').prepend("<div id='isSpoiler' style='color:red; font-size:smaller; float:right;'>hover to show spoiler<div>");
         $('.spoiler').hover(function() {
             $(this).find('#isSpoiler').hide(500);
@@ -698,7 +710,8 @@ var features = { //ALL the functions must go in here
         });
     },
 
-    commentReplies: function() { //For adding reply links to comments
+    commentReplies: function() {
+        // Description: For adding reply links to comments
         $('.comment').each(function() {
             if ($('.topbar-links a span:eq(0)').text() != $(this).find('.comment-text a.comment-user').text()) { //make sure the link is not added to your own comments
                 $(this).append("<span id='replyLink' title='reply to this user'>&crarr;</span>");
@@ -718,7 +731,8 @@ var features = { //ALL the functions must go in here
         });
     },
 
-    parseCrossSiteLinks: function() { //For converting cross-site links to their titles
+    parseCrossSiteLinks: function() {
+        // Description: For converting cross-site links to their titles
         var sites = ['stackexchange', 'stackoverflow', 'superuser', 'serverfault', 'askubuntu', 'stackapps', 'mathoverflow', 'programmers', 'bitcoin'];
 
         $('.post-text a').each(function() {
@@ -740,7 +754,6 @@ var features = { //ALL the functions must go in here
                 var id = $(this).attr('href').split('/')[2],
                     sitename = $(location).attr('hostname').split('.')[0],
                     that = $(this);
-
                 $.getJSON("https://api.stackexchange.com/2.2/questions/" + id + "?order=desc&sort=activity&site=" + sitename, function(json) {
                     answers = json.items[0].answer_count;
                     that.attr('title', answers + (answers == 1 ? ' answer' : ' answers'));
@@ -749,7 +762,8 @@ var features = { //ALL the functions must go in here
         });
     },*/
 
-    linkQuestionAuthorName: function() { //For adding a button to the editor toolbar to insert a link to a post and automatically add the author's name
+    linkQuestionAuthorName: function() {
+        // Description: For adding a button to the editor toolbar to insert a link to a post and automatically add the author's name
         var div = "<div id='addLinkAuthorName' class='wmd-prompt-dialog sox-centered' style='display:none'> \
             <h5>Insert hyperlink with author's name</h5> \
             <br /> \
@@ -815,7 +829,8 @@ var features = { //ALL the functions must go in here
         }, 1000);
     },
 
-    confirmNavigateAway: function() { //For adding a 'are you ure you want to go away' confirmation on pages where you have started writing something
+    confirmNavigateAway: function() {
+        // Description: For adding a 'are you ure you want to go away' confirmation on pages where you have started writing something
         if (window.location.href.indexOf('questions/') >= 0) {
             $(window).bind('beforeunload', function() {
                 if ($('.comment-form textarea').length && $('.comment-form textarea').val() != '') {
@@ -827,7 +842,8 @@ var features = { //ALL the functions must go in here
         }
     },
 
-    sortByBountyAmount: function() { //For adding some buttons to sort bounty's by size
+    sortByBountyAmount: function() {
+        // Description: For adding some buttons to sort bounty's by size
         if (!SOHelper.isOnUserProfile()) { //not on the user profile page
             if ($('.bounty-indicator').length) { //if there is at least one bounty on the page
                 $('.question-summary').each(function() {
@@ -868,7 +884,8 @@ var features = { //ALL the functions must go in here
         $('#question-header').prepend("<div title='this question is in the top 30 most recent hot network questions!' class='sox-hot'>HOT<div>");
     },
 
-    isQuestionHot: function() { //For adding some text to questions that are in the 30 most recent hot network questions
+    isQuestionHot: function() {
+        // Description: For adding some text to questions that are in the 30 most recent hot network questions
         $('#qinfo').after('<div id="feed"></div>');
 
         setTimeout(function() {
@@ -888,7 +905,8 @@ var features = { //ALL the functions must go in here
         }, 500);
     },
 
-    autoShowCommentImages: function() { //For auto-inlining any links to imgur images in comments
+    autoShowCommentImages: function() {
+        // Description: For auto-inlining any links to imgur images in comments
         $('.comment .comment-text .comment-copy a').each(function() {
             if ($(this).attr('href').indexOf('imgur.com') != -1) {
                 var image = $(this).attr('href');
@@ -897,7 +915,8 @@ var features = { //ALL the functions must go in here
         });
     },
 
-    showCommentScores: function() { //For adding a button on your profile comment history pages to show your comment's scores
+    showCommentScores: function() {
+        // Description: For adding a button on your profile comment history pages to show your comment's scores
         var sitename = SOHelper.getSiteName('api');
         $('.history-table td b a[href*="#comment"]').each(function() {
             id = $(this).attr('href').split('#')[1].split('_')[0].replace('comment', '');
@@ -911,7 +930,8 @@ var features = { //ALL the functions must go in here
         });
     },
 
-    answerTagsSearch: function() { //For adding tags to answers in search
+    answerTagsSearch: function() {
+        // Description: For adding tags to answers in search
         if (window.location.href.indexOf('search?q=') > -1) { //ONLY ON SEARCH PAGES!
             var sitename = SOHelper.getSiteName('api'),
                 ids = [],
@@ -945,7 +965,8 @@ var features = { //ALL the functions must go in here
         }
     },
 
-    stickyVoteButtons: function() { //For making the vote buttons stick to the screen as you scroll through a post
+    stickyVoteButtons: function() {
+        // Description: For making the vote buttons stick to the screen as you scroll through a post
         //https://github.com/shu8/SE_OptionalFeatures/pull/14:
         //https://github.com/shu8/Stack-Overflow-Optional-Features/issues/28: Thanks @SnoringFrog for fixing this!
         $(window).scroll(function() {
@@ -993,7 +1014,8 @@ var features = { //ALL the functions must go in here
         });
     },
 
-    titleEditDiff: function() { //For showing the new version of a title in a diff separately rather than loads of crossing outs in red and additions in green
+    titleEditDiff: function() {
+        // Description: For showing the new version of a title in a diff separately rather than loads of crossing outs in red and additions in green
         setTimeout(function() {
             var $questionHyperlink = $('.summary h2 .question-hyperlink').clone(),
                 $questionHyperlinkTwo = $('.summary h2 .question-hyperlink').clone(),
@@ -1006,7 +1028,8 @@ var features = { //ALL the functions must go in here
         }, 1000);
     },
 
-    metaChatBlogStackExchangeButton: function() { //For adding buttons next to sites under the StackExchange button that lead to that site's meta, chat and blog
+    metaChatBlogStackExchangeButton: function() {
+        // Description: For adding buttons next to sites under the StackExchange button that lead to that site's meta, chat and blog
         var blogSites = ["math", "serverfault", "english", "stats", "diy", "bicycles", "webapps", "mathematica", "christianity", "cooking", "fitness", "cstheory", "scifi", "tex", "security", "islam", "superuser", "gaming", "programmers", "gis", "apple", "photo", "dba"],
             link,
             blogLink = '//' + 'blog.stackexchange.com';
@@ -1030,7 +1053,8 @@ var features = { //ALL the functions must go in here
         });
     },
 
-    metaNewQuestionAlert: function() { //For adding a fake mod diamond that notifies you if there has been a new post posted on the current site's meta
+    metaNewQuestionAlert: function() {
+        // Description: For adding a fake mod diamond that notifies you if there has been a new post posted on the current site's meta
         var metaName = 'meta.' + $(location).attr('hostname').split('.')[0],
             lastQuestions = {};
         var apiLink = "https://api.stackexchange.com/2.2/questions?pagesize=5&order=desc&sort=activity&site=" + metaName;
@@ -1090,11 +1114,13 @@ No new meta questions!</span>\
         });
     },
 
-    betterCSS: function() { //For adding the better CSS for the voting buttons and favourite button
+    betterCSS: function() {
+        // Description: For adding the better CSS for the voting buttons and favourite button
         $('head').append('<link rel="stylesheet" href="https://cdn.rawgit.com/shu8/SE-Answers_scripts/master/coolMaterialDesignCss.css" type="text/css" />');
     },
 
-    standOutDupeCloseMigrated: function() { //For adding cooler signs that a questions has been closed/migrated/put on hod/is a dupe
+    standOutDupeCloseMigrated: function() {
+        // Description: For adding cooler signs that a questions has been closed/migrated/put on hod/is a dupe
         var questions = {};
         $.each($('.question-summary'), function() { //Find the questions and add their id's and statuses to an object
             if ($(this).find('.summary a:eq(0)').text().trim().substr($(this).find('.summary a:eq(0)').text().trim().length - 11) == '[duplicate]') {
@@ -1131,7 +1157,8 @@ No new meta questions!</span>\
         });
     },
 
-    editReasonTooltip: function() { //For showing the latest revision's comment as a tooltip on 'edit [date] at [time]'
+    editReasonTooltip: function() {
+        // Description: For showing the latest revision's comment as a tooltip on 'edit [date] at [time]'
         $('.question, .answer').each(function() {
             if ($(this).find('.post-signature').length > 1) {
                 var id = $(this).attr('data-questionid') || $(this).attr('data-answerid');
@@ -1238,7 +1265,8 @@ Toggle SBS?</div></li>';
         }, 1000);
     },
 
-    addSBSBtn: function() { //For adding a button to the editor toolbar to toggle side-by-side editing
+    addSBSBtn: function() {
+        // Description: For adding a button to the editor toolbar to toggle side-by-side editing
         //Adding script dynamically because @requiring causes the page load to hand -- don't know how to fix! :(
         var script = document.createElement('script');
         script.src = "https://cdn.rawgit.com/BrockA/2625891/raw/9c97aa67ff9c5d56be34a55ad6c18a314e5eb548/waitForKeyElements.js";
@@ -1268,7 +1296,8 @@ Toggle SBS?</div></li>';
         }, 2000);
     },
 
-    alwaysShowImageUploadLinkBox: function() { //For always showing the 'Link from the web' box when uploading an image.
+    alwaysShowImageUploadLinkBox: function() {
+        // Description: For always showing the 'Link from the web' box when uploading an image.
         var header = document.getElementById('header'); //Code courtesy of Siguza <http://meta.stackoverflow.com/a/306901/3541881>! :)
         if (header) {
             new MutationObserver(function(records) {
@@ -1326,7 +1355,8 @@ Toggle SBS?</div></li>';
         });
     },
 
-    addAuthorNameToInboxNotifications: function() { //To add the author's name to inbox notifications
+    addAuthorNameToInboxNotifications: function() {
+        // Description: To add the author's name to inbox notifications
         new MutationObserver(function(mutations) {
             mutations.forEach(function(mutation) {
                 var length = mutation.addedNodes.length;
@@ -1348,13 +1378,17 @@ Toggle SBS?</div></li>';
         });
     },
 
-    flagOutcomeTime: function() { //https://github.com/shu8/Stack-Overflow-Optional-Features/pull/32
+    flagOutcomeTime: function() {
+        // Description: For adding the flag outcome time to the flag page
+        //https://github.com/shu8/Stack-Overflow-Optional-Features/pull/32
         $(".flag-outcome").each(function() {
             $(this).append(" – " + $(this).attr("title"));
         });
     },
 
-    scrollToTop: function() { //https://github.com/shu8/Stack-Overflow-Optional-Features/pull/34
+    scrollToTop: function() {
+        // Description: For adding a button at the bottom right part of the screen to scroll back to the top
+        //https://github.com/shu8/Stack-Overflow-Optional-Features/pull/34
         if (!SOHelper.isOnChat()) { // don't show scrollToTop button while in chat.
             var $scroll = $("<div/>", {
                     id: "sox-scrollToTop",
@@ -1384,7 +1418,9 @@ Toggle SBS?</div></li>';
         }
     },
 
-    flagPercentages: function() { //By @enki; https://github.com/shu8/Stack-Overflow-Optional-Features/pull/38, http://meta.stackoverflow.com/q/310881/3541881, http://stackapps.com/q/6773/26088
+    flagPercentages: function() {
+        // Description: For adding percentages to the flag summary on the flag page
+        //By @enki; https://github.com/shu8/Stack-Overflow-Optional-Features/pull/38, http://meta.stackoverflow.com/q/310881/3541881, http://stackapps.com/q/6773/26088
         var group = {
             POST: 1,
             SPAM: 2,
@@ -1462,7 +1498,8 @@ Toggle SBS?</div></li>';
         }
     },
 
-    linkedPostsInline: function() { //Displays linked posts inline with an arrow
+    linkedPostsInline: function() {
+        // Description: Displays linked posts inline with an arrow
         $('.post-text a, .comments .comment-copy a').each(function() {
             var url = $(this).attr('href');
             if (url && url.indexOf($(location).attr('hostname')) > -1 && url.indexOf('/questions/') > -1 && url.indexOf('#comment') == -1) {
@@ -1513,8 +1550,10 @@ Toggle SBS?</div></li>';
             $searchbar = $topbar.find(".search-container"),
             $search = $("<a/>", {
                 href: "/search",
-                title:"Search " + SOHelper.getSiteName()
-            }).append($("<i/>", {class:"fa fa-search"}));
+                title: "Search " + SOHelper.getSiteName()
+            }).append($("<i/>", {
+                class: "fa fa-search"
+            }));
 
         $searchbar.remove();
         $links.append($search);
