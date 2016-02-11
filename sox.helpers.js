@@ -1,12 +1,12 @@
 SOHelper = {
     getUsername: function() {
         $uname = $('body > div.topbar > div > div.topbar-links > a > div.gravatar-wrapper-24');
-        return ($uname.length ? $uname.attr('title') : -1);
+        return ($uname.length ? $uname.attr('title') : false);
     },
 
     getReputation: function() {
         $rep = $('div.topbar-links .links-container>span.reputation');
-        return ($rep.length ? $rep.text().trim().replace(',', '') : -1);
+        return ($rep.length ? $rep.text().trim().replace(',', '') : false);
     },
 
     getSiteName: function(type) {
@@ -39,6 +39,9 @@ SOHelper = {
     },
 
     hasPriv: function(priv) {
+        if (!SOHelper.isLoggedIn()) {
+            return false;
+        }
         graduatedPrivs = {
             "access review queues": 2000,
             "access to moderator tools": 10000,
@@ -92,9 +95,6 @@ SOHelper = {
             "vote down": 125,
             "vote up": 15
         };
-        if (!SOHelper.isLoggedIn) {
-            return
-        }
         rep = SOHelper.getReputation();
         repNeeded = (SOHelper.getSiteType() == 'graduated' ? graduatedPrivs[priv] : betaPrivs[priv])
         return (rep > repNeeded ? true : false)
