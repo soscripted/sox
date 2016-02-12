@@ -67,6 +67,7 @@
     width: 40px;
     height: 40px;
     text-align: center;
+    cursor: pointer;
 }
 
 /*Main centered divs, SE-style:*/
@@ -303,10 +304,4 @@ li.fixedTopbar-siteLink {
     overflow-wrap: break-word;
     width: 630px;
     padding: 10px;
-}
-
-/*scrollToTop button*/
-#sox-scrollToTop {
-    cursor: pointer;
-}
 }
