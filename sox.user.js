@@ -214,7 +214,7 @@
             ["showCommentScores", "Show your comment and comment replies scores in your profile tabs"]
         ]);
 
-        addCategory("Unsorted");
+        addCategory("Miscellaneous");
         addFeatures([
             ["shareLinksMarkdown", "Change 'share' link to format of [post-name](url)"],
             ["parseCrossSiteLinks", "Parse titles to links cross-SE-sites"],
