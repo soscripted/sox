@@ -1,6 +1,6 @@
 #SOX
 
-Stack Overflow Extras is a project that stemmed from the [Stack Overflow Optional Features (SOOF)](https://github.com/shu8/Stack-Overflow-Optional-Features) project. It has a new collaborator, new look and features have been rewritten to be better!
+Stack Overflow Extras is a project that stemmed from the [Stack Overflow Optional Features (SOOF)](https://github.com/shu8/Stack-Overflow-Optional-Features) project. It has been written by [ᔕᖺᘎᕊ](stackexchange.com/users/4337810/) and [ᴉʞuǝ](stackoverflow.com/users/1454538/) new collaborator, new look and features have been rewritten to be better!
 
 The SOX userscript adds a bunch of **optional** features to all sites in the Stack Exchange network. These can be toggled on or off from an easy to use control panel (see screenshot below).
 
@@ -25,4 +25,4 @@ Please post bugs and feature requests as issues on [Github](https://github.com/s
 
 ##Changes
 
-Please see the change log [in the answer on the Stack Apps post](http://stackapps.com/a/6358).
+Please see the change log [below](http://stackapps.com/a/6358).
