@@ -1560,10 +1560,5 @@ Toggle SBS?</div></li>';
 
         $searchbar.remove();
         $links.append($search);
-    },
-    
-    testFunction: function() {
-        console.log('testing2');
-        alert('testing2');
     }
 };
