@@ -1563,7 +1563,7 @@ Toggle SBS?</div></li>';
     },
     
     testFunction: function() {
-        console.log('testing');
-        alert('testing');
+        console.log('testing2');
+        alert('testing2');
     }
 };
