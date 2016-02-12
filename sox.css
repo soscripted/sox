@@ -304,3 +304,9 @@ li.fixedTopbar-siteLink {
     width: 630px;
     padding: 10px;
 }
+
+/*scrollToTop button*/
+#sox-scrollToTop {
+    cursor: pointer;
+}
+}
