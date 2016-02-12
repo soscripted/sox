@@ -362,7 +362,7 @@ var features = { //ALL the functions must go in here
             $.each(JSON.parse(GM_getValue('editReasons')), function(i, obj) {
                 $('#currentValues').append(this[0] + ' - ' + this[1] + '<input type="button" id="' + i + '" value="Delete"><br />');
             });
-            features.addCheckboxes();
+            addCheckboxes();
         }
 
         var div = "<div id='dialogEditReasons' class='sox-centered wmd-prompt-dialog'><span id='closeDialogEditReasons' style='float:right;'>Close</span><span id='resetEditReasons' style='float:left;'>Reset</span>  \
