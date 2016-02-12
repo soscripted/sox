@@ -1533,23 +1533,21 @@ Toggle SBS?</div></li>';
 
     hideHotNetworkQuestions: function() {
         // Description: Hides the Hot Network Questions module from the sidebar
-
         $("#hot-network-questions").remove();
     },
 
     hideHireMe: function() {
         // Description: Hides the Looking for a Job module from the sidebar
-
         $("#hireme").remove();
     },
+    
     hideCommunityBulletin: function() {
         // Description: Hides the Community Bulletin module from the sidebar
-
         $("#sidebar .community-bulletin").remove();
     },
+    
     hideSearchBar: function() {
         // Description: Replaces the searchbox with a button that takes you to the search page
-
         var $topbar = $(".topbar"),
             $links = $topbar.find(".topbar-menu-links"),
             $searchbar = $topbar.find(".search-container"),
@@ -1562,5 +1560,10 @@ Toggle SBS?</div></li>';
 
         $searchbar.remove();
         $links.append($search);
+    },
+    
+    testFunction: function() {
+        console.log('testing');
+        alert('testing');
     }
 };
