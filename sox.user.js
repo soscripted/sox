@@ -20,7 +20,7 @@
 // @require      https://cdn.rawgit.com/jeresig/jquery.hotkeys/master/jquery.hotkeys.js
 // @require      https://cdn.rawgit.com/camagu/jquery-feeds/master/jquery.feeds.js
 // @require      https://rawgit.com/soscripted/sox/master/sox.helpers.js
-// @require      https://rawgit.com/soscripted/sox/master/sox.features.js
+// @require      https://rawgit.com/soscripted/sox/master/sox.features.js?v=dev
 // @resource     settingsDialog https://rawgit.com/soscripted/sox/master/sox-dialog.html
 // @grant        GM_setValue
 // @grant        GM_getValue
@@ -185,7 +185,7 @@
             ["hideHotNetworkQuestions", "Hide the Hot Network Questions module"],
             ["hideHireMe", "Hide the Looking for a Job module"],
             ["hideCommunityBulletin", "Hide the Community Bulletin module"],
-            ["hideSearchBar", "Replaces the searchbar with an link to the search page"]
+            ["hideSearchBar", "Replace the search bar with a link to the search page"]
         ]);
 
         addCategory("Flags");
