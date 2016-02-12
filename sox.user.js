@@ -27,7 +27,6 @@
 // @grant        GM_deleteValue
 // @grant        GM_getResourceText
 // ==/UserScript==
-/*jshint multistr: true */
 (function(sox, $, undefined) {
     const SOX = "Stack Overflow Extras";
     const SOX_SETTINGS = "SOXSETTINGS";
@@ -43,7 +42,7 @@
 
         // add sox CSS file and font-awesome CSS file
         $("head").append("<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css'>")
-                 .append("<link rel='stylesheet' type='text/css' href='https://rawgit.com/soscripted/sox/master/sox.css' />");
+            .append("<link rel='stylesheet' type='text/css' href='https://rawgit.com/soscripted/sox/master/sox.css' />");
         $("body").append($settingsDialog);
 
         $soxSettingsDialog = $("#sox-settings-dialog");
@@ -79,7 +78,7 @@
             location.reload(); // reload page to reflect changed settings
         });
         $soxSettingsSave.on("click", function() {
-            extras = [];
+            var extras = [];
             $soxSettingsDialogFeatures.find('input[type=checkbox]:checked').each(function() {
                 var x = $(this).attr('id');
                 extras.push(x); //Add the function's ID (also the checkbox's ID) to the array
@@ -90,11 +89,11 @@
 
         // check if settings exist and execute desired functions
         if (isAvailable()) {
-            extras = getSettings();
+            var extras = getSettings();
             if (isDeprecated()) { //if the setting is set but a deprecated, non-existent feature exists, then delete the setting and act as if it is new
                 reset();
             } else {
-                for (i = 0; i < extras.length; ++i) {
+                for (var i = 0; i < extras.length; ++i) {
                     $soxSettingsDialogFeatures.find("#" + extras[i]).prop('checked', true); //check the boxes that have been saved
                     features[extras[i]](); //Call the functions that were chosen
                 }
@@ -102,43 +101,43 @@
         } else {
             // no settings found, mark all inputs as checked and display settings dialog
             $soxSettingsDialogFeatures.find("input").prop("checked", true);
-            setTimeout(function(){
+            setTimeout(function() {
                 $soxSettingsDialog.show();
             }, 500);
         }
 
     };
 
-    function isAvailable() {
+    function isAvailable() { //check whether there are any settings in GM storage
         //return ~GM_getValue("sox-featureOptions", -1) ? false : true;
         return (GM_getValue(SOX_SETTINGS, -1) == -1 ? false : true);
     }
 
-    function getSettings() {
+    function getSettings() { //get settings from GM storage
         return JSON.parse(GM_getValue(SOX_SETTINGS));
     }
 
-    function reset() {
+    function reset() { //delete settings from GM storage
         GM_deleteValue(SOX_SETTINGS);
     }
 
-    function save(options) {
+    function save(options) { //save settings to GM storage
         GM_setValue(SOX_SETTINGS, JSON.stringify(options));
         console.log("sox settings saved: " + JSON.stringify(options));
     }
 
     function isDeprecated() { //checks whether the saved settings contain a deprecated feature
-        settings = getSettings();
+        var settings = getSettings();
         var deprecatedFeatures = ['answerCountSidebar', 'highlightClosedQuestions', 'unHideAnswer', 'flaggingPercentages'];
-        for (i=0; i<deprecatedFeatures; i++) {
+        for (var i = 0; i < deprecatedFeatures; i++) {
             if (settings.indexOf(deprecatedFeatures[i]) != -1) {
                 return true;
             }
         }
     }
 
-    function addFeatures(features) {
-        $.each(features, function(i, o) {
+    function addFeatures(features) { //add a feature in the settings dialog -- checkbox with description
+        $.each(features, function(i, o) { //loop through the array of arrays of features and add a checkbox with the id and description
             var $div = $("<div/>"),
                 $label = $("<label/>"),
                 $input = $("<input/>", {
@@ -153,7 +152,7 @@
         });
     }
 
-    function addCategory(name) {
+    function addCategory(name) { //add a category in the settings dialog
         var $div = $("<div/>"),
             $h3 = $("<h3/>", {
                 text: name
@@ -162,7 +161,7 @@
         $soxSettingsDialogFeatures.append($div);
     }
 
-    function loadFeatures() {
+    function loadFeatures() { //load the features in the settings dialog -- add checkboxes with ids and short descriptions
         addCategory("Appearance");
         addFeatures([
             ["grayOutVotes", "Gray out deleted votes"],
@@ -193,7 +192,6 @@
         addFeatures([
             ["flagOutcomeTime", "Show the flag outcome time when viewing your Flag History"],
             ["flagPercentages", "Show flagging percentages for each type in the Flag Summary"]
-            // lots more to come
         ]);
 
         addCategory("Editing");
@@ -205,8 +203,8 @@
             ["linkQuestionAuthorName", "Add a button in the editor toolbar to insert a hyperlink to a post and add the author automatically"],
             ["titleEditDiff", "Make title edits show seperately rather than merged"]
         ]);
-        addCategory("Comments");
 
+        addCategory("Comments");
         addFeatures([
             ["moveCommentsLink", "Move 'show x more comments' to the top"],
             ["commentShortcuts", "Use Ctrl+I,B,K (to italicise, bolden and add code backticks) in comments"],
@@ -218,7 +216,6 @@
 
         addCategory("Unsorted");
         addFeatures([
-            //other
             ["shareLinksMarkdown", "Change 'share' link to format of [post-name](url)"],
             ["parseCrossSiteLinks", "Parse titles to links cross-SE-sites"],
             ["confirmNavigateAway", "Add a confirmation dialog before navigating away on pages whilst you are still typing a comment"],
@@ -236,4 +233,4 @@
 }(window.sox = window.sox || {}, jQuery));
 
 // initialize sox
-sox.init(); //TODO: not sure if we really need this to be a function, script is wrapped in IIFE so init code could just go at the top.
+sox.init();
