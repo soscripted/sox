@@ -8,7 +8,8 @@ The SOX userscript adds a bunch of **optional** features to all sites in the Sta
 
 1. Install [Greasemonkey](http://www.greasespot.net/) (for Firefox), [Tampermonkey](http://tampermonkey.net/) (for Chrome), or [NinjaKit](https://github.com/os0x/NinjaKit) for Safari. These are userscript managers that *must* be installed in order for this to work, as the script relies on certain `GM_*` functions in order to save your settings!
 2. Install the script. Clicking on 'install' below will make your userscript manager prompt you automatically to install it.
-        - Official Version: <kbd>[install](https://github.com/soscripted/sox/raw/master/sox.user.js)</kbd>. <kbd>[view source](https://github.com/soscripted/sox/blob/master/sox.user.js)</kbd>
+    
+    - Official Version: <kbd>[install](https://github.com/soscripted/sox/raw/master/sox.user.js)</kbd>. <kbd>[view source](https://github.com/soscripted/sox/blob/master/sox.user.js)</kbd>
     - Development Version: <kbd>[install](https://github.com/soscripted/sox/raw/develop/sox.user.js)</kbd>. <kbd>[view source](https://github.com/soscripted/sox/blob/develop/sox.user.js)</kbd>
     
 3. Go to any site in the Stack Exchange Network (eg. [Super User](http://superuser.com/) or [Stack Overflow](http://stackoverflow.com/)). You will automatically be asked to choose and save your settings. A toggle button (gears icon) will be added to your topbar where you can change these later on: 
