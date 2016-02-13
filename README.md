@@ -1,6 +1,6 @@
 #SOX
 
-Stack Overflow Extras is a project that stemmed from the [Stack Overflow Optional Features (SOOF)](https://github.com/shu8/Stack-Overflow-Optional-Features) project. It has been written by [ᔕᖺᘎᕊ](stackexchange.com/users/4337810/) and [ᴉʞuǝ](stackoverflow.com/users/1454538/), has a new look, and features have been rewritten to be better!
+Stack Overflow Extras is a project that stemmed from the [Stack Overflow Optional Features (SOOF)](https://github.com/shu8/Stack-Overflow-Optional-Features) project. It has been written by [ᔕᖺᘎᕊ](https://stackexchange.com/users/4337810/) and [ᴉʞuǝ](https://stackoverflow.com/users/1454538/), has a new look, and features have been rewritten to be better!
 
 The SOX userscript adds a bunch of **optional** features to all sites in the Stack Exchange network. These can be toggled on or off from an easy to use control panel (see screenshot below).
 
@@ -10,7 +10,7 @@ The SOX userscript adds a bunch of **optional** features to all sites in the Sta
 2. Install the script. Clicking on 'install' below will make your userscript manager prompt you automatically to install it.
 	- Official Version: <kbd>[install]()</kbd>. <kbd>[view source]()</kbd>
     - Development Version: <kbd>[install]()</kbd>. <kbd>[view source]()</kbd>
-3. Go to any site in the Stack Exchange Network (eg. [Super User](http://superuser.com/) or [Stack Overflow](http://stackoverflow.com/)). You will automatically be asked to choose and save your settings. A toggle button (gears icon) will be added to your topbar where you can change these later on: 
+3. Go to any site in the Stack Exchange Network (eg. [Super User](http://superuser.com/) or [Stack Overflow](http://stackoverflow.com/)). You will automatically be asked to choose and save your settings. A toggle button (gears icon) will be added to your topbar where you can change these later on:
 
 ![toggle button](http://i.stack.imgur.com/4aaaM.png)
 ![control panel](http://i.stack.imgur.com/Bijmr.png)
