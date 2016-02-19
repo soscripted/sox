@@ -76,6 +76,14 @@
     text-align: center;
 }
 
+.sox-settings-button {
+    background-image: none;
+    padding-top: 10px;
+    font-size: 14px;
+    color: #999;
+    height: 24px;
+    min-width: 34px;
+}
 
 /*--------------OLD:-------------*/
 
