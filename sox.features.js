@@ -1474,14 +1474,14 @@ Toggle SBS?</div></li>';
             if ($(this).hasClass('expander-arrow-small-show')) {
                 $(this).removeClass('expander-arrow-small-show');
                 $(this).addClass('expander-arrow-small-hide');
-                $('.loaded-body-shub').remove();
+                $('.linkedPostsInline-loaded-body-shub').remove();
             } else if ($(this).hasClass('expander-arrow-small-hide')) {
                 $(this).removeClass('expander-arrow-small-hide');
                 $(this).addClass('expander-arrow-small-show');
                 $that = $(this);
                 id = features.getIdFromUrl($(this).next().attr('href'));
                 $.get("http://" + $(location).attr('hostname') + "/posts/" + id + "/body", function(d) {
-                    var div = "<div class='loaded-body-shub' style='background-color: #ffffcc;'>" + d + "</div>";
+                    var div = "<div class='linkedPostsInline-loaded-body-shub' style='background-color: #ffffcc;'>" + d + "</div>";
                     $that.next().after(div);
                 });
             }
