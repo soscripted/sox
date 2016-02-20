@@ -175,7 +175,7 @@
             ["renameChat", "Prepend 'Chat - ' to chat tabs' titles"],
             ["exclaim", "Remove exclamation mark on message"],
             ["employeeStar", "Add star after employee names"],
-            ["bulletReplace", "Replace triangluar bullets with normal ones"],
+            ["bulletReplace", "Replace triangular bullets with normal ones"],
             ["addEllipsis", "Add ellipsis to long names"],
             ["fixedTopbar", "Fix topbar position"],
             ["displayName", "Display name before gravatar"],
