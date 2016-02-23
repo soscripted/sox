@@ -1,19 +1,32 @@
-# Stack Overflow Extras (SOX)
+#SOX
 
-A userscript for sites in the Stack Overflow Network that adds a bunch of optional, user-selectable features via an easy-to-use control panel.
+Stack Overflow Extras is a project that stemmed from the [Stack Overflow Optional Features (SOOF)](https://github.com/shu8/Stack-Overflow-Optional-Features) project. It has been written by [ᔕᖺᘎᕊ](https://stackexchange.com/users/4337810/) and [ᴉʞuǝ](https://stackoverflow.com/users/1454538/), has a new look, and features have been rewritten to be better!
 
-#How to use, requirements, how it works
-1. Install [Tampermonkey](http://tampermonkey.net/) (for Chrome), or [Greasemonkey](http://www.greasespot.net/) (for Firefox) or similar. These are userscript managers that are required for this script to work, because they also provide support for `GM_*` functions, which this script relies on to save the options you set!
-2. Install [the script](https://github.com/soscripted/sox/raw/master/sox.user.js)
-3. Go to any SO site (eg. www.superuser.com or www.stackoverflow.com)
-4. A dialog box should popup asking you to select the features you want
+The SOX userscript adds a bunch of **optional** features to all sites in the Stack Exchange network. These can be toggled on or off from an easy to use control panel (see screenshot below).
 
-If you ever want to change your options, a toggle button (gears icon) has been added to the navigation bar so it is easily accessible from any page.
+##Installation & Requirements
 
-**You need to have a browser compatible with Greasemonkey, or Tampermokey (or similar), because this script relies on `GM_*` features**, as mentioned above.
+1. Install [Greasemonkey](http://www.greasespot.net/) (for Firefox), [Tampermonkey](http://tampermonkey.net/) (for Chrome), or [NinjaKit](https://github.com/os0x/NinjaKit) for Safari. These are userscript managers that *must* be installed in order for this to work, as the script relies on certain `GM_*` functions in order to save your settings!
+2. Install the script. Clicking on 'install' below will make your userscript manager prompt you automatically to install it.
+    
+    - Official Version: <kbd>[install](https://github.com/soscripted/sox/raw/master/sox.user.js)</kbd>. <kbd>[view source](https://github.com/soscripted/sox/blob/master/sox.user.js)</kbd>
+    - Development Version: <kbd>[install](https://github.com/soscripted/sox/raw/dev/sox.user.js)</kbd>. <kbd>[view source](https://github.com/soscripted/sox/blob/develop/sox.user.js)</kbd>
+    
+3. Go to any site in the Stack Exchange Network (eg. [Super User](http://superuser.com/) or [Stack Overflow](http://stackoverflow.com/)). You will automatically be asked to choose and save your settings. A toggle button (gears icon) will be added to your topbar where you can change these later on: 
 
-In case you're wondering, it works by using `GM_setValue` to save your options and then calling the appropiate functions according to your options.
+![toggle button](http://i.stack.imgur.com/4aaaM.png)
+![control panel](http://i.stack.imgur.com/Bijmr.png)
 
-#What features are included?
+##What features are included?
 
-A list of all features (current and depreciated) is available on the SOX documentation page. [here]
+A full list of all the features is available on the SOX wiki page [here](https://github.com/soscripted/sox/wiki/Features).
+
+##Bugs and Feature Requests
+
+Please post bugs and feature requests as issues on [Github](https://github.com/soscripted/sox), where we can track them easily and push updates quickly. Please **do not** post them as answers on Stack Apps -- they are much harder to manage!
+
+##Changes
+
+Please see the change log [below](http://stackapps.com/a/6358).
+
+Note: This project has no relation to Stack Overflow or Stack Exchange; it is simply a userscript that enhances the sites!
