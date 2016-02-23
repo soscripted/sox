@@ -56,8 +56,9 @@
         // add settings icon to navbar
         var $soxSettingsButton = $("<a/>", {
                 id: "soxSettingsButton",
-                class: "topbar-icon sox-settings-button",
+                class: "topbar-icon yes-hover sox-settings-button",
                 title: "Change SOX Settings",
+                style: "color: #A1A1A1",
                 click: function(e) {
                     e.preventDefault();
                     $("#sox-settings-dialog").toggle();
