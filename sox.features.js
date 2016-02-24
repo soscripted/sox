@@ -1064,7 +1064,7 @@ var features = { //ALL the functions must go in here
             lastQuestions = {};
         var apiLink = "https://api.stackexchange.com/2.2/questions?pagesize=5&order=desc&sort=activity&site=" + metaName;
 
-        $('.topbar-links').prepend('<span id="mod-extra-icon" class="reputation links-container metaNewQuestionAlert-diamondOff">♦</span>');
+        $('.topbar-links').prepend('<span id="mod-extra-icon" title="New Meta Questions" class="reputation hover-yes links-container metaNewQuestionAlert-diamondOff">♦</span>');
         $('.js-topbar-dialog-corral').prepend('<div class="topbar-dialog help-dialog dno" id="newMetaQuestionsDialog" style="top: 34px; left: 380px; display: none; overflow: auto;">\
 <div class="modal-content" id="newMetaQuestionsList" style="max-height:none"><span id="closeNewQuestionList" style="float:right">x</span>\
 <ul>\
