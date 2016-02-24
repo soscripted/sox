@@ -20,7 +20,7 @@
 // @require      https://cdn.rawgit.com/camagu/jquery-feeds/master/jquery.feeds.js
 // @require      https://rawgit.com/soscripted/sox/dev/sox.helpers.js?v=02092016a
 // @require      https://rawgit.com/soscripted/sox/dev/sox.features.js?v=02092016a
-// @resource     settingsDialog https://rawgit.com/soscripted/sox/dev/sox-dialog.html
+// @resource     settingsDialog https://rawgit.com/soscripted/sox/dev/sox.dialog.html
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_deleteValue
