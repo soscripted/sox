@@ -1,0 +1,43 @@
+body {
+    display: flex;
+}
+
+#tabbar {
+    flex: 0 1 auto;
+    display: flex;
+    flex-flow: row nowrap;
+}
+
+#tabs {
+    flex: 1 0 auto;
+}
+
+#tabbar ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+#tabbar ul li {
+    display: inline;
+    border: none;
+    border-bottom: solid black 1px;
+    background: #DDD;
+    flex: 0 1 auto;
+}
+
+#tabbar ul li:hover {
+    background: #EEE;
+}
+
+#tabbar ul li.active {
+    border: solid black 1px;
+    border-bottom: none;
+    background: #FFF;
+}
+
+#tabbar ul li.filler {
+    border: none;
+    border-bottom: solid black 1px;
+    background: #CCC;
+}
