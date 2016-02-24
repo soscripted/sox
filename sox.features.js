@@ -365,16 +365,16 @@ var features = { //ALL the functions must go in here
             addCheckboxes();
         }
 
-        var div = "<div id='dialogEditReasons' class='sox-centered wmd-prompt-dialog'><span id='closeDialogEditReasons' style='float:right;'>Close</span><span id='resetEditReasons' style='float:left;'>Reset</span>  \
-                        <h2>View/Remove Edit Reasons</h2>																														\
-                        <div id='currentValues'></div>																															\
-                        <br />																																					\
-                        <h3>Add a custom reason</h3>																															\
-                        Display Reason:	<input type='text' id='displayReason'>																									\
-                        <br /> 																																					\
-                        Actual Reason: <input type='text' id='actualReason'>																									\
-                        <br />																																					\
-                        <input type='button' id='submitUpdate' value='Submit'>																									\
+        var div = "<div id='dialogEditReasons' class='sox-centered wmd-prompt-dialog'><span id='closeDialogEditReasons' style='float:right;'>Close</span><span id='resetEditReasons' style='float:left;'>Reset</span>\
+                        <h2>View/Remove Edit Reasons</h2>\
+                        <div id='currentValues'></div>\
+                        <br />\
+                        <h3>Add a custom reason</h3>\
+                        Display Reason:	<input type='text' id='displayReason'>\
+                        <br />\
+                        Actual Reason: <input type='text' id='actualReason'>\
+                        <br />\
+                        <input type='button' id='submitUpdate' value='Submit'>\
                     </div>";
 
         $('body').append(div);
