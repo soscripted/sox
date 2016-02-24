@@ -10,12 +10,11 @@ SOHelper = {
     },
 
     getSiteName: function(type) {
-        $location = $(location).attr('href');
-        return (type == 'api' ? $location.split('/')[2].split('.')[0] : $(".current-site-link").text().trim());
+        return (type == 'api' ? location.href.split('/')[2].split('.')[0] : $(".current-site-link").text().trim());
     },
 
     getSiteType: function() {
-        return ($('.beta-title').length ? 'beta' : 'graduated');
+        return $('.beta-title').length ? 'beta' : 'graduated';
     },
 
     getQuestionId: function() {
@@ -23,19 +22,19 @@ SOHelper = {
     },
 
     isLoggedIn: function() {
-        return ($('.call-to-login').length ? false : true);
+        return !$('.call-to-login').length;
     },
 
     isOnUserProfile: function() {
-        return ($(location).attr('href').indexOf('/users/') > -1 ? true : false);
+        return location.href.indexOf('/users/') > -1;
+    },
+    
+    isOnMeta: function() {
+        return location.href.indexOf('meta.') > -1;
     },
     
     isOnChat: function() {
-        if($('#jplayer').length && location.href.indexOf('chat.') > -1) {
-            return true;
-        } else {
-            return false;
-        }
+        return $('#jplayer').length && location.href.indexOf('chat.') > -1;
     },
 
     hasPriv: function(priv) {
