@@ -211,6 +211,8 @@ var features = { //ALL the functions must go in here
             //Thanks ArtOfCode (http://worldbuilding.stackexchange.com/users/2685/artofcode) for fixing the topbar covering the header :)
             $("#header").css("margin-top", "34px");
             $(".topbar").css("margin-top", "-34px");
+        } else if (SOHelper.isOnChat()) { //chat is a bit different
+            $('.topbar').css('position', 'fixed');
         }
 
         $("#rep-card-next .percent").after($("#rep-card-next .label").css("z-index", 0)).css("position", "absolute");
