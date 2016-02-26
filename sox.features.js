@@ -1524,7 +1524,7 @@ Toggle SBS?</div></li>';
 
         $('.post-text a, .comments .comment-copy a').each(function() {
             var url = $(this).attr('href');
-            if (url && url.indexOf($(location).attr('hostname')) > -1 && url.indexOf('/questions/') > -1 && url.indexOf('#comment') == -1) {
+            if (url && url.indexOf($(location).attr('hostname')) > -1 && url.indexOf('/questions/') > -1 && url.indexOf('#comment') == -1 && url.indexOf('/tags/') == -1 && url.indexOf('/tagged/') == -1) {
                 $(this).css('color', '#0033ff');
                 $(this).before('<a class="expander-arrow-small-hide expand-post-shub"></a>');
             }
