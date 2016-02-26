@@ -1321,8 +1321,8 @@ Toggle SBS?</div></li>';
 
     alwaysShowImageUploadLinkBox: function() {
         // Description: For always showing the 'Link from the web' box when uploading an image.
-        var header = document.getElementById('header'); //Code courtesy of Siguza <http://meta.stackoverflow.com/a/306901/3541881>! :)
-        if (header) {
+        var body = document.getElementById('body'); //Code courtesy of Siguza <http://meta.stackoverflow.com/a/306901/3541881>! :)
+        if (body) {
             new MutationObserver(function(records) {
                 records.forEach(function(r) {
                     Array.prototype.forEach.call(r.addedNodes, function(n) {
@@ -1339,7 +1339,7 @@ Toggle SBS?</div></li>';
                         }
                     });
                 });
-            }).observe(header, {
+            }).observe(body, {
                 childList: true
             });
         }
