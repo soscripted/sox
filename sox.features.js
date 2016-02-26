@@ -1127,7 +1127,7 @@ var features = { //ALL the functions must go in here
             var $li = $("<li/>"),
                 $link = $("<a/>", {href: link}),
                 $icon = $("<div/>", {class: "site-icon favicon favicon-" + favicon}),
-                $message = $("<div/>", {class: "message-text"}).append($("<h4/>", {text: title}));
+                $message = $("<div/>", {class: "message-text"}).append($("<h4/>", {html: title}));
     
             $link.append($icon).append($message).appendTo($li);
             $questions.append($li);
