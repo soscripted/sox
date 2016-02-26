@@ -93,10 +93,14 @@
                 reset();
             } else {
                 for (i = 0; i < extras.length; ++i) {
-                    //console.log(extras[i]);
                     $soxSettingsDialogFeatures.find("#" + extras[i]).prop('checked', true);
-                    //$('#sox-settings-dialog #' + extras[i]).prop('checked', true);
-                    features[extras[i]](); //Call the functions that were chosen
+                    try {
+                        features[extras[i]](); //Call the functions that were chosen
+                    } catch(err) {
+                        $soxSettingsDialogFeatures.find("#" + extras[i]).parent().css('color', 'red').attr('title', 'There was an error loading this feature. Please raise an issue on GitHub.');
+                        console.log('SOX error: There was an error loading the feature "' + extras[i] + '". Please raise an issue on GitHub.');
+                        i++;
+                    }
                 }
             }
         } else {
@@ -209,8 +213,8 @@
             ["linkQuestionAuthorName", "Add a button in the editor toolbar to insert a hyperlink to a post and add the author automatically"],
             ["titleEditDiff", "Make title edits show seperately rather than merged"]
         ]);
+        
         addCategory("Comments");
-
         addFeatures([
             ["moveCommentsLink", "Move 'show x more comments' to the top"],
             ["commentShortcuts", "Use Ctrl+I,B,K (to italicise, bolden and add code backticks) in comments"],
