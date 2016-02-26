@@ -30,3 +30,5 @@ Please post bugs and feature requests as issues on [Github](https://github.com/s
 Please see the change log [at Stack Apps](http://stackapps.com/a/6358).
 
 Note: This project has no relation to Stack Overflow or Stack Exchange; it is simply a userscript that enhances the sites!
+
+<!--test-->
