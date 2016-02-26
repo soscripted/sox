@@ -1060,63 +1060,80 @@ var features = { //ALL the functions must go in here
 
     metaNewQuestionAlert: function() {
         // Description: For adding a fake mod diamond that notifies you if there has been a new post posted on the current site's meta
+        
+        const NEWQUESTIONS = "metaNewQuestionAlert-lastQuestions",
+              DIAMONDON = "new-meta-questions-diamondOn",
+              DIAMONDOFF = "new-meta-questions-diamondOff";
+    
+        var favicon = $(".current-site a[href*='meta'] .site-icon").attr('class').split('favicon-')[1];
+        
         var metaName = 'meta.' + $(location).attr('hostname').split('.')[0],
-            lastQuestions = {};
-        var apiLink = "https://api.stackexchange.com/2.2/questions?pagesize=5&order=desc&sort=activity&site=" + metaName;
-
-        $('.topbar-links').prepend('<span id="mod-extra-icon" class="reputation links-container metaNewQuestionAlert-diamondOff">♦</span>');
-        $('.js-topbar-dialog-corral').prepend('<div class="topbar-dialog help-dialog dno" id="newMetaQuestionsDialog" style="top: 34px; left: 380px; display: none; overflow: auto;">\
-<div class="modal-content" id="newMetaQuestionsList" style="max-height:none"><span id="closeNewQuestionList" style="float:right">x</span>\
-<ul>\
-<li>\
-<a>No new questions!<span class="item-summary">\
-No new meta questions!</span>\
-</a>\
-</li>\
-</ul>\
-</div>\
-</div>');
-
-        $('#mod-extra-icon').css('cursor', 'pointer').click(function() {
-            $('#newMetaQuestionsDialog').show();
-        });
-        $('#closeNewQuestionList').css('cursor', 'pointer').click(function() {
-            $('#newMetaQuestionsDialog').hide();
-        });
+            lastQuestions = {},
+            apiLink = "https://api.stackexchange.com/2.2/questions?pagesize=5&order=desc&sort=activity&site=" + metaName;
+    
+        var $dialog = $("<div/>", {id: "new-meta-questions-dialog", class: "topbar-dialog achievements-dialog dno"}),
+            $header = $("<div/>", {class: "header"}).append($("<h3/>", {text: "new meta posts"})),
+            $content = $("<div/>", {class: "modal-content"}),
+            $questions = $("<ul/>", {id: "new-meta-questions-dialog-list", class: "js-items items"}),
+            $diamond = $("<a/>", {id: "new-meta-questions-button",
+                                  class: "topbar-icon yes-hover new-meta-questions-diamondOff",
+                                  click: function(){
+                                      $diamond.toggleClass("topbar-icon-on");
+                                      $dialog.toggle();
+                                  }});
+        
+        $dialog.append($header).append($content.append($questions)).prependTo(".js-topbar-dialog-corral");
+        $diamond.appendTo("div.network-items");
+    
         $(document).mouseup(function(e) {
-            var container = $('#newMetaQuestionsDialog');
-            if (!container.is(e.target) && container.has(e.target).length === 0) {
-                container.hide();
+            if (!$dialog.is(e.target) 
+                && $dialog.has(e.target).length === 0  
+                && !$(e.target).is('#new-meta-questions-button')){
+                $dialog.hide();
+                $diamond.removeClass("topbar-icon-on");
             }
         });
-
-        if (GM_getValue("metaNewQuestionAlert-lastQuestions", -1) == -1) {
-            GM_setValue("metaNewQuestionAlert-lastQuestions", JSON.stringify(lastQuestions));
+    
+        if (GM_getValue(NEWQUESTIONS, -1) == -1) {
+            GM_setValue(NEWQUESTIONS, JSON.stringify(lastQuestions));
         } else {
-            lastQuestions = JSON.parse(GM_getValue("metaNewQuestionAlert-lastQuestions"));
+            lastQuestions = JSON.parse(GM_getValue(NEWQUESTIONS));
         }
-
+    
         $.getJSON(apiLink, function(json) {
             var latestQuestion = json.items[0].title;
             if (latestQuestion == lastQuestions[metaName]) {
                 //if you've already seen the stuff
-                $('#mod-extra-icon').removeClass('metaNewQuestionAlert-diamondOn').addClass('metaNewQuestionAlert-diamondOff');
+                $diamond.removeClass(DIAMONDON).addClass(DIAMONDOFF);
             } else {
-                $('#newMetaQuestionsList ul').text("");
-                $('#mod-extra-icon').removeClass('metaNewQuestionAlert-diamondOff').addClass('metaNewQuestionAlert-diamondOn');
-
-                for (var i = 0; i < json.items.length; i++) {
+                $diamond.removeClass(DIAMONDOFF).addClass(DIAMONDON);
+    
+                for (i = 0; i < json.items.length; i++) {
                     var title = json.items[i].title,
                         link = json.items[i].link,
                         author = json.items[i].owner.display_name;
-                    $('#newMetaQuestionsList ul').append("<li><a href='" + link + "'>" + title + "<br>(" + author + ")</a>");
+                    addQuestion(title, link);
+    
                 }
                 lastQuestions[metaName] = latestQuestion;
-                $('#mod-extra-icon').css('cursor', 'pointer').click(function() {
-                    GM_setValue("metaNewQuestionAlert-lastQuestions", JSON.stringify(lastQuestions));
+    
+                $diamond.click(function() {
+                    GM_setValue(NEWQUESTIONS, JSON.stringify(lastQuestions));
                 });
             }
         });
+    
+        function addQuestion(title, link){
+            var $li = $("<li/>"),
+                $link = $("<a/>", {href: link}),
+                $icon = $("<div/>", {class: "site-icon favicon favicon-" + favicon}),
+                $message = $("<div/>", {class: "message-text"}).append($("<h4/>", {text: title}));
+    
+            $link.append($icon).append($message).appendTo($li);
+            $questions.append($li);
+        }
+        
+        
     },
 
     betterCSS: function() {
