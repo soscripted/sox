@@ -206,7 +206,7 @@
             ["kbdAndBullets", "Add KBD and list buttons to editor toolbar"],
             ["editComment", "Pre-defined edit comment options"],
             ["editReasonTooltip", "Add a tooltip to posts showing the latest revision's comment on 'edited [date] at [time]'"],
-            ["addSBSBtn", "Add a button the the editor toolbar to start side-by-side editing"],
+            ["addSBSBtn", "Add a button to the editor toolbar to start side-by-side editing"],
             ["linkQuestionAuthorName", "Add a button in the editor toolbar to insert a hyperlink to a post and add the author automatically"],
             ["titleEditDiff", "Make title edits show seperately rather than merged"]
         ]);
