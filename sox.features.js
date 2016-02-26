@@ -219,6 +219,14 @@ var features = { //ALL the functions must go in here
 
     highlightQuestions: function() {
         // Description: For highlighting only the tags of favorite questions
+        
+        function change(interesting) {
+            $(".tagged-interesting > .summary > .tags > .post-tag").filter(function(index) {
+                return interesting.indexOf($(this).text()) > -1;
+            }).css(betterCSS);
+
+            $(".tagged-interesting").removeClass("tagged-interesting");
+        }
         setTimeout(function() { //Need delay to make sure the CSS is applied
             if (window.location.href.indexOf('superuser') > -1) { //superuser
                 var betterCSS = {
@@ -241,12 +249,17 @@ var features = { //ALL the functions must go in here
             var interestingTagsDiv = $("#interestingTags").text();
             var interesting = interestingTagsDiv.split(' ');
             interesting.pop(); //Because there's one extra value at the end
-
-            $(".tagged-interesting > .summary > .tags > .post-tag").filter(function(index) {
-                return interesting.indexOf($(this).text()) > -1;
-            }).css(betterCSS);
-
-            $(".tagged-interesting").removeClass("tagged-interesting");
+            
+            new MutationObserver(function(records) {
+                records.forEach(function(mutation) {
+                    if(m.attributeName == 'class') {
+                         change(interesting);
+                     }
+                });
+            }).observe(document.querySelector('.question-summary'), {
+                childList: true,
+                attributes: true
+            });
         }, 300);
     },
 
