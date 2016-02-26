@@ -743,12 +743,14 @@ var features = { //ALL the functions must go in here
         $('.post-text a').each(function() {
             var anchor = $(this);
             if (sites.indexOf($(this).attr('href').split('/')[2].split('.')[0]) > -1) { //if the link is to an SE site (not, for example, to google), do the necessary stuff
-                var sitename = $(this).attr('href').split('/')[2].split('.')[0],
-                    id = $(this).attr('href').split('/')[4];
-
-                $.getJSON("https://api.stackexchange.com/2.2/questions/" + id + "?order=desc&sort=activity&site=" + sitename, function(json) {
-                    anchor.html(json.items[0].title); //Get the title and add it in
-                });
+                if($(this).text() == $(this).attr('href')) { //if there isn't text on it (ie. bare url)
+                    var sitename = $(this).attr('href').split('/')[2].split('.')[0],
+                        id = $(this).attr('href').split('/')[4];
+    
+                    $.getJSON("https://api.stackexchange.com/2.2/questions/" + id + "?order=desc&sort=activity&site=" + sitename, function(json) {
+                        anchor.html(json.items[0].title); //Get the title and add it in
+                    });
+                }
             }
         });
     },
