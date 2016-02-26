@@ -18,6 +18,15 @@ SOHelper = {
         return ($('.beta-title').length ? 'beta' : 'graduated');
     },
 
+    getSiteIcon: function() {
+        return "favicon-" + $(".current-site a:not([href*='meta']) .site-icon").attr('class').split('favicon-')[1];
+
+    },
+    
+    getMetaSiteIcon: function() {
+        return "favicon-" + $(".current-site a[href*='meta'] .site-icon").attr('class').split('favicon-')[1];
+    },
+
     getQuestionId: function() {
         return window.location.href.split('/')[4];
     },
@@ -29,7 +38,7 @@ SOHelper = {
     isOnUserProfile: function() {
         return ($(location).attr('href').indexOf('/users/') > -1 ? true : false);
     },
-    
+
     isOnChat: function() {
         if($('#jplayer').length && location.href.indexOf('chat.') > -1) {
             return true;
