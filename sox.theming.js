@@ -5,19 +5,27 @@ var siteName = SOHelper.getSiteName(),
 
 var FONTS = JSON.parse(GM_getValue(siteName + "_ALL")),
     THEME_NAME = GM_getValue(siteName + "_THEME"),
-    THEME_URL = GM_getValue(siteName + "_" + siteType + "_" + THEME_NAME + "_URL"), //load as extension module
-    FAVICONS = JSON.parse(GM_getValue("FAVICONS")),
-    THEME_URL = GM_getValue(siteName + "_" + siteType + "_" + THEME_NAME + "_CSS_URL"),
-    THEME = GM_getValue(siteName + "_" + siteType + "_" + THEME_NAME + "_CSS"),
-    SPRITESHEET_URL = GM_getValue(siteName + "_" + siteType + "_" + THEME_NAME + "_SPRITESHEET")
+    REPOS = GM_getValue("THEME_REPOS"),
+    FAVICONS = JSON.parse(GM_getValue("FAVICONS"));
+    //JS_URL = GM_getValue(siteName + "_" + siteType + "_" + THEME_NAME + "_URL"), //TODO: load as extension module
+if (THEME_NAME.contains('.')) {
+    var themeParts = theme.split('.'),
+        THEME = $.get(REPOS[themeparts[0]] + themeparts[1] + '.css');
+        //TODO: spritesheet svg as well?
+} else {
+    var THEME_URL = GM_getValue(siteName + "_" + siteType + "_" + THEME_NAME + "_CSS_URL"),
+        THEME = GM_getValue(siteName + "_" + siteType + "_" + THEME_NAME + "_CSS"),
+        SPRITESHEET_URL = GM_getValue(siteName + "_" + siteType + "_" + THEME_NAME + "_SPRITESHEET");
+}
 //TODO: load from CSS to GM as new theme, combine themes?
 
 //Replace spritesheet
 if (SPRITESHEET_URL) {
     $('head').append($('<style/>', {
-        html: '.envelope-on, .envelope-off, .vote-up-off, .vote-up-on, .vote-down-off, .vote-down-on, .star-on, .star-off, .comment-up-off, .comment-up-on, .comment-flag, .edited-yes, .feed-icon, .vote-accepted-off, .vote-accepted-on, .vote-accepted-bounty, .badge-earned-check, .delete-tag, .grippie, .expander-arrow-hide, .expander-arrow-show, .expander-arrow-small-hide, .expander-arrow-small-show, .anonymous-gravatar, .badge1, .badge2, .badge3, .gp-share, .fb-share, .twitter-share, #notify-containerspan.notify-close, .migrated.to, .migrated.from {background-url: ' + SPRITESHEET_URL + '}'
+        html: '.envelope-on, .envelope-off, .vote-up-off, .vote-up-on, .vote-down-off, .vote-down-on, .star-on, .star-off, .comment-up-off, .comment-up-on, .comment-flag, .edited-yes, .feed-icon, .vote-accepted-off, .vote-accepted-on, .vote-accepted-bounty, .badge-earned-check, .delete-tag, .grippie, .expander-arrow-hide, .expander-arrow-show, .expander-arrow-small-hide, .expander-arrow-small-show, .anonymous-gravatar, .badge1, .badge2, .badge3, .gp-share, .fb-share, .twitter-share, #notify-containerspan.notify-close, .migrated.to, .migrated.from { background-url: ' + SPRITESHEET_URL + '; }'
     }));
 }
+//TODO: images from multiple sources?
 
 //Replace CSS
 if (THEME_URL) {
@@ -43,7 +51,7 @@ if (FAVICONS) {
 };
 
 $("body").append($("<div/>", {
-    "id": "upload",
+    "id": "upload"
 }).css({
     "position": "absolute",
     "z-index": "10",
@@ -51,21 +59,23 @@ $("body").append($("<div/>", {
     "width": "100%",
     "background": "rgba(255, 255, 255, 0.75)",
     "display": "none",
-    "top": "0"
+    "top": "0",
+    "margin": "10px",
+    "border": "dashed 10px #888"
 }));
 
 //Quick theme changer
-$("html").on("dragenter", function(e){
+$("html").on("dragenter", function(e) {
     e.preventDefault();
     e.stopPropagation();
     $("#upload").show();
 });
-$("html").on("dragleave", function(e){
+$("html").on("dragleave", function(e) {
     e.preventDefault();
     e.stopPropagation();
     $('#upload').hide();
 });
-$("html").on("dragstop", function(e){
+$("html").on("dragstop", function(e) { //TODO: fix this and get file name - if file:// + image upload
     e.preventDefault();
     e.stopPropagation();
     $("#upload").hide();

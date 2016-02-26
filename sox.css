@@ -1,16 +1,5 @@
-/* -------- sox settings dialog  ------- */
-#sox-settings-dialog {
-    position: fixed;
-    display: none;
-    height: 100%;
-    width: 400px;
-    top: 0;
-    left: 0;
-    z-index: 9999;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-    background-color: #fff;
-    border-right: solid 1px #aaa;
-}
+/* -------- sox settings dialog -------- */
+
 #sox-settings-dialog-title {
     padding: 10px;
     height: 30px;
