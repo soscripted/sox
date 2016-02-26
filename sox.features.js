@@ -252,7 +252,7 @@ var features = { //ALL the functions must go in here
             
             new MutationObserver(function(records) {
                 records.forEach(function(mutation) {
-                    if(m.attributeName == 'class') {
+                    if(mutation.attributeName == 'class') {
                          change(interesting);
                      }
                 });
