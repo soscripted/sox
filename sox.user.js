@@ -18,8 +18,8 @@
 // @require      https://cdn.rawgit.com/timdown/rangyinputs/master/rangyinputs-jquery-src.js
 // @require      https://cdn.rawgit.com/jeresig/jquery.hotkeys/master/jquery.hotkeys.js
 // @require      https://cdn.rawgit.com/camagu/jquery-feeds/master/jquery.feeds.js
-// @require      https://rawgit.com/soscripted/sox/dev/sox.helpers.js?v=02092016a
-// @require      https://rawgit.com/soscripted/sox/dev/sox.features.js?v=02092016a
+// @require      https://rawgit.com/soscripted/sox/dev/sox.helpers.js?v=02262016j
+// @require      https://rawgit.com/soscripted/sox/dev/sox.features.js?v=02262016j
 // @resource     settingsDialog https://rawgit.com/soscripted/sox/dev/sox-dialog.html
 // @grant        GM_setValue
 // @grant        GM_getValue
@@ -42,7 +42,7 @@
 
         // add sox CSS file and font-awesome CSS file
         $("head").append("<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css'>")
-                 .append("<link rel='stylesheet' type='text/css' href='https://rawgit.com/soscripted/sox/dev/sox.css' />");
+                 .append("<link rel='stylesheet' type='text/css' href='https://rawgit.com/soscripted/sox/dev/sox.css?v=02262016j' />");
         $("body").append($settingsDialog);
 
         $soxSettingsDialog = $("#sox-settings-dialog");
@@ -56,9 +56,8 @@
         // add settings icon to navbar
         var $soxSettingsButton = $("<a/>", {
                 id: "soxSettingsButton",
-                class: "topbar-icon yes-hover sox-settings-button",
+                class: "topbar-icon sox-settings-button",
                 title: "Change SOX Settings",
-                style: "color: #A1A1A1",
                 click: function(e) {
                     e.preventDefault();
                     $("#sox-settings-dialog").toggle();
