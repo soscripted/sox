@@ -250,6 +250,7 @@ var features = { //ALL the functions must go in here
                 };
                 //}
             }
+            change(betterCSS);
             
             new MutationObserver(function(records) {
                 records.forEach(function(mutation) {
