@@ -22,6 +22,7 @@
 // @require      https://rawgit.com/soscripted/sox/experimental/sox.features.js?v=02092016a
 // @require      https://rawgit.com/soscripted/sox/experimental/themes/sox.themeeditor.js?v=02092016a
 // @require      https://rawgit.com/soscripted/sox/experimental/themes/sox.theming.js?v=02092016a
+// @require      https://rawgit.com/soscripted/sox/experimental/chat/sox.chat.js?v=02092016a
 // @resource     settingsDialog https://rawgit.com/soscripted/sox/dev/sox.dialog.html
 // @resource     themeEditor https://rawgit.com/soscripted/sox/dev/sox.themeeditor.html
 // @grant        GM_setValue
