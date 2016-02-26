@@ -142,7 +142,6 @@ background-position: -138px -86px;
     top: 34px;
     left: 230px;
     width: 377px;
-    height: 250px;
 }
 #new-meta-questions-dialog-list:empty::after{
     content: "No new meta questions at this time.";
