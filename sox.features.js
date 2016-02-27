@@ -992,50 +992,38 @@ var features = { //ALL the functions must go in here
     stickyVoteButtons: function() {
         // Description: For making the vote buttons stick to the screen as you scroll through a post
         //https://github.com/shu8/SE_OptionalFeatures/pull/14:
-        //https://github.com/shu8/Stack-Overflow-Optional-Features/issues/28: Thanks @SnoringFrog for fixing this!
+
+        var $votecells = $(".votecell");
+        $votecells.css("width", "61px");
+
+        stickcells();
+
         $(window).scroll(function() {
-            $(".votecell").each(function() {
+            stickcells();
+        });
+
+        function stickcells(){
+            $votecells.each(function() {
                 var offset = 0;
                 if ($(".topbar").css("position") == "fixed") {
                     offset = 34;
                 }
                 var vote = $(this).find(".vote");
-                var post_contents = $(this).next("td.postcell, td.answercell");
                 if ($(this).offset().top - $(window).scrollTop() + offset <= 0) {
-                    if ($(this).offset().top + $(this).height() + offset - $(window).scrollTop() - vote.height() > 0) {
+                    if ($(this).offset().top + $(this).height() - $(window).scrollTop() + offset - vote.height() > 0) {
                         vote.css({
                             position: "fixed",
-                            left: $(this).offset().left,
-                            top: 0 + offset
-                        });
-                        post_contents.css({
-                            position: "relative",
-                            left: "45px"
+                            left: $(this).offset().left + 4,
+                            top: 10 + offset
                         });
                     } else {
-                        vote.css({
-                            position: "relative",
-                            left: 0,
-                            top: $(this).height() - vote.height()
-                        });
-                        post_contents.css({
-                            position: "relative",
-                            left: "0px"
-                        });
+                        vote.removeAttr("style");
                     }
                 } else {
-                    vote.css({
-                        position: "relative",
-                        left: 0,
-                        top: 0
-                    });
-                    post_contents.css({
-                        position: "relative",
-                        left: "0px"
-                    });
+                    vote.removeAttr("style");
                 }
             });
-        });
+        }
     },
 
     titleEditDiff: function() {
@@ -1079,17 +1067,17 @@ var features = { //ALL the functions must go in here
 
     metaNewQuestionAlert: function() {
         // Description: For adding a fake mod diamond that notifies you if there has been a new post posted on the current site's meta
-        
+
         const NEWQUESTIONS = "metaNewQuestionAlert-lastQuestions",
               DIAMONDON = "new-meta-questions-diamondOn",
               DIAMONDOFF = "new-meta-questions-diamondOff";
-    
+
         var favicon = $(".current-site a[href*='meta'] .site-icon").attr('class').split('favicon-')[1];
-        
+
         var metaName = 'meta.' + $(location).attr('hostname').split('.')[0],
             lastQuestions = {},
             apiLink = "https://api.stackexchange.com/2.2/questions?pagesize=5&order=desc&sort=activity&site=" + metaName;
-    
+
         var $dialog = $("<div/>", {id: "new-meta-questions-dialog", class: "topbar-dialog achievements-dialog dno"}),
             $header = $("<div/>", {class: "header"}).append($("<h3/>", {text: "new meta posts"})),
             $content = $("<div/>", {class: "modal-content"}),
@@ -1100,25 +1088,25 @@ var features = { //ALL the functions must go in here
                                       $diamond.toggleClass("topbar-icon-on");
                                       $dialog.toggle();
                                   }});
-        
+
         $dialog.append($header).append($content.append($questions)).prependTo(".js-topbar-dialog-corral");
         $diamond.appendTo("div.network-items");
-    
+
         $(document).mouseup(function(e) {
-            if (!$dialog.is(e.target) 
-                && $dialog.has(e.target).length === 0  
+            if (!$dialog.is(e.target)
+                && $dialog.has(e.target).length === 0
                 && !$(e.target).is('#new-meta-questions-button')){
                 $dialog.hide();
                 $diamond.removeClass("topbar-icon-on");
             }
         });
-    
+
         if (GM_getValue(NEWQUESTIONS, -1) == -1) {
             GM_setValue(NEWQUESTIONS, JSON.stringify(lastQuestions));
         } else {
             lastQuestions = JSON.parse(GM_getValue(NEWQUESTIONS));
         }
-    
+
         $.getJSON(apiLink, function(json) {
             var latestQuestion = json.items[0].title;
             if (latestQuestion == lastQuestions[metaName]) {
@@ -1126,33 +1114,33 @@ var features = { //ALL the functions must go in here
                 $diamond.removeClass(DIAMONDON).addClass(DIAMONDOFF);
             } else {
                 $diamond.removeClass(DIAMONDOFF).addClass(DIAMONDON);
-    
+
                 for (i = 0; i < json.items.length; i++) {
                     var title = json.items[i].title,
                         link = json.items[i].link,
                         author = json.items[i].owner.display_name;
                     addQuestion(title, link);
-    
+
                 }
                 lastQuestions[metaName] = latestQuestion;
-    
+
                 $diamond.click(function() {
                     GM_setValue(NEWQUESTIONS, JSON.stringify(lastQuestions));
                 });
             }
         });
-    
+
         function addQuestion(title, link){
             var $li = $("<li/>"),
                 $link = $("<a/>", {href: link}),
                 $icon = $("<div/>", {class: "site-icon favicon favicon-" + favicon}),
                 $message = $("<div/>", {class: "message-text"}).append($("<h4/>", {html: title}));
-    
+
             $link.append($icon).append($message).appendTo($li);
             $questions.append($li);
         }
-        
-        
+
+
     },
 
     betterCSS: function() {
@@ -1576,12 +1564,12 @@ Toggle SBS?</div></li>';
         // Description: Hides the Looking for a Job module from the sidebar
         $("#hireme").remove();
     },
-    
+
     hideCommunityBulletin: function() {
         // Description: Hides the Community Bulletin module from the sidebar
         $("#sidebar .community-bulletin").remove();
     },
-    
+
     hideSearchBar: function() {
         // Description: Replaces the searchbox with a button that takes you to the search page
         var $topbar = $(".topbar"),
