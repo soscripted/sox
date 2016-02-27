@@ -16,7 +16,6 @@ var enhancedEditor = {
     
     init: function(wmd) {
         var urls = ['http://cdn.rawgit.com/dwieeb/jquery-textrange/1.x/jquery-textrange.js', 
-            'http://cdn.rawgit.com/jeresig/jquery.hotkeys/master/jquery.hotkeys.js',
             'http://rawgit.com/ajaxorg/ace-builds/master/src-noconflict/ace.js',
             'http://rawgit.com/ajaxorg/ace-builds/master/src-noconflict/ext-language_tools.js',
             'http://rawgit.com/ajaxorg/ace-builds/master/src-noconflict/theme-github.js',
@@ -238,15 +237,19 @@ var enhancedEditor = {
     
     betterTabKey: function(s) {
         $(s).on('keydown', function(e) {
-            if(e.keyCode == 9) {
-                pos = $(s).textrange('get', 'position');
-                oldVal = $(s).val();
-
-                //http://stackoverflow.com/a/15977052/3541881:
-                $(s).val(oldVal.substring(0, pos) + '\t' + oldVal.substring(pos));
-
-                return false;
+            if (keyCode === 9) { //http://stackoverflow.com/a/25430815/3541881
                 e.preventDefault();
+                var start = this.selectionStart;
+                var end = this.selectionEnd;
+                var val = this.value;
+                var selected = val.substring(start, end);
+                var re = /^/gm;
+                var count = selected.match(re).length;
+        
+        
+                this.value = val.substring(0, start) + selected.replace(re, '\t') + val.substring(end);
+                this.selectionStart = start;
+                this.selectionEnd = end + count;
             }
         });
     },
@@ -294,28 +297,35 @@ var enhancedEditor = {
         enhancedEditor.refreshPreview();
     },
     
-    keyboardShortcuts: function(s) {
-        $(s).bind('keydown', 'alt+a', function() { //ace editor
-            $('#enhancedEditor-aceEditor').show(500);
-        });
-        $(s).bind('keydown', 'alt+f', function() { //find replace
-            $('#findReplace').trigger('click');
-        });
-        
+    keyboardShortcuts: function(s) {        
         //Replace default SE bindings
         $(document).keydown(function(e) {
-            if(e.which == 71 && e.ctrlKey) { //alt+g (images)
+            if(e.which == 71 && e.ctrlKey) { //ctrl+g (images)
                 $('#enhancedEditor-insertImageDialog').show(500);
                 e.stopPropagation();
                 e.preventDefault();
                 return false;
             }
-            if(e.which == 76 && e.ctrlKey) { //alt+l (links)
+            if(e.which == 76 && e.ctrlKey) { //ctrl+l (links)
                 $('#enhancedEditor-insertLinkDialog').show(500);
                 e.stopPropagation();
                 e.preventDefault();
                 return false;                
             }
+         });
+         $(s).keydown(function(e) {
+            if(e.which == 65 && e.ctrlKey) { //ctrl+a (ace editor)
+                $('#enhancedEditor-aceEditor').show(500);
+                e.stopPropagation();
+                e.preventDefault();
+                return false;                
+            }
+            if(e.which == 70 && e.ctrlKey) { //ctrl+f (find+replace)
+                $('#findReplace').trigger('click');
+                e.stopPropagation();
+                e.preventDefault();
+                return false;                
+            }  
         });        
     },
     
