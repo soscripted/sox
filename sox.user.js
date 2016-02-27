@@ -135,7 +135,7 @@
             ['kbdAndBullets', 'Add KBD and list buttons to editor toolbar'],
             ['editComment', 'Pre-defined edit comment options'],
             ['editReasonTooltip', 'Add a tooltip to posts showing the latest revision\'s comment on \'edited [date] at [time]\''],
-            ['addSBSBtn', 'Add a button the the editor toolbar to start side-by-side editing'],
+            ['addSBSBtn', 'Add a button to the editor toolbar to start side-by-side editing'],
             ['linkQuestionAuthorName', 'Add a button in the editor toolbar to insert a hyperlink to a post and add the author automatically'],
             ['titleEditDiff', 'Make title edits show seperately rather than merged']
         ]);
@@ -224,10 +224,14 @@
                 reset();
             } else {
                 for (i = 0; i < extras.length; ++i) {
-                    //console.log(extras[i]);
                     $soxSettingsDialogFeatures.find('#' + extras[i]).prop('checked', true);
-                    //$('#sox-settings-dialog #' + extras[i]).prop('checked', true);
-                    features[extras[i]](); //Call the functions that were chosen
+                    try {
+                        features[extras[i]](); //Call the functions that were chosen
+                    } catch(err) {
+                        $soxSettingsDialogFeatures.find('#' + extras[i]).parent().css('color', 'red').attr('title', 'There was an error loading this feature. Please raise an issue on GitHub.');
+                        console.log('SOX error: There was an error loading the feature "' + extras[i] + '". Please raise an issue on GitHub.');
+                        i++;
+                    }
                 }
             }
         } else {

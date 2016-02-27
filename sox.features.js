@@ -211,6 +211,8 @@ var features = { //ALL the functions must go in here
             //Thanks ArtOfCode (http://worldbuilding.stackexchange.com/users/2685/artofcode) for fixing the topbar covering the header :)
             $('#header').css('margin-top', '34px');
             $('.topbar').css('margin-top', '-34px');
+        } else if (SOHelper.getSiteType() === 'chat') { //chat is a bit different
+            $('.topbar').css('position', 'fixed');
         }
 
         $('#rep-card-next .percent').after($('#rep-card-next .label').css('z-index', 0)).css('position', 'absolute');
@@ -219,6 +221,18 @@ var features = { //ALL the functions must go in here
 
     highlightQuestions: function() {
         // Description: For highlighting only the tags of favorite questions
+
+        function change(betterCSS) {
+            var interestingTagsDiv = $('#interestingTags').text();
+            var interesting = interestingTagsDiv.split(' ');
+            interesting.pop(); //Because there's one extra value at the end
+
+            $('.tagged-interesting > .summary > .tags > .post-tag').filter(function(index) {
+                return interesting.indexOf($(this).text()) > -1;
+            }).css(betterCSS);
+
+            $('.tagged-interesting').removeClass('tagged-interesting');
+        }
         setTimeout(function() { //Need delay to make sure the CSS is applied
             if (/superuser/.test(window.hostname)) { //superuser
                 var betterCSS = {
@@ -238,15 +252,18 @@ var features = { //ALL the functions must go in here
                 };
                 //}
             }
-            var interestingTagsDiv = $('#interestingTags').text();
-            var interesting = interestingTagsDiv.split(' ');
-            interesting.pop(); //Because there's one extra value at the end
+            change(betterCSS);
 
-            $('.tagged-interesting > .summary > .tags > .post-tag').filter(function(index) {
-                return interesting.indexOf($(this).text()) > -1;
-            }).css(betterCSS);
-
-            $('.tagged-interesting').removeClass('tagged-interesting');
+            new MutationObserver(function(records) {
+                records.forEach(function(mutation) {
+                    if(mutation.attributeName == 'class') {
+                         change(betterCSS);
+                    }
+                });
+            }).observe(document.querySelector('.question-summary'), {
+                childList: true,
+                attributes: true
+            });
         }, 300);
     },
 
@@ -365,16 +382,16 @@ var features = { //ALL the functions must go in here
             addCheckboxes();
         }
 
-        var div = '<div id="dialogEditReasons" class="sox-centered wmd-prompt-dialog"><span id="closeDialogEditReasons" style="float:right;">Close</span><span id="resetEditReasons" style="float:left;">Reset</span> 
-                        <h2>View/Remove Edit Reasons</h2> 
-                        <div id="currentValues"></div> 
-                        <br /> 
-                        <h3>Add a custom reason</h3> 
-                        Display Reason:	<input type="text" id="displayReason"> 
-                        <br /> 
-                        Actual Reason: <input type="text" id="actualReason"> 
-                        <br /> 
-                        <input type="button" id="submitUpdate" value="Submit"> 
+        var div = '<div id="dialogEditReasons" class="sox-centered wmd-prompt-dialog"><span id="closeDialogEditReasons" style="float:right;">Close</span><span id="resetEditReasons" style="float:left;">Reset</span> \
+                        <h2>View/Remove Edit Reasons</h2> \
+                        <div id="currentValues"></div> \
+                        <br /> \
+                        <h3>Add a custom reason</h3> \
+                        Display Reason:	<input type="text" id="displayReason"> \
+                        <br /> \
+                        Actual Reason: <input type="text" id="actualReason"> \
+                        <br /> \
+                        <input type="button" id="submitUpdate" value="Submit"> \
                     </div>';
 
         $('body').append(div);
@@ -592,7 +609,7 @@ var features = { //ALL the functions must go in here
 
                         var factfile = '<span id="closeQuickCommentShortcuts" style="float:right;">close</span> \
                                             <h3>User "' + answererName + '" - ' + type + ': <br /> \
-                                            Creation Date: ' + new Date(creationDate * 1000).toUTCString() + ' <br /> 
+                                            Creation Date: ' + new Date(creationDate * 1000).toUTCString() + ' <br /> \
                                             New? ' + newUser + '<br /> \
                                             Last seen: ' + new Date(lastAccess * 1000).toUTCString() + ' <br /> \
                                             Reputation: ' + reputation + ' <br /> \
@@ -743,12 +760,14 @@ var features = { //ALL the functions must go in here
         $('.post-text a').each(function() {
             var anchor = $(this);
             if (sites.indexOf($(this).attr('href').split('/')[2].split('.')[0]) > -1) { //if the link is to an SE site (not, for example, to google), do the necessary stuff
-                var sitename = $(this).attr('href').split('/')[2].split('.')[0],
-                    id = $(this).attr('href').split('/')[4];
-
-                $.getJSON('https://api.stackexchange.com/2.2/questions/' + id + '?order=desc&sort=activity&site=' + sitename, function(json) {
-                    anchor.html(json.items[0].title); //Get the title and add it in
-                });
+                if($(this).text() == $(this).attr('href')) { //if there isn't text on it (ie. bare url)
+                    var sitename = $(this).attr('href').split('/')[2].split('.')[0],
+                        id = $(this).attr('href').split('/')[4];
+    
+                    SOHelper.getFromAPI('questions', id, sitename, function(json) {
+                        anchor.html(json.items[0].title); //Get the title and add it in
+                    }, 'activity');
+                }
             }
         });
     },
@@ -759,10 +778,10 @@ var features = { //ALL the functions must go in here
                 var id = $(this).attr('href').split('/')[2],
                     sitename = $(location).attr('hostname').split('.')[0],
                     that = $(this);
-                $.getJSON('https://api.stackexchange.com/2.2/questions/' + id + '?order=desc&sort=activity&site=' + sitename, function(json) {
+                SOHelper.getFromAPI('questions', id,  sitename, function(json) {
                     answers = json.items[0].answer_count;
                     that.attr('title', answers + (answers == 1 ? ' answer' : ' answers'));
-                });
+                }, 'activity');
             }
         });
     },*/
@@ -790,7 +809,7 @@ var features = { //ALL the functions must go in here
                 title = link.split('"')[1];
 
             if (link.split('/')[3].substr(0, 1) == 'a') { //for answers
-                $.getJSON('https://api.stackexchange.com/2.2/answers/' + id + '?order=desc&sort=activity&site=' + sitename, function(json) {
+                SOHelper.getFromAPI('answers', id, sitename, function(json) {
                     //Insert at caret thanks to http://stackoverflow.com/a/15977052/3541881
                     var caretPos = document.getElementById('wmd-input').selectionStart,
                         textAreaTxt = textarea.val(),
@@ -804,9 +823,9 @@ var features = { //ALL the functions must go in here
 
                     textarea.val(textAreaTxt.substring(0, caretPos) + txtToAdd + textAreaTxt.substring(caretPos));
                     $('#addLinkAuthorName').hide();
-                });
+                }, 'activity');
             } else { //for questions
-                $.getJSON('https://api.stackexchange.com/2.2/questions/' + id + '?order=desc&sort=activity&site=' + sitename, function(json) {
+                SOHelper.getFromAPI('questions', id, sitename, function(json) {
                     //Insert at caret thanks to http://stackoverflow.com/a/15977052/3541881
                     var caretPos = document.getElementById('wmd-input').selectionStart,
                         textAreaTxt = textarea.val(),
@@ -820,7 +839,7 @@ var features = { //ALL the functions must go in here
 
                     textarea.val(textAreaTxt.substring(0, caretPos) + txtToAdd + textAreaTxt.substring(caretPos));
                     $('#addLinkAuthorName').hide();
-                });
+                }, 'activity');
             }
         });
 
@@ -929,7 +948,7 @@ var features = { //ALL the functions must go in here
         });
         $('.showCommentScore').css('cursor', 'pointer').on('click', function() {
             var $that = $(this);
-            $.getJSON('https://api.stackexchange.com/2.2/comments/' + $that.attr('id') + '?order=desc&sort=creation&site=' + sitename, function(json) {
+            SOHelper.getFromAPI('comments', $that.attr('id'), sitename, function(json) {
                 $that.html('&nbsp;&nbsp;&nbsp;' + json.items[0].score);
             });
         });
@@ -974,8 +993,18 @@ var features = { //ALL the functions must go in here
         // Description: For making the vote buttons stick to the screen as you scroll through a post
         //https://github.com/shu8/SE_OptionalFeatures/pull/14:
         //https://github.com/shu8/Stack-Overflow-Optional-Features/issues/28: Thanks @SnoringFrog for fixing this!
+
+        var $votecells = $(".votecell");
+        $votecells.css("width", "61px");
+
+        stickcells();
+
         $(window).scroll(function() {
-            $('.votecell').each(function() {
+            stickcells();
+        });
+
+        function stickcells(){
+            $votecells.each(function() {
                 var offset = 0;
                 if ($('.topbar').css('position') == 'fixed') {
                     offset = 34;
@@ -983,40 +1012,20 @@ var features = { //ALL the functions must go in here
                 var vote = $(this).find('.vote');
                 var post_contents = $(this).next('td.postcell, td.answercell');
                 if ($(this).offset().top - $(window).scrollTop() + offset <= 0) {
-                    if ($(this).offset().top + $(this).height() + offset - $(window).scrollTop() - vote.height() > 0) {
+                    if ($(this).offset().top + $(this).height() - $(window).scrollTop() + offset - vote.height() > 0) {
                         vote.css({
                             position: 'fixed',
-                            left: $(this).offset().left,
-                            top: 0 + offset
-                        });
-                        post_contents.css({
-                            position: 'relative',
-                            left: '45px'
+                            left: $(this).offset().left + 4,
++                           top: 10 + offset
                         });
                     } else {
-                        vote.css({
-                            position: 'relative',
-                            left: 0,
-                            top: $(this).height() - vote.height()
-                        });
-                        post_contents.css({
-                            position: 'relative',
-                            left: '0px'
-                        });
+                        vote.removeAttr("style");
                     }
                 } else {
-                    vote.css({
-                        position: 'relative',
-                        left: 0,
-                        top: 0
-                    });
-                    post_contents.css({
-                        position: 'relative',
-                        left: '0px'
-                    });
+                    vote.removeAttr("style");
                 }
             });
-        });
+        }
     },
 
     titleEditDiff: function() {
@@ -1062,14 +1071,14 @@ var features = { //ALL the functions must go in here
         // Description: For adding a fake mod diamond that notifies you if there has been a new post posted on the current site's meta
         
         const NEWQUESTIONS = 'metaNewQuestionAlert-lastQuestions',
-              DIAMONDON = 'new-meta-questions-diamondOn",
-              DIAMONDOFF = "new-meta-questions-diamondOff";
+              DIAMONDON = 'new-meta-questions-diamondOn',
+              DIAMONDOFF = "new-meta-questions-diamondOff';
     
         var favicon = $(".current-site a[href*='meta'] .site-icon").attr('class').split('favicon-')[1];
         
         var metaName = 'meta.' + $(location).attr('hostname').split('.')[0],
             lastQuestions = {},
-            apiLink = "https://api.stackexchange.com/2.2/questions?pagesize=5&order=desc&sort=activity&site=" + metaName;
+            apiLink = 'https://api.stackexchange.com/2.2/questions?pagesize=5&order=desc&sort=activity&site=' + metaName;
     
         var $dialog = $('<div/>', {id: 'new-meta-questions-dialog', class: 'topbar-dialog achievements-dialog dno'}),
             $header = $('<div/>', {class: 'header'}).append($('<h3/>', {text: 'new meta posts'})),
@@ -1083,7 +1092,7 @@ var features = { //ALL the functions must go in here
                                   }});
         
         $dialog.append($header).append($content.append($questions)).prependTo('.js-topbar-dialog-corral');
-        $diamond.appendTo('div.network-items');
+        $('#soxSettingsButton').before($diamond);
     
         $(document).mouseup(function(e) {
             if (!$dialog.is(e.target) 
@@ -1322,8 +1331,8 @@ Toggle SBS?</div></li>';
 
     alwaysShowImageUploadLinkBox: function() {
         // Description: For always showing the 'Link from the web' box when uploading an image.
-        var header = document.getElementById('header'); //Code courtesy of Siguza <http://meta.stackoverflow.com/a/306901/3541881>! :)
-        if (header) {
+        var body = document.getElementById('body'); //Code courtesy of Siguza <http://meta.stackoverflow.com/a/306901/3541881>! :)
+        if (body) {
             new MutationObserver(function(records) {
                 records.forEach(function(r) {
                     Array.prototype.forEach.call(r.addedNodes, function(n) {
@@ -1340,7 +1349,7 @@ Toggle SBS?</div></li>';
                         }
                     });
                 });
-            }).observe(header, {
+            }).observe(body, {
                 childList: true
             });
         }
@@ -1526,7 +1535,7 @@ Toggle SBS?</div></li>';
 
         $('.post-text a, .comments .comment-copy a').each(function() {
             var url = $(this).attr('href');
-            if (url && url.indexOf($(location).attr('hostname')) > -1 && url.indexOf('/questions/') > -1 && url.indexOf('#comment') == -1) {
+            if (url && url.indexOf($(location).attr('hostname')) > -1 && /\/questions\//.test(url) && /#comment/.test(url)) {
                 $(this).css('color', '#0033ff');
                 $(this).before('<a class="expander-arrow-small-hide expand-post-sox"></a>');
             }
