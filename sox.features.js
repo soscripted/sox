@@ -1580,21 +1580,21 @@ Toggle SBS?</div></li>';
     },
 
     editTheme: function() {
-        var $themeEditor = $(GM_getResourceText("themeEditor")),
+        var $themeEditor = $(GM_getResourceText('themeEditor')),
             $soxThemeButton = $("<a/>", {
-                id: "soxThemeButton",
-                class: "topbar-icon yes-hover sox-theme-button", //TODO: sox-theme-button
-                title: "Edit site theme",
-                style: "color: #A1A1A1",
+                id: 'soxThemeButton',
+                class: 'topbar-icon yes-hover sox-theme-button', //TODO: sox-theme-button
+                title: 'Edit site theme',
+                style: 'color: #A1A1A1',
                 click: function(e) {
                     e.preventDefault();
-                    $("#sox-theme-editor").toggle();
+                    $('#sox-theme-editor').toggle();
                 }
             }),
-            $icon = $("<i/>", {
-                class: "fa fa-cogs" //TODO
+            $icon = $('<i/>', {
+                class: 'fa fa-cogs' //TODO
             });
-        $("body").append($themeEditor);
+        $themeEditor.appendTo("body");
         $soxThemeButton.append($icon).appendTo("div.network-items");
     }
 };

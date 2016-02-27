@@ -5,7 +5,7 @@
 // @description  Adds a bunch of optional features to sites in the Stack Overflow Network.
 // @contributor  ᴉʞuǝ (stackoverflow.com/users/1454538/)
 // @contributor  ᔕᖺᘎᕊ (stackexchange.com/users/4337810/)
-// @updateURL    https://rawgit.com/soscripted/sox/master/sox.user.js
+// @updateURL    https://rawgit.com/soscripted/sox/experimental/sox.user.js
 // @match        *://*.stackoverflow.com/*
 // @match        *://*.stackexchange.com/*
 // @match        *://*.superuser.com/*
@@ -18,11 +18,11 @@
 // @require      https://cdn.rawgit.com/timdown/rangyinputs/master/rangyinputs-jquery-src.js
 // @require      https://cdn.rawgit.com/jeresig/jquery.hotkeys/master/jquery.hotkeys.js
 // @require      https://cdn.rawgit.com/camagu/jquery-feeds/master/jquery.feeds.js
-// @require      https://rawgit.com/soscripted/sox/experimental/sox.helpers.js?v=02092016a
-// @require      https://rawgit.com/soscripted/sox/experimental/sox.features.js?v=02092016a
-// @require      https://rawgit.com/soscripted/sox/experimental/themes/sox.themeeditor.js?v=02092016a
-// @require      https://rawgit.com/soscripted/sox/experimental/themes/sox.theming.js?v=02092016a
-// @require      https://rawgit.com/soscripted/sox/experimental/chat/sox.chat.js?v=02092016a
+// @require      https://rawgit.com/soscripted/sox/experimental/sox.helpers.js
+// @require      https://rawgit.com/soscripted/sox/experimental/sox.features.js
+// @require      https://rawgit.com/soscripted/sox/experimental/themes/sox.themeeditor.js?
+// @require      https://rawgit.com/soscripted/sox/experimental/themes/sox.theming.js
+// @require      https://rawgit.com/soscripted/sox/experimental/chat/sox.chat.js
 // @resource     settingsDialog https://rawgit.com/soscripted/sox/experimental/sox.dialog.html
 // @resource     themeEditor https://rawgit.com/soscripted/sox/experimental/themes/sox.themeeditor.html
 // @grant        GM_setValue

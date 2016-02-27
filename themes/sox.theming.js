@@ -75,7 +75,7 @@ $("html").on("dragleave", function(e) {
     e.stopPropagation();
     $('#upload').hide();
 });
-$("html").on("dragstop", function(e) { //TODO: fix this and get file name - if file:// + image upload
+$("html").on("drop", function(e) { //TODO: fix this and get file name - if file:// + image upload
     e.preventDefault();
     e.stopPropagation();
     $("#upload").hide();

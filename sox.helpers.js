@@ -30,9 +30,9 @@ SOHelper = {
     },
     
     getSiteType: function() {
-        if($('#jplayer').length && location.href.indexOf('chat.') > -1) {
+        if($('#jplayer').length && /^chat\./.test(location.hostname)) {
             return 'chat';
-        } else if (location.href.indexOf('meta.') > -1) {
+        } else if (/^meta\./.test(location.hostname)) {
             return 'meta';
         } else {
             return 'main';
