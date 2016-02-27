@@ -56,7 +56,7 @@
         // add settings icon to navbar
         var $soxSettingsButton = $("<a/>", {
                 id: "soxSettingsButton",
-                class: "topbar-icon sox-settings-button",
+                class: "topbar-icon sox-settings-button yes-hover",
                 title: "Change SOX Settings",
                 click: function(e) {
                     e.preventDefault();
@@ -213,7 +213,7 @@
             ["linkQuestionAuthorName", "Add a button in the editor toolbar to insert a hyperlink to a post and add the author automatically"],
             ["titleEditDiff", "Make title edits show seperately rather than merged"]
         ]);
-        
+
         addCategory("Comments");
         addFeatures([
             ["moveCommentsLink", "Move 'show x more comments' to the top"],
