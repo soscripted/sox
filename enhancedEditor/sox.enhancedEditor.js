@@ -1,4 +1,19 @@
 var enhancedEditor = {
+    startFeature: function() {
+        setTimeout(function() {
+            $.each($('textarea[id^="wmd-input"].processed'), function() {
+                enhancedEditor.init($(this).attr('id'));
+            });
+
+            $('.edit-post').click(function() {
+                $that = $(this);
+                setTimeout(function() {
+                    enhancedEditor.init($that.parents('table').find('.inline-editor textarea.processed').attr('id'));
+                }, 2000);
+            });
+        }, 2000);        
+    },
+    
     init: function(wmd) {
         var urls = ['https://cdn.rawgit.com/dwieeb/jquery-textrange/1.x/jquery-textrange.js', 
             'https://cdn.rawgit.com/jeresig/jquery.hotkeys/master/jquery.hotkeys.js',
