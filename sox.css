@@ -1,5 +1,16 @@
-/* -------- sox settings dialog -------- */
-
+/* -------- sox settings dialog  ------- */
+#sox-settings-dialog {
+    position: fixed;
+    display: none;
+    height: 100%;
+    width: 550px;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    background-color: #fff;
+    border-right: solid 1px #aaa;
+}
 #sox-settings-dialog-title {
     padding: 10px;
     height: 30px;
@@ -46,15 +57,18 @@
     float: right;
     padding: 14px;
 }
-.sox-settings-button {		
-    background-image: none !important;		
-    padding-top: 10px;		
-    font-size: 14px;		
-    color: #999;		
-    height: 24px !important;		
-    min-width: 34px;		
+.sox-settings-button {
+    background-image: none !important;
+    padding-top: 10px;
+    font-size: 14px;
+    color: #999;
+    height: 24px !important;
+    min-width: 34px;
  }
- 
+ .sox-settings-button:hover {
+     color: #999;
+  }
+
 /* -------- sox specific features' CSS ------- */
 #sox-scrollToTop {
     position: fixed;
@@ -131,7 +145,6 @@ background-position: -138px -86px;
     top: 34px;
     left: 230px;
     width: 377px;
-    height: 250px;
 }
 #new-meta-questions-dialog-list:empty::after{
     content: "No new meta questions at this time.";
