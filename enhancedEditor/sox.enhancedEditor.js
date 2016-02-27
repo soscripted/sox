@@ -28,7 +28,7 @@ var enhancedEditor = {
             script.src = urls[i];
             document.body.appendChild(script);
         }
-        $('head').append("<link rel='stylesheet' type='text/css' href='https://rawgit.com/soxscripted/sox/experimental/enhancedEditor/sox.enhancedEditor.css' />");
+        $('head').append("<link rel='stylesheet' type='text/css' href='https://rawgit.com/soscripted/sox/experimental/enhancedEditor/sox.enhancedEditor.css' />");
 
         $('[id^="enhancedEditor"]').remove();
         var s = '#'+wmd; //s is the selector we pass onto each function so the action is applied to the correct textarea (and not, for example the 'add answer' textarea *and* the 'edit' textarea!)
@@ -375,16 +375,3 @@ var enhancedEditor = {
         StackExchange.MarkdownEditor.refreshAllPreviews();
     }
 };
-
-setTimeout(function() {
-    $.each($('textarea[id^="wmd-input"].processed'), function() {
-        enhancedEditor.init($(this).attr('id'));
-    });
-
-    $('.edit-post').click(function() {
-        $that = $(this);
-        setTimeout(function() {
-            enhancedEditor.init($that.parents('table').find('.inline-editor textarea.processed').attr('id'));
-        }, 2000);
-    });
-}, 2000);
