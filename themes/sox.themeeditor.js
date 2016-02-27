@@ -133,6 +133,20 @@ var themeEditor = function() {
         
     });
     //TODO: load existing rule - parse css - display as what name?
+    /*$().on('click', function() {
+        // get all regex matches - http://stackoverflow.com/a/6323598/3323231
+        var re = /\s*([^[:]+):\"([^"]+)"/g,
+             s = '[description:"aoeu" uuid:"123sth"]',
+             m,
+             result;
+
+        do {
+            m = re.exec(s);
+            if (m) {
+                result.push(m);
+            }
+        } while (m);
+    });*/
     //var matches = /^(?:\s*([^{,]+),)*(?:\s*([^{]+))\s*\{(?:\s*([^:]+):\s*([^;]+)\s*;)+\s*\}\s*$/.exec(foo) //TODO: get all results
     $('#sox-rule-add').on('click', function() {
         var save = true;

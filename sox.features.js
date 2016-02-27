@@ -1443,8 +1443,7 @@ Toggle SBS?</div></li>';
             AGEDAWAY: 'aged away'
         };
 
-        var total,
-            count,
+        var count,
             percentage;
 
         function addPercentage(group, type, percentage) {
@@ -1471,17 +1470,19 @@ Toggle SBS?</div></li>';
         }
 
         // add percentages
-        group.forEach(function(item) {
-            total = getFlagCount(item, type.TOTAL);
-            type.forEach(function(typeitem, typeKey) {
+        for (var groupKey in group) {
+            var item = group[groupKey],
+                total = getFlagCount(item, type.TOTAL);
+            for (var typeKey in type) {
+                typeItem = type[typeKey];
                 if (typeKey !== 'TOTAL') {
-                    count = getFlagCount(item, typeitem);
+                    count = getFlagCount(item, typeItem);
                     percentage = calculatePercentage(count, total);
                     //console.log(groupKey + ": " + typeKey + " Flags -- " + count);
-                    addPercentage(item, typeitem, percentage);
+                    addPercentage(item, typeItem, percentage);
                 }
             });
-        });
+        }
     },
 
     linkedPostsInline: function() {

@@ -1,8 +1,6 @@
 var theming = function() {
     var siteName = SOHelper.getSiteName(),
-        siteType = SOHelper.isOnMeta() ? 'meta'
-                 : SOHelper.isOnChat() ? 'chat'
-                 : 'main';
+        siteType = SOHelper.getSiteType();
     ////cdn.sstatic.net/sitename/all.css
     var FONTS = JSON.parse(GM_getValue(siteName + '_ALL')),
         THEME_NAME = GM_getValue(siteName + '_THEME'),

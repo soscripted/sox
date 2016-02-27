@@ -143,7 +143,7 @@
 
         addCategory('Comments');
         addFeatures([
-            ['copyCommentsLink', 'Copy \'show x more comments\' to the top'],
+            //['copyCommentsLink', 'Copy \'show x more comments\' to the top'],
             ['commentShortcuts', 'Use Ctrl+I,B,K (to italicise, bolden and add code backticks) in comments'],
             ['quickCommentShortcutsMain', 'Add shortcuts to add pre-defined comments to comment fields'],
             ['commentReplies', 'Add reply links to comments for quick replying (without having to type someone\'s username)'],
@@ -231,7 +231,9 @@
                         features[extras[i]](); //Call the functions that were chosen
                     } catch(err) {
                         $soxSettingsDialogFeatures.find('#' + extras[i]).parent().css('color', 'red').attr('title', 'There was an error loading this feature. Please raise an issue on GitHub.');
-                        console.log('SOX error: There was an error loading the feature "' + extras[i] + '". Please raise an issue on GitHub.');
+                        console.log('SOX error: There was an error loading the feature "' + extras[i] + '". Please raise an issue on GitHub, and copy the following error log.');
+                        console.log('Error details:');
+                        console.log(err);
                         i++;
                     }
                 }
