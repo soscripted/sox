@@ -157,9 +157,9 @@ var features = { //ALL the functions must go in here
                     class: 'fixedTopbar-siteLink'
                 }));
             };
-            sites.forEach(function(link, name) {
-                addSite(link, name);
-            });
+            for (var name in sites) {
+                addSite(sites[name], name);
+            }
             listOfSites.append(more);
             var moreList = $('li', $(more));
             var addMoreSite = function(link, name) {
@@ -168,9 +168,9 @@ var features = { //ALL the functions must go in here
                     class: 'fixedTopbar-siteLink'
                 }));
             };
-            moreSites.forEach(function(link, name) {
-                addMoreSite(link, name);
-            });
+            for (name in moreSites) {
+                addMoreSite(moreSites[name], name);
+            }
             $('.nav-global').remove(); //Ubuntu links
             $('#custom-header').remove();
             linksWrapper.append(listOfSites);

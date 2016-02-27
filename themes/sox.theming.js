@@ -2,13 +2,17 @@ var theming = function() {
     var siteName = SOHelper.getSiteName(),
         siteType = SOHelper.getSiteType();
     ////cdn.sstatic.net/sitename/all.css
-    var FONTS = JSON.parse(GM_getValue(siteName + '_ALL')),
+    var FONT_JSON = GM_getValue(siteName + '_FONTS'),
         THEME_NAME = GM_getValue(siteName + '_THEME'),
         REPOS = GM_getValue('THEME_REPOS'),
-        FAVICONS = JSON.parse(GM_getValue('FAVICONS')),
+        FAVICON_JSON = GM_getValue('FAVICONS'),
         THEME = '',
         THEME_URL = '',
         SPRITESHEET_URL = '';
+    if (FONT_JSON) {
+        var FONTS = FONT_JSON ? JSON.parse(FONT_JSON) : null;
+        var FAVICONS = FAVICON_JSON ? JSON.parse(FAVICON_JSON) : null;
+    }
         //JS_URL = GM_getValue(siteName + '_' + siteType + '_' + THEME_NAME + '_URL'), //TODO: load as extension module
     if (THEME_NAME.contains('.')) {
         var themeParts = THEME_NAME.split('.');
