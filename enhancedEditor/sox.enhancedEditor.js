@@ -295,9 +295,6 @@ var enhancedEditor = {
     },
     
     keyboardShortcuts: function(s) {
-        $(s).bind('keydown', 'alt+k', function() { //kbd
-            enhancedEditor.addKbd();
-        });
         $(s).bind('keydown', 'alt+a', function() { //ace editor
             $('#enhancedEditor-aceEditor').show(500);
         });
