@@ -37,16 +37,10 @@ var enhancedEditor = {
         enhancedEditor.betterTabKey(s);
         enhancedEditor.keyboardShortcuts(s);
         
-        
-        $(s).before("<span class='enhancedEditor-toolbar' id='enhancedEditor|"+s+"'>&nbsp;<span id='startAce'>Insert code (Ace editor)</span> | <span id='findReplace'>Find & Replace</span> | <span id='surroundKbd'>KBD-ify</span> | <span id='autoCorrect'>Auto correct</span></span>");
+        $(s).before("<span class='enhancedEditor-toolbar' id='enhancedEditor|"+s+"'>&nbsp;<span id='startAce'>Insert code (Ace editor)</span> | <span id='findReplace'>Find & Replace</span> | <span id='autoCorrect'>Auto correct</span></span>");
 
         $('#startAce').click(function(e) {
             enhancedEditor.startAceEditor(s);
-            e.preventDefault();
-            e.stopPropagation();
-        });
-        $('#surroundKbd').click(function(e) {
-            enhancedEditor.addKbd($(this).parent().attr('id').split('|')[1]);
             e.preventDefault();
             e.stopPropagation();
         });
@@ -297,12 +291,6 @@ var enhancedEditor = {
     addLink: function(query, url, s) {
         $(s).textrange('replace', '['+query.text+']('+url+')');
         $('#enhancedEditor-insertLinkDialog').hide();
-        enhancedEditor.refreshPreview();
-    },
-    
-    addKbd: function(s) {
-        origText = $(s).textrange();
-        $(s).textrange('replace', '<kbd>'+origText.text+'</kbd>');
         enhancedEditor.refreshPreview();
     },
     
