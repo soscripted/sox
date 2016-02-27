@@ -1,4 +1,5 @@
 /*jshint multistr: true */
+//TODO: what are post_contents and author for?
 var features = { //ALL the functions must go in here
 
     grayOutVotes: function() {
@@ -57,7 +58,7 @@ var features = { //ALL the functions must go in here
             'Pops', 'Megan Spaans', 'Whitney Dwyer', 'Philip Camillo', 'onesysadmin', 'Aurelien Gasser', 'Alyssa Tomback', 'Alex Cresswell', 'couchand', 'Brian Nickel', 'Princess',
             'Yaakov Ellis', 'Ana Hevesi', 'Noureddine Latrech', 'Hertz', 'Jill Ciaccia', 'Tobias Schmidt', 'Jon Chan', 'Johanna Perrin', 'Kristian Bright', 'John LeClerc',
             'Rob Dandorph', 'Jessica Genther', 'Courtny Cotten', 'Stephanie', 'Sean Durkin', 'rla4', 'Alex Warren', 'Jaime Kronick', 'Alexa', 'Samuel Rouayrenc', 'Josh Helfgott',
-            'Peter Tarr', 'Shane Madden', 'Nextraztus', 'G-Wiz', 'Dan O'Boyle', 'yolovolo', 'Griffin Sandberg', 'ODB', 'Mark Villarreal', 'Lowell Gruman Jr.', 'bweber', 'Natalie How',
+            'Peter Tarr', 'Shane Madden', 'Nextraztus', 'G-Wiz', 'Dan O\'Boyle', 'yolovolo', 'Griffin Sandberg', 'ODB', 'Mark Villarreal', 'Lowell Gruman Jr.', 'bweber', 'Natalie How',
             'Haney', 'jmac', 'Emmanuel Andem-Ewa', 'Jess Pardue', 'Dean Ward', 'Steve Trout', 'Nicholas Chabanovsky', 'Kelli Ward', 'Noah Neuman', 'Lauren Roemer', 'Heidi Hays',
             'Joe Wilkie', 'Mackenzie Ralston', 'animuson'
         ];
@@ -117,92 +118,67 @@ var features = { //ALL the functions must go in here
     fixedTopbar: function() {
         // Description: For making the topbar fixed (always stay at top of screen)
         if ($(location).attr('hostname') == 'askubuntu.com') { //AskUbuntu is annoying. UnicornsAreVeryVeryYummy made the below code for AskUbuntu: https://github.com/shu8/Stack-Overflow-Optional-Features/issues/11 Thanks!
-            var head = document.getElementsByTagName('head')[0],
-                ubuntuLinks = document.getElementsByClassName('nav-global')[0],
-                remove = document.getElementById('custom-header'),
-                newUbuntuLinks = document.createElement('div'),
-                linksWrapper = document.createElement('div'),
-                listOfSites = document.createElement('ul'),
-                ubuntuHome = document.createElement('li'),
-                ubuntuCommunity = document.createElement('li'),
-                askubuntu = document.createElement('li'),
-                developer = document.createElement('li'),
-                design = document.createElement('li'),
-                discourse = document.createElement('li'),
-                hardware = document.createElement('li'),
-                insights = document.createElement('li'),
-                juju = document.createElement('li'),
-                shop = document.createElement('li'),
-                more = document.createElement('li'),
-                apps = document.createElement('li'),
-                help = document.createElement('li'),
-                forum = document.createElement('li'),
-                launchpad = document.createElement('li'),
-                MAAS = document.createElement('li'),
-                canonical = document.createElement('li');
-
-            ubuntuLinks.parentElement.removeChild(ubuntuLinks);
-            remove.parentElement.removeChild(remove);
-            newUbuntuLinks.className = 'fixedTopbar-links';
-            linksWrapper.className = 'fixedTopbar-linksList';
-            listOfSites.className = 'fixedTopbar-siteLink';
-            ubuntuHome.innerHTML = '<a href="http://www.ubuntu.com">Ubuntu</a>';
-            ubuntuHome.className = 'fixedTopbar-siteLink';
-            ubuntuCommunity.innerHTML = '<a href="http://community.ubuntu.com/">Community</a>';
-            ubuntuCommunity.className = 'fixedTopbar-siteLink';
-            askubuntu.innerHTML = '<a href="http://askubuntu.com">Ask!</a>';
-            askubuntu.className = 'fixedTopbar-activeSite fixedTopbar-siteLink';
-            developer.innerHTML = '<a href="http://developer.ubuntu.com">Developer</a>';
-            developer.className = 'fixedTopbar-siteLink';
-            design.innerHTML = '<a href="http://design.ubuntu.com">Design</a>';
-            design.className = 'fixedTopbar-siteLink';
-            discourse.innerHTML = '<a href="http://discourse.ubuntu.com">Discourse</a>';
-            discourse.className = 'fixedTopbar-siteLink';
-            hardware.innerHTML = '<a href="http://www.ubuntu.com/certification">Hardware</a>';
-            hardware.className = 'fixedTopbar-siteLink';
-            insights.innerHTML = '<a href="http://insights.ubuntu.com/">Insights</a>';
-            insights.className = 'fixedTopbar-siteLink';
-            juju.innerHTML = '<a href="http://juju.ubuntu.com">Juju</a>';
-            juju.className = 'fixedTopbar-siteLink';
-            shop.innerHTML = '<a href="http://shop.ubuntu.com">Shop</a>';
-            shop.className = 'fixedTopbar-siteLink';
-            apps.innerHTML = '<a href="http://apps.ubuntu.com">Apps</a>';
-            apps.className = 'fixedTopbar-siteLink';
-            help.innerHTML = '<a href="https://help.ubuntu.com">Help</a>';
-            help.className = 'fixedTopbar-siteLink';
-            forum.innerHTML = '<a href="http://ubuntuforums.org">Forum</a>';
-            forum.className = 'fixedTopbar-siteLink';
-            launchpad.innerHTML = '<a href="http://launchpad.net">Launchpad</a>';
-            launchpad.className = 'fixedTopbar-siteLink';
-            MAAS.innerHTML = '<a href="http://maas.ubuntu.com">MAAS</a>';
-            MAAS.className = 'fixedTopbar-siteLink';
-            canonical.innerHTML = '<a href="http://canonical">Canonical</a>';
-            canonical.className = 'fixedTopbar-siteLink';
-            listOfSites.appendChild(ubuntuHome);
-            listOfSites.appendChild(ubuntuCommunity);
-            listOfSites.appendChild(askubuntu);
-            listOfSites.appendChild(developer);
-            listOfSites.appendChild(design);
-            listOfSites.appendChild(discourse);
-            listOfSites.appendChild(hardware);
-            listOfSites.appendChild(insights);
-            listOfSites.appendChild(juju);
-            listOfSites.appendChild(shop);
-            listOfSites.appendChild(apps);
-            listOfSites.appendChild(help);
-            listOfSites.appendChild(forum);
-            listOfSites.appendChild(launchpad);
-            listOfSites.appendChild(MAAS);
-            listOfSites.appendChild(canonical);
-            linksWrapper.appendChild(listOfSites);
-            newUbuntuLinks.appendChild(linksWrapper);
-            document.body.appendChild(newUbuntuLinks);
-            var toolbar = document.getElementsByClassName('topbar')[0];
-            toolbar.className += ' fixedTopbar-stickyToolbar';
-            var line = document.createElement('div');
-            line.innerHTML = '<br><br>';
-            toolbar.parentElement.insertBefore(line, toolbar);
-        } else if (!SOHelper.getSiteType() === 'chat') { //for all the normal, unannoying sites, excluding chat ;)
+            var newUbuntuLinks = $('<div/>', {
+                    class: 'fixedTopbar-links'
+                }),
+                linksWrapper = $('<div/>', {
+                    class: 'fixedTopbar-linksList'
+                }),
+                listOfSites = $('<ul/>', {
+                    class: 'fixedTopbar-siteLink'
+                }),
+                more = $('<li/>', {
+                    html: '<a href="#">More</a>',
+                    class: 'fixedTopbar-siteLink'
+                }),
+                sites = {
+                    Ubuntu: 'ubuntu.com',
+                    Community: 'community.ubuntu.com',
+                    'Ask!': 'askubuntu.com',
+                    Developer: 'developer.ubuntu.com',
+                    Design: 'design.ubuntu.com',
+                    Discourse: 'discourse.ubuntu.com',
+                    Hardware: 'www.ubuntu.com/certification',
+                    Insights: 'insights.ubuntu.com',
+                    Juju: 'juju.ubuntu.com',
+                    Shop: 'shop.ubuntu.com'
+                },
+                moreSites = {
+                    Apps: 'apps.ubuntu.com',
+                    Help: 'help.ubuntu.com',
+                    Forum: 'ubuntuforums.org',
+                    Launchpad: 'launchpad.net',
+                    MAAS: 'maas.ubuntu.com',
+                    Canonical: 'canonical' //TODO
+                };
+            var addSite = function(link, name) {
+                listOfSites.append($('<li/>', {
+                    html: '<a href="http://' + link + '">' + name + '</a>',
+                    class: 'fixedTopbar-siteLink'
+                }));
+            };
+            sites.forEach(function(link, name) {
+                addSite(link, name);
+            });
+            listOfSites.append(more);
+            var moreList = $('li', $(more));
+            var addMoreSite = function(link, name) {
+                moreList.append($('<li/>', {
+                    html: '<a href="http://' + link + '">' + name + '</a>',
+                    class: 'fixedTopbar-siteLink'
+                }));
+            };
+            moreSites.forEach(function(link, name) {
+                addMoreSite(link, name);
+            });
+            $('.nav-global').remove(); //Ubuntu links
+            $('#custom-header').remove();
+            linksWrapper.append(listOfSites);
+            newUbuntuLinks.append(linksWrapper);
+            $('body').append(newUbuntuLinks);
+            $('.topbar').addClass('fixedTopbar-stickyToolbar');
+            $('.topbar').before($('<div/>', {html: '<br/><br/>'}));
+        } else if (SOHelper.getSiteType() !== 'chat') { //for all the normal, unannoying sites, excluding chat ;)
             $('.topbar').css({
                 'position': 'fixed',
                 'z-index': '1001'
@@ -216,7 +192,7 @@ var features = { //ALL the functions must go in here
         }
 
         $('#rep-card-next .percent').after($('#rep-card-next .label').css('z-index', 0)).css('position', 'absolute');
-        $('#badge-card-next .percent').after($('#badge-card-next .label').css('z-index', 0)).css('position', "absolute');
+        $('#badge-card-next .percent').after($('#badge-card-next .label').css('z-index', 0)).css('position', 'absolute');
     },
 
     highlightQuestions: function() {
@@ -234,19 +210,20 @@ var features = { //ALL the functions must go in here
             $('.tagged-interesting').removeClass('tagged-interesting');
         }
         setTimeout(function() { //Need delay to make sure the CSS is applied
+            var betterCSS = {};
             if (/superuser/.test(window.hostname)) { //superuser
-                var betterCSS = {
+                betterCSS = {
                     backgroundColor: '#a1eaff',
                     color: 'black'
                 };
             } else if (/stackoverflow/.test(window.hostname)) { //stackoverflow
-                var betterCSS = {
+                betterCSS = {
                     backgroundColor: '#ffefc6',
                     borderWidth: '0'
                 };
             } else { //if (/stackexchange.com/.test(window.hostname)) {
                 //if (window.location.href.indexOf('meta') === -1) { //beta sites
-                var betterCSS = {
+                betterCSS = {
                     backgroundColor: '#c3dafa',
                     borderWidth: '0'
                 };
@@ -304,7 +281,7 @@ var features = { //ALL the functions must go in here
         }
 
         var kbdBtn = '<li class="wmd-button" title="surround selected text with <kbd> tags" style="left: 400px;"><span id="wmd-kbd-button" style="background-image: none;">kbd</span></li>';
-        var listBtn = '<li class="wmd-button" title="add dashes (\"-\") before every line to make a bullet point list" style="left: 425px;"><span id="wmd-bullet-button" style="background-image:none;">&#x25cf;</span></li>';
+        var listBtn = '<li class="wmd-button" title="add dashes (\"-\") before every line to make a bulvar point list" style="left: 425px;"><span id="wmd-bullet-button" style="background-image:none;">&#x25cf;</span></li>';
 
         setTimeout(function() {
             $('[id^="wmd-redo-button"]').after(kbdBtn);
@@ -358,7 +335,7 @@ var features = { //ALL the functions must go in here
                 var editCommentField = $('[id^="edit-comment"]');
                 $('#reasons input[type="checkbox"]').change(function() {
                     if (this.checked) { //Add it to the summary
-                        if (editCommentField.val() == '') {
+                        if (!editCommentField.val()) {
                             editCommentField.val(editCommentField.val() + $(this).val().replace(/on$/g, ''));
                         } else {
                             editCommentField.val(editCommentField.val() + '; ' + $(this).val().replace(/on$/g, ''));
@@ -435,7 +412,7 @@ var features = { //ALL the functions must go in here
         });
 
         $('#submitUpdate').click(function() { //Click handler to update the array with custom value
-            if ($('#displayReason').val() == '' || $('#actualReason').val() == '') {
+            if (!$('#displayReason').val() || !$('#actualReason').val()) {
                 alert('Please enter something in both the textboxes!');
             } else {
                 var arrayToAdd = [$('#displayReason').val(), $('#actualReason').val()];
@@ -568,7 +545,7 @@ var features = { //ALL the functions must go in here
             data = [
                 //Format: ['name', 'shortcut', 'comment text'],
                 ['How to ping', 'alt+p', 'To ping other users, please start your comment with an `@` followed by the person\'s username (with no spaces). For example, to ping you, I would use `@$ANSWERER$`. For more information, please see [How do comments replies work?](http://meta.stackexchange.com/questions/43019/how-do-comment-replies-work).'],
-                ['Not an answer', 'alt+n', 'This does not provide an answer to the question. To critique or request clarification from an author, leave a comment below their post - you need to gain [reputation]($SITEURL$/faq#reputation) before you can comment on others' posts to prevent abuse; why don't you try and get some by [answering a question]($SITEURL$/unanswered)?'],
+                ['Not an answer', 'alt+n', 'This does not provide an answer to the question. To critique or request clarification from an author, leave a comment below their post - you need to gain [reputation]($SITEURL$/faq#reputation) before you can comment on others\' posts to prevent abuse; why don\'t you try and get some by [answering a question]($SITEURL$/unanswered)?'],
                 ['Link-only answer', 'alt+l', 'While this link may answer the question, it is better to include the essential parts of the answer here and provide the link for reference. Link-only answers can become invalid if the linked page changes, resulting in your answer being useless and consequently deleted.'],
                 ['Ask a new question', 'alt+d', 'If you have a new question, please ask it by clicking the [Ask Question]($SITEURL$/questions/ask) button. Include a link to this question if it helps provide context. You can also [start a bounty]($SITEURL$/help/privileges/set-bounties) to draw more attention to this question.'],
                 ['Don\'t add "Thank You"', 'alt+t', 'Please don\'t add \'thank you\' as an answer. Instead, vote up the answers that you find helpful. To do so, you need to have reputation. You can read more about reputation [here]($SITEURL$/faq#reputation).']
@@ -598,12 +575,11 @@ var features = { //ALL the functions must go in here
                             gold = json.items[0].badge_counts.gold,
                             type = json.items[0].user_type;
 
+                        var welcomeText = '',
+                            newUser = 'No';
                         if ((new Date().getTime() / 1000) - (creationDate) < 864000) {
-                            var welcomeText = 'Welcome to $SITENAME$ $ANSWERERNORMAL$! ',
-                                newUser = 'Yes';
-                        } else {
-                            var welcomeText = '',
-                                newUser = 'No';
+                            welcomeText = 'Welcome to $SITENAME$ $ANSWERERNORMAL$! ';
+                            newUser = 'Yes';
                         }
 
 
@@ -640,7 +616,7 @@ var features = { //ALL the functions must go in here
                             $('.comments textarea').bind('keydown', this[1], function() {
                                 $(this).append(text);
                             });
-                            $('#quickCommentShortcuts table').append('<tr><td>' + this[0] + '</td><td>' + this[1] + '</td><td>' + text + '</td><td><input type="button" id="' + i + '" value="Delete"></td><td><input type="button" id="' + i + '" value="Edit"></td></tr><br />");
+                            $('#quickCommentShortcuts table').append('<tr><td>' + this[0] + '</td><td>' + this[1] + '</td><td>' + text + '</td><td><input type="button" id="' + i + '" value="Delete"></td><td><input type="button" id="' + i + '" value="Edit"></td></tr><br />');
                             $('#quickCommentShortcuts').find('table, th, td').css(tableCSS);
                         });
 
@@ -698,7 +674,7 @@ var features = { //ALL the functions must go in here
                             $(this).after('<input type="button" value="Save" id="saveEdits">');
                             $(this).hide();
                             $('#quickCommentShortcuts #saveEdits').click(function() {
-                                for (i = 0; i < 3; i++) {
+                                for (var i = 0; i < 3; i++) {
                                     data[id][i] = $(this).parent().parent().find('input[type="text"]:eq(' + i + ')').val();
                                     saveGM(data);
                                 }
@@ -763,7 +739,7 @@ var features = { //ALL the functions must go in here
                 if($(this).text() == $(this).attr('href')) { //if there isn't text on it (ie. bare url)
                     var sitename = $(this).attr('href').split('/')[2].split('.')[0],
                         id = $(this).attr('href').split('/')[4];
-    
+
                     SOHelper.getFromAPI('questions', id, sitename, function(json) {
                         anchor.html(json.items[0].title); //Get the title and add it in
                     }, 'activity');
@@ -857,7 +833,7 @@ var features = { //ALL the functions must go in here
         // Description: For adding a 'are you ure you want to go away' confirmation on pages where you have started writing something
         if (window.location.href.indexOf('questions/') >= 0) {
             $(window).bind('beforeunload', function() {
-                if ($('.comment-form textarea').length && $('.comment-form textarea').val() != '') {
+                if ($('.comment-form textarea').length && $('.comment-form textarea').val()) {
                     return 'Do you really want to navigate away? Anything you have written will be lost!';
                 } else {
                     return;
@@ -875,11 +851,7 @@ var features = { //ALL the functions must go in here
                     $(this).attr('data-bountyamount', bountyAmount); //add a 'bountyamount' attribute to all the questions
                 });
 
-                if ($('#question-mini-list').length) { //if on homepage featured tab
-                    var $wrapper = $('#question-mini-list');
-                } else {
-                    var $wrapper = $('#questions'); //if on questions featured tab
-                }
+                var $wrapper = $('#question-mini-list').length ? $('#question-mini-list') : $wrapper = $('#questions'); //homepage/questions tab
 
                 setTimeout(function() {
                     //filter buttons:
@@ -1010,13 +982,13 @@ var features = { //ALL the functions must go in here
                     offset = 34;
                 }
                 var vote = $(this).find('.vote');
-                var post_contents = $(this).next('td.postcell, td.answercell');
+                //var post_contents = $(this).next('td.postcell, td.answercell');
                 if ($(this).offset().top - $(window).scrollTop() + offset <= 0) {
                     if ($(this).offset().top + $(this).height() - $(window).scrollTop() + offset - vote.height() > 0) {
                         vote.css({
                             position: 'fixed',
                             left: $(this).offset().left + 4,
-+                           top: 10 + offset
+                            top: 10 + offset
                         });
                     } else {
                         vote.removeAttr("style");
@@ -1069,17 +1041,17 @@ var features = { //ALL the functions must go in here
 
     metaNewQuestionAlert: function() {
         // Description: For adding a fake mod diamond that notifies you if there has been a new post posted on the current site's meta
-        
-        const NEWQUESTIONS = 'metaNewQuestionAlert-lastQuestions',
-              DIAMONDON = 'new-meta-questions-diamondOn',
-              DIAMONDOFF = "new-meta-questions-diamondOff';
-    
+
+        var NEWQUESTIONS = 'metaNewQuestionAlert-lastQuestions',
+            DIAMONDON = 'new-meta-questions-diamondOn',
+            DIAMONDOFF = 'new-meta-questions-diamondOff';
+
         var favicon = $(".current-site a[href*='meta'] .site-icon").attr('class').split('favicon-')[1];
-        
+
         var metaName = 'meta.' + $(location).attr('hostname').split('.')[0],
             lastQuestions = {},
             apiLink = 'https://api.stackexchange.com/2.2/questions?pagesize=5&order=desc&sort=activity&site=' + metaName;
-    
+
         var $dialog = $('<div/>', {id: 'new-meta-questions-dialog', class: 'topbar-dialog achievements-dialog dno'}),
             $header = $('<div/>', {class: 'header'}).append($('<h3/>', {text: 'new meta posts'})),
             $content = $('<div/>', {class: 'modal-content'}),
@@ -1090,25 +1062,25 @@ var features = { //ALL the functions must go in here
                                       $diamond.toggleClass('topbar-icon-on');
                                       $dialog.toggle();
                                   }});
-        
+
         $dialog.append($header).append($content.append($questions)).prependTo('.js-topbar-dialog-corral');
         $('#soxSettingsButton').before($diamond);
-    
+
         $(document).mouseup(function(e) {
-            if (!$dialog.is(e.target) 
-                && $dialog.has(e.target).length === 0  
-                && !$(e.target).is('#new-meta-questions-button')){
+            if (!$dialog.is(e.target) &&
+                $dialog.has(e.target).length === 0 &&
+                !$(e.target).is('#new-meta-questions-button')){
                 $dialog.hide();
                 $diamond.removeClass("topbar-icon-on");
             }
         });
-    
+
         if (GM_getValue(NEWQUESTIONS, -1) == -1) {
             GM_setValue(NEWQUESTIONS, JSON.stringify(lastQuestions));
         } else {
             lastQuestions = JSON.parse(GM_getValue(NEWQUESTIONS));
         }
-    
+
         $.getJSON(apiLink, function(json) {
             var latestQuestion = json.items[0].title;
             if (latestQuestion == lastQuestions[metaName]) {
@@ -1116,33 +1088,33 @@ var features = { //ALL the functions must go in here
                 $diamond.removeClass(DIAMONDON).addClass(DIAMONDOFF);
             } else {
                 $diamond.removeClass(DIAMONDOFF).addClass(DIAMONDON);
-    
-                for (i = 0; i < json.items.length; i++) {
+
+                for (var i = 0; i < json.items.length; i++) {
                     var title = json.items[i].title,
-                        link = json.items[i].link,
-                        author = json.items[i].owner.display_name;
+                        link = json.items[i].link;
+                        //author = json.items[i].owner.display_name;
                     addQuestion(title, link);
-    
+
                 }
                 lastQuestions[metaName] = latestQuestion;
-    
+
                 $diamond.click(function() {
                     GM_setValue(NEWQUESTIONS, JSON.stringify(lastQuestions));
                 });
             }
         });
-    
+
         function addQuestion(title, link){
             var $li = $('<li/>'),
                 $link = $('<a/>', {href: link}),
                 $icon = $('<div/>', {class: 'site-icon favicon favicon-' + favicon}),
                 $message = $('<div/>', {class: 'message-text'}).append($('<h4/>', {html: title}));
-    
+
             $link.append($icon).append($message).appendTo($li);
             $questions.append($li);
         }
-        
-        
+
+
     },
 
     betterCSS: function() {
@@ -1259,7 +1231,7 @@ var features = { //ALL the functions must go in here
                 }
             } else { //sbs was toggled off
                 //check if sbs is off for all existing questions and answers
-                if ($('.question').find('.wmd-preview.sbs-on').length == 0 && $('.answer').find('.wmd-preview.sbs-on').length == 0) {
+                if (!$('.question').find('.wmd-preview.sbs-on').length && !$('.answer').find('.wmd-preview.sbs-on').length) {
                     $('.votecell').removeClass('sbs-on');
 
                     if (!($('#wmd-preview').hasClass('sbs-on'))) { //sbs is off for everything
@@ -1313,13 +1285,13 @@ Toggle SBS?</div></li>';
                 var numAnchors = anchorList.length;
                 var itemIDs = [];
 
-                for (i = 1; i <= numAnchors - 2; i++) { //the first and last anchors aren't answers
+                for (var i = 1; i <= numAnchors - 2; i++) { //the first and last anchors aren't answers
                     itemIDs.push(anchorList[i].name);
                 }
                 itemIDs.push($('.question').data('questionid'));
 
                 //event listeners for adding the sbs toggle buttons for editing existing questions or answers
-                for (var i = 0; i <= numAnchors - 2; i++) {
+                for (i = 0; i <= numAnchors - 2; i++) {
                     waitForKeyElements('#wmd-redo-button-' + itemIDs[i], SBS);
                 }
             }
@@ -1358,7 +1330,7 @@ Toggle SBS?</div></li>';
     addAuthorNameToInboxNotifications: function() {
         // Description: To add the author's name to inbox notifications
 
-        getAuthorName($node) = ({
+        var getAuthorName = (function() {
             var getFromAPI = {
                 'comment': function(d) {
                     var comment_id = d.link.split('/')[5].split('?')[0];
@@ -1382,13 +1354,14 @@ Toggle SBS?</div></li>';
                     console.log('Script does not currently support getting author information for type "' + d.n.find('.item-header .item-type').text() + '"!');
                 }
             };
-            var type = $node.find('.item-header .item-type').text();
 
-            return function($node) {getFromAPI[type] || getFromAPI['other'])({
-                n: $node,
-                link: $node.find('a').eq(0).attr('href'),
-                sitename: $node.find('a').eq(0).attr('href').split('/')[2].split('.')[0]
-            })};
+            return function($node) {
+                (getFromAPI[$node.find('.item-header .item-type').text()] || getFromAPI.other)({
+                    n: $node,
+                    link: $node.find('a').eq(0).attr('href'),
+                    sitename: $node.find('a').eq(0).attr('href').split('/')[2].split('.')[0]
+                });
+            };
             //TODO: test
         })();
 
@@ -1424,8 +1397,8 @@ Toggle SBS?</div></li>';
     scrollToTop: function() {
         // Description: For adding a button at the bottom right part of the screen to scroll back to the top
         //https://github.com/shu8/Stack-Overflow-Optional-Features/pull/34
-        if (!SOHelper.getSiteType() === 'chat') { // don't show scrollToTop button while in chat.
-            var $scroll = $('<div/>', {
+        if (SOHelper.getSiteType() !== 'chat') { // don't show scrollToTop button while in chat.
+            $('<div/>', {
                 id: 'sox-scrollToTop',
                 click: function(e) {
                     e.preventDefault();
@@ -1470,9 +1443,7 @@ Toggle SBS?</div></li>';
             AGEDAWAY: 'aged away'
         };
 
-        var groupKey,
-            typeKey,
-            total,
+        var total,
             count,
             percentage;
 
@@ -1500,17 +1471,17 @@ Toggle SBS?</div></li>';
         }
 
         // add percentages
-        for (groupKey in group) {
-            total = getFlagCount(group[groupKey], type.TOTAL);
-            for (typeKey in type) {
+        group.forEach(function(item) {
+            total = getFlagCount(item, type.TOTAL);
+            type.forEach(function(typeitem, typeKey) {
                 if (typeKey !== 'TOTAL') {
-                    count = getFlagCount(group[groupKey], type[typeKey]);
+                    count = getFlagCount(item, typeitem);
                     percentage = calculatePercentage(count, total);
                     //console.log(groupKey + ": " + typeKey + " Flags -- " + count);
-                    addPercentage(group[groupKey], type[typeKey], percentage);
+                    addPercentage(item, typeitem, percentage);
                 }
-            }
-        }
+            });
+        });
     },
 
     linkedPostsInline: function() {
@@ -1568,12 +1539,12 @@ Toggle SBS?</div></li>';
         // Description: Hides the Looking for a Job module from the sidebar
         $('#hireme').remove();
     },
-    
+
     hideCommunityBulletin: function() {
         // Description: Hides the Community Bulletin module from the sidebar
         $('#sidebar .community-bulletin').remove();
     },
-    
+
     hideSearchBar: function() {
         // Description: Replaces the searchbox with a button that takes you to the search page
         var $topbar = $('.topbar'),
@@ -1589,23 +1560,30 @@ Toggle SBS?</div></li>';
         $searchbar.remove();
         $links.append($search);
     },
+    
+    themes: function() {
+        theming();
+    },
 
-    editTheme: function() {
-        var $themeEditor = $(GM_getResourceText('themeEditor')),
-            $soxThemeButton = $('<a/>', {
-                id: 'soxThemeButton',
-                class: 'topbar-icon yes-hover sox-theme-button', //TODO: sox-theme-button
-                title: 'Edit site theme',
-                style: 'color: #A1A1A1',
-                click: function(e) {
-                    e.preventDefault();
-                    $('#sox-theme-editor').toggle();
-                }
-            }),
-            $icon = $('<i/>', {
-                class: 'fa fa-cogs' //TODO
-            });
-        $themeEditor.appendTo('body');
-        $soxThemeButton.append($icon).appendTo('div.network-items');
+    editTheme: function() { //only if retheme exists
+        if (JSON.parse(GM_getValue(SOX_SETTINGS)).themes) {
+            var $themeEditor = $(GM_getResourceText('themeEditor')),
+                $soxThemeButton = $('<a/>', {
+                    id: 'soxThemeButton',
+                    class: 'topbar-icon yes-hover sox-theme-button', //TODO: sox-theme-button
+                    title: 'Edit site theme',
+                    style: 'color: #A1A1A1',
+                    click: function(e) {
+                        e.preventDefault();
+                        $('#sox-theme-editor').toggle();
+                    }
+                }),
+                $icon = $('<i/>', {
+                    class: 'fa fa-css3' //TODO
+                });
+            $themeEditor.appendTo('body');
+            $soxThemeButton.append($icon).appendTo('div.network-items');
+            themeEditor();
+        }
     }
 };

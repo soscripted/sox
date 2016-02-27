@@ -32,8 +32,8 @@
 // ==/UserScript==
 /*jshint multistr: true */
 (function(sox, $, undefined) {
-    const SOX = 'Stack Overflow Extras';
-    const SOX_SETTINGS = 'SOXSETTINGS';
+    //var SOX = 'Stack Overflow Extras';
+    var SOX_SETTINGS = 'SOXSETTINGS';
 
     var $settingsDialog = $(GM_getResourceText('settingsDialog')),
         $soxSettingsDialog,
@@ -43,7 +43,7 @@
         $soxSettingsClose;
 
     function isAvailable() {
-        return !(GM_getValue(SOX_SETTINGS, -1) == -1);
+        return GM_getValue(SOX_SETTINGS, -1) != -1;
     }
 
     function getSettings() {
@@ -61,7 +61,7 @@
 
     function isDeprecated() { //checks whether the saved settings contain a deprecated feature
         //TODO: add function names to an array and loop instead of || .. || .. ||
-        settings = getSettings();
+        var settings = getSettings();
         if (settings.indexOf('answerCountSidebar') != -1 ||
             settings.indexOf('highlightClosedQuestions') != -1 ||
             settings.indexOf('unHideAnswer') != -1 ||
@@ -120,6 +120,7 @@
             ['hideHireMe', 'Hide the Looking for a Job module'],
             ['hideCommunityBulletin', 'Hide the Community Bulletin module'],
             ['hideSearchBar', 'Replaces the searchbar with an link to the search page'],
+            ['themes', 'Enable themes'],
             ['themeEditor', 'Enable theme editor']
         ]);
 
@@ -145,7 +146,7 @@
             ['copyCommentsLink', 'Copy \'show x more comments\' to the top'],
             ['commentShortcuts', 'Use Ctrl+I,B,K (to italicise, bolden and add code backticks) in comments'],
             ['quickCommentShortcutsMain', 'Add shortcuts to add pre-defined comments to comment fields'],
-            ['commentReplies', 'Add reply links to comments for quick replying (without having to type someone's username)'],
+            ['commentReplies', 'Add reply links to comments for quick replying (without having to type someone\'s username)'],
             ['autoShowCommentImages', 'View linked images (to imgur) in comments inline'],
             ['showCommentScores', 'Show your comment and comment replies scores in your profile tabs']
         ]);
@@ -208,7 +209,7 @@
             location.reload(); // reload page to reflect changed settings
         });
         $soxSettingsSave.on('click', function() {
-            extras = [];
+            var extras = [];
             $soxSettingsDialogFeatures.find('input[type=checkbox]:checked').each(function() {
                 var x = $(this).attr('id');
                 extras.push(x); //Add the function's ID (also the checkbox's ID) to the array
@@ -219,11 +220,12 @@
 
         // check if settings exist and execute desired functions
         if (isAvailable()) {
-            extras = getSettings();
+            var extras = getSettings();
             if (isDeprecated()) { //if the setting is set but a deprecated, non-existent feature exists, then delete the setting and act as if it is new
                 reset();
             } else {
-                for (i = 0; i < extras.length; ++i) {
+                for (var i = 0; i < extras.length; ++i) {
+                    //TODO: weird ++i and i++ in catch
                     $soxSettingsDialogFeatures.find('#' + extras[i]).prop('checked', true);
                     try {
                         features[extras[i]](); //Call the functions that were chosen

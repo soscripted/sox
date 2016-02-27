@@ -1,10 +1,10 @@
-themeEditor = function() {
+var themeEditor = function() {
     var siteName = SOHelper.getSiteName(),
         siteType = SOHelper.getSiteType();
     function userSelectElement() {
         $('#sox-theme-editor').hide();
         //highlight element under mouse - http://stackoverflow.com/questions/4711023/how-do-i-efficiently-highlight-element-under-mouse-cursor-with-an-overlay
-        window.selectingElement = true;
+        var selectingElement = true;
         var $box = $('<div/>', {'class': 'outer'}).css({
             display: 'none',
             position: 'absolute', 
@@ -71,18 +71,18 @@ themeEditor = function() {
             browserspecific.push(item); //TODO: IE, mobile
         } else {
             styles.push(item);
-        };
-    };
+        }
+    }
     $('#sox-style-item-selector').append(styles.reduce(function(total, next) {
-        return total + '<option value='' + next + ''>' + next + '</option>'
-    });
+        return total + '<option value="' + next + '">' + next + '</option>';
+    }));
     $('#sox-style-item-selector-browser-specific').append(browserspecific.reduce(function(total, next) {
-        return total + '<option value='' + next + ''>' + next + '</option>'
-    });
+        return total + '<option value="' + next + '">' + next + '</option>';
+    }));
     $('#sox-style-item-selector').on('change', function() { //TODO: only on value change
     });
     $('#sox-style-item-selector-browser-specific').on('change', function() {
-        if($('#sox-style-item-selector-browser-specific').val().contains('color') {
+        if($('#sox-style-item-selector-browser-specific').val().contains('color')) {
             $('sox-style-item-value').attr('type', 'color');
         } else {
             $('sox-style-item-value').attr('type', 'text');
@@ -90,44 +90,44 @@ themeEditor = function() {
     });
     /* -------- Highlighters/anti-highlighters -------- */
     $('#sox-element-classes').on('mouseenter', 'li', function(e) {
-        $('.' + e.target.innerHTML).addClass('sox-highlight')
+        $('.' + e.target.innerHTML).addClass('sox-highlight');
     });
     $('#sox-element-classes').on('mouseleave', 'li', function(e) {
-        $('.' + e.target.innerHTML).removeClass('sox-highlight')
+        $('.' + e.target.innerHTML).removeClass('sox-highlight');
     });
-    $$('#sox-element-id').on('mouseenter', 'li', function(e) {
-        $('#' + e.target.innerHTML).addClass('sox-highlight')
+    $('#sox-element-id').on('mouseenter', 'li', function(e) {
+        $('#' + e.target.innerHTML).addClass('sox-highlight');
     });
     $('#sox-element-id').on('mouseleave', 'li', function(e) {
-        $('#' + e.target.innerHTML).removeClass('sox-highlight')
+        $('#' + e.target.innerHTML).removeClass('sox-highlight');
     });
     /* -------- Adders -------- */
     $('#sox-element-attributes').on('click', 'li', function(e) {
         //TODO: check for dupe
         //selected to css
-        $('#sox-edited-rule').append('<span class='sox-rule-selector'>['/*att*/ + e.target.innerHTML + ']</span>');
+        $('#sox-edited-rule').append('<span class="sox-rule-selector">['/* + att*/ + e.target.innerHTML + ']</span>');
     });
     $('#sox-element-classes').on('click', 'li', function(e) {
         //TODO: check for dupe
-        $('#sox-edited-rule').append('<span class='sox-rule-selector'>.' + e.target.innerHTML + '</span>');
+        $('#sox-edited-rule').append('<span class="sox-rule-selector">.' + e.target.innerHTML + '</span>');
     });
     $('#sox-element-id').on('click', function(e) {
         //TODO: check for dupe
-        $('#sox-edited-rule').append('<span class='sox-rule-selector'>#' + e.target.innerHTML + '</span>');
+        $('#sox-edited-rule').append('<span class="sox-rule-selector">#' + e.target.innerHTML + '</span>');
     });
     $('#sox-element-tag').on('click', function(e) {
         //TODO: check for dupe
-        $('#sox-edited-rule').append('<span class='sox-rule-selector'>' + e.target.innerHTML + '</span>');
+        $('#sox-edited-rule').append('<span class="sox-rule-selector">' + e.target.innerHTML + '</span>');
     });
     $('#sox-rule-applies-to').on('click', 'li', function(e) {
         $('#sox-rule-applies-to').remove($(e.target));
     });
     //Add rule click handler
     $('#sox-add-style-item').on('click', function() {
-        var styleName = $('#sox-style-item-selector').is(':enabled')
-            ? $('#sox-style-item-selector').val()
-            : $('#sox-style-item-selector-browser-specific').val();
-        $('#sox-edited-rule').html($('#sox-edited-rule').html().replace(/\r\n}$/m, '    ' + styleName + ':' + $('sox-style-item-value').val() + ';\r\n}'))
+        var styleName = $('#sox-style-item-selector').is(':enabled') ?
+            $('#sox-style-item-selector').val() :
+            $('#sox-style-item-selector-browser-specific').val();
+        $('#sox-edited-rule').html($('#sox-edited-rule').html().replace(/\r\n}$/m, '    ' + styleName + ':' + $('sox-style-item-value').val() + ';\r\n}'));
     });
     $('#sox-rule-toggle-display').on('click', function() {
         
@@ -151,4 +151,4 @@ themeEditor = function() {
     //TODO: delete theme: GM_deleteValue(siteName + '_' + siteType + '_' + THEME_NAME + '_CSS')
     //TODO: theme URL manager
     //TODO: theme repos
-}
+};

@@ -1,11 +1,11 @@
-SOHelper = {
+var SOHelper = {
     getUsername: function() {
-        $uname = $('body > div.topbar > div > div.topbar-links > a > div.gravatar-wrapper-24');
+        var $uname = $('body > div.topbar > div > div.topbar-links > a > div.gravatar-wrapper-24');
         return ($uname.length ? $uname.attr('title') : false);
     },
 
     getReputation: function() {
-        $rep = $('div.topbar-links .links-container>span.reputation');
+        var $rep = $('div.topbar-links .links-container>span.reputation');
         return ($rep.length ? $rep.text().trim().replace(',', '') : false);
     },
 
@@ -28,11 +28,11 @@ SOHelper = {
     isOnUserProfile: function() {
         return location.href.indexOf('/users/') > -1;
     },
-    
+
     getFromAPI: function(type, id, sitename, callback, sortby) {
         $.getJSON('https://api.stackexchange.com/2.2/' + type + id + '?order=desc&sort=' + (sortby || 'creation') + '&site=' + sitename, callback);
     },
-    
+
     getSiteType: function() {
         if($('#jplayer').length && /^chat\./.test(location.hostname)) {
             return 'chat';
@@ -97,12 +97,12 @@ SOHelper = {
             'vote down': 125,
             'vote up': 15
         };
-        return function(priv) {        
+        return function(priv) {
             if (!SOHelper.isLoggedIn()) {
                 return false;
             }
-            var repNeeded = SOHelper.getSiteType() == 'graduated' ? graduatedPrivs[priv] : betaPrivs[priv];
+            var repNeeded = SOHelper.isBeta() ? betaPrivs[priv] : graduatedPrivs[priv];
             return SOHelper.getReputation() > repNeeded;
-        }
-    })();
-}
+        };
+    })()
+};
