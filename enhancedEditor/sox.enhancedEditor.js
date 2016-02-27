@@ -24,9 +24,11 @@ var enhancedEditor = {
             'https://rawgit.com/ajaxorg/ace-builds/master/src-noconflict/snippets/javascript.js'];
 
         for (var i = 0; i < urls.length; i++) {
-            $('head').append('<script src="'+urls[i]+'"></script>');
+            script = document.createElement('script');
+            script.src = urls[i];
+            document.body.appendChild(script);
         }
-        $('head').append("<link rel='stylesheet' type='text/css' href='https://rawgit.com/soxscripted/sox/experimental/enhancedEditor/sox.enhancedEdtitor.css' />");
+        $('head').append("<link rel='stylesheet' type='text/css' href='https://rawgit.com/soxscripted/sox/experimental/enhancedEditor/sox.enhancedEditor.css' />");
 
         $('[id^="enhancedEditor"]').remove();
         var s = '#'+wmd; //s is the selector we pass onto each function so the action is applied to the correct textarea (and not, for example the 'add answer' textarea *and* the 'edit' textarea!)
