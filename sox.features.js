@@ -308,10 +308,10 @@ var features = { //ALL the functions must go in here
 
         function addCheckboxes() {
             $('#reasons').remove(); //remove the div containing everything, we're going to add/remove stuff now:
-            if ($('[class^="inline-editor"]').length < 0) { //if there is no inline editor, do nothing
+            if (!$('[class^="inline-editor"]').length) { //if there is no inline editor, do nothing
                 return;
             }
-            if (window.location.href.indexOf('/edit') > -1 || $('[class^="inline-editor"]').length > 0) { //everything else
+            if (/\/edit/.test(window.location.href) || $('[class^="inline-editor"]').length) { //everything else
                 $('.form-submit').before('<div id="reasons"></div>');
 
                 $.each(JSON.parse(GM_getValue('editReasons')), function(i, obj) {
@@ -984,7 +984,7 @@ var features = { //ALL the functions must go in here
                 var vote = $(this).find('.vote');
                 //var post_contents = $(this).next('td.postcell, td.answercell');
                 if ($(this).offset().top - $(window).scrollTop() + offset <= 0) {
-                    if ($(this).offset().top + $(this).height() - $(window).scrollTop() + offset - vote.height() > 0) {
+                    if ($(this).offset().top + $(this).height() - $(window).scrollTop() + offset - vote.height() > 34) {
                         vote.css({
                             position: 'fixed',
                             left: $(this).offset().left + 4,
@@ -1264,7 +1264,7 @@ Toggle SBS?</div></li>';
                 //add click listeners for "Save Edits" and "cancel" buttons
                 // - also gets added to the "Post New Question" and "Post New Answer" button as an innocuous (I think) side effect
                 $('#post-editor' + toAppend).siblings('.form-submit').children().on('click', function() {
-                    if ($(this).parent().siblings('.sbs-on').length > 0) { //sbs was on, so turn it off
+                    if ($(this).parent().siblings('.sbs-on').length) { //sbs was on, so turn it off
                         startSBS(toAppend);
                     }
                 });
