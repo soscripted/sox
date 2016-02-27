@@ -20,7 +20,7 @@
 // @require      https://cdn.rawgit.com/camagu/jquery-feeds/master/jquery.feeds.js
 // @require      https://rawgit.com/soscripted/sox/experimental/sox.helpers.js
 // @require      https://rawgit.com/soscripted/sox/experimental/sox.features.js
-// @require      https://rawgit.com/soscripted/sox/experimental/themes/sox.themeeditor.js?
+// @require      https://rawgit.com/soscripted/sox/experimental/themes/sox.themeeditor.js
 // @require      https://rawgit.com/soscripted/sox/experimental/themes/sox.theming.js
 // @require      https://rawgit.com/soscripted/sox/experimental/chat/sox.chat.js
 // @resource     settingsDialog https://rawgit.com/soscripted/sox/experimental/sox.dialog.html
