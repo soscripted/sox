@@ -57,15 +57,18 @@
     float: right;
     padding: 14px;
 }
-.sox-settings-button {		
-    background-image: none !important;		
-    padding-top: 10px;		
-    font-size: 14px;		
-    color: #999;		
-    height: 24px !important;		
-    min-width: 34px;		
+.sox-settings-button {
+    background-image: none !important;
+    padding-top: 10px;
+    font-size: 14px;
+    color: #999;
+    height: 24px !important;
+    min-width: 34px;
  }
- 
+ .sox-settings-button:hover {
+     color: #999;
+  }
+
 /* -------- sox specific features' CSS ------- */
 #sox-scrollToTop {
     position: fixed;

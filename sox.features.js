@@ -221,12 +221,12 @@ var features = { //ALL the functions must go in here
 
     highlightQuestions: function() {
         // Description: For highlighting only the tags of favorite questions
-        
+
         function change(betterCSS) {
             var interestingTagsDiv = $("#interestingTags").text();
             var interesting = interestingTagsDiv.split(' ');
             interesting.pop(); //Because there's one extra value at the end
-            
+
             $(".tagged-interesting > .summary > .tags > .post-tag").filter(function(index) {
                 return interesting.indexOf($(this).text()) > -1;
             }).css(betterCSS);
@@ -253,7 +253,7 @@ var features = { //ALL the functions must go in here
                 //}
             }
             change(betterCSS);
-            
+
             new MutationObserver(function(records) {
                 records.forEach(function(mutation) {
                     if(mutation.attributeName == 'class') {
@@ -763,7 +763,7 @@ var features = { //ALL the functions must go in here
                 if($(this).text() == $(this).attr('href')) { //if there isn't text on it (ie. bare url)
                     var sitename = $(this).attr('href').split('/')[2].split('.')[0],
                         id = $(this).attr('href').split('/')[4];
-    
+
                     $.getJSON("https://api.stackexchange.com/2.2/questions/" + id + "?order=desc&sort=activity&site=" + sitename, function(json) {
                         anchor.html(json.items[0].title); //Get the title and add it in
                     });
@@ -1090,7 +1090,9 @@ var features = { //ALL the functions must go in here
                                   }});
 
         $dialog.append($header).append($content.append($questions)).prependTo(".js-topbar-dialog-corral");
-        $diamond.appendTo("div.network-items");
+
+        // inject diamond before sox button
+        $("#soxSettingsButton").before($diamond);
 
         $(document).mouseup(function(e) {
             if (!$dialog.is(e.target)
