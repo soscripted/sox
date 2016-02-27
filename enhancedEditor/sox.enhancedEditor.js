@@ -15,18 +15,18 @@ var enhancedEditor = {
     },
     
     init: function(wmd) {
-        var urls = ['https://cdn.rawgit.com/dwieeb/jquery-textrange/1.x/jquery-textrange.js', 
-            'https://cdn.rawgit.com/jeresig/jquery.hotkeys/master/jquery.hotkeys.js',
-            'https://rawgit.com/ajaxorg/ace-builds/master/src-noconflict/ace.js',
-            'https://rawgit.com/ajaxorg/ace-builds/master/src-noconflict/ext-language_tools.js',
-            'https://rawgit.com/ajaxorg/ace-builds/master/src-noconflict/theme-github.js',
-            'https://rawgit.com/ajaxorg/ace-builds/master/src-noconflict/mode-javascript.js',
-            'https://rawgit.com/ajaxorg/ace-builds/master/src-noconflict/snippets/javascript.js'];
+        var urls = ['http://cdn.rawgit.com/dwieeb/jquery-textrange/1.x/jquery-textrange.js', 
+            'http://cdn.rawgit.com/jeresig/jquery.hotkeys/master/jquery.hotkeys.js',
+            'http://rawgit.com/ajaxorg/ace-builds/master/src-noconflict/ace.js',
+            'http://rawgit.com/ajaxorg/ace-builds/master/src-noconflict/ext-language_tools.js',
+            'http://rawgit.com/ajaxorg/ace-builds/master/src-noconflict/theme-github.js',
+            'http://rawgit.com/ajaxorg/ace-builds/master/src-noconflict/mode-javascript.js',
+            'http://rawgit.com/ajaxorg/ace-builds/master/src-noconflict/snippets/javascript.js'];
 
         for (var i = 0; i < urls.length; i++) {
             script = document.createElement('script');
             script.src = urls[i];
-            document.body.appendChild(script);
+            document.head.appendChild(script);
         }
         $('head').append("<link rel='stylesheet' type='text/css' href='https://rawgit.com/soscripted/sox/experimental/enhancedEditor/sox.enhancedEditor.css' />");
 
