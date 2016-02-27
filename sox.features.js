@@ -31,7 +31,7 @@ var features = { //ALL the functions must go in here
     renameChat: function() {
         // Description: Renames Chat tabs to prepend 'Chat' before the room name
 
-        if (SOHelper.isOnChat()) {
+        if (SOHelper.getSiteType() === 'chat') {
             document.title = 'Chat - ' + document.title;
         }
     },
@@ -202,7 +202,7 @@ var features = { //ALL the functions must go in here
             var line = document.createElement('div');
             line.innerHTML = "<br><br>";
             toolbar.parentElement.insertBefore(line, toolbar);
-        } else if (!SOHelper.isOnChat()) { //for all the normal, unannoying sites, excluding chat ;)
+        } else if (!SOHelper.getSiteType() === 'chat') { //for all the normal, unannoying sites, excluding chat ;)
             $('.topbar').css({
                 'position': 'fixed',
                 'z-index': '1001'
@@ -1413,7 +1413,7 @@ Toggle SBS?</div></li>';
     scrollToTop: function() {
         // Description: For adding a button at the bottom right part of the screen to scroll back to the top
         //https://github.com/shu8/Stack-Overflow-Optional-Features/pull/34
-        if (!SOHelper.isOnChat()) { // don't show scrollToTop button while in chat.
+        if (!SOHelper.getSiteType() === 'chat') { // don't show scrollToTop button while in chat.
             var $scroll = $("<div/>", {
                 id: "sox-scrollToTop",
                 click: function(e) {

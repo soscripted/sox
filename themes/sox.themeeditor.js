@@ -1,8 +1,6 @@
 themeEditor = function() {
     var siteName = SOHelper.getSiteName(),
-        siteType = SOHelper.isOnMeta() ? 'meta'
-                 : SOHelper.isOnChat() ? 'chat'
-                 : 'main';
+        siteType = SOHelper.getSiteType();
     function userSelectElement() {
         $("#sox-theme-editor").hide();
         //highlight element under mouse - http://stackoverflow.com/questions/4711023/how-do-i-efficiently-highlight-element-under-mouse-cursor-with-an-overlay
