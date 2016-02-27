@@ -237,7 +237,7 @@ var enhancedEditor = {
     
     betterTabKey: function(s) {
         $(s).on('keydown', function(e) {
-            if (keyCode === 9) { //http://stackoverflow.com/a/25430815/3541881
+            if (e.which === 9) { //http://stackoverflow.com/a/25430815/3541881
                 e.preventDefault();
                 var start = this.selectionStart;
                 var end = this.selectionEnd;
