@@ -1474,14 +1474,14 @@ Toggle SBS?</div></li>';
             var item = group[groupKey],
                 total = getFlagCount(item, type.TOTAL);
             for (var typeKey in type) {
-                typeItem = type[typeKey];
+                var typeItem = type[typeKey];
                 if (typeKey !== 'TOTAL') {
                     count = getFlagCount(item, typeItem);
                     percentage = calculatePercentage(count, total);
                     //console.log(groupKey + ": " + typeKey + " Flags -- " + count);
                     addPercentage(item, typeItem, percentage);
                 }
-            });
+            }
         }
     },
 
