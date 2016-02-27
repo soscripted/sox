@@ -143,7 +143,7 @@
 
         addCategory('Comments');
         addFeatures([
-            //['copyCommentsLink', 'Copy \'show x more comments\' to the top'],
+            ['copyCommentsLink', 'Copy \'show x more comments\' to the top'],
             ['commentShortcuts', 'Use Ctrl+I,B,K (to italicise, bolden and add code backticks) in comments'],
             ['quickCommentShortcutsMain', 'Add shortcuts to add pre-defined comments to comment fields'],
             ['commentReplies', 'Add reply links to comments for quick replying (without having to type someone\'s username)'],

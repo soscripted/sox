@@ -85,7 +85,7 @@ var features = { //ALL the functions must go in here
         $('.user-info .user-details').css('text-overflow', 'ellipsis');
     },
 
-    moveCommentsLink: function() {
+    copyCommentsLink: function() {
         // Description: Adds the 'show x more comments' link before the commnents
         $('.js-show-link.comments-link').each(function() {
             var $this2 = $(this);
