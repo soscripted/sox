@@ -7,7 +7,7 @@ themeEditor = function() {
         window.selectingElement = true;
         var $box = $("<div/>", {"class": "outer"}).css({
             display: "none",
-            position: "absolute", 
+            position: "absolute",
             zIndex: 65535,
             background: "rgba(128, 128, 255, .3)"
         }).appendTo("body"),
@@ -29,10 +29,10 @@ themeEditor = function() {
             var $target = $(target);
             var offset = $target.offset();
             $box.css({
-                width:  $target.outerWidth()  - 1, 
-                height: $target.outerHeight() - 1, 
-                left:   offset.left, 
-                top:    offset.top 
+                width:  $target.outerWidth()  - 1,
+                height: $target.outerHeight() - 1,
+                left:   offset.left,
+                top:    offset.top
             });
         });
 
@@ -58,7 +58,7 @@ themeEditor = function() {
             $("#sox-element-classes").html($tr);
             $("#sox-element-id").html(target.id);
             $("#sox-element-tag").html(target.tagName.toLowerCase());
-            #("body").off("mousemove");
+            $("body").off("mousemove");
             $("#sox-theme-editor").show();
         });
     }
@@ -130,7 +130,7 @@ themeEditor = function() {
         $("#sox-edited-rule").html($("#sox-edited-rule").html().replace(/\r\n}$/m, "    " + styleName + ":" + $("sox-style-item-value").val() + ";\r\n}"))
     });
     $("#sox-rule-toggle-display").on("click", function() {
-        
+
     });
     //TODO: load existing rule - parse css - display as what name?
     var matches = /^(?:\s*([^{,]+),)*(?:\s*([^{]+))\s*\{(?:\s*([^:]+):\s*([^;]+)\s*;)+\s*\}\s*$/.exec(foo) //TODO: get all results
