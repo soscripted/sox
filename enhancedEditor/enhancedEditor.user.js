@@ -1,28 +1,18 @@
-// ==UserScript==
-// @name         Stack Exchange Editor Extra
-// @namespace    http://stackexchange.com/users/4337810/
-// @version      1.0.1
-// @description  A userscript that adds some extra features to the standard Stack Exchange Markdown Editor
-// @author       ᔕᖺᘎᕊ (http://stackexchange.com/users/4337810/)
-// @match        *://*.stackexchange.com/*
-// @match        *://*.stackoverflow.com/*
-// @match        *://*.superuser.com/*
-// @match        *://*.serverfault.com/*
-// @match        *://*.askubuntu.com/*
-// @match        *://*.stackapps.com/*
-// @match        *://*.mathoverflow.net/*
-// @require      https://cdn.rawgit.com/dwieeb/jquery-textrange/1.x/jquery-textrange.js
-// @require      https://cdn.rawgit.com/jeresig/jquery.hotkeys/master/jquery.hotkeys.js
-// @require      https://rawgit.com/ajaxorg/ace-builds/master/src-noconflict/ace.js
-// @require      https://rawgit.com/ajaxorg/ace-builds/master/src-noconflict/ext-language_tools.js
-// @require      https://rawgit.com/ajaxorg/ace-builds/master/src-noconflict/theme-github.js
-// @require      https://rawgit.com/ajaxorg/ace-builds/master/src-noconflict/mode-javascript.js
-// @require      https://rawgit.com/ajaxorg/ace-builds/master/src-noconflict/snippets/javascript.js
-// @grant        none
-// ==/UserScript==
-
 var enhancedEditor = {
     init: function(wmd) {
+        var urls = ['https://cdn.rawgit.com/dwieeb/jquery-textrange/1.x/jquery-textrange.js', 
+            'https://cdn.rawgit.com/jeresig/jquery.hotkeys/master/jquery.hotkeys.js',
+            'https://rawgit.com/ajaxorg/ace-builds/master/src-noconflict/ace.js',
+            'https://rawgit.com/ajaxorg/ace-builds/master/src-noconflict/ext-language_tools.js',
+            'https://rawgit.com/ajaxorg/ace-builds/master/src-noconflict/theme-github.js',
+            'https://rawgit.com/ajaxorg/ace-builds/master/src-noconflict/mode-javascript.js',
+            'https://rawgit.com/ajaxorg/ace-builds/master/src-noconflict/snippets/javascript.js'];
+
+        for (var i = 0; i < urls.length; i++) {
+            $('head').append('<script src="'+urls[i]+'"></script>');
+        }
+        $('head').append("<link rel='stylesheet' type='text/css' href='https://rawgit.com/soxscripted/sox/experimental/enhancedEditor/sox.enhancedEdtitor.css' />");
+
         $('[id^="enhancedEditor"]').remove();
         var s = '#'+wmd; //s is the selector we pass onto each function so the action is applied to the correct textarea (and not, for example the 'add answer' textarea *and* the 'edit' textarea!)
         enhancedEditor.startInsertLink(s);
@@ -30,7 +20,6 @@ var enhancedEditor = {
         enhancedEditor.betterTabKey(s);
         enhancedEditor.keyboardShortcuts(s);
         
-        $('head').append("<link rel='stylesheet' type='text/css' href='https://rawgit.com/shu8/Stack-Exchange-Editor-Pro/master/allCss.css?v=1.0.1' />");
         
         $(s).before("<span class='enhancedEditor-toolbar' id='enhancedEditor|"+s+"'>&nbsp;<span id='startAce'>Insert code (Ace editor)</span> | <span id='findReplace'>Find & Replace</span> | <span id='surroundKbd'>KBD-ify</span> | <span id='autoCorrect'>Auto correct</span></span>");
 
