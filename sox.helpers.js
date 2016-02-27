@@ -29,6 +29,10 @@ SOHelper = {
         return location.href.indexOf('/users/') > -1;
     },
     
+    getFromAPI: function(type, id, sitename, callback) {
+        $.getJSON('https://api.stackexchange.com/2.2/' type + id + '?order=desc&sort=creation&site=' + sitename, callback);
+    },
+    
     getSiteType: function() {
         if($('#jplayer').length && /^chat\./.test(location.hostname)) {
             return 'chat';
