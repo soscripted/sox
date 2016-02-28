@@ -32,7 +32,6 @@
 // ==/UserScript==
 /*jshint multistr: true */
 (function(sox, $, undefined) {
-    //var SOX = 'Stack Overflow Extras';
     var SOX_SETTINGS = 'SOXSETTINGS';
 
     var $settingsDialog = $(GM_getResourceText('settingsDialog')),
