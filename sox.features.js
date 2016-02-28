@@ -116,7 +116,7 @@ var features = { //ALL the functions must go in here
 
     fixedTopbar: function() {
         // Description: For making the topbar fixed (always stay at top of screen)
-        if ($(location).attr('hostname') == 'askubuntu.com') { //AskUbuntu is annoying. UnicornsAreVeryVeryYummy made the below code for AskUbuntu: https://github.com/shu8/Stack-Overflow-Optional-Features/issues/11 Thanks!
+        if (location.hostname == 'askubuntu.com') { //AskUbuntu is annoying. UnicornsAreVeryVeryYummy made the below code for AskUbuntu: https://github.com/shu8/Stack-Overflow-Optional-Features/issues/11 Thanks!
             var head = document.getElementsByTagName('head')[0],
                 ubuntuLinks = document.getElementsByClassName('nav-global')[0],
                 remove = document.getElementById('custom-header'),
@@ -1004,23 +1004,28 @@ var features = { //ALL the functions must go in here
 
         function stickcells(){
             $votecells.each(function() {
-                var offset = 0;
-                if ($(".topbar").css("position") == "fixed") {
-                    offset = 34;
+                var $topbar = $('.topbar'),
+                    topbarHeight = $topbar.outerHeight(),
+                    offset = 10;
+                if ($topbar.css('position') == 'fixed') {
+                    offset += topbarHeight;
                 }
-                var vote = $(this).find(".vote");
-                if ($(this).offset().top - $(window).scrollTop() + offset <= 0) {
-                    if ($(this).offset().top + $(this).height() - $(window).scrollTop() + offset - vote.height() > 0) {
-                        vote.css({
-                            position: "fixed",
-                            left: $(this).offset().left + 4,
-                            top: 10 + offset
+                var $voteCell = $(this),
+                    $vote = $voteCell.find('.vote'),
+                    vcOfset = $voteCell.offset(),
+                    scrollTop = $(window).scrollTop();
+                if (vcOfset.top - scrollTop - offset <= 0) {
+                    if (vcOfset.top + $voteCell.height() - scrollTop - offset - $vote.height() > topbarHeight) {
+                        $vote.css({
+                            position: 'fixed',
+                            left: vcOfset.left + 4,
+                            top: offset
                         });
                     } else {
-                        vote.removeAttr("style");
+                        $vote.removeAttr("style");
                     }
                 } else {
-                    vote.removeAttr("style");
+                    $vote.removeAttr("style");
                 }
             });
         }
