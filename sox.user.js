@@ -154,8 +154,7 @@
                 'answerCountSidebar',
                 'highlightClosedQuestions',
                 'unHideAnswer',
-                'flaggingPercentages',
-                'moveCommentsLink',
+                'flaggingPercentages'
             ];
         return (new RegExp('('+deprecatedFeatures.join('|')+')')).test(settings);
     }
