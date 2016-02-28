@@ -1564,35 +1564,5 @@ Toggle SBS?</div></li>';
 
         $searchbar.remove();
         $links.append($search);
-    },
-    
-    themes: function() {
-        theming();
-    },
-
-    editTheme: function() { //only if retheme exists
-        if (JSON.parse(GM_getValue(SOX_SETTINGS)).themes) {
-            var $themeEditor = $(GM_getResourceText('themeEditor')),
-                $soxThemeButton = $('<a/>', {
-                    id: 'soxThemeButton',
-                    class: 'topbar-icon yes-hover sox-theme-button', //TODO: sox-theme-button
-                    title: 'Edit site theme',
-                    style: 'color: #A1A1A1',
-                    click: function(e) {
-                        e.preventDefault();
-                        $('#sox-theme-editor').toggle();
-                    }
-                }),
-                $icon = $('<i/>', {
-                    class: 'fa fa-css3' //TODO
-                });
-            $themeEditor.appendTo('body');
-            $soxThemeButton.append($icon).appendTo('div.network-items');
-            themeEditor();
-        }
-    },
-    
-    enhancedEditor: function() {
-        enhancedEditor.startFeature();
     }
 };
