@@ -983,16 +983,12 @@ var features = { //ALL the functions must go in here
                 }
                 var vote = $(this).find('.vote');
                 //var post_contents = $(this).next('td.postcell, td.answercell');
-                if ($(this).offset().top - $(window).scrollTop() + offset <= 0) {
-                    if ($(this).offset().top + $(this).height() - $(window).scrollTop() + offset - vote.height() > -34) {
-                        vote.css({
-                            position: 'fixed',
-                            left: $(this).offset().left + 4,
-                            top: 10 + offset
-                        });
-                    } else {
-                        vote.removeAttr("style");
-                    }
+                if ($(this).offset().top + $(this).height() - $(window).scrollTop() + offset - vote.height() > -34) {
+                    vote.css({
+                        position: 'fixed',
+                        left: $(this).offset().left + 4,
+                        top: 10 + offset
+                    });
                 } else {
                     vote.removeAttr("style");
                 }
