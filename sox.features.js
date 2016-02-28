@@ -1586,5 +1586,9 @@ Toggle SBS?</div></li>';
             $soxThemeButton.append($icon).appendTo('div.network-items');
             themeEditor();
         }
+    },
+    
+    enhancedEditor: function() {
+        enhancedEditor.startFeature();
     }
 };
