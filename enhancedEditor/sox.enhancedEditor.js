@@ -272,14 +272,57 @@ var enhancedEditor = {
         .replace(/(?!\.\.\.*)([,.!?;:])(\S)/g, "$1 $2") //add space after punctuation
         .replace(/\s(\?|!)/g, "$1") //remove space before !/?
         .replace(/\bwud\b/gi, "would") //wud->would
-        .replace(/\bcant\b/gi, "can't") //cant->can't
         .replace(/\bcud\b/gi, "could") //cud->could
-        .replace(/\bwont\b/gi, "won't") //wont->won't
         .replace(/\bshud\b/gi, "should") //shud->should
         .replace(/\b(plz|pls)\b/gi, "please") //plz/pls->please
-        .replace(/\bim\b/gi, "I'm") //im->I'm
+        .replace(/\bi'(ve|ll|m|d)\b/gi, "I'$1") //i'(anything)->I'(anything)
         .replace(/\bu\b/gi, "you") //u->you
         .replace(/\bure?\b/gi, "your") //ur(e)->your
+        .replace(/\b(d)ont\b/gi, "$1on't")
+        .replace(/\b(t)eh\b/gi, "$1he")
+        .replace(/\b(()?:ubunto|ubunut|ubunutu|ubunu|ubntu|ubutnu|uuntu|unbuntu|ubunt|ubutu)\b/gi, "$1buntu")
+        .replace(/\b(a)rent\b/gi, "$1ren't")
+        .replace(/\b(c)ant\b/gi, "$1an't")
+        .replace(/\b(c)ouldnt\b/gi, "$1ouldn't")
+        .replace(/\b(d)idnt\b/gi, "$1idn't")
+        .replace(/\b(d)oesnt\b/gi, "$1oesn't")
+        .replace(/\b(d)ont\b/gi, "$1on't")
+        .replace(/\b(h)adnt\b/gi, "$1adn't")
+        .replace(/\b(h)asnt\b/gi, "$1asn't")
+        .replace(/\b(h)avent\b/gi, "$1aven't")
+        .replace(/\b(h)ed\b/gi, "$1e'd")
+        .replace(/\b(h)es\b/gi, "$1e's")
+        .replace(/\b(I)d\b/gi, "$1'd")
+        .replace(/\b(I)m\b/gi, "$1'm")
+        .replace(/\b(I)ve\b/gi, "$1've")
+        .replace(/\b(i)snt\b/gi, "$1sn't")
+        .replace(/\b(m)ightnt\b/gi, "$1ightn't")
+        .replace(/\b(m)ustnt\b/gi, "$1ustn't")
+        .replace(/\b(s)hant\b/gi, "$1han't")
+        .replace(/\b(s)hes\b/gi, "$1he's")
+        .replace(/\b(s)houldnt\b/gi, "$1houldn't")
+        .replace(/\b(t)hats\b/gi, "$1hat's")
+        .replace(/\b(t)heres\b/gi, "$1here's")
+        .replace(/\b(t)heyd\b/gi, "$1hey'd")
+        .replace(/\b(t)heyll\b/gi, "$1hey'll")
+        .replace(/\b(t)heyre\b/gi, "$1hey're")
+        .replace(/\b(t)heyve\b/gi, "$1hey've")
+        .replace(/\b(w)eve\b/gi, "$1e've")
+        .replace(/\b(w)erent\b/gi, "$1eren't")
+        .replace(/\b(w)hatll\b/gi, "$1hat'll")
+        .replace(/\b(w)hatre\b/gi, "$1hat're")
+        .replace(/\b(w)hats\b/gi, "$1hat's")
+        .replace(/\b(w)hatve\b/gi, "$1hat've")
+        .replace(/\b(w)heres\b/gi, "$1here's")
+        .replace(/\b(w)hod\b/gi, "$1ho'd")
+        .replace(/\b(w)holl\b/gi, "$1ho'll")
+        .replace(/\b(w)hove\b/gi, "$1ho've")
+        .replace(/\b(w)ont\b/gi, "$1on't")
+        .replace(/\b(w)ouldnt\b/gi, "$1ouldn't")
+        .replace(/\b(y)oud\b/gi, "$1ou'd")
+        .replace(/\b(y)oull\b/gi, "$1ou'll")
+        .replace(/\b(y)oure\b/gi, "$1ou're")
+        .replace(/\b(y)ouve\b/gi, "$1ou've")
         .replace(/(^.)/gm,  function (txt) { //Capitalise new line first character
             return txt.toUpperCase();
         })
