@@ -1,4 +1,4 @@
-﻿// ==UserScript==
+// ==UserScript==
 // @name         Stack Overflow Extras (SOX)
 // @namespace    https://github.com/soscripted/sox
 // @version      1.0.1
@@ -29,6 +29,14 @@
 /*jshint multistr: true */
 (function(sox, $, undefined) {
     var SOX_SETTINGS = 'SOXSETTINGS';
+
+    var $settingsDialog = $(GM_getResourceText('settingsDialog')),
+        $soxSettingsDialog,
+        $soxSettingsDialogFeatures,
+        $soxSettingsSave,
+        $soxSettingsReset,
+        $soxSettingsToggle,
+        $soxSettingsClose;
 
     function isAvailable() {
         return GM_getValue(SOX_SETTINGS, -1) != -1;
@@ -161,12 +169,12 @@
             .append('<link rel="stylesheet" type="text/css" href="https://rawgit.com/soscripted/sox/dev/sox.css?v=1.0.1a" />');
         $('body').append($settingsDialog);
 
-        var $soxSettingsDialog = $('#sox-settings-dialog'),
-	    $soxSettingsDialogFeatures = $soxSettingsDialog.find('#sox-settings-dialog-features'),
-            $soxSettingsSave = $soxSettingsDialog.find('#sox-settings-dialog-save'),
-            $soxSettingsReset = $soxSettingsDialog.find('#sox-settings-dialog-reset'),
-            $soxSettingsToggle = $soxSettingsDialog.find('#sox-settings-dialog-check-toggle'),
-            $soxSettingsClose = $soxSettingsDialog.find('#sox-settings-dialog-close');
+        $soxSettingsDialog = $('#sox-settings-dialog');
+        $soxSettingsDialogFeatures = $soxSettingsDialog.find('#sox-settings-dialog-features');
+        $soxSettingsSave = $soxSettingsDialog.find('#sox-settings-dialog-save');
+        $soxSettingsReset = $soxSettingsDialog.find('#sox-settings-dialog-reset');
+        $soxSettingsToggle = $soxSettingsDialog.find('#sox-settings-dialog-check-toggle');
+        $soxSettingsClose = $soxSettingsDialog.find('#sox-settings-dialog-close');
 
         loadFeatures(); //load all the features in the settings dialog
 
