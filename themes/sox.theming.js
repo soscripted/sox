@@ -2,22 +2,24 @@ var theming = function() {
     var siteName = SOHelper.getSiteName(),
         siteType = SOHelper.getSiteType();
     ////cdn.sstatic.net/sitename/all.css
-    var FONT_JSON = GM_getValue(siteName + '_FONTS'),
-        THEME_NAME = GM_getValue(siteName + '_THEME'),
-        REPOS = GM_getValue('THEME_REPOS'),
-        FAVICON_JSON = GM_getValue('FAVICONS'),
-        THEME = '',
-        THEME_URL = '',
-        SPRITESHEET_URL = '';
-    if (FONT_JSON) {
-        var FONTS = FONT_JSON ? JSON.parse(FONT_JSON) : null;
-        var FAVICONS = FAVICON_JSON ? JSON.parse(FAVICON_JSON) : null;
-    }
+    var FONT_JSON = GM_getValue('FONTS'),
+        THEME_JSON = GM_getValue('THEMES') || '',
+        REPO_JSON = GM_getValue('REPOS'),
+        FAVICON_URLS = GM_getValue('FAVICONS'),
+        SPRITESHEET_URLS = GM_getValue('SPRITESHEETS');
         //JS_URL = GM_getValue(siteName + '_' + siteType + '_' + THEME_NAME + '_URL'), //TODO: load as extension module
-    if (THEME_NAME.contains('.')) {
+    if (FONT_JSON) {
+        var ALL_FONTS = FONT_JSON ? JSON.parse(FONT_JSON) : {};
+        var FONTS = $.extend(true, {}, ALL_FONTS.all || {}, ALL_FONTS[siteName] || {});
+        var ALL_THEMES = THEME_JSON ? JSON.parse(THEME_JSON) : {};
+        var THEME = $.extend(true, {}, ALL_THEMES.all || {}, ALL_THEMES[siteName] || {});
+        var FAVICONS = FAVICON_JSON ? JSON.parse(FAVICON_JSON) : {};
+        var REPOS = REPO_JSON ? JSON.parse(REPO_JSON) : [];
+    }
+
+    if (THEME.contains('.')) {
         var themeParts = THEME_NAME.split('.');
-        THEME = $.get(REPOS[themeParts[0]] + themeParts[1] + '.css');
-            //TODO: spritesheet svg as well?
+        THEME = $.get(REPOS[themeParts[0]] + themeParts[1] + '.css'); //TODO: spritesheet svg as well?
     } else {
         THEME_URL = GM_getValue(siteName + '_' + siteType + '_' + THEME_NAME + '_CSS_URL');
         SPRITESHEET_URL = GM_getValue(siteName + '_' + siteType + '_' + THEME_NAME + '_SPRITESHEET');
@@ -93,3 +95,13 @@ var theming = function() {
 
     //TODO: get other settings from PPCG script - e.g. question of the day
 };
+
+var changeTheme = function() {
+    var REPO_JSON = GM_getValue('THEME_REPOS'),
+        REPOS = REPO_JSON ? JSON.parse(REPO_JSON) : null;
+    for(var i in REPOS) {
+        repo = REPOS[i];
+        
+    }
+}
+//TODO: load repos
