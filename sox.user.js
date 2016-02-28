@@ -19,7 +19,7 @@
 // @require      https://cdn.rawgit.com/jeresig/jquery.hotkeys/master/jquery.hotkeys.js
 // @require      https://cdn.rawgit.com/camagu/jquery-feeds/master/jquery.feeds.js
 // @require      https://rawgit.com/DJDavid98/sox/sticky-vote-btn-fix/sox.helpers.js
-// @require      https://rawgit.com/DJDavid98/sox/sticky-vote-btn-fix/sox.features.js
+// @require      https://github.com/DJDavid98/sox/raw/sticky-vote-btn-fix/sox.features.js
 // @require      https://rawgit.com/DJDavid98/sox/sticky-vote-btn-fix/themes/sox.themeeditor.js
 // @require      https://rawgit.com/DJDavid98/sox/sticky-vote-btn-fix/themes/sox.theming.js
 // @require      https://rawgit.com/DJDavid98/sox/sticky-vote-btn-fix/chat/sox.chat.js
