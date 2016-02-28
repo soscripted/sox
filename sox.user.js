@@ -39,7 +39,9 @@
         $soxSettingsDialogFeatures,
         $soxSettingsSave,
         $soxSettingsReset,
-        $soxSettingsClose;
+        $soxSettingsToggle,
+        $soxSettingsClose
+
 
     function isAvailable() {
         return GM_getValue(SOX_SETTINGS, -1) != -1;
@@ -172,13 +174,14 @@
 
         // add sox CSS file and font-awesome CSS file
         $('head').append('<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">')
-                 .append('<link rel="stylesheet" type="text/css" href="https://rawgit.com/soscripted/sox/dev/sox.css" />');
+            .append('<link rel="stylesheet" type="text/css" href="https://rawgit.com/soscripted/sox/dev/sox.css" />');
         $('body').append($settingsDialog);
 
         $soxSettingsDialog = $('#sox-settings-dialog');
         $soxSettingsDialogFeatures = $soxSettingsDialog.find('#sox-settings-dialog-features');
         $soxSettingsSave = $soxSettingsDialog.find('#sox-settings-dialog-save');
         $soxSettingsReset = $soxSettingsDialog.find('#sox-settings-dialog-reset');
+        $soxSettingsToggle = $soxSettingsDialog.find('#sox-settings-dialog-check-toggle');
         $soxSettingsClose = $soxSettingsDialog.find('#sox-settings-dialog-close');
 
         loadFeatures(); //load all the features in the settings dialog
@@ -207,6 +210,18 @@
             reset();
             location.reload(); // reload page to reflect changed settings
         });
+        $soxSettingsToggle.on('click', function() {
+            var $icon = $(this).find('i'),
+                checked = $icon.hasClass('fa-check-square-o') ? true : false;
+
+            if (checked) {
+                $icon.removeClass('fa-check-square-o').addClass('fa-square-o');
+                $soxSettingsDialogFeatures.find('input').prop('checked', false);
+            } else {
+                $icon.removeClass('fa-square-o').addClass('fa-check-square-o');
+                $soxSettingsDialogFeatures.find('input').prop('checked', true);
+            }
+        });
         $soxSettingsSave.on('click', function() {
             var extras = [];
             $soxSettingsDialogFeatures.find('input[type=checkbox]:checked').each(function() {
@@ -228,7 +243,7 @@
                     $soxSettingsDialogFeatures.find('#' + extras[i]).prop('checked', true);
                     try {
                         features[extras[i]](); //Call the functions that were chosen
-                    } catch(err) {
+                    } catch (err) {
                         $soxSettingsDialogFeatures.find('#' + extras[i]).parent().css('color', 'red').attr('title', 'There was an error loading this feature. Please raise an issue on GitHub.');
                         console.log('SOX error: There was an error loading the feature "' + extras[i] + '". Please raise an issue on GitHub, and copy the following error log.');
                         console.log('Error details:');
@@ -241,7 +256,7 @@
             // no settings found, mark all inputs as checked and display settings dialog
             $soxSettingsDialogFeatures.find('input').prop('checked', true);
 
-            setTimeout(function(){
+            setTimeout(function() {
                 $soxSettingsDialog.show();
             }, 500);
 
