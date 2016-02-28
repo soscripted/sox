@@ -18,13 +18,17 @@
 // @require      https://cdn.rawgit.com/timdown/rangyinputs/master/rangyinputs-jquery-src.js
 // @require      https://cdn.rawgit.com/jeresig/jquery.hotkeys/master/jquery.hotkeys.js
 // @require      https://cdn.rawgit.com/camagu/jquery-feeds/master/jquery.feeds.js
+
 // @require      https://rawgit.com/soscripted/sox/experimental/sox.helpers.js
 // @require      https://rawgit.com/soscripted/sox/experimental/sox.features.js
 // @require      https://rawgit.com/soscripted/sox/experimental/themes/sox.themeeditor.js
 // @require      https://rawgit.com/soscripted/sox/experimental/themes/sox.theming.js
 // @require      https://rawgit.com/soscripted/sox/experimental/chat/sox.chat.js
+// @require      https://rawgit.com/soscripted/sox/experimental/enhancedEditor/sox.enhancedEditor.js
+
 // @resource     settingsDialog https://rawgit.com/soscripted/sox/experimental/sox.dialog.html
 // @resource     themeEditor https://rawgit.com/soscripted/sox/experimental/themes/sox.themeeditor.html
+
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_deleteValue
@@ -139,7 +143,8 @@
             ['editReasonTooltip', 'Add a tooltip to posts showing the latest revision\'s comment on \'edited [date] at [time]\''],
             ['addSBSBtn', 'Add a button to the editor toolbar to start side-by-side editing'],
             ['linkQuestionAuthorName', 'Add a button in the editor toolbar to insert a hyperlink to a post and add the author automatically'],
-            ['titleEditDiff', 'Make title edits show seperately rather than merged']
+            ['titleEditDiff', 'Make title edits show seperately rather than merged'],
+            ['enhancedEditor', 'Enhance the standard SE markdown editor to add features (find+replace, Ace code editor and more)']
         ]);
 
         addCategory('Comments');
@@ -174,7 +179,8 @@
 
         // add sox CSS file and font-awesome CSS file
         $('head').append('<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">')
-            .append('<link rel="stylesheet" type="text/css" href="https://rawgit.com/soscripted/sox/experimental/sox.css" />');
+            .append('<link rel="stylesheet" type="text/css" href="https://rawgit.com/soscripted/sox/experimental/sox.css" />')
+            .append('<link rel="stylesheet" type="text/css" href="https://rawgit.com/soscripted/sox/experimental/enhancedEditor/enhancedEditor.css" />');
         $('body').append($settingsDialog);
 
         $soxSettingsDialog = $('#sox-settings-dialog');
