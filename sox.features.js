@@ -1560,7 +1560,7 @@ Toggle SBS?</div></li>';
 
         $searchbar.remove();
         $links.append($search);
-    },
+    }/*,
     
     themes: function() {
         theming();
@@ -1586,5 +1586,5 @@ Toggle SBS?</div></li>';
             $soxThemeButton.append($icon).appendTo('div.network-items');
             themeEditor();
         }
-    }
+    }*/
 };
