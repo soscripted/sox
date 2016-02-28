@@ -1,4 +1,5 @@
-/*jshint multistr: true */
+﻿/*jshint multistr: true */
+//TODO: what are post_contents and author for?
 var features = { //ALL the functions must go in here
 
     grayOutVotes: function() {
@@ -31,7 +32,7 @@ var features = { //ALL the functions must go in here
     renameChat: function() {
         // Description: Renames Chat tabs to prepend 'Chat' before the room name
 
-        if (SOHelper.isOnChat()) {
+        if (SOHelper.getSiteType() === 'chat') {
             document.title = 'Chat - ' + document.title;
         }
     },
@@ -39,7 +40,7 @@ var features = { //ALL the functions must go in here
     exclaim: function() {
         // Description: Removes exclamation marks
 
-        var old = $("td.comment-actions > div > div > div.message-text");
+        var old = $('td.comment-actions > div > div > div.message-text');
         var newText = old.text().replace("!", ".");
         old.html(newText);
     },
@@ -47,19 +48,19 @@ var features = { //ALL the functions must go in here
     employeeStar: function() {
         // Description: Adds an star next to users that *might* be a Stack Overflow Employee
 
-        var employees = ["Jeff Atwood", "Joel Spolsky", "Jarrod Dixon", "Geoff Dalgas", "David Fullerton", "Korneel Bouman", "Robert Cartaino", "Kevin Montrose",
-            "MandyK", "Marc Gravell", "balpha", "Matt Sherman", "Danny Miller", "Jason Punyon", "NickC", "Kyle Brandt", "Jin", "Tall Jeff", "Zypher",
-            "Nick Craver", "Nick Larsen", "Shog9", "Greg", "Alex Miller", "GuyZee", "abby hairboat", "samthebrand", "Laura", "Grace Note", "Dimitar Stanimiroff",
-            "Hammer", "Peter Grace", "Charles", "Anna Lear", "stevvve", "Bethany", "Andrew17", "Kizzle", "Jay", "mjibson", "Stefan Schwarzgruber", "Will Cole", "Sean Bave",
-            "Robyn", "Bart Silverstrim", "Jaydles", "Maxwell Applebaum", "Snails", "Jordan Conner", "Bodhi", "cashenhu", "rb4", "Maurbawlz", "CMartin", "Joe Humphries", "Max",
-            "Oded", "Val Perez", "rossipedia", "Derek Still", "Tim Post", "Paul", "PDePree", "Sklivvz", "Todd Jenkins", "Jim Egan", "Kaziorex", "Ben Collins", "TomOnTime", "Dr.D",
-            "David", "Sara Rayman", "Monika P", "Prefontaine", "m0sa", "Jon Ericson", "Juice", "Tania", "Angela", "Hynes", "Kasra Rahjerdi", "Gabe", "Bret Copeland", "Arie Litovsky",
-            "Pops", "Megan Spaans", "Whitney Dwyer", "Philip Camillo", "onesysadmin", "Aurelien Gasser", "Alyssa Tomback", "Alex Cresswell", "couchand", "Brian Nickel", "Princess",
-            "Yaakov Ellis", "Ana Hevesi", "Noureddine Latrech", "Hertz", "Jill Ciaccia", "Tobias Schmidt", "Jon Chan", "Johanna Perrin", "Kristian Bright", "John LeClerc",
-            "Rob Dandorph", "Jessica Genther", "Courtny Cotten", "Stephanie", "Sean Durkin", "rla4", "Alex Warren", "Jaime Kronick", "Alexa", "Samuel Rouayrenc", "Josh Helfgott",
-            "Peter Tarr", "Shane Madden", "Nextraztus", "G-Wiz", "Dan O'Boyle", "yolovolo", "Griffin Sandberg", "ODB", "Mark Villarreal", "Lowell Gruman Jr.", "bweber", "Natalie How",
-            "Haney", "jmac", "Emmanuel Andem-Ewa", "Jess Pardue", "Dean Ward", "Steve Trout", "Nicholas Chabanovsky", "Kelli Ward", "Noah Neuman", "Lauren Roemer", "Heidi Hays",
-            "Joe Wilkie", "Mackenzie Ralston", "animuson"
+        var employees = ['Jeff Atwood', 'Joel Spolsky', 'Jarrod Dixon', 'Geoff Dalgas', 'David Fullerton', 'Korneel Bouman', 'Robert Cartaino', 'Kevin Montrose',
+            'MandyK', 'Marc Gravell', 'balpha', 'Matt Sherman', 'Danny Miller', 'Jason Punyon', 'NickC', 'Kyle Brandt', 'Jin', 'Tall Jeff', 'Zypher',
+            'Nick Craver', 'Nick Larsen', 'Shog9', 'Greg', 'Alex Miller', 'GuyZee', 'abby hairboat', 'samthebrand', 'Laura', 'Grace Note', 'Dimitar Stanimiroff',
+            'Hammer', 'Peter Grace', 'Charles', 'Anna Lear', 'stevvve', 'Bethany', 'Andrew17', 'Kizzle', 'Jay', 'mjibson', 'Stefan Schwarzgruber', 'Will Cole', 'Sean Bave',
+            'Robyn', 'Bart Silverstrim', 'Jaydles', 'Maxwell Applebaum', 'Snails', 'Jordan Conner', 'Bodhi', 'cashenhu', 'rb4', 'Maurbawlz', 'CMartin', 'Joe Humphries', 'Max',
+            'Oded', 'Val Perez', 'rossipedia', 'Derek Still', 'Tim Post', 'Paul', 'PDePree', 'Sklivvz', 'Todd Jenkins', 'Jim Egan', 'Kaziorex', 'Ben Collins', 'TomOnTime', 'Dr.D',
+            'David', 'Sara Rayman', 'Monika P', 'Prefontaine', 'm0sa', 'Jon Ericson', 'Juice', 'Tania', 'Angela', 'Hynes', 'Kasra Rahjerdi', 'Gabe', 'Bret Copeland', 'Arie Litovsky',
+            'Pops', 'Megan Spaans', 'Whitney Dwyer', 'Philip Camillo', 'onesysadmin', 'Aurelien Gasser', 'Alyssa Tomback', 'Alex Cresswell', 'couchand', 'Brian Nickel', 'Princess',
+            'Yaakov Ellis', 'Ana Hevesi', 'Noureddine Latrech', 'Hertz', 'Jill Ciaccia', 'Tobias Schmidt', 'Jon Chan', 'Johanna Perrin', 'Kristian Bright', 'John LeClerc',
+            'Rob Dandorph', 'Jessica Genther', 'Courtny Cotten', 'Stephanie', 'Sean Durkin', 'rla4', 'Alex Warren', 'Jaime Kronick', 'Alexa', 'Samuel Rouayrenc', 'Josh Helfgott',
+            'Peter Tarr', 'Shane Madden', 'Nextraztus', 'G-Wiz', 'Dan O\'Boyle', 'yolovolo', 'Griffin Sandberg', 'ODB', 'Mark Villarreal', 'Lowell Gruman Jr.', 'bweber', 'Natalie How',
+            'Haney', 'jmac', 'Emmanuel Andem-Ewa', 'Jess Pardue', 'Dean Ward', 'Steve Trout', 'Nicholas Chabanovsky', 'Kelli Ward', 'Noah Neuman', 'Lauren Roemer', 'Heidi Hays',
+            'Joe Wilkie', 'Mackenzie Ralston', 'animuson'
         ];
 
         $('.comment, .deleted-answer-info, .employee-name, .started, .user-details').each(function() { //normal comments, deleted answers (deleted by), SE.com/about, question feed users, question/answer/edit owners
@@ -84,23 +85,23 @@ var features = { //ALL the functions must go in here
         $('.user-info .user-details').css('text-overflow', 'ellipsis');
     },
 
-    moveCommentsLink: function() {
+    copyCommentsLink: function() {
         // Description: Adds the 'show x more comments' link before the commnents
         $('.js-show-link.comments-link').each(function() {
             var $this2 = $(this);
-            $("<tr><td></td><td>" + $this2.clone().wrap('<div>').parent().html() + "</td></tr>").insertBefore($(this).parent().closest('tr')).click(function() {
+            $('<tr><td></td><td>' + $this2.clone().wrap('<div>').parent().html() + '</td></tr>').insertBefore($(this).parent().closest('tr')).click(function() {
                 $(this).hide();
             });
             var commentParent;
             // Determine if comment is on a question or an answer
-            if ($(this).parents(".answer").length) {
-                commentParent = ".answer";
+            if ($(this).parents('.answer').length) {
+                commentParent = '.answer';
             } else {
-                commentParent = ".question";
+                commentParent = '.question';
             }
 
             $(this).click(function() {
-                $(this).closest(commentParent).find(".js-show-link.comments-link").hide();
+                $(this).closest(commentParent).find('.js-show-link.comments-link').hide();
             });
         });
 
@@ -117,136 +118,112 @@ var features = { //ALL the functions must go in here
     fixedTopbar: function() {
         // Description: For making the topbar fixed (always stay at top of screen)
         if (location.hostname == 'askubuntu.com') { //AskUbuntu is annoying. UnicornsAreVeryVeryYummy made the below code for AskUbuntu: https://github.com/shu8/Stack-Overflow-Optional-Features/issues/11 Thanks!
-            var head = document.getElementsByTagName('head')[0],
-                ubuntuLinks = document.getElementsByClassName('nav-global')[0],
-                remove = document.getElementById('custom-header'),
-                newUbuntuLinks = document.createElement('div'),
-                linksWrapper = document.createElement('div'),
-                listOfSites = document.createElement('ul'),
-                ubuntuHome = document.createElement('li'),
-                ubuntuCommunity = document.createElement('li'),
-                askubuntu = document.createElement('li'),
-                developer = document.createElement('li'),
-                design = document.createElement('li'),
-                discourse = document.createElement('li'),
-                hardware = document.createElement('li'),
-                insights = document.createElement('li'),
-                juju = document.createElement('li'),
-                shop = document.createElement('li'),
-                more = document.createElement('li'),
-                apps = document.createElement('li'),
-                help = document.createElement('li'),
-                forum = document.createElement('li'),
-                launchpad = document.createElement('li'),
-                MAAS = document.createElement('li'),
-                canonical = document.createElement('li');
-
-            ubuntuLinks.parentElement.removeChild(ubuntuLinks);
-            remove.parentElement.removeChild(remove);
-            newUbuntuLinks.className = "fixedTopbar-links";
-            linksWrapper.className = "fixedTopbar-linksList";
-            listOfSites.className = "fixedTopbar-siteLink";
-            ubuntuHome.innerHTML = "<a href=\"http://www.ubuntu.com\">Ubuntu</a>";
-            ubuntuHome.className = "fixedTopbar-siteLink";
-            ubuntuCommunity.innerHTML = "<a href=\"http://community.ubuntu.com/\">Community</a>";
-            ubuntuCommunity.className = "fixedTopbar-siteLink";
-            askubuntu.innerHTML = "<a href=\"http://askubuntu.com\">Ask!</a>";
-            askubuntu.className = "fixedTopbar-activeSite fixedTopbar-siteLink";
-            developer.innerHTML = "<a href=\"http://developer.ubuntu.com\">Developer</a>";
-            developer.className = "fixedTopbar-siteLink";
-            design.innerHTML = "<a href=\"http://design.ubuntu.com\">Design</a>";
-            design.className = "fixedTopbar-siteLink";
-            discourse.innerHTML = "<a href=\"http://discourse.ubuntu.com\">Discourse</a>";
-            discourse.className = "fixedTopbar-siteLink";
-            hardware.innerHTML = "<a href=\"http://www.ubuntu.com/certification\">Hardware</a>";
-            hardware.className = "fixedTopbar-siteLink";
-            insights.innerHTML = "<a href=\"http://insights.ubuntu.com/\">Insights</a>";
-            insights.className = "fixedTopbar-siteLink";
-            juju.innerHTML = "<a href=\"http://juju.ubuntu.com\">Juju</a>";
-            juju.className = "fixedTopbar-siteLink";
-            shop.innerHTML = "<a href=\"http://shop.ubuntu.com\">Shop</a>";
-            shop.className = "fixedTopbar-siteLink";
-            apps.innerHTML = "<a href=\"http://apps.ubuntu.com\">Apps</a>";
-            apps.className = "fixedTopbar-siteLink";
-            help.innerHTML = "<a href=\"https://help.ubuntu.com\">Help</a>";
-            help.className = "fixedTopbar-siteLink";
-            forum.innerHTML = "<a href=\"http://ubuntuforums.org\">Forum</a>";
-            forum.className = "fixedTopbar-siteLink";
-            launchpad.innerHTML = "<a href=\"http://launchpad.net\">Launchpad</a>";
-            launchpad.className = "fixedTopbar-siteLink";
-            MAAS.innerHTML = "<a href=\"http://maas.ubuntu.com\">MAAS</a>";
-            MAAS.className = "fixedTopbar-siteLink";
-            canonical.innerHTML = "<a href=\"http://canonical\">Canonical</a>";
-            canonical.className = "fixedTopbar-siteLink";
-            listOfSites.appendChild(ubuntuHome);
-            listOfSites.appendChild(ubuntuCommunity);
-            listOfSites.appendChild(askubuntu);
-            listOfSites.appendChild(developer);
-            listOfSites.appendChild(design);
-            listOfSites.appendChild(discourse);
-            listOfSites.appendChild(hardware);
-            listOfSites.appendChild(insights);
-            listOfSites.appendChild(juju);
-            listOfSites.appendChild(shop);
-            listOfSites.appendChild(apps);
-            listOfSites.appendChild(help);
-            listOfSites.appendChild(forum);
-            listOfSites.appendChild(launchpad);
-            listOfSites.appendChild(MAAS);
-            listOfSites.appendChild(canonical);
-            linksWrapper.appendChild(listOfSites);
-            newUbuntuLinks.appendChild(linksWrapper);
-            document.body.appendChild(newUbuntuLinks);
-            var toolbar = document.getElementsByClassName('topbar')[0];
-            toolbar.className += " fixedTopbar-stickyToolbar";
-            var line = document.createElement('div');
-            line.innerHTML = "<br><br>";
-            toolbar.parentElement.insertBefore(line, toolbar);
-        } else if (!SOHelper.isOnChat()) { //for all the normal, unannoying sites, excluding chat ;)
+            var newUbuntuLinks = $('<div/>', {
+                    class: 'fixedTopbar-links'
+                }),
+                linksWrapper = $('<div/>', {
+                    class: 'fixedTopbar-linksList'
+                }),
+                listOfSites = $('<ul/>', {
+                    class: 'fixedTopbar-siteLink'
+                }),
+                more = $('<li/>', {
+                    html: '<a href="#">More</a>',
+                    class: 'fixedTopbar-siteLink'
+                }),
+                sites = {
+                    Ubuntu: 'ubuntu.com',
+                    Community: 'community.ubuntu.com',
+                    'Ask!': 'askubuntu.com',
+                    Developer: 'developer.ubuntu.com',
+                    Design: 'design.ubuntu.com',
+                    Discourse: 'discourse.ubuntu.com',
+                    Hardware: 'www.ubuntu.com/certification',
+                    Insights: 'insights.ubuntu.com',
+                    Juju: 'juju.ubuntu.com',
+                    Shop: 'shop.ubuntu.com'
+                },
+                moreSites = {
+                    Apps: 'apps.ubuntu.com',
+                    Help: 'help.ubuntu.com',
+                    Forum: 'ubuntuforums.org',
+                    Launchpad: 'launchpad.net',
+                    MAAS: 'maas.ubuntu.com',
+                    Canonical: 'canonical' //TODO
+                };
+            var addSite = function(link, name) {
+                listOfSites.append($('<li/>', {
+                    html: '<a href="http://' + link + '">' + name + '</a>',
+                    class: 'fixedTopbar-siteLink'
+                }));
+            };
+            for (var name in sites) {
+                addSite(sites[name], name);
+            }
+            listOfSites.append(more);
+            var moreList = $('li', $(more));
+            var addMoreSite = function(link, name) {
+                moreList.append($('<li/>', {
+                    html: '<a href="http://' + link + '">' + name + '</a>',
+                    class: 'fixedTopbar-siteLink'
+                }));
+            };
+            for (name in moreSites) {
+                addMoreSite(moreSites[name], name);
+            }
+            $('.nav-global').remove(); //Ubuntu links
+            $('#custom-header').remove();
+            linksWrapper.append(listOfSites);
+            newUbuntuLinks.append(linksWrapper);
+            $('body').append(newUbuntuLinks);
+            $('.topbar').addClass('fixedTopbar-stickyToolbar');
+            $('.topbar').before($('<div/>', {html: '<br/><br/>'}));
+        } else if (SOHelper.getSiteType() !== 'chat') { //for all the normal, unannoying sites, excluding chat ;)
             $('.topbar').css({
                 'position': 'fixed',
                 'z-index': '1001'
             });
 
             //Thanks ArtOfCode (http://worldbuilding.stackexchange.com/users/2685/artofcode) for fixing the topbar covering the header :)
-            $("#header").css("margin-top", "34px");
-            $(".topbar").css("margin-top", "-34px");
-        } else if (SOHelper.isOnChat()) { //chat is a bit different
+            $('#header').css('margin-top', '34px');
+            $('.topbar').css('margin-top', '-34px');
+        } else if (SOHelper.getSiteType() === 'chat') { //chat is a bit different
             $('.topbar').css('position', 'fixed');
         }
 
-        $("#rep-card-next .percent").after($("#rep-card-next .label").css("z-index", 0)).css("position", "absolute");
-        $("#badge-card-next .percent").after($("#badge-card-next .label").css("z-index", 0)).css("position", "absolute");
+        $('#rep-card-next .percent').after($('#rep-card-next .label').css('z-index', 0)).css('position', 'absolute');
+        $('#badge-card-next .percent').after($('#badge-card-next .label').css('z-index', 0)).css('position', 'absolute');
     },
 
     highlightQuestions: function() {
         // Description: For highlighting only the tags of favorite questions
 
         function change(betterCSS) {
-            var interestingTagsDiv = $("#interestingTags").text();
+            var interestingTagsDiv = $('#interestingTags').text();
             var interesting = interestingTagsDiv.split(' ');
             interesting.pop(); //Because there's one extra value at the end
 
-            $(".tagged-interesting > .summary > .tags > .post-tag").filter(function(index) {
+            $('.tagged-interesting > .summary > .tags > .post-tag').filter(function(index) {
                 return interesting.indexOf($(this).text()) > -1;
             }).css(betterCSS);
 
-            $(".tagged-interesting").removeClass("tagged-interesting");
+            $('.tagged-interesting').removeClass('tagged-interesting');
         }
         setTimeout(function() { //Need delay to make sure the CSS is applied
-            if (window.location.href.indexOf('superuser') > -1) { //superuser
-                var betterCSS = {
+            var betterCSS = {};
+            if (/superuser/.test(window.hostname)) { //superuser
+                betterCSS = {
                     backgroundColor: '#a1eaff',
                     color: 'black'
                 };
-            } else if (window.location.href.indexOf('stackoverflow') > -1) { //stackoverflow
-                var betterCSS = {
+            } else if (/stackoverflow/.test(window.hostname)) { //stackoverflow
+                betterCSS = {
                     backgroundColor: '#ffefc6',
                     borderWidth: '0'
                 };
-            } else { //if (window.location.href.indexOf('.stackexchange.com') > -1) {
+            } else { //if (/stackexchange.com/.test(window.hostname)) {
                 //if (window.location.href.indexOf('meta') === -1) { //beta sites
-                var betterCSS = {
+                betterCSS = {
                     backgroundColor: '#c3dafa',
                     borderWidth: '0'
                 };
@@ -258,7 +235,7 @@ var features = { //ALL the functions must go in here
                 records.forEach(function(mutation) {
                     if(mutation.attributeName == 'class') {
                          change(betterCSS);
-                     }
+                    }
                 });
             }).observe(document.querySelector('.question-summary'), {
                 childList: true,
@@ -270,7 +247,7 @@ var features = { //ALL the functions must go in here
     displayName: function() {
         // Description: For displaying username next to avatar on topbar
         var uname = SOHelper.getUsername();
-        var insertme = "<span class='reputation links-container' style='color:white;' title='" + uname + "'>" + uname + "</span>";
+        var insertme = '<span class="reputation links-container" style="color:white;" title="' + uname + '">' + uname + '</span>"';
         $(insertme).insertBefore('.gravatar-wrapper-24');
     },
 
@@ -303,8 +280,8 @@ var features = { //ALL the functions must go in here
             $('[id^="wmd-input"]').surroundSelectedText("<kbd>", "</kbd>");
         }
 
-        var kbdBtn = "<li class='wmd-button' title='surround selected text with <kbd> tags' style='left: 400px;'><span id='wmd-kbd-button' style='background-image: none;'>kbd</span></li>";
-        var listBtn = "<li class='wmd-button' title='add dashes (\"-\") before every line to make a bullet point list' style='left: 425px;'><span id='wmd-bullet-button' style='background-image:none;'>&#x25cf;</span></li>";
+        var kbdBtn = '<li class="wmd-button" title="surround selected text with <kbd> tags" style="left: 400px;"><span id="wmd-kbd-button" style="background-image: none;">kbd</span></li>';
+        var listBtn = '<li class="wmd-button" title="add dashes (\"-\") before every line to make a bulvar point list" style="left: 425px;"><span id="wmd-bullet-button" style="background-image:none;">&#x25cf;</span></li>';
 
         setTimeout(function() {
             $('[id^="wmd-redo-button"]').after(kbdBtn);
@@ -331,10 +308,10 @@ var features = { //ALL the functions must go in here
 
         function addCheckboxes() {
             $('#reasons').remove(); //remove the div containing everything, we're going to add/remove stuff now:
-            if ($('[class^="inline-editor"]').length < 0) { //if there is no inline editor, do nothing
+            if (!$('[class^="inline-editor"]').length) { //if there is no inline editor, do nothing
                 return;
             }
-            if (window.location.href.indexOf('/edit') > -1 || $('[class^="inline-editor"]').length > 0) { //everything else
+            if (/\/edit/.test(window.location.href) || $('[class^="inline-editor"]').length) { //everything else
                 $('.form-submit').before('<div id="reasons"></div>');
 
                 $.each(JSON.parse(GM_getValue('editReasons')), function(i, obj) {
@@ -358,7 +335,7 @@ var features = { //ALL the functions must go in here
                 var editCommentField = $('[id^="edit-comment"]');
                 $('#reasons input[type="checkbox"]').change(function() {
                     if (this.checked) { //Add it to the summary
-                        if (editCommentField.val() == '') {
+                        if (!editCommentField.val()) {
                             editCommentField.val(editCommentField.val() + $(this).val().replace(/on$/g, ''));
                         } else {
                             editCommentField.val(editCommentField.val() + '; ' + $(this).val().replace(/on$/g, ''));
@@ -382,17 +359,17 @@ var features = { //ALL the functions must go in here
             addCheckboxes();
         }
 
-        var div = "<div id='dialogEditReasons' class='sox-centered wmd-prompt-dialog'><span id='closeDialogEditReasons' style='float:right;'>Close</span><span id='resetEditReasons' style='float:left;'>Reset</span>  \
-                        <h2>View/Remove Edit Reasons</h2>																														\
-                        <div id='currentValues'></div>																															\
-                        <br />																																					\
-                        <h3>Add a custom reason</h3>																															\
-                        Display Reason:	<input type='text' id='displayReason'>																									\
-                        <br /> 																																					\
-                        Actual Reason: <input type='text' id='actualReason'>																									\
-                        <br />																																					\
-                        <input type='button' id='submitUpdate' value='Submit'>																									\
-                    </div>";
+        var div = '<div id="dialogEditReasons" class="sox-centered wmd-prompt-dialog"><span id="closeDialogEditReasons" style="float:right;">Close</span><span id="resetEditReasons" style="float:left;">Reset</span> \
+                        <h2>View/Remove Edit Reasons</h2> \
+                        <div id="currentValues"></div> \
+                        <br /> \
+                        <h3>Add a custom reason</h3> \
+                        Display Reason:	<input type="text" id="displayReason"> \
+                        <br /> \
+                        Actual Reason: <input type="text" id="actualReason"> \
+                        <br /> \
+                        <input type="button" id="submitUpdate" value="Submit"> \
+                    </div>';
 
         $('body').append(div);
         $('#dialogEditReasons').draggable().css('position', 'absolute').css('text-align', 'center').css('height', '60%').hide();
@@ -435,7 +412,7 @@ var features = { //ALL the functions must go in here
         });
 
         $('#submitUpdate').click(function() { //Click handler to update the array with custom value
-            if ($('#displayReason').val() == '' || $('#actualReason').val() == '') {
+            if (!$('#displayReason').val() || !$('#actualReason').val()) {
                 alert('Please enter something in both the textboxes!');
             } else {
                 var arrayToAdd = [$('#displayReason').val(), $('#actualReason').val()];
@@ -533,11 +510,11 @@ var features = { //ALL the functions must go in here
         // Description: For adding shortcuts to insert pre-defined text into comment fields
 
         function parseGM() {
-            return JSON.parse(GM_getValue("quickCommentShortcutsData"));
+            return JSON.parse(GM_getValue('quickCommentShortcutsData'));
         }
 
         function saveGM(data) {
-            GM_setValue("quickCommentShortcutsData", JSON.stringify(data));
+            GM_setValue('quickCommentShortcutsData', JSON.stringify(data));
         }
 
         function replaceVars(text, sitename, siteurl, op, answererName) {
@@ -547,7 +524,7 @@ var features = { //ALL the functions must go in here
         function resetReminderAndTable() {
             $('#quickCommentShortcutsReminder').html('');
             $('#quickCommentShortcuts table').html(' ');
-            $('#quickCommentShortcuts table').append("<tr><th>Name</th><th>Shortcut</th><th>Text</th><th>Delete?</th><th>Edit?</th></tr>");
+            $('#quickCommentShortcuts table').append('<tr><th>Name</th><th>Shortcut</th><th>Text</th><th>Delete?</th><th>Edit?</th></tr>');
         }
 
         var sitename = SOHelper.getSiteName(),
@@ -560,18 +537,18 @@ var features = { //ALL the functions must go in here
                 'vertical-align': 'middle'
             };
 
-        $('body').append("<div id='quickCommentShortcuts' class='sox-centered wmd-prompt-dialog' style='display:none;'><table></table></div>");
+        $('body').append('<div id="quickCommentShortcuts" class="sox-centered wmd-prompt-dialog" style="display:none;"><table></table></div>');
         $('#quickCommentShortcuts').css('width', '100%').css('position', 'absolute').draggable();
-        $('body').append("<div id='quickCommentShortcutsReminder' class='quickCommentShortcutsReminder' style='display:none;'></div>");
+        $('body').append('<div id="quickCommentShortcutsReminder" class="quickCommentShortcutsReminder" style="display:none;"></div>');
 
-        if (!GM_getValue("quickCommentShortcutsData") || parseGM().length < 1) {
+        if (!GM_getValue('quickCommentShortcutsData') || parseGM().length < 1) {
             data = [
                 //Format: ['name', 'shortcut', 'comment text'],
-                ['How to ping', 'alt+p', "To ping other users, please start your comment with an `@` followed by the person's username (with no spaces). For example, to ping you, I would use `@$ANSWERER$`. For more information, please see [How do comments replies work?](http://meta.stackexchange.com/questions/43019/how-do-comment-replies-work)."],
-                ['Not an answer', 'alt+n', "This does not provide an answer to the question. To critique or request clarification from an author, leave a comment below their post - you need to gain [reputation]($SITEURL$/faq#reputation) before you can comment on others' posts to prevent abuse; why don't you try and get some by [answering a question]($SITEURL$/unanswered)?"],
-                ['Link-only answer', 'alt+l', "While this link may answer the question, it is better to include the essential parts of the answer here and provide the link for reference. Link-only answers can become invalid if the linked page changes, resulting in your answer being useless and consequently deleted."],
-                ['Ask a new question', 'alt+d', "If you have a new question, please ask it by clicking the [Ask Question]($SITEURL$/questions/ask) button. Include a link to this question if it helps provide context. You can also [start a bounty]($SITEURL$/help/privileges/set-bounties) to draw more attention to this question."],
-                ['Don\'t add "Thank You"', 'alt+t', "Please don't add 'thank you' as an answer. Instead, vote up the answers that you find helpful. To do so, you need to have reputation. You can read more about reputation [here]($SITEURL$/faq#reputation)."]
+                ['How to ping', 'alt+p', 'To ping other users, please start your comment with an `@` followed by the person\'s username (with no spaces). For example, to ping you, I would use `@$ANSWERER$`. For more information, please see [How do comments replies work?](http://meta.stackexchange.com/questions/43019/how-do-comment-replies-work).'],
+                ['Not an answer', 'alt+n', 'This does not provide an answer to the question. To critique or request clarification from an author, leave a comment below their post - you need to gain [reputation]($SITEURL$/faq#reputation) before you can comment on others\' posts to prevent abuse; why don\'t you try and get some by [answering a question]($SITEURL$/unanswered)?'],
+                ['Link-only answer', 'alt+l', 'While this link may answer the question, it is better to include the essential parts of the answer here and provide the link for reference. Link-only answers can become invalid if the linked page changes, resulting in your answer being useless and consequently deleted.'],
+                ['Ask a new question', 'alt+d', 'If you have a new question, please ask it by clicking the [Ask Question]($SITEURL$/questions/ask) button. Include a link to this question if it helps provide context. You can also [start a bounty]($SITEURL$/help/privileges/set-bounties) to draw more attention to this question.'],
+                ['Don\'t add "Thank You"', 'alt+t', 'Please don\'t add \'thank you\' as an answer. Instead, vote up the answers that you find helpful. To do so, you need to have reputation. You can read more about reputation [here]($SITEURL$/faq#reputation).']
             ];
         } else {
             data = parseGM();
@@ -580,10 +557,10 @@ var features = { //ALL the functions must go in here
             $(document).on('click', 'a.js-add-link.comments-link', function() {
                 var answererName = $(this).parents('div').find('.post-signature:last').first().find('.user-details a').text(),
                     answererId = $(this).parents('div').find('.post-signature:last').first().find('.user-details a').attr('href').split('/')[2],
-                    apiUrl = "https://api.stackexchange.com/2.2/users/" + answererId + "?site=" + SOHelper.getSiteName('api');
+                    apiUrl = 'https://api.stackexchange.com/2.2/users/' + answererId + '?site=' + SOHelper.getSiteName('api');
 
                 setTimeout(function() {
-                    $('.comments textarea').attr('placeholder', "Use comments to ask for clarification or add more information. Avoid answering questions in comments. Press Alt+O to view/edit/delete Quick Comment Shortcuts data, or press Alt+R to open a box to remind you of the shortcuts.");
+                    $('.comments textarea').attr('placeholder', 'Use comments to ask for clarification or add more information. Avoid answering questions in comments. Press Alt+O to view/edit/delete Quick Comment Shortcuts data, or press Alt+R to open a box to remind you of the shortcuts.');
                 }, 500);
 
                 $.ajax({
@@ -598,18 +575,17 @@ var features = { //ALL the functions must go in here
                             gold = json.items[0].badge_counts.gold,
                             type = json.items[0].user_type;
 
+                        var welcomeText = '',
+                            newUser = 'No';
                         if ((new Date().getTime() / 1000) - (creationDate) < 864000) {
-                            var welcomeText = 'Welcome to $SITENAME$ $ANSWERERNORMAL$! ',
-                                newUser = 'Yes';
-                        } else {
-                            var welcomeText = '',
-                                newUser = 'No';
+                            welcomeText = 'Welcome to $SITENAME$ $ANSWERERNORMAL$! ';
+                            newUser = 'Yes';
                         }
 
 
                         var factfile = '<span id="closeQuickCommentShortcuts" style="float:right;">close</span> \
                                             <h3>User "' + answererName + '" - ' + type + ': <br /> \
-                                            Creation Date: ' + new Date(creationDate * 1000).toUTCString() + ' <br />\
+                                            Creation Date: ' + new Date(creationDate * 1000).toUTCString() + ' <br /> \
                                             New? ' + newUser + '<br /> \
                                             Last seen: ' + new Date(lastAccess * 1000).toUTCString() + ' <br /> \
                                             Reputation: ' + reputation + ' <br /> \
@@ -630,8 +606,8 @@ var features = { //ALL the functions must go in here
                             $('#quickCommentShortcuts').hide();
                         });
 
-                        $('#quickCommentShortcuts table').append("<tr><th>Name</th><th>Shortcut</th><th>Text</th><th>Delete?</th><th>Edit?</th></tr>");
-                        $('#quickCommentShortcuts table').after("<input type='button' id='newComment' value='New Comment'>");
+                        $('#quickCommentShortcuts table').append('<tr><th>Name</th><th>Shortcut</th><th>Text</th><th>Delete?</th><th>Edit?</th></tr>');
+                        $('#quickCommentShortcuts table').after('<input type="button" id="newComment" value="New Comment">');
                         $('#quickCommentShortcutsReminder').html('');
                         $.each(data, function(i) {
                             $('#quickCommentShortcutsReminder').append(this[0] + ' - ' + this[1] + '<br />');
@@ -640,15 +616,15 @@ var features = { //ALL the functions must go in here
                             $('.comments textarea').bind('keydown', this[1], function() {
                                 $(this).append(text);
                             });
-                            $('#quickCommentShortcuts table').append("<tr><td>" + this[0] + "</td><td>" + this[1] + "</td><td>" + text + "</td><td><input type='button' id='" + i + "'value='Delete'></td><td><input type='button' id='" + i + "'value='Edit'></td></tr><br />");
+                            $('#quickCommentShortcuts table').append('<tr><td>' + this[0] + '</td><td>' + this[1] + '</td><td>' + text + '</td><td><input type="button" id="' + i + '" value="Delete"></td><td><input type="button" id="' + i + '" value="Edit"></td></tr><br />');
                             $('#quickCommentShortcuts').find('table, th, td').css(tableCSS);
                         });
 
                         $('.comments textarea').on('keydown', null, 'alt+o', function() {
                             $('#quickCommentShortcuts').show();
-                            $("body").animate({
+                            $('body').animate({
                                 scrollTop: 0
-                            }, "slow");
+                            }, 'slow');
                         });
                         $('.comments textarea').bind('keydown', 'alt+r', function() {
                             $('#quickCommentShortcutsReminder').show();
@@ -661,17 +637,17 @@ var features = { //ALL the functions must go in here
                             $.each(data, function(i) {
                                 $('#quickCommentShortcutsReminder').append(this[0] + ' - ' + this[1] + '<br />');
                                 var text = welcomeText + this[2];
-                                $('#quickCommentShortcuts table').append("<tr><td>" + this[0] + "</td><td>" + this[1] + "</td><td>" + text + "</td><td><input type='button' id='" + i + "'value='Delete'></td><td><input type='button' id='" + i + "'value='Edit'></td></tr><br />");
+                                $('#quickCommentShortcuts table').append('<tr><td>' + this[0] + '</td><td>' + this[1] + '</td><td>' + text + '</td><td><input type="button" id="' + i + '" value="Delete"></td><td><input type="button" id="' + i + '" value="Edit"></td></tr><br />');
                                 $('#quickCommentShortcuts').find('table, th, td').css(tableCSS);
                             });
                         });
 
                         $('#quickCommentShortcuts').on('click', '#newComment', function() {
                             $(this).hide();
-                            $(this).before("<div id='newCommentStuff'>Name:<input type='text' id='newCommentName'> \
-                                                <br /> Shortcut:<input type='text' id='newCommentShortcut'> \
-                                                <br /> Text:<textarea id='newCommentText'></textarea> \
-                                                <br /> <input type='button' id='newCommentSave' value='Save'></div>");
+                            $(this).before('<div id="newCommentStuff">Name:<input type="text" id="newCommentName"> \
+                                                <br /> Shortcut:<input type="text" id="newCommentShortcut"> \
+                                                <br /> Text:<textarea id="newCommentText"></textarea> \
+                                                <br /> <input type="button" id="newCommentSave" value="Save"></div>');
                             $('#quickCommentShortcuts #newCommentSave').click(function() {
                                 var newName = $('#newCommentName').val(),
                                     newShortcut = $('#newCommentShortcut').val(),
@@ -682,7 +658,7 @@ var features = { //ALL the functions must go in here
                                 $.each(data, function(i) {
                                     $('#quickCommentShortcutsReminder').append(this[0] + ' - ' + this[1] + '<br />');
                                     var text = welcomeText + this[2];
-                                    $('#quickCommentShortcuts table').append("<tr><td>" + this[0] + "</td><td>" + this[1] + "</td><td>" + text + "</td><td><input type='button' id='" + i + "'value='Delete'></td><td><input type='button' id='" + i + "'value='Edit'></td></tr><br />");
+                                    $('#quickCommentShortcuts table').append('<tr><td>' + this[0] + '</td><td>' + this[1] + '</td><td>' + text + '</td><td><input type="button" id="' + i + '" value="Delete"></td><td><input type="button" id="' + i + '" value="Edit"></td></tr><br />');
                                     $('#quickCommentShortcuts').find('table, th, td').css(tableCSS);
                                 });
                                 $('#newCommentStuff').remove();
@@ -693,12 +669,12 @@ var features = { //ALL the functions must go in here
                         $('#quickCommentShortcuts').on('click', 'input[value="Edit"]', function() {
                             var id = $(this).attr('id');
                             for (var i = 0; i < 3; i++) {
-                                $(this).parent().parent().find('td:eq(' + i + ')').replaceWith("<td><input style='width:90%;' type='text' id='" + id + "' value='" + data[id][i].replace(/"/g, '&quot;').replace(/'/g, '&rsquo;') + "'></td>");
+                                $(this).parent().parent().find('td:eq(' + i + ')').replaceWith('<td><input style="width:90%;" type="text" id="' + id + '" value="' + data[id][i].replace(/"/g, '&quot;').replace(/'/g, '&rsquo;') + '"></td>');
                             }
-                            $(this).after("<input type='button' value='Save' id='saveEdits'>");
+                            $(this).after('<input type="button" value="Save" id="saveEdits">');
                             $(this).hide();
                             $('#quickCommentShortcuts #saveEdits').click(function() {
-                                for (i = 0; i < 3; i++) {
+                                for (var i = 0; i < 3; i++) {
                                     data[id][i] = $(this).parent().parent().find('input[type="text"]:eq(' + i + ')').val();
                                     saveGM(data);
                                 }
@@ -706,7 +682,7 @@ var features = { //ALL the functions must go in here
                                 $.each(data, function(i) {
                                     $('#quickCommentShortcutsReminder').append(this[0] + ' - ' + this[1] + '<br />');
                                     var text = welcomeText + this[2];
-                                    $('#quickCommentShortcuts table').append("<tr><td>" + this[0] + "</td><td>" + this[1] + "</td><td>" + text + "</td><td><input type='button' id='" + i + "'value='Delete'></td><td><input type='button' id='" + i + "'value='Edit'></td></tr><br />");
+                                    $('#quickCommentShortcuts table').append('<tr><td>' + this[0] + '</td><td>' + this[1] + '</td><td>' + text + '</td><td><input type="button" id="' + i + '" value="Delete"></td><td><input type="button" id="' + i + '" value="Edit"></td></tr><br />');
                                     $('#quickCommentShortcuts').find('table, th, td').css(tableCSS);
                                 });
                                 $(this).remove();
@@ -724,7 +700,7 @@ var features = { //ALL the functions must go in here
 
     spoilerTip: function() {
         // Description: For adding some text to spoilers to tell people to hover over it
-        $('.spoiler').prepend("<div id='isSpoiler' style='color:red; font-size:smaller; float:right;'>hover to show spoiler<div>");
+        $('.spoiler').prepend('<div id="isSpoiler" style="color:red; font-size:smaller; float:right;">hover to show spoiler<div>');
         $('.spoiler').hover(function() {
             $(this).find('#isSpoiler').hide(500);
         }, function() {
@@ -736,13 +712,13 @@ var features = { //ALL the functions must go in here
         // Description: For adding reply links to comments
         $('.comment').each(function() {
             if ($('.topbar-links a span:eq(0)').text() != $(this).find('.comment-text a.comment-user').text()) { //make sure the link is not added to your own comments
-                $(this).append("<span id='replyLink' title='reply to this user'>&crarr;</span>");
+                $(this).append('<span id="replyLink" title="reply to this user">&crarr;</span>');
             }
         });
 
         $('span[id="replyLink"]').css('cursor', 'pointer').on('click', function() {
             var parentDiv = $(this).parent().parent().parent().parent();
-            var textToAdd = '@' + $(this).parent().find('.comment-text a.comment-user').text().replace(/\s/g, "").replace(/♦/, '') + ' '; //eg. @USERNAME [space]
+            var textToAdd = '@' + $(this).parent().find('.comment-text a.comment-user').text().replace(/\s/g, '').replace(/♦/, '') + ' '; //eg. @USERNAME [space]
 
             if (parentDiv.find('textarea').length) {
                 parentDiv.find('textarea').append(textToAdd); //add the name
@@ -764,9 +740,9 @@ var features = { //ALL the functions must go in here
                     var sitename = $(this).attr('href').split('/')[2].split('.')[0],
                         id = $(this).attr('href').split('/')[4];
 
-                    $.getJSON("https://api.stackexchange.com/2.2/questions/" + id + "?order=desc&sort=activity&site=" + sitename, function(json) {
+                    SOHelper.getFromAPI('questions', id, sitename, function(json) {
                         anchor.html(json.items[0].title); //Get the title and add it in
-                    });
+                    }, 'activity');
                 }
             }
         });
@@ -778,22 +754,22 @@ var features = { //ALL the functions must go in here
                 var id = $(this).attr('href').split('/')[2],
                     sitename = $(location).attr('hostname').split('.')[0],
                     that = $(this);
-                $.getJSON("https://api.stackexchange.com/2.2/questions/" + id + "?order=desc&sort=activity&site=" + sitename, function(json) {
+                SOHelper.getFromAPI('questions', id,  sitename, function(json) {
                     answers = json.items[0].answer_count;
                     that.attr('title', answers + (answers == 1 ? ' answer' : ' answers'));
-                });
+                }, 'activity');
             }
         });
     },*/
 
     linkQuestionAuthorName: function() {
         // Description: For adding a button to the editor toolbar to insert a link to a post and automatically add the author's name
-        var div = "<div id='addLinkAuthorName' class='wmd-prompt-dialog sox-centered' style='display:none'> \
-            <h5>Insert hyperlink with author's name</h5> \
+        var div = '<div id="addLinkAuthorName" class="wmd-prompt-dialog sox-centered" style="display:none"> \
+            <h5>Insert hyperlink with author\'s name</h5> \
             <br /> \
-            <input id='link' placeholder='http://example.com/ \"optional title\"' size='50'> \
-            <input id='addLinkOk' value='OK' type='button' style='margin: 10px; display: inline; width: 7em;'><input id='addLinkCancel' value='Cancel' type='button' style='margin: 10px; display: inline; width: 7em;'> \
-           </div>";
+            <input id="link" placeholder="http://example.com/ \"optional title\"" size="50"> \
+            <input id="addLinkOk" value="OK" type="button" style="margin: 10px; display: inline; width: 7em;"><input id="addLinkCancel" value="Cancel" type="button" style="margin: 10px; display: inline; width: 7em;"> \
+           </div>';
         $('body').append(div);
         $('#addLinkAuthorName').css('top', '50%').css('position', 'fixed').css('height', '20%');
 
@@ -809,7 +785,7 @@ var features = { //ALL the functions must go in here
                 title = link.split('"')[1];
 
             if (link.split('/')[3].substr(0, 1) == 'a') { //for answers
-                $.getJSON("https://api.stackexchange.com/2.2/answers/" + id + "?order=desc&sort=activity&site=" + sitename, function(json) {
+                SOHelper.getFromAPI('answers', id, sitename, function(json) {
                     //Insert at caret thanks to http://stackoverflow.com/a/15977052/3541881
                     var caretPos = document.getElementById('wmd-input').selectionStart,
                         textAreaTxt = textarea.val(),
@@ -823,9 +799,9 @@ var features = { //ALL the functions must go in here
 
                     textarea.val(textAreaTxt.substring(0, caretPos) + txtToAdd + textAreaTxt.substring(caretPos));
                     $('#addLinkAuthorName').hide();
-                });
+                }, 'activity');
             } else { //for questions
-                $.getJSON("https://api.stackexchange.com/2.2/questions/" + id + "?order=desc&sort=activity&site=" + sitename, function(json) {
+                SOHelper.getFromAPI('questions', id, sitename, function(json) {
                     //Insert at caret thanks to http://stackoverflow.com/a/15977052/3541881
                     var caretPos = document.getElementById('wmd-input').selectionStart,
                         textAreaTxt = textarea.val(),
@@ -839,11 +815,11 @@ var features = { //ALL the functions must go in here
 
                     textarea.val(textAreaTxt.substring(0, caretPos) + txtToAdd + textAreaTxt.substring(caretPos));
                     $('#addLinkAuthorName').hide();
-                });
+                }, 'activity');
             }
         });
 
-        var liSpan = "<li class='wmd-button' title='Hyperlink (with author name)' style='left: 450px;'><span id='wmd-author-link-button' style='background-position: -40px 0px;'></span></li>";
+        var liSpan = '<li class="wmd-button" title="Hyperlink (with author name)" style="left: 450px;"><span id="wmd-author-link-button" style="background-position: -40px 0px;"></span></li>';
 
         setTimeout(function() {
             $('[id^="wmd-redo-button"]').after(liSpan);
@@ -857,8 +833,8 @@ var features = { //ALL the functions must go in here
         // Description: For adding a 'are you ure you want to go away' confirmation on pages where you have started writing something
         if (window.location.href.indexOf('questions/') >= 0) {
             $(window).bind('beforeunload', function() {
-                if ($('.comment-form textarea').length && $('.comment-form textarea').val() != '') {
-                    return "Do you really want to navigate away? Anything you have written will be lost!";
+                if ($('.comment-form textarea').length && $('.comment-form textarea').val()) {
+                    return 'Do you really want to navigate away? Anything you have written will be lost!';
                 } else {
                     return;
                 }
@@ -875,11 +851,7 @@ var features = { //ALL the functions must go in here
                     $(this).attr('data-bountyamount', bountyAmount); //add a 'bountyamount' attribute to all the questions
                 });
 
-                if ($('#question-mini-list').length) { //if on homepage featured tab
-                    var $wrapper = $('#question-mini-list');
-                } else {
-                    var $wrapper = $('#questions'); //if on questions featured tab
-                }
+                var $wrapper = $('#question-mini-list').length ? $('#question-mini-list') : $wrapper = $('#questions'); //homepage/questions tab
 
                 setTimeout(function() {
                     //filter buttons:
@@ -908,7 +880,7 @@ var features = { //ALL the functions must go in here
 
         function addHotText() {
             $('#feed').html('<p>In the top 30 most recent hot network questions!</p>');
-            $('#question-header').prepend("<div title='this question is in the top 30 most recent hot network questions!' class='sox-hot'>HOT<div>");
+            $('#question-header').prepend('<div title="this question is in the top 30 most recent hot network questions!" class="sox-hot">HOT<div>');
         }
         $('#qinfo').after('<div id="feed"></div>');
 
@@ -934,7 +906,7 @@ var features = { //ALL the functions must go in here
         $('.comment .comment-text .comment-copy a').each(function() {
             if ($(this).attr('href').indexOf('imgur.com') != -1) {
                 var image = $(this).attr('href');
-                $(this).replaceWith("<img src='" + image + "' width='100%'>");
+                $(this).replaceWith('<img src="' + image + '" width="100%">');
             }
         });
     },
@@ -944,12 +916,12 @@ var features = { //ALL the functions must go in here
         var sitename = SOHelper.getSiteName('api');
         $('.history-table td b a[href*="#comment"]').each(function() {
             var id = $(this).attr('href').split('#')[1].split('_')[0].replace('comment', '');
-            $(this).after("<span class='showCommentScore' id='" + id + "'>&nbsp;&nbsp;&nbsp;show comment score</span>");
+            $(this).after('<span class="showCommentScore" id="' + id + '">&nbsp;&nbsp;&nbsp;show comment score</span>');
         });
         $('.showCommentScore').css('cursor', 'pointer').on('click', function() {
             var $that = $(this);
-            $.getJSON("https://api.stackexchange.com/2.2/comments/" + $that.attr('id') + "?order=desc&sort=creation&site=" + sitename, function(json) {
-                $that.html("&nbsp;&nbsp;&nbsp;" + json.items[0].score);
+            SOHelper.getFromAPI('comments', $that.attr('id'), sitename, function(json) {
+                $that.html('&nbsp;&nbsp;&nbsp;' + json.items[0].score);
             });
         });
     },
@@ -964,7 +936,7 @@ var features = { //ALL the functions must go in here
             $.each($('div[id*="answer"]'), function() { //loop through all *answers*
                 ids.push($(this).find('.result-link a').attr('href').split('/')[2]); //Get the IDs for the questions for all the *answers*
             });
-            $.getJSON("https://api.stackexchange.com/2.2/questions/" + ids.join(';') + "?site=" + sitename, function(json) {
+            $.getJSON('https://api.stackexchange.com/2.2/questions/' + ids.join(';') + '?site=' + sitename, function(json) {
                 var itemsLength = json.items.length;
                 for (var i = 0; i < itemsLength; i++) {
                     idsAndTags[json.items[i].question_id] = json.items[i].tags;
@@ -975,7 +947,7 @@ var features = { //ALL the functions must go in here
                     var id = $(this).find('.result-link a').attr('href').split('/')[2]; //get their ID
                     var $that = $(this);
                     for (var x = 0; x < idsAndTags[id].length; x++) { //Add the appropiate tags for the appropiate answer
-                        $that.find('.summary .tags').append("<a href='/questions/tagged/" + idsAndTags[id][x] + "' class='post-tag'>" + idsAndTags[id][x] + "</a>"); //add the tags and their link to the answers
+                        $that.find('.summary .tags').append('<a href="/questions/tagged/' + idsAndTags[id][x] + '" class="post-tag">' + idsAndTags[id][x] + '</a>'); //add the tags and their link to the answers
                     }
                     $that.find('.summary .tags a').each(function() {
                         if ($(this).text().indexOf('status-') > -1) { //if it's a mod tag
@@ -992,6 +964,7 @@ var features = { //ALL the functions must go in here
     stickyVoteButtons: function() {
         // Description: For making the vote buttons stick to the screen as you scroll through a post
         //https://github.com/shu8/SE_OptionalFeatures/pull/14:
+        //https://github.com/shu8/Stack-Overflow-Optional-Features/issues/28: Thanks @SnoringFrog for fixing this!
 
         var $votecells = $(".votecell");
         $votecells.css("width", "61px");
@@ -1041,13 +1014,13 @@ var features = { //ALL the functions must go in here
                 removed = ($questionHyperlink.find('.diff-add').remove().end().text());
 
             $('.summary h2 .question-hyperlink').hide();
-            $('.summary h2 .question-hyperlink').after("<a href='" + link + "' class='question-hyperlink'><span class='diff-delete'>" + removed + "</span><span class='diff-add'>" + added + "</span></a>");
+            $('.summary h2 .question-hyperlink').after('<a href="' + link + '" class="question-hyperlink"><span class="diff-delete">' + removed + '</span><span class="diff-add">' + added + '</span></a>');
         }, 1000);
     },
 
     metaChatBlogStackExchangeButton: function() {
         // Description: For adding buttons next to sites under the StackExchange button that lead to that site's meta, chat and blog
-        var blogSites = ["math", "serverfault", "english", "stats", "diy", "bicycles", "webapps", "mathematica", "christianity", "cooking", "fitness", "cstheory", "scifi", "tex", "security", "islam", "superuser", "gaming", "programmers", "gis", "apple", "photo", "dba"],
+        var blogSites = ['math', 'serverfault', 'english', 'stats', 'diy', 'bicycles', 'webapps', 'mathematica', 'christianity', 'cooking', 'fitness', 'cstheory', 'scifi', 'tex', 'security', 'islam', 'superuser', 'gaming', 'programmers', 'gis', 'apple', 'photo', 'dba'],
             link,
             blogLink = '//' + 'blog.stackexchange.com';
         $('#your-communities-section > ul > li > a').hover(function() {
@@ -1058,10 +1031,10 @@ var features = { //ALL the functions must go in here
                 }
 
                 $(this).find('.rep-score').hide();
-                $(this).append('<div class="related-links" style="float: right;">\
-                                 <a href="' + link + '">meta</a>\
-                                 <a href="http://chat.stackexchange.com">chat</a>\
-                                 <a href="' + blogLink + '">blog</a>\
+                $(this).append('<div class="related-links" style="float: right;"> \
+                                 <a href="' + link + '">meta</a> \
+                                 <a href="http://chat.stackexchange.com">chat</a> \
+                                 <a href="' + blogLink + '">blog</a> \
                                 </div>');
             }
         }, function() {
@@ -1073,36 +1046,34 @@ var features = { //ALL the functions must go in here
     metaNewQuestionAlert: function() {
         // Description: For adding a fake mod diamond that notifies you if there has been a new post posted on the current site's meta
 
-        const NEWQUESTIONS = "metaNewQuestionAlert-lastQuestions",
-              DIAMONDON = "new-meta-questions-diamondOn",
-              DIAMONDOFF = "new-meta-questions-diamondOff";
+        var NEWQUESTIONS = 'metaNewQuestionAlert-lastQuestions',
+            DIAMONDON = 'new-meta-questions-diamondOn',
+            DIAMONDOFF = 'new-meta-questions-diamondOff';
 
         var favicon = $(".current-site a[href*='meta'] .site-icon").attr('class').split('favicon-')[1];
 
         var metaName = 'meta.' + $(location).attr('hostname').split('.')[0],
             lastQuestions = {},
-            apiLink = "https://api.stackexchange.com/2.2/questions?pagesize=5&order=desc&sort=activity&site=" + metaName;
+            apiLink = 'https://api.stackexchange.com/2.2/questions?pagesize=5&order=desc&sort=activity&site=' + metaName;
 
-        var $dialog = $("<div/>", {id: "new-meta-questions-dialog", class: "topbar-dialog achievements-dialog dno"}),
-            $header = $("<div/>", {class: "header"}).append($("<h3/>", {text: "new meta posts"})),
-            $content = $("<div/>", {class: "modal-content"}),
-            $questions = $("<ul/>", {id: "new-meta-questions-dialog-list", class: "js-items items"}),
-            $diamond = $("<a/>", {id: "new-meta-questions-button",
-                                  class: "topbar-icon yes-hover new-meta-questions-diamondOff",
+        var $dialog = $('<div/>', {id: 'new-meta-questions-dialog', class: 'topbar-dialog achievements-dialog dno'}),
+            $header = $('<div/>', {class: 'header'}).append($('<h3/>', {text: 'new meta posts'})),
+            $content = $('<div/>', {class: 'modal-content'}),
+            $questions = $('<ul/>', {id: 'new-meta-questions-dialog-list', class: 'js-items items'}),
+            $diamond = $('<a/>', {id: 'new-meta-questions-button',
+                                  class: 'topbar-icon yes-hover new-meta-questions-diamondOff',
                                   click: function(){
-                                      $diamond.toggleClass("topbar-icon-on");
+                                      $diamond.toggleClass('topbar-icon-on');
                                       $dialog.toggle();
                                   }});
 
-        $dialog.append($header).append($content.append($questions)).prependTo(".js-topbar-dialog-corral");
-
-        // inject diamond before sox button
-        $("#soxSettingsButton").before($diamond);
+        $dialog.append($header).append($content.append($questions)).prependTo('.js-topbar-dialog-corral');
+        $('#soxSettingsButton').before($diamond);
 
         $(document).mouseup(function(e) {
-            if (!$dialog.is(e.target)
-                && $dialog.has(e.target).length === 0
-                && !$(e.target).is('#new-meta-questions-button')){
+            if (!$dialog.is(e.target) &&
+                $dialog.has(e.target).length === 0 &&
+                !$(e.target).is('#new-meta-questions-button')){
                 $dialog.hide();
                 $diamond.removeClass("topbar-icon-on");
             }
@@ -1122,10 +1093,10 @@ var features = { //ALL the functions must go in here
             } else {
                 $diamond.removeClass(DIAMONDOFF).addClass(DIAMONDON);
 
-                for (i = 0; i < json.items.length; i++) {
+                for (var i = 0; i < json.items.length; i++) {
                     var title = json.items[i].title,
-                        link = json.items[i].link,
-                        author = json.items[i].owner.display_name;
+                        link = json.items[i].link;
+                        //author = json.items[i].owner.display_name;
                     addQuestion(title, link);
 
                 }
@@ -1138,10 +1109,10 @@ var features = { //ALL the functions must go in here
         });
 
         function addQuestion(title, link){
-            var $li = $("<li/>"),
-                $link = $("<a/>", {href: link}),
-                $icon = $("<div/>", {class: "site-icon favicon favicon-" + favicon}),
-                $message = $("<div/>", {class: "message-text"}).append($("<h4/>", {html: title}));
+            var $li = $('<li/>'),
+                $link = $('<a/>', {href: link}),
+                $icon = $('<div/>', {class: 'site-icon favicon favicon-' + favicon}),
+                $message = $('<div/>', {class: 'message-text'}).append($('<h4/>', {html: title}));
 
             $link.append($icon).append($message).appendTo($li);
             $questions.append($li);
@@ -1181,7 +1152,7 @@ var features = { //ALL the functions must go in here
             var $that = $(this);
             $.each(questions, function(key, val) { //loop through object of questions closed/dupes/migrated
                 if ($that.attr('id').split('-')[2] == key) {
-                    $that.find('.summary a:eq(0)').after("&nbsp;<span class='standOutDupeCloseMigrated-" + val + "'>&nbsp;" + val + "&nbsp;</span>"); //add appropiate message
+                    $that.find('.summary a:eq(0)').after('&nbsp;<span class="standOutDupeCloseMigrated-' + val + '">&nbsp;' + val + '&nbsp;</span>'); //add appropiate message
                 }
             });
         });
@@ -1192,13 +1163,13 @@ var features = { //ALL the functions must go in here
 
         function getComment(url, $that) {
             $.get(url, function(responseText, textStatus, XMLHttpRequest) {
-                $that.find('.shub-revision-comment').attr('title', $(XMLHttpRequest.responseText).find('.revision-comment:eq(0)')[0].innerHTML);
+                $that.find('.sox-revision-comment').attr('title', $(XMLHttpRequest.responseText).find('.revision-comment:eq(0)')[0].innerHTML);
             });
         }
         $('.question, .answer').each(function() {
             if ($(this).find('.post-signature').length > 1) {
                 var id = $(this).attr('data-questionid') || $(this).attr('data-answerid');
-                $(this).find('.post-signature:eq(0)').find('.user-action-time a').wrapInner("<span class='shub-revision-comment'></span>");
+                $(this).find('.post-signature:eq(0)').find('.user-action-time a').wrapInner('<span class="sox-revision-comment"></span>');
                 var $that = $(this);
                 getComment('http://' + $(location).attr('hostname') + '/posts/' + id + '/revisions', $that);
             }
@@ -1264,7 +1235,7 @@ var features = { //ALL the functions must go in here
                 }
             } else { //sbs was toggled off
                 //check if sbs is off for all existing questions and answers
-                if ($('.question').find('.wmd-preview.sbs-on').length == 0 && $('.answer').find('.wmd-preview.sbs-on').length == 0) {
+                if (!$('.question').find('.wmd-preview.sbs-on').length && !$('.answer').find('.wmd-preview.sbs-on').length) {
                     $('.votecell').removeClass('sbs-on');
 
                     if (!($('#wmd-preview').hasClass('sbs-on'))) { //sbs is off for everything
@@ -1285,7 +1256,7 @@ var features = { //ALL the functions must go in here
             // edited (or new question/answer being written)
             setTimeout(function() {
                 var sbsBtn = '<li class="wmd-button" title="side-by-side-editing" style="left: 500px;width: 170px;"> \
-<div id="wmd-sbs-button' + toAppend + '" style="background-image: none;">              \
+<div id="wmd-sbs-button' + toAppend + '" style="background-image: none;"> \
 Toggle SBS?</div></li>';
                 jNode.after(sbsBtn);
 
@@ -1297,7 +1268,7 @@ Toggle SBS?</div></li>';
                 //add click listeners for "Save Edits" and "cancel" buttons
                 // - also gets added to the "Post New Question" and "Post New Answer" button as an innocuous (I think) side effect
                 $('#post-editor' + toAppend).siblings('.form-submit').children().on('click', function() {
-                    if ($(this).parent().siblings('.sbs-on').length > 0) { //sbs was on, so turn it off
+                    if ($(this).parent().siblings('.sbs-on').length) { //sbs was on, so turn it off
                         startSBS(toAppend);
                     }
                 });
@@ -1306,24 +1277,25 @@ Toggle SBS?</div></li>';
 
         //Adding script dynamically because @requiring causes the page load to hand -- don't know how to fix! :(
         var script = document.createElement('script');
-        script.src = "https://cdn.rawgit.com/BrockA/2625891/raw/9c97aa67ff9c5d56be34a55ad6c18a314e5eb548/waitForKeyElements.js";
+        script.src = 'https://cdn.rawgit.com/BrockA/2625891/raw/9c97aa67ff9c5d56be34a55ad6c18a314e5eb548/waitForKeyElements.js';
         document.getElementsByTagName('head')[0].appendChild(script);
         //This is a heavily modified version by szego <https://github.com/szego/SE-Answers_scripts/blob/master/side-by-side-editing.user.js>:
         setTimeout(function() {
             if (window.location.pathname.indexOf('questions/ask') < 0) { //not posting a new question
                 //get question and answer IDs for keeping track of the event listeners
-                var anchorList = $('#answers').children("a"); //answers have anchor tags before them of the form <a name="#">,
+                var anchorList = $('#answers > a'); //answers have anchor tags before them of the form <a name="#">,
                 // where # is the answer ID
+                // TODO: test
                 var numAnchors = anchorList.length;
                 var itemIDs = [];
 
-                for (i = 1; i <= numAnchors - 2; i++) { //the first and last anchors aren't answers
+                for (var i = 1; i <= numAnchors - 2; i++) { //the first and last anchors aren't answers
                     itemIDs.push(anchorList[i].name);
                 }
                 itemIDs.push($('.question').data('questionid'));
 
                 //event listeners for adding the sbs toggle buttons for editing existing questions or answers
-                for (var i = 0; i <= numAnchors - 2; i++) {
+                for (i = 0; i <= numAnchors - 2; i++) {
                     waitForKeyElements('#wmd-redo-button-' + itemIDs[i], SBS);
                 }
             }
@@ -1362,23 +1334,23 @@ Toggle SBS?</div></li>';
     addAuthorNameToInboxNotifications: function() {
         // Description: To add the author's name to inbox notifications
 
-        function getAuthorName($node) {
+        var getAuthorName = (function() {
             var getFromAPI = {
                 'comment': function(d) {
                     var comment_id = d.link.split('/')[5].split('?')[0];
-                    $.getJSON("https://api.stackexchange.com/2.2/comments/" + comment_id + "?order=desc&sort=creation&site=" + d.sitename, function(json) {
+                    SOHelper.getFromAPI('comments', comment_id, d.sitename, function(json) {
                         d.n.find('.item-header .item-type').text(d.n.find('.item-header .item-type').text() + ' (' + json.items[0].owner.display_name + ')');
                     });
                 },
                 'answer': function(d) {
                     var answer_id = d.link.split('/')[4].split('?')[0];
-                    $.getJSON("https://api.stackexchange.com/2.2/answers/" + answer_id + "?order=desc&sort=creation&site=" + d.sitename, function(json) {
+                    SOHelper.getFromAPI('answers', answer_id, d.sitename, function(json) {
                         d.n.find('.item-header .item-type').text(d.n.find('.item-header .item-type').text() + ' (' + json.items[0].owner.display_name + ')');
                     });
                 },
                 'edit suggested': function(d) {
                     var edit_id = d.link.split('/')[4];
-                    $.getJSON("https://api.stackexchange.com/2.2/suggested-edits/" + edit_id + "?order=desc&sort=creation&site=" + d.sitename, function(json) {
+                    SOHelper.getFromAPI('suggested-edits', edit_id, d.sitename, function(json) {
                         d.n.find('.item-header .item-type').text(d.n.find('.item-header .item-type').text() + ' (' + json.items[0].proposing_user.display_name + ')');
                     });
                 },
@@ -1386,14 +1358,16 @@ Toggle SBS?</div></li>';
                     console.log('Script does not currently support getting author information for type "' + d.n.find('.item-header .item-type').text() + '"!');
                 }
             };
-            var type = $node.find('.item-header .item-type').text();
 
-            (getFromAPI[type] || getFromAPI['other'])({
-                n: $node,
-                link: $node.find('a').eq(0).attr('href'),
-                sitename: $node.find('a').eq(0).attr('href').split('/')[2].split('.')[0]
-            });
-        }
+            return function($node) {
+                (getFromAPI[$node.find('.item-header .item-type').text()] || getFromAPI.other)({
+                    n: $node,
+                    link: $node.find('a').eq(0).attr('href'),
+                    sitename: $node.find('a').eq(0).attr('href').split('/')[2].split('.')[0]
+                });
+            };
+            //TODO: test
+        })();
 
         new MutationObserver(function(mutations) {
             mutations.forEach(function(mutation) {
@@ -1419,17 +1393,17 @@ Toggle SBS?</div></li>';
     flagOutcomeTime: function() {
         // Description: For adding the flag outcome time to the flag page
         //https://github.com/shu8/Stack-Overflow-Optional-Features/pull/32
-        $(".flag-outcome").each(function() {
-            $(this).append(" – " + $(this).attr("title"));
+        $('.flag-outcome').each(function() {
+            $(this).append(' – ' + $(this).attr('title'));
         });
     },
 
     scrollToTop: function() {
         // Description: For adding a button at the bottom right part of the screen to scroll back to the top
         //https://github.com/shu8/Stack-Overflow-Optional-Features/pull/34
-        if (!SOHelper.isOnChat()) { // don't show scrollToTop button while in chat.
-            var $scroll = $("<div/>", {
-                id: "sox-scrollToTop",
+        if (SOHelper.getSiteType() !== 'chat') { // don't show scrollToTop button while in chat.
+            $('<div/>', {
+                id: 'sox-scrollToTop',
                 click: function(e) {
                     e.preventDefault();
                     $('html, body').animate({
@@ -1437,9 +1411,9 @@ Toggle SBS?</div></li>';
                     }, 800);
                     return false;
                 }
-            }).append($("<i/>", {
-                class: "fa fa-angle-double-up fa-3x"
-            })).appendTo("div.container");
+            }).append($('<i/>', {
+                class: 'fa fa-angle-double-up fa-3x'
+            })).appendTo('div.container');
 
             if ($(window).scrollTop() < 200) {
                 $('#sox-scrollToTop').hide();
@@ -1465,26 +1439,23 @@ Toggle SBS?</div></li>';
             COMMENT: 4
         };
         var type = {
-            TOTAL: "flags",
-            WAITING: "waiting",
-            HELPFUL: "helpful",
-            DECLINED: "declined",
-            DISPUTED: "disputed",
-            AGEDAWAY: "aged away"
+            TOTAL: 'flags',
+            WAITING: 'waiting',
+            HELPFUL: 'helpful',
+            DECLINED: 'declined',
+            DISPUTED: 'disputed',
+            AGEDAWAY: 'aged away'
         };
 
-        var groupKey,
-            typeKey,
-            total,
-            count,
+        var count,
             percentage;
 
         function addPercentage(group, type, percentage) {
-            var $span = $("<span/>", {
-                text: "({0}%)".replace('{0}', percentage),
-                style: "margin-left:5px; color: #999; font-size: 12px;"
+            var $span = $('<span/>', {
+                text: '({0}%)'.replace('{0}', percentage),
+                style: 'margin-left:5px; color: #999; font-size: 12px;'
             });
-            $("td > a[href*='group=" + group + "']:contains('" + type + "')").after($span);
+            $('td > a[href*="group=' + group + '"]:contains("' + type + '")').after($span);
         }
 
         function calculatePercentage(count, total) {
@@ -1494,23 +1465,25 @@ Toggle SBS?</div></li>';
 
         function getFlagCount(group, type) {
             var flagCount = 0;
-            flagCount += Number($("td > a[href*='group=" + group + "']:contains('" + type + "')")
+            flagCount += Number($('td > a[href*="group=' + group + '"]:contains("' + type + '")')
                 .parent()
                 .prev()
                 .text()
-                .replace(",", ""));
+                .replace(',', ''));
             return flagCount;
         }
 
         // add percentages
-        for (groupKey in group) {
-            total = getFlagCount(group[groupKey], type.TOTAL);
-            for (typeKey in type) {
-                if (typeKey !== "TOTAL") {
-                    count = getFlagCount(group[groupKey], type[typeKey]);
+        for (var groupKey in group) {
+            var item = group[groupKey],
+                total = getFlagCount(item, type.TOTAL);
+            for (var typeKey in type) {
+                var typeItem = type[typeKey];
+                if (typeKey !== 'TOTAL') {
+                    count = getFlagCount(item, typeItem);
                     percentage = calculatePercentage(count, total);
                     //console.log(groupKey + ": " + typeKey + " Flags -- " + count);
-                    addPercentage(group[groupKey], type[typeKey], percentage);
+                    addPercentage(item, typeItem, percentage);
                 }
             }
         }
@@ -1538,24 +1511,24 @@ Toggle SBS?</div></li>';
 
         $('.post-text a, .comments .comment-copy a').each(function() {
             var url = $(this).attr('href');
-            if (url && url.indexOf($(location).attr('hostname')) > -1 && url.indexOf('/questions/') > -1 && url.indexOf('#comment') == -1 && url.indexOf('/tags/') == -1 && url.indexOf('/tagged/') == -1) {
+            if (url && url.indexOf($(location).attr('hostname')) > -1 && /\/questions\//.test(url) && /#comment/.test(url)) {
                 $(this).css('color', '#0033ff');
-                $(this).before('<a class="expander-arrow-small-hide expand-post-shub"></a>');
+                $(this).before('<a class="expander-arrow-small-hide expand-post-sox"></a>');
             }
         });
 
-        $(document).on('click', 'a.expand-post-shub', function() {
+        $(document).on('click', 'a.expand-post-sox', function() {
             if ($(this).hasClass('expander-arrow-small-show')) {
                 $(this).removeClass('expander-arrow-small-show');
                 $(this).addClass('expander-arrow-small-hide');
-                $('.linkedPostsInline-loaded-body-shub').remove();
+                $('.linkedPostsInline-loaded-body-sox').remove();
             } else if ($(this).hasClass('expander-arrow-small-hide')) {
                 $(this).removeClass('expander-arrow-small-hide');
                 $(this).addClass('expander-arrow-small-show');
                 var $that = $(this);
                 var id = getIdFromUrl($(this).next().attr('href'));
-                $.get("http://" + $(location).attr('hostname') + "/posts/" + id + "/body", function(d) {
-                    var div = "<div class='linkedPostsInline-loaded-body-shub' style='background-color: #ffffcc;'>" + d + "</div>";
+                $.get('http://' + $(location).attr('hostname') + '/posts/' + id + '/body', function(d) {
+                    var div = '<div class="linkedPostsInline-loaded-body-sox" style="background-color: #ffffcc;">' + d + '</div>';
                     $that.next().after(div);
                 });
             }
@@ -1564,32 +1537,62 @@ Toggle SBS?</div></li>';
 
     hideHotNetworkQuestions: function() {
         // Description: Hides the Hot Network Questions module from the sidebar
-        $("#hot-network-questions").remove();
+        $('#hot-network-questions').remove();
     },
 
     hideHireMe: function() {
         // Description: Hides the Looking for a Job module from the sidebar
-        $("#hireme").remove();
+        $('#hireme').remove();
     },
 
     hideCommunityBulletin: function() {
         // Description: Hides the Community Bulletin module from the sidebar
-        $("#sidebar .community-bulletin").remove();
+        $('#sidebar .community-bulletin').remove();
     },
 
     hideSearchBar: function() {
         // Description: Replaces the searchbox with a button that takes you to the search page
-        var $topbar = $(".topbar"),
-            $links = $topbar.find(".topbar-menu-links"),
-            $searchbar = $topbar.find(".search-container"),
-            $search = $("<a/>", {
-                href: "/search",
-                title: "Search " + SOHelper.getSiteName()
-            }).append($("<i/>", {
-                class: "fa fa-search"
+        var $topbar = $('.topbar'),
+            $links = $topbar.find('.topbar-menu-links'),
+            $searchbar = $topbar.find('.search-container'),
+            $search = $('<a/>', {
+                href: '/search',
+                title: 'Search ' + SOHelper.getSiteName()
+            }).append($('<i/>', {
+                class: 'fa fa-search'
             }));
 
         $searchbar.remove();
         $links.append($search);
+    },
+    
+    themes: function() {
+        theming();
+    },
+
+    editTheme: function() { //only if retheme exists
+        if (JSON.parse(GM_getValue(SOX_SETTINGS)).themes) {
+            var $themeEditor = $(GM_getResourceText('themeEditor')),
+                $soxThemeButton = $('<a/>', {
+                    id: 'soxThemeButton',
+                    class: 'topbar-icon yes-hover sox-theme-button', //TODO: sox-theme-button
+                    title: 'Edit site theme',
+                    style: 'color: #A1A1A1',
+                    click: function(e) {
+                        e.preventDefault();
+                        $('#sox-theme-editor').toggle();
+                    }
+                }),
+                $icon = $('<i/>', {
+                    class: 'fa fa-css3' //TODO
+                });
+            $themeEditor.appendTo('body');
+            $soxThemeButton.append($icon).appendTo('div.network-items');
+            themeEditor();
+        }
+    },
+    
+    enhancedEditor: function() {
+        enhancedEditor.startFeature();
     }
 };

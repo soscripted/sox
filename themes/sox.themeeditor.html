@@ -1,0 +1,32 @@
+<div id="sox-theme-editor">
+    <div id="sox-settings-dialog-title">
+        <h3>Stack Overflow Extras - Theme Editor</h3>
+        <div id="sox-settings-dialog-close"><a title="Close Settings Dialog">×</a></div>
+    </div>
+    <p id="theme-name-p"><b>Name: </b><span id="theme-name"></span></p><!--TODO: edit-->
+    <p id="sox-theme-editor-select">Select element <i class="fa fa-hand-grab-o"></i></p>
+    <input type="radio" id="sox-selector-all" name="sox-selector-all-any" value="all"><label for="sox-selector-all">All conditions</label>
+    <input type="radio" id="sox-selector-any" name="sox-selector-all-any" value="any"><label for="sox-selector-any">Any conditions</label>
+    <p><b>Attributes</b></p>
+    <table id="sox-element-attributes"></table>
+    <input type="radio" id="sox-css-equals" name="sox-css-equality" value="equals"><label for="sox-css-equals">Equals</label>
+    <input type="radio" id="sox-css-contains" name="sox-css-equality" value="contains"><label for="sox-css-contains">Contains</label>
+    <input type="radio" id="sox-css-starts-with" name="sox-css-equality" value="starts-with"><label for="sox-css-starts-with">Starts with</label>
+    <input type="radio" id="sox-css-ends-with" name="sox-css-equality" value="ends-with"><label for="sox-css-ends-with">Ends with</label>
+    <!--TODO: get active-->
+    <p><b>Classes</b></p>
+    <ul id="sox-element-classes"></ul>
+    <p><b>ID</b></p>
+    <p id="sox-element-id"></p>
+    <p><b>Tag</b></p>
+    <p id="sox-element-tag"></p>
+    <!--editor-->
+    <select id="sox-style-item-selector"></select> <!--TODO: only one active - disabled true-->
+    <select id="sox-style-item-selector-browser-specific"></select>
+    <p><input type="text" id="sox-style-item-value"><button id="sox-add-style-item">Add</button></p>
+    <code id="sox-edited-rule"></code><!--TODO:enable editing -> textarea + save button, when not in edit mode span.sox-rule-selector-->
+    <p><b>Applies to</b></p>
+    <ul id="sox-rule-applies-to"></ul>
+    <button id="sox-rule-toggle-display">Toggle off</button><!--TODO: change text-->
+    <button id="sox-rule-add">Add</button>
+</div>

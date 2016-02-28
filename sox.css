@@ -65,10 +65,10 @@
     height: 24px !important;
     min-width: 34px;
  }
- .sox-settings-button:hover {
-     color: #999;
-  }
-  #sox-settings-dialog-check-toggle > i {
+.sox-settings-button:hover {
+    color: #999;
+}
+#sox-settings-dialog-check-toggle > i {
     padding: 14px 0;
 }
 
