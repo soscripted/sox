@@ -57,6 +57,9 @@
     float: right;
     padding: 14px;
 }
+#sox-settings-dialog-check-toggle i {
+    padding: 14px;
+}
 
 /* -------- sox specific features' CSS ------- */
 #sox-scrollToTop {
