@@ -3,7 +3,7 @@
     position: fixed;
     display: none;
     height: 100%;
-    width: 400px;
+    width: 550px;
     top: 0;
     left: 0;
     z-index: 9999;
@@ -53,12 +53,23 @@
     margin-left: 5px;
     float: right;
 }
-#sox-settings-dialog-reset {
+#sox-settings-dialog-reset, #sox-settings-dialog-report {
     float: right;
     padding: 14px;
 }
-#sox-settings-dialog-check-toggle i {
-    padding: 14px;
+.sox-settings-button {
+    background-image: none !important;
+    padding-top: 10px;
+    font-size: 14px;
+    color: #999;
+    height: 24px !important;
+    min-width: 34px;
+ }
+.sox-settings-button:hover {
+    color: #999;
+}
+#sox-settings-dialog-check-toggle > i {
+    padding: 14px 0;
 }
 
 /* -------- sox specific features' CSS ------- */
@@ -121,59 +132,27 @@
 }
 
 /*metaNewQuestionAlert for the mod diamond */
-.metaNewQuestionAlert-diamondOn {
-    font-size: 1.7em;
-    vertical-align: top;
-    padding-top: 6px !important; /*!important because the 'links-container' class has a different value which I need to overide*/
-    color: rgb(30, 126, 203);
+#new-meta-questions-button {
+    cursor: pointer;
+    width: 32px;
 }
-.metaNewQuestionAlert-diamondOff {
-    font-size: 1.7em;
-    vertical-align: top;
-    padding-top: 6px !important; /*!important because the 'links-container' class has a different value which I need to overide*/
-    color: rgb(136, 136, 136);
+
+.new-meta-questions-diamondOn {
+background-position: -218px -86px;
 }
-@keyframes metaNewQuestionAlert-pulse {
-    0% {
-        -ms-transform: scale(1, 1);
-        -webkit-transform: scale(1, 1);
-        transform: scale(1, 1)
-    }
-    50% {
-        -ms-transform: scale(1.1, 1.15);
-        -webkit-transform: scale(1.1, 1.15);
-        transform: scale(1.1, 1.15)
-    }
-    100% {
-        -ms-transform: scale(1, 1);
-        -webkit-transform: scale(1, 1);
-        transform: scale(1, 1)
-    }
+.new-meta-questions-diamondOff {
+background-position: -138px -86px;
 }
-@-webkit-keyframes metaNewQuestionAlert-pulse {
-    0% {
-        -ms-transform: scale(1, 1);
-        -webkit-transform: scale(1, 1);
-        transform: scale(1, 1)
-    }
-    50% {
-        -ms-transform: scale(1.1, 1.15);
-        -webkit-transform: scale(1.1, 1.15);
-        transform: scale(1.1, 1.15)
-    }
-    100% {
-        -ms-transform: scale(1, 1);
-        -webkit-transform: scale(1, 1);
-        transform: scale(1, 1)
-    }
+
+#new-meta-questions-dialog {
+    top: 34px;
+    left: 230px;
+    width: 377px;
 }
-.metaNewQuestionAlert-diamondOn:hover,
-.metaNewQuestionAlert-diamondOff:hover {
-    -webkit-animation-name: metaNewQuestionAlert-pulse;
-    -webkit-animation-duration: .5s;
-    animation-name: metaNewQuestionAlert-pulse;
-    animation-duration: .5s
+#new-meta-questions-dialog-list:empty::after{
+    content: "No new meta questions at this time.";
 }
+
 
 /*addHotText for the 'this question is hot' banner */
 .sox-hot {
