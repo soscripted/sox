@@ -978,16 +978,17 @@ var features = { //ALL the functions must go in here
         function stickcells(){
             $votecells.each(function() {
                 var $topbar = $('.topbar'),
+                    topbarHeight = $topbar.outerHeight(),
                     offset = 10;
                 if ($topbar.css('position') == 'fixed') {
-                    offset += $topbar.outerHeight();
+                    offset += topbarHeight;
                 }
                 var $voteCell = $(this),
                     $vote = $voteCell.find('.vote'),
                     vcOfset = $voteCell.offset(),
                     scrollTop = $(window).scrollTop();
                 if (vcOfset.top - scrollTop - offset <= 0) {
-                    if (vcOfset.top + $voteCell.height() - scrollTop - offset - $vote.height() > 34) {
+                    if (vcOfset.top + $voteCell.height() - scrollTop - offset - $vote.height() > topbarHeight) {
                         $vote.css({
                             position: 'fixed',
                             left: vcOfset.left + 4,
