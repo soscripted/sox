@@ -135,14 +135,15 @@
     }
 
     function isDeprecated() { //checks whether the saved settings contain a deprecated feature
-        //TODO: add function names to an array and loop instead of || .. || .. ||
-        settings = getSettings();
-        if (settings.indexOf('answerCountSidebar') != -1 ||
-            settings.indexOf('highlightClosedQuestions') != -1 ||
-            settings.indexOf('unHideAnswer') != -1 ||
-            settings.indexOf('flaggingPercentages') != -1) {
-            return true;
-        }
+        var settings = getSettings(),
+            deprecatedFeatures = [
+                'answerCountSidebar',
+                'highlightClosedQuestions',
+                'unHideAnswer',
+                'flaggingPercentages',
+                'moveCommentsLink',
+            ];
+        return (new RegExp('('+deprecatedFeatures.join('|')+')')).test(settings);
     }
 
     function addFeatures(features) {
