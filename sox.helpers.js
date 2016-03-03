@@ -10,7 +10,7 @@ var SOHelper = {
     },
 
     getSiteName: function(type) {
-        return (type == 'api' ? location.href.split('/')[2].split('.')[0] : $('.current-site-link').text().trim());
+        return (type == 'api' ? location.href.split('/')[2].split('.')[0] : StackExchange.options.site.name);
     },
 
     isBeta: function() {
@@ -34,9 +34,9 @@ var SOHelper = {
     },
 
     getSiteType: function() {
-        if($('#jplayer').length && /^chat\./.test(location.hostname)) {
+        if(window.CHAT) {
             return 'chat';
-        } else if (/^meta\./.test(location.hostname)) {
+        } else if (StackExchange.options.site.isMetaSite) {
             return 'meta';
         } else {
             return 'main';
