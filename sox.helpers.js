@@ -8,6 +8,10 @@ var SOHelper = {
         var $rep = $('div.topbar-links .links-container>span.reputation');
         return ($rep.length ? $rep.text().trim().replace(',', '') : false);
     },
+    
+    getSiteURL: function(type) {
+        return (type == 'full' ? location.href : location.hostname);
+    },
 
     getSiteName: function(type) {
         return (type == 'api' ? location.href.split('/')[2].split('.')[0] : StackExchange.options.site.name);
@@ -18,11 +22,11 @@ var SOHelper = {
     },
 
     getQuestionId: function() {
-        return window.location.href.split('/')[4];
+        return StackExchange.question.getQuestionId();
     },
 
     isLoggedIn: function() {
-        return !$('.call-to-login').length;
+        return StackExchange.options.user.isRegistered;
     },
 
     isOnUserProfile: function() {
@@ -30,7 +34,7 @@ var SOHelper = {
     },
 
     getFromAPI: function(type, id, sitename, callback, sortby) {
-        $.getJSON('https://api.stackexchange.com/2.2/' + type + id + '?order=desc&sort=' + (sortby || 'creation') + '&site=' + sitename, callback);
+        $.getJSON('https://api.stackexchange.com/2.2/' + type + '/' + id + '?order=desc&sort=' + (sortby || 'creation') + '&site=' + sitename, callback);
     },
 
     getSiteType: function() {
