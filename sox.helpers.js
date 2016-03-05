@@ -23,11 +23,7 @@ SOHelper = {
     getAPISiteName: function() {
         return location.href.split('/')[2].split('.')[0];
     },
-
-    getSiteType: function() {
-        return ($('.beta-title').length ? 'beta' : 'graduated');
-    },
-
+    
     getSiteIcon: function() {
         return "favicon-" + $(".current-site a:not([href*='meta']) .site-icon").attr('class').split('favicon-')[1];
     },
@@ -57,12 +53,16 @@ SOHelper = {
     },
 
     getSiteType: function() {
-        if(window.CHAT) {
+        if (window.CHAT) {
             return 'chat';
         } else if (StackExchange.options.site.isMetaSite) {
             return 'meta';
         } else {
-            return 'main';
+            if ($('.beta-title').length) {
+                return 'beta';
+            } else {
+                return 'graduated';
+            }
         }
     },
 

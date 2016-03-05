@@ -576,7 +576,7 @@ var features = { //ALL the functions must go in here
             $(document).on('click', 'a.js-add-link.comments-link', function () {
                 var answererName = $(this).parents('div').find('.post-signature:last').first().find('.user-details a').text(),
                     answererId = $(this).parents('div').find('.post-signature:last').first().find('.user-details a').attr('href').split('/')[2],
-                    apiUrl = 'https://api.stackexchange.com/2.2/users/' + answererId + '?site=' + SOHelper.getSiteName('api');
+                    apiUrl = 'https://api.stackexchange.com/2.2/users/' + answererId + '?site=' + SOHelper.getAPISiteName();
 
                 setTimeout(function () {
                     $('.comments textarea').attr('placeholder', 'Use comments to ask for clarification or add more information. Avoid answering questions in comments. Press Alt+O to view/edit/delete Quick Comment Shortcuts data, or press Alt+R to open a box to remind you of the shortcuts.');
@@ -943,7 +943,7 @@ var features = { //ALL the functions must go in here
     showCommentScores: function () {
         // Description: For adding a button on your profile comment history pages to show your comment's scores
 
-        var sitename = SOHelper.getSiteName('api');
+        var sitename = SOHelper.getAPISiteName();
         $('.history-table td b a[href*="#comment"]').each(function () {
             var id = $(this).attr('href').split('#')[1].split('_')[0].replace('comment', '');
             $(this).after('<span class="showCommentScore" id="' + id + '">&nbsp;&nbsp;&nbsp;show comment score</span>');
@@ -960,7 +960,7 @@ var features = { //ALL the functions must go in here
         // Description: For adding tags to answers in search
 
         if (window.location.href.indexOf('search?q=') > -1) { //ONLY ON SEARCH PAGES!
-            var sitename = SOHelper.getSiteName('api'),
+            var sitename = SOHelper.getAPISiteName(),
                 ids = [],
                 idsAndTags = {};
 
@@ -1089,7 +1089,7 @@ var features = { //ALL the functions must go in here
 
         var favicon = $(".current-site a[href*='meta'] .site-icon").attr('class').split('favicon-')[1];
 
-        var metaName = 'meta.' + SOHelper.getSiteName('api'),
+        var metaName = 'meta.' + SOHelper.getAPISiteName(),
             lastQuestions = {},
             apiLink = 'https://api.stackexchange.com/2.2/questions?pagesize=5&order=desc&sort=activity&site=' + metaName;
         var $dialog = $('<div/>', {
