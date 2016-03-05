@@ -16,8 +16,12 @@ SOHelper = {
         return (type == 'full' ? location.href : location.hostname);
     },
 
-    getSiteName: function(type) {
+    getSiteName: function() {
         return StackExchange.options.site.name;
+    },
+    
+    getAPISiteName: function() {
+        return location.href.split('/')[2].split('.')[0];
     },
 
     getSiteType: function() {
