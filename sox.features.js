@@ -1398,42 +1398,53 @@ Toggle SBS?</div></li>';
     addAuthorNameToInboxNotifications: function () {
         // Description: To add the author's name to inbox notifications
 
-        var getAuthorName = (function () {
-            var addAuthorNameFromAPI = {
-                'comment': function (d) {
-                    var comment_id = d.link.split('/')[5].split('?')[0];
-                    SOHelper.getFromAPI('comments', comment_id, d.sitename, function (json) {
-                        d.n.find('.item-header .item-type').html(d.n.find('.item-header .item-type').text() + ' <span class="authorName">(' + json.items[0].owner.display_name + ')</span>');
-                    });
-                },
-                'answer': function (d) {
-                    var answer_id = d.link.split('/')[4].split('?')[0];
-                    SOHelper.getFromAPI('answers', answer_id, d.sitename, function (json) {
-                        d.n.find('.item-header .item-type').html(d.n.find('.item-header .item-type').text() + ' <span class="authorName">(' + json.items[0].owner.display_name + ')</span>');
-                    });
-                },
-                'edit suggested': function (d) {
-                    var edit_id = d.link.split('/')[4];
-                    SOHelper.getFromAPI('suggested-edits', edit_id, d.sitename, function (json) {
-                        d.n.find('.item-header .item-type').html(d.n.find('.item-header .item-type').text() + ' <span class="authorName">(' + json.items[0].proposing_user.display_name + ')</span>');
-                    });
-                },
-                'other': function (d) {
-                    console.log('Script does not currently support getting author information for type "' + d.n.find('.item-header .item-type').text() + '"!');
-                }
-            };
+        function getAuthorName($node) {
+            var type = $node.find('.item-header .item-type').text(),
+                sitename = $node.find('a').eq(0).attr('href').split('/')[2].split('.')[0],
+                link = $node.find('a').eq(0).attr('href'),
+                apiurl,
+                id;
 
-            return function ($node) {
-                (addAuthorNameFromAPI[$node.find('.item-header .item-type').text()] || addAuthorNameFromAPI.other)({
-                    n: $node,
-                    link: $node.find('a').eq(0).attr('href'),
-                    sitename: $node.find('a').eq(0).attr('href').split('/')[2].split('.')[0]
-                });
-            };
-        })();
+            switch (type) {
+                case 'comment':
+                    id = link.split('/')[5].split('?')[0],
+                        apiurl = 'https://api.stackexchange.com/2.2/comments/' + id + '?order=desc&sort=creation&site=' + sitename
+                    break;
+                case 'answer':
+                    id = link.split('/')[4].split('?')[0];
+                    apiurl = 'https://api.stackexchange.com/2.2/answers/' + id + '?order=desc&sort=creation&site=' + sitename
+                    break;
+                case 'edit suggested':
+                    id = link.split('/')[4],
+                        apiurl = 'https://api.stackexchange.com/2.2/suggested-edits/' + id + '?order=desc&sort=creation&site=' + sitename
+                    break;
+                default:
+                    console.log('sox does not currently support get author information for type' + type)
+                    return;
+            }
 
-        new MutationObserver(function (mutations) {
-            mutations.forEach(function (mutation) {
+            $.getJSON(apiurl, function(json) {
+
+                var author = json.items[0].owner.display_name,
+                    $author = $('<span/>', {
+                        class: 'author',
+                        style: 'padding-left: 5px;',
+                        text: author
+                    });
+                console.log(author);
+
+                var $header = $node.find('.item-header'),
+                    $type = $header.find('.item-type').clone(),
+                    $creation = $header.find('.item-creation').clone();
+
+                //fix conflict with soup fix mse207526 - https://github.com/vyznev/soup/blob/master/SOUP.user.js#L489
+                $header.empty().append($type).append($author).append($creation);
+
+            });
+        };
+
+        new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
                 var length = mutation.addedNodes.length;
                 for (var i = 0; i < length; i++) {
                     var $addedNode = $(mutation.addedNodes[i]);
@@ -1441,7 +1452,7 @@ Toggle SBS?</div></li>';
                         return;
                     }
 
-                    for (var x = 0; x < 16; x++) { //first 15 items
+                    for (var x = 0; x < 21; x++) { //first 20 items
                         getAuthorName($addedNode.find('.inbox-item').eq(x));
                     }
                 }
