@@ -471,20 +471,27 @@ var features = { //ALL the functions must go in here
 
     commentShortcuts: function() {
         // Description: For adding support in comments for Ctrl+K,I,B to add code backticks, italicise, bolden selection
-        //TODO: this plugin has gone!
         $('.js-add-link.comments-link').click(function() {
             setTimeout(function() {
-                $('.comments textarea').bind('keydown', 'ctrl+k', function(e) {
-                    e.preventDefault();
-                    $(this).surroundSelectedText('`', '`');
-                });
-                $('.comments textarea').bind('keydown', 'ctrl+i', function(e) {
-                    e.preventDefault();
-                    $(this).surroundSelectedText('*', '*');
-                });
-                $('.comments textarea').bind('keydown', 'ctrl+b', function(e) {
-                    e.preventDefault();
-                    $(this).surroundSelectedText('**', '**');
+                $('.comments textarea').keydown(function(e) {
+                    if(e.which == 75 && e.ctrlKey) { //ctrl+k (code)
+                        $(this).surroundSelectedText('`', '`');
+                        e.stopPropagation();
+                        e.preventDefault();
+                        return false;                
+                    }
+                    if(e.which == 73 && e.ctrlKey) { //ctrl+i (italics)
+                        $(this).surroundSelectedText('*', '*');
+                        e.stopPropagation();
+                        e.preventDefault();
+                        return false;                
+                    }   
+                    if(e.which == 66 && e.ctrlKey) { //ctrl+b (bold)
+                        $(this).surroundSelectedText('**', '**');
+                        e.stopPropagation();
+                        e.preventDefault();
+                        return false;                
+                    }  
                 });
             }, 200);
         });
