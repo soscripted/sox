@@ -1231,7 +1231,7 @@ var features = { //ALL the functions must go in here
                 var id = $(this).attr('data-questionid') || $(this).attr('data-answerid');
                 $(this).find('.post-signature:eq(0)').find('.user-action-time a').wrapInner('<span class="sox-revision-comment"></span>');
                 var $that = $(this);
-                getComment(SOHelper.getSiteURL('full') + '/posts/' + id + '/revisions', $that);
+                getComment('http://' + SOHelper.getSiteURL() + '/posts/' + id + '/revisions', $that);
             }
         });
     },
@@ -1575,7 +1575,7 @@ Toggle SBS?</div></li>';
 
         $('.post-text a, .comments .comment-copy a').each(function() {
             var url = $(this).attr('href');
-            if (url && url.indexOf(SOHelper.getSiteUrl()) > -1 && /\/questions\//.test(url) && /#comment/.test(url)) {
+            if (url && url.indexOf(SOHelper.getSiteURL()) > -1 && /\/questions\//.test(url) && /#comment/.test(url)) {
                 $(this).css('color', '#0033ff');
                 $(this).before('<a class="expander-arrow-small-hide expand-post-sox"></a>');
             }
