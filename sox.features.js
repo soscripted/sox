@@ -1,4 +1,4 @@
-﻿/*jshint multistr: true */
+/*jshint multistr: true */
 //TODO: what are post_contents and author for?
 var features = { //ALL the functions must go in here
 
@@ -885,17 +885,16 @@ var features = { //ALL the functions must go in here
         $('#qinfo').after('<div id="feed"></div>');
 
         setTimeout(function() {
-            $('#feed').feeds({
-                feeds: {
-                    se: 'http://stackexchange.com/feeds/questions'
-                },
-                xml: true,
-                entryTemplate: '<p></p>',
-                loadingTemplate: '<div></div>',
-                preprocess: function(feed) {
-                    if (document.URL == this.xml.find('link').attr('href')) {
-                        addHotText();
-                    }
+            $.ajax({
+                type: 'get',
+                url: 'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20feed%20where%20url%3D"http%3A%2F%2Fstackexchange.com%2Ffeeds%2Fquestions"&format=json',
+                success: function(d) {
+                    var results = d.query.results.entry;
+                    $.each(results, function(i, result) {
+                        if(document.URL == result.link.href) {
+                            addHotText();
+                        }
+                    });
                 }
             });
         }, 500);
@@ -906,7 +905,11 @@ var features = { //ALL the functions must go in here
         $('.comment .comment-text .comment-copy a').each(function() {
             if ($(this).attr('href').indexOf('imgur.com') != -1) {
                 var image = $(this).attr('href');
-                $(this).replaceWith('<img src="' + image + '" width="100%">');
+                if (image.indexOf($(this).text()) != -1) {
+                    $(this).replaceWith('<img src="' + image + '" width="100%">');
+                } else {
+                    $(this).after('<img src="' + image + '" width="100%">');
+                }
             }
         });
     },
@@ -1013,9 +1016,11 @@ var features = { //ALL the functions must go in here
                 added = ($questionHyperlinkTwo.find('.diff-delete').remove().end().text()),
                 removed = ($questionHyperlink.find('.diff-add').remove().end().text());
 
-            $('.summary h2 .question-hyperlink').hide();
-            $('.summary h2 .question-hyperlink').after('<a href="' + link + '" class="question-hyperlink"><span class="diff-delete">' + removed + '</span><span class="diff-add">' + added + '</span></a>');
-        }, 1000);
+            if($('.summary h2 .question-hyperlink').find('.diff-delete, .diff-add').length) {
+                $('.summary h2 .question-hyperlink').hide();
+                $('.summary h2 .question-hyperlink').after('<a href="' + link + '" class="question-hyperlink"><span class="diff-delete">' + removed + '</span><span class="diff-add">' + added + '</span></a>');
+            }
+        }, 2000);
     },
 
     metaChatBlogStackExchangeButton: function() {

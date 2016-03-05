@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Stack Overflow Extras (SOX)
 // @namespace    https://github.com/soscripted/sox
-// @version      1.0.1
+// @version      1.0.2 DEV
 // @description  Adds a bunch of optional features to sites in the Stack Overflow Network.
 // @contributor  ᴉʞuǝ (stackoverflow.com/users/1454538/)
 // @contributor  ᔕᖺᘎᕊ (stackexchange.com/users/4337810/)
@@ -17,7 +17,6 @@
 // @require      https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js
 // @require      https://cdn.rawgit.com/timdown/rangyinputs/master/rangyinputs-jquery-src.js
 // @require      https://cdn.rawgit.com/jeresig/jquery.hotkeys/master/jquery.hotkeys.js
-// @require      https://cdn.rawgit.com/camagu/jquery-feeds/master/jquery.feeds.js
 // @require      https://rawgit.com/soscripted/sox/dev/sox.helpers.js?v=1.0.1a
 // @require      https://rawgit.com/soscripted/sox/dev/sox.features.js?v=1.0.1a
 // @resource     settingsDialog https://rawgit.com/soscripted/sox/dev/sox.dialog.html
