@@ -1,24 +1,15 @@
-<<<<<<< HEAD
 SOHelper = {
     getUserId: function () {
         return StackExchange.options.user.userId;
     },
 
-=======
-var SOHelper = {
->>>>>>> origin/dev
     getUsername: function() {
         var $uname = $('body > div.topbar > div > div.topbar-links > a > div.gravatar-wrapper-24');
         return ($uname.length ? $uname.attr('title') : false);
     },
 
     getReputation: function() {
-<<<<<<< HEAD
         return StackExchange.options.user.rep;
-=======
-        var $rep = $('div.topbar-links .links-container>span.reputation');
-        return ($rep.length ? $rep.text().trim().replace(',', '') : false);
->>>>>>> origin/dev
     },
 
     getSiteURL: function(type) {
@@ -26,7 +17,6 @@ var SOHelper = {
     },
 
     getSiteName: function(type) {
-<<<<<<< HEAD
         return StackExchange.options.site.name;
     },
 
@@ -40,13 +30,10 @@ var SOHelper = {
 
     getMetaSiteIcon: function() {
         return "favicon-" + $(".current-site a[href*='meta'] .site-icon").attr('class').split('favicon-')[1];
-=======
-        return (type == 'api' ? location.href.split('/')[2].split('.')[0] : StackExchange.options.site.name);
     },
 
     isBeta: function() {
         return !!$('.beta-title').length;
->>>>>>> origin/dev
     },
 
     getQuestionId: function() {
