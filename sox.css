@@ -179,30 +179,17 @@ background-position: -138px -86px;
 /*fixedTopbar */
 /*Ubuntu CSS by @UnicornsAreVeryVeryYummy - http://stackapps.com/users/33746/unicorns-are-very-very-yummy */
 .fixedTopbar-links {
-    position: fixed;
     z-index: 10001;
-    width: 100px;
-    height: 310px;
     line-height: 19.2px;
-    display: block;
     -moz-box-shadow: 0 0 4px #ccc;
     -webkit-box-shadow: 0 0 4px #ccc;
     box-shadow: 0 0 4px #ccc;
     font-family: Ubuntu, Arial, "libra sans", sans-serif;
     font-weight: 300;
-    top: 50%;
-    margin-top: -155px;
 }
 .fixedTopbar-linksList {
     -moz-box-sizing: border-box;
     background: none repeat scroll 0 0 #fff;
-    margin: 0 auto;
-    width: 100px;
-    height: 310px;
-    position: fixed;
-    z-index: 10001;
-    top: 50%;
-    margin-top: -155px;
 }
 li.fixedTopbar-activeSite {
     border-right: 3px solid #dd4814;
@@ -212,13 +199,14 @@ ul.fixedTopbar-siteLink {
     list-style-type: none;
 }
 li.fixedTopbar-siteLink {
-    display: block;
+    display: inline-block;
+    margin-left: 10px;
 }
 .fixedTopbar-stickyToolbar {
     position: fixed;
     top: 0px;
     left: 50%;
-    margin-left: -515px;
+    margin-left: -545px;
     z-index: 1000;
 }
 
@@ -286,4 +274,106 @@ li.fixedTopbar-siteLink {
     overflow-wrap: break-word;
     width: 630px;
     padding: 10px;
+}
+
+/*enhancedEditor (enhanced_editor folder)*/
+.enhancedEditor-centered {
+    width:40%;
+    z-index:1001;
+    top:190px;
+    left:615.5px;
+    display:inline-block;
+    margin-top:-95.5px;
+    margin-left:-216px;
+    overflow:auto;
+    height:70%;   
+}
+.ownURL, .ownImage {
+    border-radius: 5px;
+    width: 70%;
+    padding: 5px;
+}
+.go {
+    padding: 5px;
+    border-radius: 5px;
+    color: black;
+    background-color: lightgreen;
+}
+.DDG-go {
+    float: right;
+}
+hr.or {
+    border: 0;
+    border-top: 1px solid whitesmoke;
+    text-align: center;
+}
+hr.or:after {
+    content:"or...";
+    display: inline-block;
+    position: relative;
+    top: -0.7em;
+    font-size: 1.1em;
+    padding: 0.2em;
+    background: whitesmoke;
+}
+.DDG-container {
+    background-color: whitesmoke;
+    border-radius: 10px;
+    padding: 2%;
+}
+.DDG-credit {
+    font-size: 0.8em;
+}
+
+#enhancedEditor-aceEditor>#editor {
+    position: absolute;
+    top: 10%;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.enhancedEditor-aceLanguages {
+    float: right;
+}
+
+.enhancedEditor-addCode {
+    float:right;
+    margin-right: 5px;
+}
+
+
+.enhancedEditor-toolbar {
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    padding-right: 147px;
+}
+
+.enhancedEditor-toolbar > span {
+    cursor: pointer;
+}
+
+.enhancedEditor-toolbar >span+span {
+    margin-left:2px;
+}
+
+.enhancedEditor-closeDialog {
+    float: left;
+    margin-right: 10px;
+    font-size: 1.2em;
+    cursor: pointer;
+}
+
+.enhancedEditor-toolbar.findReplace > input[type='text'] {
+    height: 10px;
+    width: 25%;
+}
+
+.enhancedEditor-toolbar.findReplace > input[type='button'] {
+    width: 10%;
+    height: 100%;
+}
+
+.enhancedEditor-asLinkContainer {
+    display: block;
 }
