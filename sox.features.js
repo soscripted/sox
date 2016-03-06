@@ -179,11 +179,12 @@ var features = { //ALL the functions must go in here
             $('#custom-header').remove();
             linksWrapper.append(listOfSites);
             newUbuntuLinks.append(linksWrapper);
-            $('body').append(newUbuntuLinks);
+            $('.topbar-wrapper').after(newUbuntuLinks);
             $('.topbar').addClass('fixedTopbar-stickyToolbar');
             $('.topbar').before($('<div/>', {
                 html: '<br/><br/>'
             }));
+            $('#header').css('margin-top', '22px');
         } else if (SOHelper.getSiteType() !== 'chat') { //for all the normal, unannoying sites, excluding chat ;)
             $('.topbar').css({
                 'position': 'fixed',
