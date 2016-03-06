@@ -1620,7 +1620,7 @@ Toggle SBS?</div></li>';
     },
 
     hideSearchBar: function () {
-        // Description: Replaces the searchbox with a button that takes you to the search page
+        // Description: Replace the search box with a button that takes you to the search page
 
         var $topbar = $('.topbar'),
             $links = $topbar.find('.topbar-menu-links'),
@@ -1634,5 +1634,11 @@ Toggle SBS?</div></li>';
 
         $searchbar.remove();
         $links.append($search);
+    },
+    
+    enhancedEditor: function() {
+        // Description: Add a bunch of features to the standard markdown editor (autocorrect, find+replace, Ace editor, and more!)
+        
+        enhancedEditor.startFeature();
     }
 };

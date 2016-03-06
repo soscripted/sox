@@ -101,6 +101,9 @@
         },
         "titleEditDiff": {
             "desc": "Make title edits show seperately rather than merged in edit suggestions"
+        },
+        "enhancedEditor": {
+            "desc": "Add a bunch of features to the standard markdown editor (autocorrect, find+replace, Ace editor, and more!)"
         }
     },
     "Comments": {
