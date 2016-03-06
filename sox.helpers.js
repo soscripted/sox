@@ -53,7 +53,7 @@ SOHelper = {
     },
 
     getSiteType: function () {
-        if (CHAT || window.CHAT) {
+        if (location.hostname.indexOf('chat.') > -1) {
             return 'chat';
         } else {
             if (StackExchange || window.StackExchange) {
