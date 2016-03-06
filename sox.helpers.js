@@ -3,74 +3,68 @@ SOHelper = {
         return StackExchange.options.user.userId;
     },
 
-    getUsername: function() {
+    getUsername: function () {
         var $uname = $('body > div.topbar > div > div.topbar-links > a > div.gravatar-wrapper-24');
         return ($uname.length ? $uname.attr('title') : false);
     },
 
-    getReputation: function() {
+    getReputation: function () {
         return StackExchange.options.user.rep;
     },
 
-    getSiteURL: function(type) {
+    getSiteURL: function (type) {
         return (type == 'full' ? location.href : location.hostname);
     },
 
-    getSiteName: function() {
-        return StackExchange.options.site.name;
+    getSiteName: function () {
+        return (SOHelper.getSiteType === 'chat' ? $('#footer-logo a').attr('title') : StackExchange.options.site.name);
     },
-    
-    getAPISiteName: function() {
+
+    getAPISiteName: function () {
         return location.href.split('/')[2].split('.')[0];
     },
-    
-    getSiteIcon: function() {
+
+    getSiteIcon: function () {
         return "favicon-" + $(".current-site a:not([href*='meta']) .site-icon").attr('class').split('favicon-')[1];
     },
 
-    getMetaSiteIcon: function() {
+    getMetaSiteIcon: function () {
         return "favicon-" + $(".current-site a[href*='meta'] .site-icon").attr('class').split('favicon-')[1];
     },
 
-    isBeta: function() {
-        return !!$('.beta-title').length;
+    isBeta: function () {
+        return ($('.beta-title').length ? true : false);
     },
 
-    getQuestionId: function() {
+    getQuestionId: function () {
         return StackExchange.question.getQuestionId();
     },
 
-    isLoggedIn: function() {
+    isLoggedIn: function () {
         return StackExchange.options.user.isRegistered;
     },
 
-    isOnUserProfile: function() {
+    isOnUserProfile: function () {
         return location.href.indexOf('/users/') > -1;
     },
 
-    getFromAPI: function(type, id, sitename, callback, sortby) {
+    getFromAPI: function (type, id, sitename, callback, sortby) {
         $.getJSON('https://api.stackexchange.com/2.2/' + type + '/' + id + '?order=desc&sort=' + (sortby || 'creation') + '&site=' + sitename, callback);
     },
 
-    getSiteType: function() {
-        if (StackExchange.options.site) {
-            if (StackExchange.options.site.isMetaSite) {
-                return 'meta';
-            } else {
-                if ($('.beta-title').length) {
-                    return 'beta';
-                } else {
-                    return 'graduated';
-                }
-            }
+    getSiteType: function () {
+        if (CHAT || window.CHAT) {
+            return 'chat';
         } else {
-            if(window.CHAT) {
-                return 'chat';
+            if (StackExchange || window.StackExchange) {
+                if (StackExchange.options.site.isMetaSite) {
+                    return 'meta';
+                }
             }
         }
     },
 
-    hasPriv: (function() { //IIFE returning function saves instantiating privs multiple times
+    hasPriv: (function () { //IIFE returning function saves instantiating privs multiple times
         var graduatedPrivs = {
             'access review queues': 2000,
             'access to moderator tools': 10000,
@@ -124,7 +118,7 @@ SOHelper = {
             'vote down': 125,
             'vote up': 15
         };
-        return function(priv) {
+        return function (priv) {
             if (!SOHelper.isLoggedIn()) {
                 return false;
             }

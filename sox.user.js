@@ -17,10 +17,10 @@
 // @require      https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js
 // @require      https://cdn.rawgit.com/timdown/rangyinputs/master/rangyinputs-jquery-src.js
 // @require      https://cdn.rawgit.com/jeresig/jquery.hotkeys/master/jquery.hotkeys.js
-// @require      https://rawgit.com/soscripted/sox/repo-system/sox.helpers.js?v=1.0.2a
-// @require      https://rawgit.com/soscripted/sox/repo-system/sox.features.js?v=1.0.2a
-// @resource     settingsDialog https://rawgit.com/soscripted/sox/repo-system/sox.dialog.html?v=1.0.2a
-// @resource     featuresJSON https://rawgit.com/soscripted/sox/repo-system/sox.features.info.json?v=1.0.2a
+// @require      https://rawgit.com/soscripted/sox/repo-system/sox.helpers.js?v=1.0.2b
+// @require      https://rawgit.com/soscripted/sox/repo-system/sox.features.js?v=1.0.2b
+// @resource     settingsDialog https://rawgit.com/soscripted/sox/repo-system/sox.dialog.html?v=1.0.2b
+// @resource     featuresJSON https://rawgit.com/soscripted/sox/repo-system/sox.features.info.json?v=1.0.2b
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_deleteValue
@@ -84,7 +84,7 @@
     function addCategory(name) {
         var $div = $('<div/>', {
                 id: name,
-                class: 'feature-header'
+                'class': 'feature-header'
             }),
             $h3 = $('<h3/>', {
                 text: name
@@ -110,7 +110,7 @@
 
         for (var category in featuresJSON) { //load all the features in the settings dialog
             addCategory(category);
-            for (feature in featuresJSON[category]) {
+            for (var feature in featuresJSON[category]) {
                 addFeature(category, feature, featuresJSON[category][feature].desc);
             }
         }
@@ -171,9 +171,9 @@
                 for (var i = 0; i < extras.length; ++i) {
                     $soxSettingsDialogFeatures.find('#' + extras[i].split('-')[1]).prop('checked', true);
                     try {
-                        var featureHeader = featuresJSON[extras[i].split('-')[0]];
+                        var featureHeader = extras[i].split('-')[0];
                         var featureId = extras[i].split('-')[1];
-                        var feature = featureHeader[featureId];
+                        var feature = featuresJSON[featureHeader][featureId];
                         if (feature['enableOnSites']) {
                             var sites = feature['enableOnSites'].split(',');
                             if (sites.indexOf(SOHelper.getAPISiteName()) > -1) { //if current site is in list, run feature
