@@ -123,17 +123,17 @@ var features = { //ALL the functions must go in here
 
         if (SOHelper.getSiteURL() == 'askubuntu.com') { //AskUbuntu is annoying. UnicornsAreVeryVeryYummy made the below code for AskUbuntu: https://github.com/shu8/Stack-Overflow-Optional-Features/issues/11 Thanks!
             var newUbuntuLinks = $('<div/>', {
-                    class: 'fixedTopbar-links'
+                    'class': 'fixedTopbar-links'
                 }),
                 linksWrapper = $('<div/>', {
-                    class: 'fixedTopbar-linksList'
+                    'class': 'fixedTopbar-linksList'
                 }),
                 listOfSites = $('<ul/>', {
-                    class: 'fixedTopbar-siteLink'
+                    'class': 'fixedTopbar-siteLink'
                 }),
                 more = $('<li/>', {
                     html: '<a href="#">More</a>',
-                    class: 'fixedTopbar-siteLink'
+                    'class': 'fixedTopbar-siteLink'
                 }),
                 sites = {
                     Ubuntu: 'ubuntu.com',
@@ -158,7 +158,7 @@ var features = { //ALL the functions must go in here
             var addSite = function (link, name) {
                 listOfSites.append($('<li/>', {
                     html: '<a href="http://' + link + '">' + name + '</a>',
-                    class: 'fixedTopbar-siteLink'
+                    'class': 'fixedTopbar-siteLink'
                 }));
             };
             for (var name in sites) {
@@ -169,7 +169,7 @@ var features = { //ALL the functions must go in here
             var addMoreSite = function (link, name) {
                 moreList.append($('<li/>', {
                     html: '<a href="http://' + link + '">' + name + '</a>',
-                    class: 'fixedTopbar-siteLink'
+                    'class': 'fixedTopbar-siteLink'
                 }));
             };
             for (name in moreSites) {
@@ -1095,25 +1095,25 @@ var features = { //ALL the functions must go in here
             apiLink = 'https://api.stackexchange.com/2.2/questions?pagesize=5&order=desc&sort=activity&site=' + metaName;
         var $dialog = $('<div/>', {
             id: 'new-meta-questions-dialog',
-            class: 'topbar-dialog achievements-dialog dno'
+            'class': 'topbar-dialog achievements-dialog dno'
         });
         var $header = $('<div/>', {
-            class: 'header'
+            'class': 'header'
         }).append($('<h3/>', {
             text: 'new meta posts'
         }));
         var $content = $('<div/>', {
-            class: 'modal-content'
+            'class': 'modal-content'
         });
 
         var $questions = $('<ul/>', {
             id: 'new-meta-questions-dialog-list',
-            class: 'js-items items'
+            'class': 'js-items items'
         });
 
         var $diamond = $('<a/>', {
             id: 'new-meta-questions-button',
-            class: 'topbar-icon yes-hover new-meta-questions-diamondOff',
+            'class': 'topbar-icon yes-hover new-meta-questions-diamondOff',
             click: function () {
                 $diamond.toggleClass('topbar-icon-on');
                 $dialog.toggle();
@@ -1167,10 +1167,10 @@ var features = { //ALL the functions must go in here
                 href: link
             });
             var $icon = $('<div/>', {
-                class: 'site-icon favicon favicon-' + favicon
+                'class': 'site-icon favicon favicon-' + favicon
             });
             var $message = $('<div/>', {
-                class: 'message-text'
+                'class': 'message-text'
             }).append($('<h4/>', {
                 html: title
             }));
@@ -1444,8 +1444,8 @@ Toggle SBS?</div></li>';
             });
         };
 
-        new MutationObserver(function(mutations) {
-            mutations.forEach(function(mutation) {
+        new MutationObserver(function (mutations) {
+            mutations.forEach(function (mutation) {
                 var length = mutation.addedNodes.length;
                 for (var i = 0; i < length; i++) {
                     var $addedNode = $(mutation.addedNodes[i]);
@@ -1489,7 +1489,7 @@ Toggle SBS?</div></li>';
                     return false;
                 }
             }).append($('<i/>', {
-                class: 'fa fa-angle-double-up fa-3x'
+                'class': 'fa fa-angle-double-up fa-3x'
             })).appendTo('div.container');
 
             if ($(window).scrollTop() < 200) {
@@ -1632,7 +1632,7 @@ Toggle SBS?</div></li>';
     },
 
     hideSearchBar: function () {
-        // Description: Replaces the searchbox with a button that takes you to the search page
+        // Description: Replace the search box with a button that takes you to the search page
 
         var $topbar = $('.topbar'),
             $links = $topbar.find('.topbar-menu-links'),
@@ -1641,10 +1641,16 @@ Toggle SBS?</div></li>';
                 href: '/search',
                 title: 'Search ' + SOHelper.getSiteName()
             }).append($('<i/>', {
-                class: 'fa fa-search'
+                'class': 'fa fa-search'
             }));
 
         $searchbar.remove();
         $links.append($search);
+    },
+    
+    enhancedEditor: function() {
+        // Description: Add a bunch of features to the standard markdown editor (autocorrect, find+replace, Ace editor, and more!)
+        
+        enhancedEditor.startFeature();
     }
 };

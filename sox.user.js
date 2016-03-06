@@ -17,19 +17,22 @@
 // @require      https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js
 // @require      https://cdn.rawgit.com/timdown/rangyinputs/master/rangyinputs-jquery-src.js
 // @require      https://cdn.rawgit.com/jeresig/jquery.hotkeys/master/jquery.hotkeys.js
-// @require      https://rawgit.com/soscripted/sox/dev/sox.helpers.js?v=1.0.2a
-// @require      https://rawgit.com/soscripted/sox/dev/sox.features.js?v=1.0.2a
-// @resource     settingsDialog https://rawgit.com/soscripted/sox/dev/sox.dialog.html
+// @require      https://rawgit.com/soscripted/sox/repo-system/sox.helpers.js?v=1.0.2a
+// @require      https://rawgit.com/soscripted/sox/repo-system/sox.enhanced_editor.js?v=1.0.2a
+// @require      https://rawgit.com/soscripted/sox/repo-system/sox.features.js?v=1.0.2a
+// @resource     settingsDialog https://rawgit.com/soscripted/sox/repo-system/sox.dialog.html?v=1.0.2a
+// @resource     featuresJSON https://rawgit.com/soscripted/sox/repo-system/sox.features.info.json?v=1.0.2a
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_deleteValue
 // @grant        GM_getResourceText
 // ==/UserScript==
 /*jshint multistr: true */
-(function(sox, $, undefined) {
+(function (sox, $, undefined) {
     var SOX_SETTINGS = 'SOXSETTINGS';
 
     var $settingsDialog = $(GM_getResourceText('settingsDialog')),
+        featuresJSON = JSON.parse(GM_getResourceText('featuresJSON')),
         $soxSettingsDialog,
         $soxSettingsDialogFeatures,
         $soxSettingsSave,
@@ -62,27 +65,28 @@
                 'unHideAnswer',
                 'flaggingPercentages'
             ];
-        return (new RegExp('('+deprecatedFeatures.join('|')+')')).test(settings);
+        return (new RegExp('(' + deprecatedFeatures.join('|') + ')')).test(settings);
     }
 
-    function addFeatures(features) {
-        $.each(features, function(i, o) {
-            var $div = $('<div/>'),
-                $label = $('<label/>'),
-                $input = $('<input/>', {
-                    id: o[0],
-                    type: 'checkbox',
-                    style: 'margin-right: 5px;'
-                });
-            $div.append($label);
-            $label.append($input);
-            $input.after(o[1]);
-            $soxSettingsDialogFeatures.append($div);
-        });
+    function addFeature(category, feature, desc) {
+        var $div = $('<div/>'),
+            $label = $('<label/>'),
+            $input = $('<input/>', {
+                id: feature,
+                type: 'checkbox',
+                style: 'margin-right: 5px;'
+            });
+        $div.append($label);
+        $label.append($input);
+        $input.after(desc);
+        $soxSettingsDialogFeatures.find('#' + category).append($div);
     }
 
     function addCategory(name) {
-        var $div = $('<div/>'),
+        var $div = $('<div/>', {
+                id: name,
+                'class': 'feature-header'
+            }),
             $h3 = $('<h3/>', {
                 text: name
             });
@@ -90,78 +94,8 @@
         $soxSettingsDialogFeatures.append($div);
     }
 
-    function loadFeatures() {
-        addCategory('Appearance');
-        addFeatures([
-            ['grayOutVotes', 'Gray out deleted votes'],
-            ['moveBounty', 'Move \'start bounty\' to top'],
-            ['dragBounty', 'Make bounty box draggable'],
-            ['renameChat', 'Prepend \'Chat - \' to chat tabs\' titles'],
-            ['exclaim', 'Remove exclamation mark on message'],
-            ['employeeStar', 'Add star after employee names'],
-            ['bulletReplace', 'Replace triangular bullets with normal ones'],
-            ['addEllipsis', 'Add ellipsis to long names'],
-            ['fixedTopbar', 'Fix topbar position'],
-            ['displayName', 'Display name before gravatar'],
-            ['unspoil', 'Add a link to show all spoilers in a post'],
-            ['spoilerTip', 'Differentiate spoilers from empty blockquotes'],
-            ['stickyVoteButtons', 'Make vote buttons next to posts sticky whilst scrolling on that post'],
-            ['betterCSS', 'Add extra CSS for voting signs and favourite button (currently only on Android SE)'],
-            ['standOutDupeCloseMigrated', 'Add colourful, more apparent signs to questions that are on hold, duplicates, closed or migrated on question lists'],
-            ['colorAnswerer', 'Color answerer\'s comments'],
-            ['highlightQuestions', 'Alternate favourite questions highlighing'],
-            ['metaNewQuestionAlert', 'Add an extra mod diamond to the topbar that alerts you if there is a new question posted on the child-meta of the current site'],
-            ['hideHotNetworkQuestions', 'Hide the Hot Network Questions module'],
-            ['hideHireMe', 'Hide the Looking for a Job module'],
-            ['hideCommunityBulletin', 'Hide the Community Bulletin module'],
-            ['hideSearchBar', 'Replaces the searchbar with an link to the search page']
-        ]);
-
-        addCategory('Flags');
-        addFeatures([
-            ['flagOutcomeTime', 'Show the flag outcome time when viewing your Flag History'],
-            ['flagPercentages', 'Show flagging percentages for each type in the Flag Summary']
-        ]);
-
-        addCategory('Editing');
-        addFeatures([
-            ['kbdAndBullets', 'Add KBD and list buttons to editor toolbar'],
-            ['editComment', 'Pre-defined edit comment options'],
-            ['editReasonTooltip', 'Add a tooltip to posts showing the latest revision\'s comment on \'edited [date] at [time]\''],
-            ['addSBSBtn', 'Add a button to the editor toolbar to start side-by-side editing'],
-            ['linkQuestionAuthorName', 'Add a button in the editor toolbar to insert a hyperlink to a post and add the author automatically'],
-            ['titleEditDiff', 'Make title edits show seperately rather than merged']
-        ]);
-
-        addCategory('Comments');
-        addFeatures([
-            ['copyCommentsLink', 'Copy \'show x more comments\' to the top'],
-            ['commentShortcuts', 'Use Ctrl+I,B,K (to italicise, bolden and add code backticks) in comments'],
-            ['quickCommentShortcutsMain', 'Add shortcuts to add pre-defined comments to comment fields'],
-            ['commentReplies', 'Add reply links to comments for quick replying (without having to type someone\'s username)'],
-            ['autoShowCommentImages', 'View linked images (to imgur) in comments inline'],
-            ['showCommentScores', 'Show your comment and comment replies scores in your profile tabs']
-        ]);
-
-        addCategory('Unsorted');
-        addFeatures([
-            //other
-            ['shareLinksMarkdown', 'Change \'share\' link to format of [post-name](url)'],
-            ['parseCrossSiteLinks', 'Parse titles to links cross-SE-sites'],
-            ['confirmNavigateAway', 'Add a confirmation dialog before navigating away on pages whilst you are still typing a comment'],
-            ['sortByBountyAmount', 'Add an option to filter bounties by their amount'],
-            ['isQuestionHot', 'Add a label on questions which are hot-network questions'],
-            ['answerTagsSearch', 'Show tags for the question an answer belongs to on search pages (for better context)'],
-            ['metaChatBlogStackExchangeButton', 'Show meta, chat and blog buttons on hover of a site under the StackExchange button'],
-            ['alwaysShowImageUploadLinkBox', 'Always show the \'Link from the web\' box when uploading an image'],
-            ['addAuthorNameToInboxNotifications', 'Add the author\'s name to notifications in the inbox'],
-            ['scrollToTop', 'Add Scroll To Top button'],
-            ['linkedPostsInline', 'Display linked posts inline (with an arrow)']
-        ]);
-    }
-
     //initialize sox
-    (function() {
+    (function () {
 
         // add sox CSS file and font-awesome CSS file
         $('head').append('<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">')
@@ -175,7 +109,12 @@
         $soxSettingsToggle = $soxSettingsDialog.find('#sox-settings-dialog-check-toggle');
         $soxSettingsClose = $soxSettingsDialog.find('#sox-settings-dialog-close');
 
-        loadFeatures(); //load all the features in the settings dialog
+        for (var category in featuresJSON) { //load all the features in the settings dialog
+            addCategory(category);
+            for (var feature in featuresJSON[category]) {
+                addFeature(category, feature, featuresJSON[category][feature].desc);
+            }
+        }
 
         // add settings icon to navbar
         var $soxSettingsButton = $('<a/>', {
@@ -183,7 +122,7 @@
                 class: 'topbar-icon yes-hover sox-settings-button',
                 title: 'Change SOX Settings',
                 style: 'color: #A1A1A1',
-                click: function(e) {
+                click: function (e) {
                     e.preventDefault();
                     $('#sox-settings-dialog').toggle();
                 }
@@ -194,14 +133,14 @@
         $soxSettingsButton.append($icon).appendTo('div.network-items');
 
         // add click handlers for the buttons in the settings dialog
-        $soxSettingsClose.on('click', function() {
+        $soxSettingsClose.on('click', function () {
             $soxSettingsDialog.hide();
         });
-        $soxSettingsReset.on('click', function() {
+        $soxSettingsReset.on('click', function () {
             reset();
             location.reload(); // reload page to reflect changed settings
         });
-        $soxSettingsToggle.on('click', function() {
+        $soxSettingsToggle.on('click', function () {
             var $icon = $(this).find('i'),
                 checked = $icon.hasClass('fa-check-square-o') ? true : false;
 
@@ -213,10 +152,11 @@
                 $soxSettingsDialogFeatures.find('input').prop('checked', true);
             }
         });
-        $soxSettingsSave.on('click', function() {
+        $soxSettingsSave.on('click', function () {
             var extras = [];
-            $soxSettingsDialogFeatures.find('input[type=checkbox]:checked').each(function() {
-                var x = $(this).attr('id');
+            $soxSettingsDialogFeatures.find('input[type=checkbox]:checked').each(function () {
+                var x = $(this).parents('.feature-header').attr('id') + '-' + $(this).attr('id');
+                console.log(x);
                 extras.push(x); //Add the function's ID (also the checkbox's ID) to the array
             });
             save(extras);
@@ -230,9 +170,24 @@
                 reset();
             } else {
                 for (var i = 0; i < extras.length; ++i) {
-                    $soxSettingsDialogFeatures.find('#' + extras[i]).prop('checked', true);
+                    $soxSettingsDialogFeatures.find('#' + extras[i].split('-')[1]).prop('checked', true);
                     try {
-                        features[extras[i]](); //Call the functions that were chosen
+                        var featureHeader = extras[i].split('-')[0];
+                        var featureId = extras[i].split('-')[1];
+                        var feature = featuresJSON[featureHeader][featureId];
+                        if (feature['enableOnSites']) {
+                            var sites = feature['enableOnSites'].split(',');
+                            if (sites.indexOf(SOHelper.getAPISiteName()) > -1) { //if current site is in list, run feature
+                                features[featureId]();
+                            }
+                        } else if (feature['disableOnSites']) {
+                            var sites = feature['disableOnSites'].split(',');
+                            if (sites.indexOf(SOHelper.getAPISiteName()) == -1) { //if current site is in list, don't run feature
+                                features[featureId]();
+                            }
+                        } else { //if neither enableOnSites nor disableOnSites is given, run the feature (features that run on all sites)
+                            features[featureId]();
+                        }
                     } catch (err) {
                         $soxSettingsDialogFeatures.find('#' + extras[i]).parent().css('color', 'red').attr('title', 'There was an error loading this feature. Please raise an issue on GitHub.');
                         console.log('SOX error: There was an error loading the feature "' + extras[i] + '". Please raise an issue on GitHub, and copy the following error log.');
@@ -246,7 +201,7 @@
             // no settings found, mark all inputs as checked and display settings dialog
             $soxSettingsDialogFeatures.find('input').prop('checked', true);
 
-            setTimeout(function() {
+            setTimeout(function () {
                 $soxSettingsDialog.show();
             }, 500);
         }
