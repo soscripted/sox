@@ -17,13 +17,13 @@ SOHelper = {
     },
 
     getSiteName: function() {
-        return (SOHelper.getSiteType === 'chat' ? $('#footer-logo a').attr('title') : StackExchange.options.site.name);
+        return (SOHelper.getSiteType() === 'chat' ? $('#footer-logo a').attr('title') : StackExchange.options.site.name);
     },
-    
+
     getAPISiteName: function() {
         return location.href.split('/')[2].split('.')[0];
     },
-    
+
     getSiteIcon: function() {
         return "favicon-" + $(".current-site a:not([href*='meta']) .site-icon").attr('class').split('favicon-')[1];
     },
