@@ -17,7 +17,7 @@ SOHelper = {
     },
 
     getSiteName: function() {
-        return StackExchange.options.site.name;
+        return (SOHelper.getSiteType === 'chat' ? $('#footer-logo a').attr('title') : StackExchange.options.site.name);
     },
     
     getAPISiteName: function() {
@@ -53,15 +53,18 @@ SOHelper = {
     },
 
     getSiteType: function() {
-        if (window.CHAT) {
+        if(window.CHAT) {
             return 'chat';
-        } else if (StackExchange.options.site.isMetaSite) {
-            return 'meta';
         } else {
-            if ($('.beta-title').length) {
-                return 'beta';
+        if (StackExchange.options.site) {
+            if (StackExchange.options.site.isMetaSite) {
+                return 'meta';
             } else {
-                return 'graduated';
+                if ($('.beta-title').length) {
+                    return 'beta';
+                } else {
+                    return 'graduated';
+                }
             }
         }
     },
