@@ -17,11 +17,11 @@
 // @require      https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js
 // @require      https://cdn.rawgit.com/timdown/rangyinputs/master/rangyinputs-jquery-src.js
 // @require      https://cdn.rawgit.com/jeresig/jquery.hotkeys/master/jquery.hotkeys.js
-// @require      https://rawgit.com/soscripted/sox/repo-system/sox.helpers.js?v=1.0.2a
-// @require      https://rawgit.com/soscripted/sox/repo-system/sox.enhanced_editor.js?v=1.0.2a
-// @require      https://rawgit.com/soscripted/sox/repo-system/sox.features.js?v=1.0.2a
-// @resource     settingsDialog https://rawgit.com/soscripted/sox/repo-system/sox.dialog.html?v=1.0.2a
-// @resource     featuresJSON https://rawgit.com/soscripted/sox/repo-system/sox.features.info.json?v=1.0.2a
+// @require      https://rawgit.com/soscripted/sox/dev/sox.helpers.js?v=1.0.2a
+// @require      https://rawgit.com/soscripted/sox/dev/sox.enhanced_editor.js?v=1.0.2a
+// @require      https://rawgit.com/soscripted/sox/dev/sox.features.js?v=1.0.2a
+// @resource     settingsDialog https://rawgit.com/soscripted/sox/dev/sox.dialog.html?v=1.0.2a
+// @resource     featuresJSON https://rawgit.com/soscripted/sox/dev/sox.features.info.json?v=1.0.2a
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_deleteValue
