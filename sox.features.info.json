@@ -67,12 +67,6 @@
         },
         "hideSearchBar": {
             "desc": "Replace the search bar with a link to the search page"
-        },
-        "themes": {
-            "desc": "Enable themes"
-        },
-        "themeEditor": {
-            "desc": "Enable theme editor"
         }
     },
     "Flags": {
