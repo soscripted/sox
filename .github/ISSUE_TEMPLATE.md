@@ -1,4 +1,4 @@
-**Installed Version: 1.X.X  |  Envirnoment: Chrome/Tampermonkey**
+**Installed Version: 1.X.X  |  Environment: Chrome/Tampermonkey**
 
 
 **Expected Behavior**
