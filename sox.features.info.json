@@ -1,7 +1,10 @@
 {
     "Appearance": {
         "grayOutVotes": {
-            "desc": "Gray out deleted votes"
+            "desc": "Gray out deleted votes",
+            "accessToken": {
+                "url": "http://example.com"
+            }
         },
         "moveBounty": {
             "desc": "Move 'start bounty' to top"
