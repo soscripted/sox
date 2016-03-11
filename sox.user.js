@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         Stack Overflow Extras (SOX)
 // @namespace    https://github.com/soscripted/sox
-// @version      1.0.2 DEV
+// @version      1.0.3 DEV
 // @description  Adds a bunch of optional features to sites in the Stack Overflow Network.
 // @contributor  ᴉʞuǝ (stackoverflow.com/users/1454538/)
 // @contributor  ᔕᖺᘎᕊ (stackexchange.com/users/4337810/)
-// @updateURL    https://rawgit.com/soscripted/sox/dev/sox.user.js
+// @updateURL    https://rawgit.com/soscripted/sox/master/sox.user.js
 // @match        *://*.stackoverflow.com/*
 // @match        *://*.stackexchange.com/*
 // @match        *://*.superuser.com/*
@@ -17,11 +17,12 @@
 // @require      https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js
 // @require      https://cdn.rawgit.com/timdown/rangyinputs/master/rangyinputs-jquery-src.js
 // @require      https://cdn.rawgit.com/jeresig/jquery.hotkeys/master/jquery.hotkeys.js
-// @require      https://rawgit.com/soscripted/sox/dev/sox.helpers.js?v=1.0.2a
-// @require      https://rawgit.com/soscripted/sox/dev/sox.enhanced_editor.js?v=1.0.2a
-// @require      https://rawgit.com/soscripted/sox/dev/sox.features.js?v=1.0.2a
-// @resource     settingsDialog https://rawgit.com/soscripted/sox/dev/sox.dialog.html?v=1.0.2a
-// @resource     featuresJSON https://rawgit.com/soscripted/sox/dev/sox.features.info.json?v=1.0.2a
+// @require      https://cdn.rawgit.com/camagu/jquery-feeds/master/jquery.feeds.js
+// @require      https://rawgit.com/soscripted/sox/dev/sox.helpers.js?v=1.0.2b
+// @require      https://rawgit.com/soscripted/sox/dev/sox.enhanced_editor.js?v=1.0.2b
+// @require      https://rawgit.com/soscripted/sox/dev/sox.features.js?v=1.0.2b
+// @resource     settingsDialog https://rawgit.com/soscripted/sox/5b3a497ac02d2b927415226d009ea08c7eba4a4f/sox.dialog.html
+// @resource     featuresJSON https://rawgit.com/soscripted/sox/dev/sox.features.info.json?v=1.0.2b
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_deleteValue
@@ -37,6 +38,7 @@
         $soxSettingsDialogFeatures,
         $soxSettingsSave,
         $soxSettingsReset,
+        $soxSettingsToggleAccessTokensDiv,
         $soxSettingsToggle,
         $soxSettingsClose;
 
@@ -91,7 +93,7 @@
                 text: name
             });
         $div.append($h3);
-        $soxSettingsDialogFeatures.append($div);
+        $soxSettingsDialogFeatures.find('#sox-settings-dialog-access-tokens').before($div);
     }
 
     //initialize sox
@@ -99,13 +101,14 @@
 
         // add sox CSS file and font-awesome CSS file
         $('head').append('<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">')
-            .append('<link rel="stylesheet" type="text/css" href="https://rawgit.com/soscripted/sox/dev/sox.css?v=1.0.1a" />');
+            .append('<link rel="stylesheet" type="text/css" href="https://rawgit.com/soscripted/sox/dev/sox.css?v=1.0.2c" />');
         $('body').append($settingsDialog);
 
         $soxSettingsDialog = $('#sox-settings-dialog');
         $soxSettingsDialogFeatures = $soxSettingsDialog.find('#sox-settings-dialog-features');
         $soxSettingsSave = $soxSettingsDialog.find('#sox-settings-dialog-save');
         $soxSettingsReset = $soxSettingsDialog.find('#sox-settings-dialog-reset');
+        $soxSettingsToggleAccessTokensDiv = $soxSettingsDialog.find('#sox-settings-dialog-access-tokens');
         $soxSettingsToggle = $soxSettingsDialog.find('#sox-settings-dialog-check-toggle');
         $soxSettingsClose = $soxSettingsDialog.find('#sox-settings-dialog-close');
 
@@ -139,6 +142,16 @@
         $soxSettingsReset.on('click', function () {
             reset();
             location.reload(); // reload page to reflect changed settings
+        });
+        $soxSettingsToggleAccessTokensDiv.find('#toggle-access-token-links').on('click', function() {
+           $links = $(this).parent().find('#sox-settings-dialog-access-tokens-links');
+           if($links.is(':visible')) {
+               $links.hide();
+               $soxSettingsToggleAccessTokensDiv.find('#toggle-access-token-links').removeClass('expander-arrow-small-show').addClass('expander-arrow-small-hide')
+           } else {
+               $links.show();
+               $soxSettingsToggleAccessTokensDiv.find('#toggle-access-token-links').removeClass('expander-arrow-small-hide').addClass('expander-arrow-small-show')
+           }
         });
         $soxSettingsToggle.on('click', function () {
             var $icon = $(this).find('i'),
