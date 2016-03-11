@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Stack Overflow Extras (SOX)
 // @namespace    https://github.com/soscripted/sox
-// @version      1.0.3 DEV
+// @version      1.0.2 DEV
 // @description  Adds a bunch of optional features to sites in the Stack Overflow Network.
 // @contributor  ᴉʞuǝ (stackoverflow.com/users/1454538/)
 // @contributor  ᔕᖺᘎᕊ (stackexchange.com/users/4337810/)
@@ -22,7 +22,7 @@
 // @require      https://rawgit.com/soscripted/sox/dev/sox.enhanced_editor.js?v=1.0.2b
 // @require      https://rawgit.com/soscripted/sox/dev/sox.features.js?v=1.0.2b
 // @resource     settingsDialog https://rawgit.com/soscripted/sox/5b3a497ac02d2b927415226d009ea08c7eba4a4f/sox.dialog.html
-// @resource     featuresJSON https://rawgit.com/soscripted/sox/dev/sox.features.info.json?v=1.0.2b
+// @resource     featuresJSON https://rawgit.com/soscripted/sox/dev/sox.features.info.json?v=1.0.2c
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_deleteValue
@@ -188,6 +188,9 @@
                         var featureHeader = extras[i].split('-')[0];
                         var featureId = extras[i].split('-')[1];
                         var feature = featuresJSON[featureHeader][featureId];
+                        if (feature['accessToken']) {
+                            $soxSettingsToggleAccessTokensDiv.find('#sox-settings-dialog-access-tokens-links').append(feature['desc'] + ': ' + feature['accessToken']['url']);
+                        }
                         if (feature['enableOnSites']) {
                             var sites = feature['enableOnSites'].split(',');
                             if (sites.indexOf(SOHelper.getAPISiteName()) > -1) { //if current site is in list, run feature
