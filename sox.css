@@ -45,6 +45,9 @@
     font-family: Arial, Helvetica, sans-serif;
     line-height: 1;
 }
+#sox-settings-dialog-access-tokens-links {
+    display: none;
+}
 #sox-settings-dialog-actions {
     height: 40px;
     padding: 0 10px;
