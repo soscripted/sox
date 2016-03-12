@@ -1,11 +1,7 @@
 {
     "Appearance": {
         "grayOutVotes": {
-            "desc": "Gray out deleted votes",
-            "accessToken": {
-                "clientId": "4999",
-                "key": ")2kXF9IR5OHnfGRPDahCVg(("
-            }
+            "desc": "Gray out deleted votes"
         },
         "moveBounty": {
             "desc": "Move 'start bounty' to top"
@@ -157,6 +153,13 @@
         },
         "linkedPostsInline": {
             "desc": "Display linked posts inline (with an arrow)"
+        },
+        "downvotedPostsEditAlert": {
+            "desc": "Add a notification to your inbox when a question you downvote is edited",
+            "accessToken": {
+                "clientId": "4999",
+                "key": ")2kXF9IR5OHnfGRPDahCVg(("
+            }
         }
     }
 }
