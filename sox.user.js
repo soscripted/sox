@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Stack Overflow Extras (SOX)
 // @namespace    https://github.com/soscripted/sox
-// @version      1.0.2 DEV
+// @version      1.0.3 DEV
 // @description  Adds a bunch of optional features to sites in the Stack Overflow Network.
 // @contributor  ᴉʞuǝ (stackoverflow.com/users/1454538/)
 // @contributor  ᔕᖺᘎᕊ (stackexchange.com/users/4337810/)
@@ -18,11 +18,12 @@
 // @require      https://cdn.rawgit.com/timdown/rangyinputs/master/rangyinputs-jquery-src.js
 // @require      https://cdn.rawgit.com/jeresig/jquery.hotkeys/master/jquery.hotkeys.js
 // @require      https://cdn.rawgit.com/camagu/jquery-feeds/master/jquery.feeds.js
-// @require      https://rawgit.com/soscripted/sox/dev/sox.helpers.js?v=1.0.2b
+// @require      https://rawgit.com/soscripted/sox/dev/sox.helpers.js?v=1.0.2c
 // @require      https://rawgit.com/soscripted/sox/dev/sox.enhanced_editor.js?v=1.0.2b
 // @require      https://rawgit.com/soscripted/sox/dev/sox.features.js?v=1.0.2b
+// @require      https://api.stackexchange.com/js/2.0/all.js
 // @resource     settingsDialog https://rawgit.com/soscripted/sox/5b3a497ac02d2b927415226d009ea08c7eba4a4f/sox.dialog.html
-// @resource     featuresJSON https://rawgit.com/soscripted/sox/dev/sox.features.info.json?v=1.0.2c
+// @resource     featuresJSON https://rawgit.com/soscripted/sox/dev/sox.features.info.json?v=1.0.2d
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_deleteValue
@@ -175,6 +176,32 @@
             save(extras);
             location.reload(); // reload page to reflect changed settings
         });
+        
+        $(document).on('click', 'a.getAccessToken', function() {
+            $that = $(this);
+            var client_id = $(this).attr('data-client-id');
+            var key = $(this).attr('data-key');
+            var featureId = $(this).attr('data-feature-id');
+            SE.init({ 
+                clientId: client_id, 
+                key: key, 
+                channelUrl: 'http://meta.stackexchange.com/blank',
+                complete: function(d) {
+                    console.log('SE init');
+                }
+            });
+            SE.authenticate({
+                success: function(data) {
+                    accessToken = data.accessToken;
+                    console.log(accessToken);
+                    var accessTokens = JSON.parse(GM_getValue('SOX-accessTokens', "{}"));
+                    accessTokens[featureId] = accessToken;
+                    GM_setValue('SOX-accessTokens', JSON.stringify(accessTokens));
+                    $that.before(accessToken);
+                    $that.text(" New access token?");
+                }
+            });
+        });
 
         // check if settings exist and execute desired functions
         if (isAvailable()) {
@@ -189,7 +216,12 @@
                         var featureId = extras[i].split('-')[1];
                         var feature = featuresJSON[featureHeader][featureId];
                         if (feature['accessToken']) {
-                            $soxSettingsToggleAccessTokensDiv.find('#sox-settings-dialog-access-tokens-links').append(feature['desc'] + ': ' + feature['accessToken']['url']);
+                            var accessTokens = JSON.parse(GM_getValue('SOX-accessTokens', "{}"));
+                            if(accessTokens == '') {
+                                $soxSettingsToggleAccessTokensDiv.find('#sox-settings-dialog-access-tokens-links').append(feature['desc'] + ': <a class="getAccessToken" data-feature-id="'+featureId+'" data-client-id="'+feature['accessToken']['clientId']+'" data-key="'+feature['accessToken']['key']+'">Get access token?</a>');
+                            } else if (accessTokens[featureId]) {
+                                $soxSettingsToggleAccessTokensDiv.find('#sox-settings-dialog-access-tokens-links').append(feature['desc'] + ': ' + accessTokens[featureId] + ' <a class="getAccessToken" data-feature-id="'+featureId+'" data-client-id="'+feature['accessToken']['clientId']+'" data-key="'+feature['accessToken']['key']+'">New access token?</a>');                                
+                            }
                         }
                         if (feature['enableOnSites']) {
                             var sites = feature['enableOnSites'].split(',');
