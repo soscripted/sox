@@ -386,3 +386,8 @@ hr.or:after {
     font-size: 20px;
     margin-top: 5px;
 }
+
+/*chatEasyAccess - for the links (b elements)*/
+.chatEasyAccess b {
+    cursor: pointer;
+}
