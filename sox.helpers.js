@@ -52,8 +52,10 @@ SOHelper = {
         return ($('.beta-title').length ? true : false);
     },
     
-    getAccessToken: function() {
-        console.log(GM_getValue('SOX-accessTokens'));
+    getAccessToken: function(featureId) {
+        var accessTokens = JSON.parse(GM_getValue('SOX-accessTokens', "{}"));
+        if (accessTokens == '') return false;
+        if (accessTokens[featureId]) return accessTokens[featureId];
     },
     
     getSiteType: function () {
