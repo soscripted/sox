@@ -160,6 +160,10 @@
                 "clientId": "4999",
                 "key": ")2kXF9IR5OHnfGRPDahCVg(("
             }
+        },
+        "chatEasyAccess": {
+            "desc": "Add buttons to user profiles to change user write access directly from a chat room",
+            "enableOnSites": "chat"
         }
     }
 }
