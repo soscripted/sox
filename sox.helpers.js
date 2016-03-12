@@ -52,6 +52,10 @@ SOHelper = {
         return ($('.beta-title').length ? true : false);
     },
     
+    getAccessToken: function() {
+        console.log(GM_getValue('SOX-accessTokens'));
+    },
+    
     getSiteType: function () {
         if (location.hostname.indexOf('chat.') > -1) {
             return 'chat';
