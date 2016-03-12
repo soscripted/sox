@@ -7,19 +7,19 @@ SOHelper = {
         var $uname = $('body > div.topbar > div > div.topbar-links > a > div.gravatar-wrapper-24');
         return ($uname.length ? $uname.attr('title') : false);
     },
-    
+
     getReputation: function() {
         return StackExchange.options.user.rep;
     },
-    
+
     getSiteURL: function (type) {
         return (type == 'full' ? location.href : location.hostname);
     },
-    
+
     getSiteName: function() {
         return (SOHelper.getSiteType() === 'chat' ? $('#footer-logo a').attr('title') : StackExchange.options.site.name);
     },
-    
+
     getAPISiteName: function () {
         return location.href.split('/')[2].split('.')[0];
     },
@@ -31,11 +31,11 @@ SOHelper = {
     isLoggedIn: function() {
         return StackExchange.options.user.isRegistered;
     },
-      
+
     getSiteIcon: function() {
         return "favicon-" + $(".current-site a:not([href*='meta']) .site-icon").attr('class').split('favicon-')[1];
     },
-    
+
     getMetaSiteIcon: function () {
         return "favicon-" + $(".current-site a[href*='meta'] .site-icon").attr('class').split('favicon-')[1];
     },
@@ -47,27 +47,30 @@ SOHelper = {
     getFromAPI: function (type, id, sitename, callback, sortby) {
         $.getJSON('https://api.stackexchange.com/2.2/' + type + '/' + id + '?order=desc&sort=' + (sortby || 'creation') + '&site=' + sitename, callback);
     },
-    
+
     isBeta: function () {
         return ($('.beta-title').length ? true : false);
     },
-    
+
     getAccessToken: function(featureId) {
         var accessTokens = JSON.parse(GM_getValue('SOX-accessTokens', "{}"));
         if (accessTokens == '') return false;
         if (accessTokens[featureId]) return accessTokens[featureId];
     },
-    
+
     getSiteType: function () {
+        var type = 'main';
+    
         if (location.hostname.indexOf('chat.') > -1) {
-            return 'chat';
+            type = 'chat';
         } else {
             if (StackExchange || window.StackExchange) {
                 if (StackExchange.options.site.isMetaSite) {
-                    return 'meta';
+                    type = 'meta';
                 }
             }
         }
+        return type;
     },
 
     hasPriv: (function () { //IIFE returning function saves instantiating privs multiple times

@@ -67,7 +67,11 @@
         },
         "hideSearchBar": {
             "desc": "Replace the search bar with a link to the search page"
+        },
+        "topAnswers": {
+            "desc": "Improve answer visibility by listing top answers"
         }
+
     },
     "Flags": {
         "flagOutcomeTime": {
