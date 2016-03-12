@@ -3,7 +3,8 @@
         "grayOutVotes": {
             "desc": "Gray out deleted votes",
             "accessToken": {
-                "url": "http://example.com"
+                "clientId": "4999",
+                "key": ")2kXF9IR5OHnfGRPDahCVg(("
             }
         },
         "moveBounty": {
