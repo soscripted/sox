@@ -1766,6 +1766,7 @@ Toggle SBS?</div></li>';
                         if($node.hasClass("user-popup")) {
                             setTimeout(function() {
                                 var id = $node.find('a')[0].href.split('/')[4];
+                                if($('.chatEasyAccess').length) $('.chatEasyAccess').remove();
                                 $node.find('div:last-child').after('<div class="chatEasyAccess">give <b id="read-only">read</b> / <b id="read-write">write</b> / <b id="remove">no</b> access</div>');
                                 $(document).on('click', '.chatEasyAccess b', function() {
                                     $that = $(this);
