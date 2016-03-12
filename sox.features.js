@@ -1652,5 +1652,106 @@ Toggle SBS?</div></li>';
         // Description: Add a bunch of features to the standard markdown editor (autocorrect, find+replace, Ace editor, and more!)
         
         enhancedEditor.startFeature();
+    },
+    
+    downvotedPostsEditAlert: function() {
+        // Description: Adds a notification to the inbox if a question you downvoted and watched is edited
+        
+        function addNotification(link, title) { //add the notification
+            var favicon = SOHelper.getSiteIcon();
+            $('div.topbar .icon-inbox').click(function() { //add the actual notification
+                setTimeout(function() {
+                    $('div.topbar div.topbar-dialog.inbox-dialog.dno ul').prepend("<li class='inbox-item unread-item question-close-notification'> \
+        <a href='" + link + "'> \
+        <div class='site-icon favicon favicon-" + favicon + "' title=''></div> \
+        <div class='item-content'> \
+        <div class='item-header'> \
+        <span class='item-type'>post edit</span> \
+        <span class='item-creation'><span style='color:blue;border: 1px solid gray;' onclick='javascript:void(0)' id='markAsRead_" + sitename + '-' + id + "'>mark as read</span></span> \
+        </div> \
+        <div class='item-location'>" + title + "</div> \
+        <div class='item-summary'>A post you downvoted has been edited since. Go check it out, and see if you should retract your downvote!</div> \
+        </div> \
+        </a> \
+        </li>");
+                }, 500);
+            });
+        }
+        
+        function addNumber() { //count the number of elements in the 'unread' object, and display that number on the inbox icon
+            var count = 0;
+            for (i in unread) {
+                if (unread.hasOwnProperty(i)) {
+                    count++;
+                }
+            }
+            if (count != 0 && $('div.topbar .icon-inbox span.unread-count').text() == '') { //display the number
+                $('div.topbar .icon-inbox span.unread-count').css('display', 'inline-block').text(count);
+            }
+        }
+        
+        var posts = JSON.parse(GM_getValue("downvotedPostsEditAlert", "[]"));
+        var unread = JSON.parse(GM_getValue("downvotedPostsEditAlert-unreadItems", "{}"));
+        var lastCheckedDate = GM_getValue("downvotedPostsEditAlert-lastCheckedDate", 0);
+        var key = ")2kXF9IR5OHnfGRPDahCVg((";
+        var access_token = SOHelper.getAccessToken('downvotedPostsEditAlert');
+        
+        $('td.votecell > div.vote').find(':last-child').not('b').after("<i class='downvotedPostsEditAlert-watchPostForEdits fa fa-eye'></i>");
+        $('.downvotedPostsEditAlert-watchPostForEdits').click(function() {
+            var $that = $(this);
+            var $parent = $(this).closest('table').parent();
+            var id;
+            if($parent.attr('data-questionid')) {
+                id = $parent.attr('data-questionid');
+            } else if($parent.attr('data-answerid')) {
+                id = $parent.attr('data-answerid');
+            }
+            var stringToAdd = SOHelper.getAPISiteName() + '-' + id;
+            var index = posts.indexOf(stringToAdd);
+            if(index == -1) {
+                $that.css('color', 'green');
+                posts.push(stringToAdd);
+                GM_setValue('downvotedPostsEditAlert', JSON.stringify(posts));
+            } else {
+                $that.removeAttr('style');
+                posts.splice(index, 1);
+                GM_setValue('downvotedPostsEditAlert', JSON.stringify(posts));
+            }
+        });
+        
+        for (var i=0; i<posts.length; i++) {
+            var sitename = posts[i].split('-')[0];
+            var id = posts[i].split('-')[1];
+            var url = "https://api.stackexchange.com/2.2/posts/" + id + "?order=desc&sort=activity&site=" + sitename + "&filter=!9YdnSEBb8&key=" + key + "&access_token=" + access_token;
+            if (new Date().getDate() != new Date(lastCheckedDate).getDate()) {
+                $.getJSON(url, function(json) {
+                    if (json.items[0].last_edit_date > ((lastCheckedDate / 1000) - 86400)) {
+                        unread[sitename + '-' + json.items[0].post_id] = [json.items[0].link, json.items[0].title];
+                        GM_setValue('downvotedPostsEditAlert-unreadItems', JSON.stringify(unread));
+                    }
+                    lastCheckedDate = new Date().getTime();
+                    GM_setValue('downvotedPostsEditAlert-lastCheckedDate', lastCheckedDate);
+                });
+            }
+            $.each(unread, function(siteAndId, details) {
+                addNotification(details[0], details[1]);
+            });
+            addNumber();
+        }
+        
+        $(document).on('click', 'span[id^=markAsRead]', function(e) { //click handler for the 'mark as read' button
+            e.preventDefault(); //don't go to questionn
+            var siteAndId = $(this).attr('id').split('_')[1];
+            delete unread[siteAndId]; //delete the question from the object
+            GM_setValue('downvotedPostsEditAlert-unreadItems', JSON.stringify(unread)); //save the object again
+            $(this).parent().parent().parent().parent().parent().hide(); //hide the notification in the inbox dropdown
+        });
+        
+        $(document).mouseup(function(e) { //hide on click off
+            var container = $('div.topbar-dialog.inbox-dialog.dno > div.modal-content');
+            if (!container.is(e.target) && container.has(e.target).length === 0) {
+                container.find('.question-close-notification').remove();
+            }
+        });
     }
 };
