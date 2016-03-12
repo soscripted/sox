@@ -380,3 +380,9 @@ hr.or:after {
 .enhancedEditor-asLinkContainer {
     display: block;
 }
+
+/*downvotedPostsEditAlert - for the watch icon*/
+.downvotedPostsEditAlert-watchPostForEdits {
+    font-size: 20px;
+    margin-top: 5px;
+}
