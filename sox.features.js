@@ -1082,7 +1082,7 @@ var features = { //ALL the functions must go in here
     metaNewQuestionAlert: function() {
         // Description: For adding a fake mod diamond that notifies you if there has been a new post posted on the current site's meta
 
-        if (SOHelper.getSiteType() != 'main') return; //DO NOT RUN ON META OR CHAT SITES
+        if (SOHelper.getSiteType() != 'main' || !$('.related-site').length) return; //DO NOT RUN ON META OR CHAT OR SITES WITHOUT A META
 
         var NEWQUESTIONS = 'metaNewQuestionAlert-lastQuestions',
             DIAMONDON = 'new-meta-questions-diamondOn',
