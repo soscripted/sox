@@ -1753,5 +1753,47 @@ Toggle SBS?</div></li>';
                 container.find('.question-close-notification').remove();
             }
         });
+    },
+    
+    chatEasyAccess: function() {
+        new MutationObserver(function( mutations ) {
+            mutations.forEach(function( mutation ) {
+                var newNodes = mutation.addedNodes;
+                if(newNodes !== null) {
+                    var $nodes = $(newNodes);
+                    $nodes.each(function() {
+                        var $node = $( this );
+                        if($node.hasClass("user-popup")) {
+                            setTimeout(function() {
+                                var id = $node.find('a')[0].href.split('/')[4];
+                                $node.find('div:last-child').after('<div class="chatEasyAccess">give <b id="read-only">read</b> / <b id="read-write">write</b> / <b id="remove">no</b> access</div>');
+                                $(document).on('click', '.chatEasyAccess b', function() {
+                                    $that = $(this);
+                                    $.ajax({
+                                        url: 'http://chat.stackexchange.com/rooms/setuseraccess/'+location.href.split('/')[4],
+                                        type: 'post',
+                                        data: {
+                                            'fkey': fkey().fkey,
+                                            'userAccess': $that.attr('id'),
+                                            'aclUserId': id
+                                        },
+                                        success: function(d) {
+                                            if(d=='') {
+                                                alert('Successfully changed user access');
+                                            } else {
+                                                alert(d);
+                                            }
+                                        }
+                                    });
+                                });
+                            }, 1000);
+                        }
+                    });
+                }
+            });    
+        }).observe(document.getElementById('chat-body'), {
+            childList: true,
+            attributes: true
+        });
     }
 };
