@@ -18,12 +18,12 @@
 // @require      https://cdn.rawgit.com/timdown/rangyinputs/master/rangyinputs-jquery-src.js
 // @require      https://cdn.rawgit.com/jeresig/jquery.hotkeys/master/jquery.hotkeys.js
 // @require      https://cdn.rawgit.com/camagu/jquery-feeds/master/jquery.feeds.js
-// @require      https://rawgit.com/soscripted/sox/dev/sox.helpers.js?v=1.0.2c
+// @require      https://rawgit.com/soscripted/sox/dev/sox.helpers.js?v=1.0.2d
 // @require      https://rawgit.com/soscripted/sox/dev/sox.enhanced_editor.js?v=1.0.2b
-// @require      https://rawgit.com/soscripted/sox/dev/sox.features.js?v=1.0.2b
+// @require      https://rawgit.com/soscripted/sox/dev/sox.features.js?v=1.0.2c
 // @require      https://api.stackexchange.com/js/2.0/all.js
 // @resource     settingsDialog https://rawgit.com/soscripted/sox/5b3a497ac02d2b927415226d009ea08c7eba4a4f/sox.dialog.html
-// @resource     featuresJSON https://rawgit.com/soscripted/sox/dev/sox.features.info.json?v=1.0.2d
+// @resource     featuresJSON https://rawgit.com/soscripted/sox/dev/sox.features.info.json?v=1.0.2e
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_deleteValue
@@ -102,7 +102,7 @@
 
         // add sox CSS file and font-awesome CSS file
         $('head').append('<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">')
-            .append('<link rel="stylesheet" type="text/css" href="https://rawgit.com/soscripted/sox/dev/sox.css?v=1.0.2c" />');
+            .append('<link rel="stylesheet" type="text/css" href="https://rawgit.com/soscripted/sox/dev/sox.css?v=1.0.2d" />');
         $('body').append($settingsDialog);
 
         $soxSettingsDialog = $('#sox-settings-dialog');
@@ -217,7 +217,7 @@
                         var feature = featuresJSON[featureHeader][featureId];
                         if (feature['accessToken']) {
                             var accessTokens = JSON.parse(GM_getValue('SOX-accessTokens', "{}"));
-                            if(accessTokens == '') {
+                            if(!accessTokens[featureId]) {
                                 $soxSettingsToggleAccessTokensDiv.find('#sox-settings-dialog-access-tokens-links').append(feature['desc'] + ': <a class="getAccessToken" data-feature-id="'+featureId+'" data-client-id="'+feature['accessToken']['clientId']+'" data-key="'+feature['accessToken']['key']+'">Get access token?</a>');
                             } else if (accessTokens[featureId]) {
                                 $soxSettingsToggleAccessTokensDiv.find('#sox-settings-dialog-access-tokens-links').append(feature['desc'] + ': ' + accessTokens[featureId] + ' <a class="getAccessToken" data-feature-id="'+featureId+'" data-client-id="'+feature['accessToken']['clientId']+'" data-key="'+feature['accessToken']['key']+'">New access token?</a>');                                
