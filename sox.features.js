@@ -1589,7 +1589,7 @@ Toggle SBS?</div></li>';
 
         $('.post-text a, .comments .comment-copy a').each(function() {
             var url = $(this).attr('href');
-            if (url && url.indexOf(SOHelper.getSiteURL()) > -1) {
+            if (url && url.indexOf(SOHelper.getSiteURL()) > -1 & url.indexOf('#comment') == -1) {
                 $(this).css('color', '#0033ff');
                 $(this).before('<a class="expander-arrow-small-hide expand-post-sox"></a>');
             }
