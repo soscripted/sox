@@ -18,11 +18,11 @@
 // @require      https://cdn.rawgit.com/timdown/rangyinputs/master/rangyinputs-jquery-src.js
 // @require      https://cdn.rawgit.com/jeresig/jquery.hotkeys/master/jquery.hotkeys.js
 // @require      https://cdn.rawgit.com/camagu/jquery-feeds/master/jquery.feeds.js
-// @require      https://rawgit.com/soscripted/sox/master/sox.helpers.js?v=1.0.2b
-// @require      https://rawgit.com/soscripted/sox/master/sox.enhanced_editor.js?v=1.0.2b
-// @require      https://rawgit.com/soscripted/sox/master/sox.features.js?v=1.0.2b
-// @resource     settingsDialog https://rawgit.com/soscripted/sox/master/sox.dialog.html?v=1.0.2b
-// @resource     featuresJSON https://rawgit.com/soscripted/sox/master/sox.features.info.json?v=1.0.2b
+// @require      https://cdn.rawgit.com/soscripted/sox/commit/0785f0c59e4e166cec532c29afed78e9ba4333ee
+// @require      https://cdn.rawgit.com/soscripted/sox/commit/4e2cc42ae85e79d97eedf036eb02e5c51e4a714b
+// @require      https://cdn.rawgit.com/soscripted/sox/commit/51058e722ec852d82e760ab0d7e10f3950c87f0f
+// @resource     settingsDialog https://cdn.rawgit.com/soscripted/sox/commit/1924ee2470a9b5862b65463680ddba093f0244d5
+// @resource     featuresJSON https://cdn.rawgit.com/soscripted/sox/commit/740a32b718b7ef9685b65d26b72e2b7242eb8822
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_deleteValue
@@ -100,7 +100,7 @@
 
         // add sox CSS file and font-awesome CSS file
         $('head').append('<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">')
-            .append('<link rel="stylesheet" type="text/css" href="https://rawgit.com/soscripted/sox/master/sox.css?v=1.0.1a" />');
+            .append('<link rel="stylesheet" type="text/css" href="https://github.com/soscripted/sox/commit/51058e722ec852d82e760ab0d7e10f3950c87f0f" />');
         $('body').append($settingsDialog);
 
         $soxSettingsDialog = $('#sox-settings-dialog');
