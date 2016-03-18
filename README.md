@@ -9,7 +9,7 @@ The SOX userscript adds a bunch of **optional** features to all sites in the Sta
 1. Install [Greasemonkey](http://www.greasespot.net/) (for Firefox), [Tampermonkey](http://tampermonkey.net/) (for Chrome), or [NinjaKit](https://github.com/os0x/NinjaKit) for Safari. These are userscript managers that *must* be installed in order for this to work, as the script relies on certain `GM_*` functions in order to save your settings!
 2. Install the script. Clicking on 'install' below will make your userscript manager prompt you automatically to install it.
     
-    - Official Version: <kbd>[install](https://github.com/soscripted/sox/raw/master/sox.user.js)</kbd>. <kbd>[view source](https://github.com/soscripted/sox/blob/master/sox.user.js)</kbd>
+    - Official Version: <kbd>[install](https://github.com/soscripted/sox/blob/v1.0.2/sox.user.js)</kbd>. <kbd>[view source](https://github.com/soscripted/sox/raw/v1.0.2/sox.user.js)</kbd>
     - Development Version: <kbd>[install](https://github.com/soscripted/sox/raw/dev/sox.user.js)</kbd>. <kbd>[view source](https://github.com/soscripted/sox/blob/dev/sox.user.js)</kbd>
     - Experimental Version: <kbd>[install](https://github.com/soscripted/sox/raw/experimental/sox.user.js)</kbd>. <kbd>[view source](https://github.com/soscripted/sox/blob/experimental/sox.user.js)</kbd>
     
