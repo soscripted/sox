@@ -405,7 +405,7 @@ hr.or:after {
     background-color: #c3dafa;
 }
 
-.favorite-tag-all:before, .favorite-tag-su:before, .favorite-tag-so:before{
+.post-tag..favorite-tag-all:before, .post-tag..favorite-tag-su:before, .post-tag..favorite-tag-so:before{
     border-color: inherit;
     background-color: inherit;
 }
