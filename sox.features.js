@@ -205,42 +205,35 @@ var features = { //ALL the functions must go in here
     highlightQuestions: function() {
         // Description: For highlighting only the tags of favorite questions
 
-        function change(betterCSS) {
+        var highlightClass = '';
+        if (/superuser/.test(window.hostname)) { //superuser
+            highlightClass = 'favorite-tag-su';
+        } else if (/stackoverflow/.test(window.hostname)) { //stackoverflow
+            highlightClass = 'favorite-tag-so';
+        } else { //for all other sites
+            highlightClass = 'favorite-tag-all';
+        }
+
+        function highlight() {
             var interestingTagsDiv = $('#interestingTags').text();
             var interesting = interestingTagsDiv.split(' ');
             interesting.pop(); //Because there's one extra value at the end
 
             $('.tagged-interesting > .summary > .tags > .post-tag').filter(function(index) {
                 return interesting.indexOf($(this).text()) > -1;
-            }).css(betterCSS);
+            }).addClass(highlightClass);
 
             $('.tagged-interesting').removeClass('tagged-interesting');
         }
+
         setTimeout(function() { //Need delay to make sure the CSS is applied
-            var betterCSS = {};
-            if (/superuser/.test(window.hostname)) { //superuser
-                betterCSS = {
-                    backgroundColor: '#a1eaff',
-                    color: 'black'
-                };
-            } else if (/stackoverflow/.test(window.hostname)) { //stackoverflow
-                betterCSS = {
-                    backgroundColor: '#ffefc6',
-                    borderWidth: '0'
-                };
-            } else { //for all other sites
-                betterCSS = {
-                    backgroundColor: '#c3dafa',
-                    borderWidth: '0'
-                };
-            }
-            change(betterCSS);
+            highlight();
 
             if ($('.question-summary').length) {
                 new MutationObserver(function(records) {
                     records.forEach(function(mutation) {
                         if (mutation.attributeName == 'class') {
-                            change(betterCSS);
+                            highlight();
                         }
                     });
                 }).observe(document.querySelector('.question-summary'), {

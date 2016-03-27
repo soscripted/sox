@@ -289,7 +289,7 @@ li.fixedTopbar-siteLink {
     margin-top:-95.5px;
     margin-left:-216px;
     overflow:auto;
-    height:70%;   
+    height:70%;
 }
 .ownURL, .ownImage {
     border-radius: 5px;
@@ -390,4 +390,22 @@ hr.or:after {
 /*chatEasyAccess - for the links (b elements)*/
 .chatEasyAccess b {
     cursor: pointer;
+}
+
+.favorite-tag-so {
+    border-color: rgba(0,0,0,.3);
+    background-color: #ffefc6;
+}
+.favorite-tag-su {
+    border-color: rgba(0,0,0,.3);
+    background-color: #a1eaff;
+}
+.favorite-tag-all {
+    border-color: rgba(0,0,0,.3);
+    background-color: #c3dafa;
+}
+
+*[class^='favorite-tag-']:before{
+    border-color: inherit;
+    background-color: inherit;
 }

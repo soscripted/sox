@@ -13,6 +13,7 @@
 // @match        *://*.askubuntu.com/*
 // @match        *://*.stackapps.com/*
 // @match        *://*.mathoverflow.net/*
+// @match        *://github.com/soscripted/sox/issues/new
 // @require      https://code.jquery.com/jquery-2.1.4.min.js
 // @require      https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js
 // @require      https://cdn.rawgit.com/timdown/rangyinputs/master/rangyinputs-jquery-src.js
@@ -30,13 +31,28 @@
 // @grant        GM_getResourceText
 // ==/UserScript==
 /*jshint multistr: true */
-(function (sox, $, undefined) {
+(function(sox, $, undefined) {
     var SOX_SETTINGS = 'SOXSETTINGS';
+    var SOX_VERSION = '1.0.3 DEV';
+
+    // auto-inject version number and environment information into GitHub issues
+    // NOT WORKING -- ONLY WORKS ON PAGE REFRESH?  I'VE TRIED DOC.READY, IIFE.... <thumbs down>
+    if (location.hostname.indexOf('github.com') > -1 ) {
+        var $issue = $('#issue_body'),
+            issueText = $issue.text();
+
+        issueText = issueText.replace('1.X.X', SOX_VERSION);
+        $issue.text(issueText);
+
+        // on GitHub, stop execution of the rest of the script.
+        return;
+    }
 
     var $settingsDialog = $(GM_getResourceText('settingsDialog')),
         featuresJSON = JSON.parse(GM_getResourceText('featuresJSON')),
         $soxSettingsDialog,
         $soxSettingsDialogFeatures,
+        $soxSettingsDialogVersion,
         $soxSettingsSave,
         $soxSettingsReset,
         $soxSettingsToggleAccessTokensDiv,
@@ -98,7 +114,7 @@
     }
 
     //initialize sox
-    (function () {
+    (function() {
 
         // add sox CSS file and font-awesome CSS file
         $('head').append('<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">')
@@ -107,11 +123,14 @@
 
         $soxSettingsDialog = $('#sox-settings-dialog');
         $soxSettingsDialogFeatures = $soxSettingsDialog.find('#sox-settings-dialog-features');
+        $soxSettingsDialogVersion = $soxSettingsDialog.find('#sox-settings-dialog-version');
         $soxSettingsSave = $soxSettingsDialog.find('#sox-settings-dialog-save');
         $soxSettingsReset = $soxSettingsDialog.find('#sox-settings-dialog-reset');
         $soxSettingsToggleAccessTokensDiv = $soxSettingsDialog.find('#sox-settings-dialog-access-tokens');
         $soxSettingsToggle = $soxSettingsDialog.find('#sox-settings-dialog-check-toggle');
         $soxSettingsClose = $soxSettingsDialog.find('#sox-settings-dialog-close');
+
+        $soxSettingsDialogVersion.text('v' + SOX_VERSION + ' ');
 
         for (var category in featuresJSON) { //load all the features in the settings dialog
             addCategory(category);
@@ -126,7 +145,7 @@
                 class: 'topbar-icon yes-hover sox-settings-button',
                 title: 'Change SOX Settings',
                 style: 'color: #A1A1A1',
-                click: function (e) {
+                click: function(e) {
                     e.preventDefault();
                     $('#sox-settings-dialog').toggle();
                 }
@@ -137,24 +156,24 @@
         $soxSettingsButton.append($icon).appendTo('div.network-items');
 
         // add click handlers for the buttons in the settings dialog
-        $soxSettingsClose.on('click', function () {
+        $soxSettingsClose.on('click', function() {
             $soxSettingsDialog.hide();
         });
-        $soxSettingsReset.on('click', function () {
+        $soxSettingsReset.on('click', function() {
             reset();
             location.reload(); // reload page to reflect changed settings
         });
         $soxSettingsToggleAccessTokensDiv.find('#toggle-access-token-links').on('click', function() {
-           $links = $(this).parent().find('#sox-settings-dialog-access-tokens-links');
-           if($links.is(':visible')) {
-               $links.hide();
-               $soxSettingsToggleAccessTokensDiv.find('#toggle-access-token-links').removeClass('expander-arrow-small-show').addClass('expander-arrow-small-hide')
-           } else {
-               $links.show();
-               $soxSettingsToggleAccessTokensDiv.find('#toggle-access-token-links').removeClass('expander-arrow-small-hide').addClass('expander-arrow-small-show')
-           }
+            $links = $(this).parent().find('#sox-settings-dialog-access-tokens-links');
+            if ($links.is(':visible')) {
+                $links.hide();
+                $soxSettingsToggleAccessTokensDiv.find('#toggle-access-token-links').removeClass('expander-arrow-small-show').addClass('expander-arrow-small-hide')
+            } else {
+                $links.show();
+                $soxSettingsToggleAccessTokensDiv.find('#toggle-access-token-links').removeClass('expander-arrow-small-hide').addClass('expander-arrow-small-show')
+            }
         });
-        $soxSettingsToggle.on('click', function () {
+        $soxSettingsToggle.on('click', function() {
             var $icon = $(this).find('i'),
                 checked = $icon.hasClass('fa-check-square-o') ? true : false;
 
@@ -166,9 +185,9 @@
                 $soxSettingsDialogFeatures.find('input').prop('checked', true);
             }
         });
-        $soxSettingsSave.on('click', function () {
+        $soxSettingsSave.on('click', function() {
             var extras = [];
-            $soxSettingsDialogFeatures.find('input[type=checkbox]:checked').each(function () {
+            $soxSettingsDialogFeatures.find('input[type=checkbox]:checked').each(function() {
                 var x = $(this).parents('.feature-header').attr('id') + '-' + $(this).attr('id');
                 console.log(x);
                 extras.push(x); //Add the function's ID (also the checkbox's ID) to the array
@@ -176,15 +195,15 @@
             save(extras);
             location.reload(); // reload page to reflect changed settings
         });
-        
+
         $(document).on('click', 'a.getAccessToken', function() {
             $that = $(this);
             var client_id = $(this).attr('data-client-id');
             var key = $(this).attr('data-key');
             var featureId = $(this).attr('data-feature-id');
-            SE.init({ 
-                clientId: client_id, 
-                key: key, 
+            SE.init({
+                clientId: client_id,
+                key: key,
                 channelUrl: 'http://meta.stackexchange.com/blank',
                 complete: function(d) {
                     console.log('SE init');
@@ -217,10 +236,10 @@
                         var feature = featuresJSON[featureHeader][featureId];
                         if (feature['accessToken']) {
                             var accessTokens = JSON.parse(GM_getValue('SOX-accessTokens', "{}"));
-                            if(!accessTokens[featureId]) {
-                                $soxSettingsToggleAccessTokensDiv.find('#sox-settings-dialog-access-tokens-links').append(feature['desc'] + ': <a class="getAccessToken" data-feature-id="'+featureId+'" data-client-id="'+feature['accessToken']['clientId']+'" data-key="'+feature['accessToken']['key']+'">Get access token?</a>');
+                            if (!accessTokens[featureId]) {
+                                $soxSettingsToggleAccessTokensDiv.find('#sox-settings-dialog-access-tokens-links').append(feature['desc'] + ': <a class="getAccessToken" data-feature-id="' + featureId + '" data-client-id="' + feature['accessToken']['clientId'] + '" data-key="' + feature['accessToken']['key'] + '">Get access token?</a>');
                             } else if (accessTokens[featureId]) {
-                                $soxSettingsToggleAccessTokensDiv.find('#sox-settings-dialog-access-tokens-links').append(feature['desc'] + ': ' + accessTokens[featureId] + ' <a class="getAccessToken" data-feature-id="'+featureId+'" data-client-id="'+feature['accessToken']['clientId']+'" data-key="'+feature['accessToken']['key']+'">New access token?</a>');                                
+                                $soxSettingsToggleAccessTokensDiv.find('#sox-settings-dialog-access-tokens-links').append(feature['desc'] + ': ' + accessTokens[featureId] + ' <a class="getAccessToken" data-feature-id="' + featureId + '" data-client-id="' + feature['accessToken']['clientId'] + '" data-key="' + feature['accessToken']['key'] + '">New access token?</a>');
                             }
                         }
                         if (feature['enableOnSites']) {
@@ -249,7 +268,7 @@
             // no settings found, mark all inputs as checked and display settings dialog
             $soxSettingsDialogFeatures.find('input').prop('checked', true);
 
-            setTimeout(function () {
+            setTimeout(function() {
                 $soxSettingsDialog.show();
             }, 500);
         }
