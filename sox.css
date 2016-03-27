@@ -392,20 +392,20 @@ hr.or:after {
     cursor: pointer;
 }
 
-.favorite-tag-so {
+.post-tag.favorite-tag-so {
     border-color: rgba(0,0,0,.3);
     background-color: #ffefc6;
 }
-.favorite-tag-su {
+.post-tag.favorite-tag-su {
     border-color: rgba(0,0,0,.3);
     background-color: #a1eaff;
 }
-.favorite-tag-all {
+.post-tag.favorite-tag-all {
     border-color: rgba(0,0,0,.3);
     background-color: #c3dafa;
 }
 
-*[class^='favorite-tag-']:before{
+.favorite-tag-all:before, .favorite-tag-su:before, .favorite-tag-so:before{
     border-color: inherit;
     background-color: inherit;
 }
