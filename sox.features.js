@@ -46,42 +46,30 @@ var features = { //ALL the functions must go in here
     },
 
     employeeStar: function() {
-        // Description: Adds an Stack Overflow logo next to users that *ARE* a Stack Overflow Employee
+        // Description: Adds an star next to users that *might* be a Stack Overflow Employee
 
-        function unique(list) {
-            //credit: GUFFA https://stackoverflow.com/questions/12551635/12551709#12551709
-            var result = [];
-            $.each(list, function(i, e) {
-                if ($.inArray(e, result) == -1) result.push(e);
-            });
-            return result;
-        }
+        var employees = ['Jeff Atwood', 'Joel Spolsky', 'Jarrod Dixon', 'Geoff Dalgas', 'David Fullerton', 'Korneel Bouman', 'Robert Cartaino', 'Kevin Montrose',
+            'MandyK', 'Marc Gravell', 'balpha', 'Matt Sherman', 'Danny Miller', 'Jason Punyon', 'NickC', 'Kyle Brandt', 'Jin', 'Tall Jeff', 'Zypher',
+            'Nick Craver', 'Nick Larsen', 'Shog9', 'Greg', 'Alex Miller', 'GuyZee', 'abby hairboat', 'samthebrand', 'Laura', 'Grace Note', 'Dimitar Stanimiroff',
+            'Hammer', 'Peter Grace', 'Charles', 'Anna Lear', 'stevvve', 'Bethany', 'Andrew17', 'Kizzle', 'Jay', 'mjibson', 'Stefan Schwarzgruber', 'Will Cole', 'Sean Bave',
+            'Robyn', 'Bart Silverstrim', 'Jaydles', 'Maxwell Applebaum', 'Snails', 'Jordan Conner', 'Bodhi', 'cashenhu', 'rb4', 'Maurbawlz', 'CMartin', 'Joe Humphries', 'Max',
+            'Oded', 'Val Perez', 'rossipedia', 'Derek Still', 'Tim Post', 'Paul', 'PDePree', 'Sklivvz', 'Todd Jenkins', 'Jim Egan', 'Kaziorex', 'Ben Collins', 'TomOnTime', 'Dr.D',
+            'David', 'Sara Rayman', 'Monika P', 'Prefontaine', 'm0sa', 'Jon Ericson', 'Juice', 'Tania', 'Angela', 'Hynes', 'Kasra Rahjerdi', 'Gabe', 'Bret Copeland', 'Arie Litovsky',
+            'Pops', 'Megan Spaans', 'Whitney Dwyer', 'Philip Camillo', 'onesysadmin', 'Aurelien Gasser', 'Alyssa Tomback', 'Alex Cresswell', 'couchand', 'Brian Nickel', 'Princess',
+            'Yaakov Ellis', 'Ana Hevesi', 'Noureddine Latrech', 'Hertz', 'Jill Ciaccia', 'Tobias Schmidt', 'Jon Chan', 'Johanna Perrin', 'Kristian Bright', 'John LeClerc',
+            'Rob Dandorph', 'Jessica Genther', 'Courtny Cotten', 'Stephanie', 'Sean Durkin', 'rla4', 'Alex Warren', 'Jaime Kronick', 'Alexa', 'Samuel Rouayrenc', 'Josh Helfgott',
+            'Peter Tarr', 'Shane Madden', 'Nextraztus', 'G-Wiz', 'Dan O\'Boyle', 'yolovolo', 'Griffin Sandberg', 'ODB', 'Mark Villarreal', 'Lowell Gruman Jr.', 'bweber', 'Natalie How',
+            'Haney', 'jmac', 'Emmanuel Andem-Ewa', 'Jess Pardue', 'Dean Ward', 'Steve Trout', 'Nicholas Chabanovsky', 'Kelli Ward', 'Noah Neuman', 'Lauren Roemer', 'Heidi Hays',
+            'Joe Wilkie', 'Mackenzie Ralston', 'animuson'
+        ];
 
-        var $links = $('.comment a, .deleted-answer-info a, .employee-name a, .started a, .user-details a').filter('a[href^="/users/"]');
-        var ids = [];
-
-        $links.each(function() {
-            var id = $(this).attr('href').split('/')[2];
-            ids.push(id);
-        });
-
-        ids = unique(ids);
-
-        var url = 'https://api.stackexchange.com/2.2/users/{ids}?site={site}'
-            .replace('{ids}', ids.join(';'))
-            .replace('{site}', SOHelper.getApiSiteParameter(StackExchange.options.site.name));
-
-        $.ajax({
-            url: url
-        }).success(function(data) {
-            for (var i = 0, len = data.items.length; i < len; i++) {
-                var userId = data.items[i].user_id,
-                    isEmployee = data.items[i].is_employee;
-
-                if (isEmployee) {
-                    $('a[href*="' + userId + '"]').append('<i class="fa fa-stack-overflow" title="employee" style="padding: 0 5px"></i>');
+        $('.comment, .deleted-answer-info, .employee-name, .started, .user-details').each(function() { //normal comments, deleted answers (deleted by), SE.com/about, question feed users, question/answer/edit owners
+            var $divtext = $(this);
+            $.each(employees, function(index, value) {
+                if ($divtext.find('a[href*="/users"]').html() == value) {
+                    $divtext.find('a[href*="/users"]').append('<span class="mod-flair" title="possible employee">&Star;</span>');
                 }
-            }
+            });
         });
     },
 
@@ -1847,8 +1835,8 @@ Toggle SBS?</div></li>';
                 }),
                 $icon = $('<i/>', {
                     class: icon,
-                    style: 'margin-bottom: 0; padding-right: 5px;'
-                });
+                style: 'margin-bottom: 0; padding-right: 5px;'
+            });
 
             $link.append($icon).append('Score: ' + score);
             $column.append($link).appendTo($row);
