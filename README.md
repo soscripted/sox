@@ -4,6 +4,8 @@ Stack Overflow Extras is a project that stemmed from the [Stack Overflow Optiona
 
 The SOX userscript adds a bunch of **optional** features to all sites in the Stack Exchange network. These can be toggled on or off from an easy to use control panel (see screenshot below).
 
+Note: This project has no relation to Stack Overflow or Stack Exchange; it is simply a userscript that enhances the sites!
+
 ##Installation & Requirements
 
 1. Install [Greasemonkey](http://www.greasespot.net/) (for Firefox), [Tampermonkey](http://tampermonkey.net/) (for Chrome), or [NinjaKit](https://github.com/os0x/NinjaKit) for Safari. These are userscript managers that *must* be installed in order for this to work, as the script relies on certain `GM_*` functions in order to save your settings!
@@ -30,4 +32,3 @@ Please post bugs and feature requests as issues on [Github](https://github.com/s
 
 Please see the change log [at Stack Apps](http://stackapps.com/a/6358).
 
-Note: This project has no relation to Stack Overflow or Stack Exchange; it is simply a userscript that enhances the sites!
