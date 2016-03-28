@@ -35,8 +35,7 @@
     var SOX_SETTINGS = 'SOXSETTINGS';
     var SOX_VERSION = '1.0.3 DEV';
 
-    // auto-inject version number and environment information into GitHub issues
-    // NOT WORKING -- ONLY WORKS ON PAGE REFRESH?  I'VE TRIED DOC.READY, IIFE.... <thumbs down>
+    // auto-inject version number into new GitHub issues
     if (location.hostname.indexOf('github.com') > -1 ) {
         var $issue = $('#issue_body'),
             issueText = $issue.text();
