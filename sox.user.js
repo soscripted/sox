@@ -13,41 +13,47 @@
 // @match        *://*.askubuntu.com/*
 // @match        *://*.stackapps.com/*
 // @match        *://*.mathoverflow.net/*
-// @match        *://github.com/soscripted/sox/issues/new
+// @match        *://github.com/soscripted/*
 // @require      https://code.jquery.com/jquery-2.1.4.min.js
 // @require      https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js
 // @require      https://cdn.rawgit.com/timdown/rangyinputs/master/rangyinputs-jquery-src.js
 // @require      https://cdn.rawgit.com/jeresig/jquery.hotkeys/master/jquery.hotkeys.js
 // @require      https://cdn.rawgit.com/camagu/jquery-feeds/master/jquery.feeds.js
-// @require      https://rawgit.com/soscripted/sox/dev/sox.helpers.js?v=1.0.2d
-// @require      https://rawgit.com/soscripted/sox/dev/sox.enhanced_editor.js?v=1.0.2b
-// @require      https://rawgit.com/soscripted/sox/dev/sox.features.js?v=1.0.2c
+// @require      https://rawgit.com/soscripted/sox/dev/sox.helpers.js?v=1.0.2g
+// @require      https://rawgit.com/soscripted/sox/dev/sox.enhanced_editor.js?v=1.0.2g
+// @require      https://rawgit.com/soscripted/sox/dev/sox.features.js?v=1.0.2g
 // @require      https://api.stackexchange.com/js/2.0/all.js
 // @resource     settingsDialog https://rawgit.com/soscripted/sox/5b3a497ac02d2b927415226d009ea08c7eba4a4f/sox.dialog.html
-// @resource     featuresJSON https://rawgit.com/soscripted/sox/dev/sox.features.info.json?v=1.0.2e
+// @resource     featuresJSON https://rawgit.com/soscripted/sox/dev/sox.features.info.json?v=1.0.2g
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_deleteValue
 // @grant        GM_getResourceText
+// @grant        GM_info
 // ==/UserScript==
 /*jshint multistr: true */
 (function(sox, $, undefined) {
     var SOX_SETTINGS = 'SOXSETTINGS';
-    var SOX_VERSION = '1.0.3 DEV';
+    var SOX_VERSION = (typeof GM_info !== "undefined" ? GM_info.script.version : "??");
+    var SOX_MANAGER = (typeof GM_info == "undefined" ? "??" : GM_info.scriptHandler + "/Chrome" ||  "Greasemonkey" + "/Firefox");
 
     // auto-inject version number and environment information into GitHub issues
-    // NOT WORKING -- ONLY WORKS ON PAGE REFRESH?  I'VE TRIED DOC.READY, IIFE.... <thumbs down>
-    if (location.hostname.indexOf('github.com') > -1 ) {
-        var $issue = $('#issue_body'),
-            issueText = $issue.text();
+    // setInterval, because on GitHub, when you change page, the URL changes but the page itself is actually the same. So this will check every 2 seconds for whether the issue texatarea exists
+    setInterval(function() {
+        if (location.hostname.indexOf('github.com') > -1) {
+            if($('#issue_body').length) {
+                var $issue = $('#issue_body'),
+                    issueText = $issue.text();
 
-        issueText = issueText.replace('1.X.X', SOX_VERSION);
-        $issue.text(issueText);
-
-        // on GitHub, stop execution of the rest of the script.
-        return;
-    }
-
+                issueText = issueText.replace('1.X.X', SOX_VERSION); //inject the SOX version by replacing the issue template's placeholder '1.X.X'
+                issueText = issueText.replace('Chrome/Tampermonkey', SOX_MANAGER); //inject the SOX userscript manager+platfirm by replacing the issue template's placeholder 'Chrome/Tampermonkey'
+                $issue.text(issueText);
+            }
+            // on GitHub, stop execution of the rest of the script.
+            return;
+        }
+    }, 2000);
+    
     var $settingsDialog = $(GM_getResourceText('settingsDialog')),
         featuresJSON = JSON.parse(GM_getResourceText('featuresJSON')),
         $soxSettingsDialog,
