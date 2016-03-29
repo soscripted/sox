@@ -61,7 +61,8 @@ var features = { //ALL the functions must go in here
         var ids = [];
 
         $links.each(function() {
-            var id = $(this).attr('href').split('/')[2];
+            var href = $(this).attr('href'),
+                id = href.split('/')[2];
             ids.push(id);
         });
 
@@ -79,7 +80,7 @@ var features = { //ALL the functions must go in here
                     isEmployee = data.items[i].is_employee;
 
                 if (isEmployee) {
-                    $('a[href*="' + userId + '"]').append('<i class="fa fa-stack-overflow" title="employee" style="padding: 0 5px"></i>');
+                    $links.filter('a[href*="' + userId + '"]').append('<i class="fa fa-stack-overflow" title="employee" style="padding: 0 5px"></i>');
                 }
             }
         });
