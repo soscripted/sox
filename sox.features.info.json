@@ -16,8 +16,8 @@
         "exclaim": {
             "desc": "Remove exclamation mark on message"
         },
-        "employeeStar": {
-            "desc": "Add star after employee names"
+        "markEmployees": {
+            "desc": "Add the SO logo after employee names to make them stand out"
         },
         "bulletReplace": {
             "desc": "Replace triangular bullets with normal ones"
