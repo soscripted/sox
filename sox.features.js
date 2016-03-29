@@ -1762,6 +1762,8 @@ Toggle SBS?</div></li>';
     },
 
     chatEasyAccess: function() {
+        // Description: Adds options to give a user read/write/no access in chat from their user popup dialog
+
         new MutationObserver(function(mutations) {
             mutations.forEach(function(mutation) {
                 var newNodes = mutation.addedNodes;
@@ -1807,6 +1809,8 @@ Toggle SBS?</div></li>';
     },
 
     topAnswers: function() {
+        // Description: Adds a box above answers to show the most highly-scoring answers
+
         var count = 0;
         var $topAnswers = $('<div/>', {
                 id: 'sox-top-answers',
@@ -1859,6 +1863,56 @@ Toggle SBS?</div></li>';
             $('#answers div.answer:first').before($topAnswers);
             $table.css('width', count * 100 + 'px');
         }
-
+    },
+    
+    tabularReviewerStats: function() {
+        // Description: Adds a notification to the inbox if a question you downvoted and watched is edited
+        // Idea by lolreppeatlol @ http://meta.stackexchange.com/a/277446/260841 :)
+        
+        var info = {};
+        $('.review-more-instructions ul:eq(0) li').each(function() { 
+            var text = $(this).text(),
+                username = $(this).find('a').text(),
+                link = $(this).find('a').attr('href'),
+                approved = text.match(/approved (.*?)[a-zA-Z]/)[1],
+                rejected = text.match(/rejected (.*?)[a-zA-Z]/)[1],
+                improved = text.match(/improved (.*?)[a-zA-Z]/)[1];
+            info[username] = {
+                'link': link,
+                'approved': approved,
+                'rejected': rejected,
+                'improved': improved
+            };
+        });
+        var $editor = $('.review-more-instructions ul:eq(1) li'),
+            editorName = $editor.find('a').text(),
+            editorLink = $editor.find('a').attr('href'),
+            editorApproved = $editor.text().match(/([0-9])/g)[0],
+            editorRejected = $editor.text().match(/([0-9])/g)[1];
+        info[editorName] = {
+                'editorLink': link,
+                'approved': editorApproved,
+                'rejected': editorRejected
+            };
+        var table = "<table><tbody><tr><th style='padding: 4px;'>User</th><th style='padding: 4px;'>Approved</th><th style='padding: 4px;'>Rejected</th><th style='padding: 4px;'>Improved</th style='padding: 4px;'></tr>";
+        $.each(info, function(user, details) {
+           table += "<tr><td style='padding: 4px;'><a href='" + details.link + "'>" + user + "</a></td><td style='padding: 4px;'>" + details.approved + "</td><td style='padding: 4px;'>" + details.rejected + "</td><td style='padding: 4px;'>" + (details.improved ? details.improved : 'N/A') + "</td></tr>";
+        });
+        table += "</tbody></table>";
+        $('.review-more-instructions p, .review-more-instructions ul').remove();
+        $('.review-more-instructions').append(table);
+    },
+    
+    linkedToFrom: function() {
+        // Description: Add an arrow to linked posts in the sidebar to show whether they are linked to or linked from
+        
+        $('.linked .spacer a.question-hyperlink').each(function() {
+            var id = $(this).attr('href').split('/')[4].split('?')[0];
+            if($('a[href*="' + id + '"]').not('.spacer a').length) {
+                $(this).append('<span title="Current question links to this question" style="color:black;font-size:15px;margin-left:5px;">&nearr;</span>');
+            } else {
+                $(this).append('<span title="Current question is linked from this question" style="color:black;font-size:15px;margin-left:5px;">&swarr;</span>');
+            }
+        });
     }
 };
