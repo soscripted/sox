@@ -70,6 +70,12 @@
         },
         "topAnswers": {
             "desc": "Improve answer visibility by listing top answers"
+        },
+        "tabularReviewerStats": {
+            "desc": "Display reviewer stats on /review/suggested-edits in table form"
+        },
+        "linkedToFrom": {
+            "desc": "Add an arrow to linked posts in the sidebar to show whether they are linked to or linked from" 
         }
 
     },
