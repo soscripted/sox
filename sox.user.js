@@ -88,7 +88,8 @@
                      'answerCountSidebar',
                      'highlightClosedQuestions',
                      'unHideAnswer',
-                     'flaggingPercentages'
+                     'flaggingPercentages',
+                     'employeeStar' //renamed to 'markEmployees' in v1.0.3
                  ];
              return (new RegExp('(' + deprecatedFeatures.join('|') + ')')).test(settings);
          }
