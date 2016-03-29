@@ -45,7 +45,7 @@ var features = { //ALL the functions must go in here
         old.html(newText);
     },
 
-    employeeStar: function() {
+    markEmployees: function() {
         // Description: Adds an Stack Overflow logo next to users that *ARE* a Stack Overflow Employee
 
         function unique(list) {
