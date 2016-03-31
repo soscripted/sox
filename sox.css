@@ -1,15 +1,15 @@
 /* -------- sox settings dialog  ------- */
 #sox-settings-dialog {
-    position: fixed;
-    display: none;
-    height: 100%;
-    width: 550px;
-    top: 0;
-    left: 0;
-    z-index: 9999;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-    background-color: #fff;
-    border-right: solid 1px #aaa;
+    top: 34px;
+    left: 235px;
+    display: block;
+    min-height: 600px;
+    max-height: 600px;
+    width: 500px
+}
+#sox-settings-dialog .modal-content {
+    min-height: 600px;
+    max-height: 600px;
 }
 #sox-settings-dialog-title {
     padding: 10px;
@@ -24,7 +24,7 @@
     display: inline;
 }
 #sox-settings-dialog-features {
-    height: calc(100vh - 110px);
+    height: calc(100vh - 160px);
     overflow-y: auto;
     padding: 0 10px 10px 10px;
 }
@@ -32,18 +32,6 @@
     margin-top: 10px;
     padding-bottom: 2px;
     border-bottom: 1px solid black;
-}
-#sox-settings-dialog-close {
-    float: right;
-}
-#sox-settings-dialog-close a {
-    padding: 3px 6px 2px 6px;
-    font-size: 16px;
-    font-weight: normal;
-    color: #fff !important;
-    background-color: #222;
-    font-family: Arial, Helvetica, sans-serif;
-    line-height: 1;
 }
 #sox-settings-dialog-access-tokens-links {
     display: none;
