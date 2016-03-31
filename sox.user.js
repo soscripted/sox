@@ -19,12 +19,12 @@
 // @require      https://cdn.rawgit.com/timdown/rangyinputs/master/rangyinputs-jquery-src.js
 // @require      https://cdn.rawgit.com/jeresig/jquery.hotkeys/master/jquery.hotkeys.js
 // @require      https://cdn.rawgit.com/camagu/jquery-feeds/master/jquery.feeds.js
-// @require      https://rawgit.com/soscripted/sox/dev/sox.helpers.js?v=1.0.2h
-// @require      https://rawgit.com/soscripted/sox/dev/sox.enhanced_editor.js?v=1.0.2h
-// @require      https://rawgit.com/soscripted/sox/dev/sox.features.js?v=1.0.2h
+// @require      https://rawgit.com/soscripted/sox/dev/sox.helpers.js?v=1.0.3a
+// @require      https://rawgit.com/soscripted/sox/dev/sox.enhanced_editor.js?v=1.0.3a
+// @require      https://rawgit.com/soscripted/sox/dev/sox.features.js?v=1.0.3a
 // @require      https://api.stackexchange.com/js/2.0/all.js
-// @resource     settingsDialog https://rawgit.com/soscripted/sox/5b3a497ac02d2b927415226d009ea08c7eba4a4f/sox.dialog.html
-// @resource     featuresJSON https://rawgit.com/soscripted/sox/dev/sox.features.info.json?v=1.0.2h
+// @resource     settingsDialog https://rawgit.com/soscripted/sox/dev/sox.dialog2.html?v=1.0.3a
+// @resource     featuresJSON https://rawgit.com/soscripted/sox/dev/sox.features.info.json?v=1.0.3a
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_deleteValue
@@ -62,6 +62,7 @@
              $soxSettingsSave,
              $soxSettingsReset,
              $soxSettingsToggleAccessTokensDiv,
+             $soxSettingsAccessTokensToggle,
              $soxSettingsToggle,
              $soxSettingsClose;
 
@@ -88,8 +89,7 @@
                      'answerCountSidebar',
                      'highlightClosedQuestions',
                      'unHideAnswer',
-                     'flaggingPercentages',
-                     'employeeStar' //renamed to 'markEmployees' in v1.0.3
+                     'flaggingPercentages'
                  ];
              return (new RegExp('(' + deprecatedFeatures.join('|') + ')')).test(settings);
          }
@@ -125,8 +125,8 @@
 
              // add sox CSS file and font-awesome CSS file
              $('head').append('<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">')
-                 .append('<link rel="stylesheet" type="text/css" href="https://rawgit.com/soscripted/sox/dev/sox.css?v=1.0.2d" />');
-             $('body').append($settingsDialog);
+                 .append('<link rel="stylesheet" type="text/css" href="https://rawgit.com/soscripted/sox/dev/sox.css?v=1.0.3a" />');
+             $('.js-topbar-dialog-corral').append($settingsDialog);
 
              $soxSettingsDialog = $('#sox-settings-dialog');
              $soxSettingsDialogFeatures = $soxSettingsDialog.find('#sox-settings-dialog-features');
@@ -134,6 +134,7 @@
              $soxSettingsSave = $soxSettingsDialog.find('#sox-settings-dialog-save');
              $soxSettingsReset = $soxSettingsDialog.find('#sox-settings-dialog-reset');
              $soxSettingsToggleAccessTokensDiv = $soxSettingsDialog.find('#sox-settings-dialog-access-tokens');
+             $soxSettingsAccessTokensToggle = $soxSettingsToggleAccessTokensDiv.find('#toggle-access-token-links');
              $soxSettingsToggle = $soxSettingsDialog.find('#sox-settings-dialog-check-toggle');
              $soxSettingsClose = $soxSettingsDialog.find('#sox-settings-dialog-close');
 
@@ -170,7 +171,7 @@
                  reset();
                  location.reload(); // reload page to reflect changed settings
              });
-             $soxSettingsToggleAccessTokensDiv.find('#toggle-access-token-links').on('click', function() {
+             $soxSettingsAccessTokensToggle.on('click', function() {
                  $links = $(this).parent().find('#sox-settings-dialog-access-tokens-links');
                  if ($links.is(':visible')) {
                      $links.hide();
@@ -196,7 +197,6 @@
                  var extras = [];
                  $soxSettingsDialogFeatures.find('input[type=checkbox]:checked').each(function() {
                      var x = $(this).parents('.feature-header').attr('id') + '-' + $(this).attr('id');
-                     console.log(x);
                      extras.push(x); //Add the function's ID (also the checkbox's ID) to the array
                  });
                  save(extras);
@@ -265,7 +265,6 @@
                          } catch (err) {
                              $soxSettingsDialogFeatures.find('#' + extras[i]).parent().css('color', 'red').attr('title', 'There was an error loading this feature. Please raise an issue on GitHub.');
                              console.log('SOX error: There was an error loading the feature "' + extras[i] + '". Please raise an issue on GitHub, and copy the following error log.');
-                             console.log('Error details:');
                              console.log(err);
                              i++;
                          }
