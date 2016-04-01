@@ -80,7 +80,7 @@ var features = { //ALL the functions must go in here
                     isEmployee = data.items[i].is_employee;
 
                 if (isEmployee) {
-                    $links.filter('a[href*="' + userId + '"]').append('<i class="fa fa-stack-overflow" title="employee" style="padding: 0 5px"></i>');
+                    $links.filter('a[href^="/users/' + userId + '/"]').append('<i class="fa fa-stack-overflow" title="employee" style="padding: 0 5px"></i>');
                 }
             }
         });
