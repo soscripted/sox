@@ -21,7 +21,7 @@
 // @require      https://cdn.rawgit.com/camagu/jquery-feeds/master/jquery.feeds.js
 // @require      https://rawgit.com/soscripted/sox/dev/sox.helpers.js?v=1.0.3a
 // @require      https://rawgit.com/soscripted/sox/dev/sox.enhanced_editor.js?v=1.0.3a
-// @require      https://rawgit.com/soscripted/sox/dev/sox.features.js?v=1.0.3a
+// @require      https://rawgit.com/soscripted/sox/dev/sox.features.js?v=1.0.3b
 // @require      https://api.stackexchange.com/js/2.0/all.js
 // @resource     settingsDialog https://rawgit.com/soscripted/sox/dev/sox.dialog2.html?v=1.0.3a
 // @resource     featuresJSON https://rawgit.com/soscripted/sox/dev/sox.features.info.json?v=1.0.3a
