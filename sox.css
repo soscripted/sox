@@ -12,17 +12,12 @@
     /* max-height: calc(100vh - 175px); */
     overflow:visible;
 }
-#sox-settings-dialog-title {
-    padding: 10px;
-    height: 30px;
+#sox-settings-dialog .header h3{
+    width: 100%;
 }
-#sox-settings-dialog-title a {
+#sox-settings-dialog-version {
     float: right;
-    margin-right: 5px;
-    cursor: pointer;
-}
-#sox-settings-dialog-title h3 {
-    display: inline;
+    font-size: 14px;
 }
 #sox-settings-dialog-features {
     padding: 0 10px 10px 10px;

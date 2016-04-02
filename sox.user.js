@@ -58,6 +58,7 @@
             featuresJSON = JSON.parse(GM_getResourceText('featuresJSON')),
             $soxSettingsDialog,
             $soxSettingsDialogFeatures,
+            $soxSettingsDialogVersion,
             $soxSettingsSave,
             $soxSettingsReset,
             $soxSettingsToggleAccessTokensDiv,
@@ -129,6 +130,7 @@
 
             $soxSettingsDialog = $('#sox-settings-dialog');
             $soxSettingsDialogFeatures = $soxSettingsDialog.find('#sox-settings-dialog-features');
+            $soxSettingsDialogVersion =  $soxSettingsDialog.find('#sox-settings-dialog-version');
             $soxSettingsSave = $soxSettingsDialog.find('#sox-settings-dialog-save');
             $soxSettingsReset = $soxSettingsDialog.find('#sox-settings-dialog-reset');
             $soxSettingsToggleAccessTokensDiv = $soxSettingsDialog.find('#sox-settings-dialog-access-tokens');
@@ -136,7 +138,7 @@
             $soxSettingsToggle = $soxSettingsDialog.find('#sox-settings-dialog-check-toggle');
             $soxSettingsClose = $soxSettingsDialog.find('#sox-settings-dialog-close');
 
-            $soxSettingsDialog.find('.header h3').append(' v' + SOX_VERSION.toLowerCase());
+            $soxSettingsDialogVersion.text(SOX_VERSION != '??' ? ' v' + SOX_VERSION.toLowerCase() : '');
 
             for (var category in featuresJSON) { //load all the features in the settings dialog
                 addCategory(category);
