@@ -58,7 +58,6 @@
             featuresJSON = JSON.parse(GM_getResourceText('featuresJSON')),
             $soxSettingsDialog,
             $soxSettingsDialogFeatures,
-            $soxSettingsDialogVersion,
             $soxSettingsSave,
             $soxSettingsReset,
             $soxSettingsToggleAccessTokensDiv,
@@ -130,7 +129,6 @@
 
             $soxSettingsDialog = $('#sox-settings-dialog');
             $soxSettingsDialogFeatures = $soxSettingsDialog.find('#sox-settings-dialog-features');
-            $soxSettingsDialogVersion = $soxSettingsDialog.find('#sox-settings-dialog-version');
             $soxSettingsSave = $soxSettingsDialog.find('#sox-settings-dialog-save');
             $soxSettingsReset = $soxSettingsDialog.find('#sox-settings-dialog-reset');
             $soxSettingsToggleAccessTokensDiv = $soxSettingsDialog.find('#sox-settings-dialog-access-tokens');
