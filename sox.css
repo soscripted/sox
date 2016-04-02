@@ -3,14 +3,12 @@
     top: 34px;
     left: 235px;
     display: block;
-    min-height: 600px;
-    max-height: 600px;
+    min-height: 500px;
     width: 500px;
     display: none;
 }
 #sox-settings-dialog .modal-content {
-    min-height: 600px;
-    max-height: 600px;
+    max-height: 470px;
 }
 #sox-settings-dialog-title {
     padding: 10px;
@@ -25,8 +23,6 @@
     display: inline;
 }
 #sox-settings-dialog-features {
-    height: calc(100vh - 160px);
-    overflow-y: auto;
     padding: 0 10px 10px 10px;
 }
 #sox-settings-dialog-features h3 {
