@@ -112,7 +112,7 @@
                     'class': 'header'
                 }),
                 $h3 = $('<h3/>', {
-                    text: name
+                    text: name.toLowerCase()
                 }),
                 $content = $('<div/>',{
                     id: name,

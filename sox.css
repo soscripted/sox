@@ -25,6 +25,9 @@
     overflow-y: scroll;
     height: calc(100vh - 175px);
 }
+#sox-settings-dialog-features .modal-content div {
+    margin-bottom: 3px;
+}
 
 #sox-settings-dialog-features .modal-content label > input {
     margin-right: 5px;
