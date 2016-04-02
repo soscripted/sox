@@ -1127,7 +1127,7 @@ var features = { //ALL the functions must go in here
         });
 
         $dialog.append($header).append($content.append($questions)).prependTo('.js-topbar-dialog-corral');
-        $('#soxSettingsButton').before($diamond);
+        $('#soxSettingsButton').after($diamond);
 
         $(document).mouseup(function(e) {
             if (!$dialog.is(e.target) &&
@@ -1864,13 +1864,13 @@ Toggle SBS?</div></li>';
             $table.css('width', count * 100 + 'px');
         }
     },
-    
+
     tabularReviewerStats: function() {
         // Description: Adds a notification to the inbox if a question you downvoted and watched is edited
         // Idea by lolreppeatlol @ http://meta.stackexchange.com/a/277446/260841 :)
-        
+
         var info = {};
-        $('.review-more-instructions ul:eq(0) li').each(function() { 
+        $('.review-more-instructions ul:eq(0) li').each(function() {
             var text = $(this).text(),
                 username = $(this).find('a').text(),
                 link = $(this).find('a').attr('href'),
@@ -1902,10 +1902,10 @@ Toggle SBS?</div></li>';
         $('.review-more-instructions p, .review-more-instructions ul').remove();
         $('.review-more-instructions').append(table);
     },
-    
+
     linkedToFrom: function() {
         // Description: Add an arrow to linked posts in the sidebar to show whether they are linked to or linked from
-        
+
         $('.linked .spacer a.question-hyperlink').each(function() {
             var id = $(this).attr('href').split('/')[4].split('?')[0];
             if($('a[href*="' + id + '"]').not('.spacer a').length) {
