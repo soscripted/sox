@@ -10,6 +10,7 @@
 }
 #sox-settings-dialog .modal-content {
     /* max-height: calc(100vh - 175px); */
+    overflow:visible;
 }
 #sox-settings-dialog-title {
     padding: 10px;
