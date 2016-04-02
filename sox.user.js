@@ -99,8 +99,7 @@
                 $label = $('<label/>'),
                 $input = $('<input/>', {
                     id: feature,
-                    type: 'checkbox',
-                    style: 'margin-right: 5px;'
+                    type: 'checkbox'
                 });
             $div.append($label);
             $label.append($input);
@@ -110,14 +109,19 @@
 
         function addCategory(name) {
             var $div = $('<div/>', {
-                    id: name,
-                    'class': 'feature-header'
+                    'class': 'header'
                 }),
                 $h3 = $('<h3/>', {
                     text: name
+                }),
+                $content = $('<div/>',{
+                    id: name,
+                    class: 'modal-content'
                 });
             $div.append($h3);
+
             $soxSettingsDialogFeatures.find('#sox-settings-dialog-access-tokens').before($div);
+            $div.after($content);
         }
 
         //initialize sox
