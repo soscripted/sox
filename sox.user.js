@@ -138,7 +138,7 @@
             $soxSettingsToggle = $soxSettingsDialog.find('#sox-settings-dialog-check-toggle');
             $soxSettingsClose = $soxSettingsDialog.find('#sox-settings-dialog-close');
 
-            $soxSettingsDialogVersion.text('v' + SOX_VERSION + ' ');
+            $soxSettingsDialog.find('.header h3').append(' v' + SOX_VERSION.toLowerCase());
 
             for (var category in featuresJSON) { //load all the features in the settings dialog
                 addCategory(category);
