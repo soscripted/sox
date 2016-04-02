@@ -1,4 +1,5 @@
 /* -------- sox settings dialog  ------- */
+
 #sox-settings-dialog {
     top: 34px;
     left: 235px;
@@ -9,7 +10,6 @@
 }
 #sox-settings-dialog .modal-content {
     /* max-height: calc(100vh - 175px); */
-    
 }
 #sox-settings-dialog-title {
     padding: 10px;
@@ -25,6 +25,7 @@
 }
 #sox-settings-dialog-features {
     padding: 0 10px 10px 10px;
+    overflow-y: scroll;
     height: calc(100vh - 200px);
 }
 #sox-settings-dialog-features h3 {
@@ -54,7 +55,7 @@
     color: #999;
     height: 24px !important;
     min-width: 34px;
- }
+}
 .sox-settings-button:hover {
     color: #999;
 }
@@ -63,6 +64,7 @@
 }
 
 /* -------- sox specific features' CSS ------- */
+
 #sox-scrollToTop {
     position: fixed;
     right: 0;
@@ -75,6 +77,7 @@
 }
 
 /*Main centered divs, SE-style:*/
+
 .sox-centered {
     width: 400px;
     z-index: 1001;
@@ -88,6 +91,7 @@
 }
 
 /*Specifically for quickCommentShortcuts -- the div's too wide! https://github.com/shu8/Stack-Overflow-Optional-Features/issues/36*/
+
 #quickCommentShortcuts.sox-centered {
     width: 75%;
     height: 90%;
@@ -99,10 +103,8 @@
 }
 
 /*standOutDupeCloseMigrated signs */
-.standOutDupeCloseMigrated-duplicate,
-.standOutDupeCloseMigrated-closed,
-.standOutDupeCloseMigrated-migrated,
-.standOutDupeCloseMigrated-onhold {
+
+.standOutDupeCloseMigrated-duplicate, .standOutDupeCloseMigrated-closed, .standOutDupeCloseMigrated-migrated, .standOutDupeCloseMigrated-onhold {
     color: #FFF;
     padding: 2px;
     border-radius: 4px;
@@ -122,29 +124,28 @@
 }
 
 /*metaNewQuestionAlert for the mod diamond */
+
 #new-meta-questions-button {
     cursor: pointer;
     width: 32px;
 }
-
 .new-meta-questions-diamondOn {
-background-position: -218px -86px;
+    background-position: -218px -86px;
 }
 .new-meta-questions-diamondOff {
-background-position: -138px -86px;
+    background-position: -138px -86px;
 }
-
 #new-meta-questions-dialog {
     top: 34px;
     left: 230px;
     width: 377px;
 }
-#new-meta-questions-dialog-list:empty::after{
+#new-meta-questions-dialog-list:empty::after {
     content: "No new meta questions at this time.";
 }
 
-
 /*addHotText for the 'this question is hot' banner */
+
 .sox-hot {
     float: right;
     -ms-transform: rotate(30deg);
@@ -153,7 +154,9 @@ background-position: -138px -86px;
     font-size: xx-large;
     color: red;
 }
+
 /*quickCommentShortcutsMain: */
+
 .quickCommentShortcutsReminder {
     height: 40%;
     width: 13%;
@@ -167,7 +170,10 @@ background-position: -138px -86px;
 }
 
 /*fixedTopbar */
+
+
 /*Ubuntu CSS by @UnicornsAreVeryVeryYummy - http://stackapps.com/users/33746/unicorns-are-very-very-yummy */
+
 .fixedTopbar-links {
     z-index: 10001;
     line-height: 19.2px;
@@ -201,6 +207,7 @@ li.fixedTopbar-siteLink {
 }
 
 /*Side by Side Editing (SBS, addSBSBtn, startSBS): https://github.com/szego/SE-Answers_scripts/blob/side-by-side/editing-and-toggling/side-by-side-editing.user.js:*/
+
 #sidebar.sbs-on {
     display: none !important;
 }
@@ -260,6 +267,7 @@ li.fixedTopbar-siteLink {
 }
 
 /*linkedPostsInline for the displayed post text; https://github.com/shu8/Stack-Overflow-Optional-Features/issues/48 */
+
 .linkedPostsInline-loaded-body-shub .post-text {
     overflow-wrap: break-word;
     width: 630px;
@@ -267,16 +275,17 @@ li.fixedTopbar-siteLink {
 }
 
 /*enhancedEditor (enhanced_editor folder)*/
+
 .enhancedEditor-centered {
-    width:40%;
-    z-index:1001;
-    top:190px;
-    left:615.5px;
-    display:inline-block;
-    margin-top:-95.5px;
-    margin-left:-216px;
-    overflow:auto;
-    height:70%;
+    width: 40%;
+    z-index: 1001;
+    top: 190px;
+    left: 615.5px;
+    display: inline-block;
+    margin-top: -95.5px;
+    margin-left: -216px;
+    overflow: auto;
+    height: 70%;
 }
 .ownURL, .ownImage {
     border-radius: 5px;
@@ -298,7 +307,7 @@ hr.or {
     text-align: center;
 }
 hr.or:after {
-    content:"or...";
+    content: "or...";
     display: inline-block;
     position: relative;
     top: -0.7em;
@@ -314,7 +323,6 @@ hr.or:after {
 .DDG-credit {
     font-size: 0.8em;
 }
-
 #enhancedEditor-aceEditor>#editor {
     position: absolute;
     top: 10%;
@@ -322,77 +330,67 @@ hr.or:after {
     bottom: 0;
     left: 0;
 }
-
 .enhancedEditor-aceLanguages {
     float: right;
 }
-
 .enhancedEditor-addCode {
-    float:right;
+    float: right;
     margin-right: 5px;
 }
-
-
 .enhancedEditor-toolbar {
     border-left: 1px solid #ccc;
     border-right: 1px solid #ccc;
     padding-right: 147px;
 }
-
 .enhancedEditor-toolbar > span {
     cursor: pointer;
 }
-
 .enhancedEditor-toolbar >span+span {
-    margin-left:2px;
+    margin-left: 2px;
 }
-
 .enhancedEditor-closeDialog {
     float: left;
     margin-right: 10px;
     font-size: 1.2em;
     cursor: pointer;
 }
-
 .enhancedEditor-toolbar.findReplace > input[type='text'] {
     height: 10px;
     width: 25%;
 }
-
 .enhancedEditor-toolbar.findReplace > input[type='button'] {
     width: 10%;
     height: 100%;
 }
-
 .enhancedEditor-asLinkContainer {
     display: block;
 }
 
 /*downvotedPostsEditAlert - for the watch icon*/
+
 .downvotedPostsEditAlert-watchPostForEdits {
     font-size: 20px;
     margin-top: 5px;
 }
 
 /*chatEasyAccess - for the links (b elements)*/
+
 .chatEasyAccess b {
     cursor: pointer;
 }
-
 .post-tag.favorite-tag-so {
-    border-color: rgba(0,0,0,.3);
+    border-color: rgba(0, 0, 0, .3);
     background-color: #ffefc6;
 }
 .post-tag.favorite-tag-su {
-    border-color: rgba(0,0,0,.3);
+    border-color: rgba(0, 0, 0, .3);
     background-color: #a1eaff;
 }
 .post-tag.favorite-tag-all {
-    border-color: rgba(0,0,0,.3);
+    border-color: rgba(0, 0, 0, .3);
     background-color: #c3dafa;
 }
-
-.post-tag.favorite-tag-all:before, .post-tag.favorite-tag-su:before, .post-tag.favorite-tag-so:before{
+.post-tag.favorite-tag-all:before, .post-tag.favorite-tag-su:before, .post-tag.favorite-tag-so:before {
     border-color: inherit;
     background-color: inherit;
 }
