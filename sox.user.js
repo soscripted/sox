@@ -125,7 +125,7 @@
 
              // add sox CSS file and font-awesome CSS file
              $('head').append('<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">')
-                 .append('<link rel="stylesheet" type="text/css" href="https://rawgit.com/soscripted/sox/dev/sox.css?v=1.0.3a" />');
+                 .append('<link rel="stylesheet" type="text/css" href="https://rawgit.com/soscripted/sox/dev/sox.css?v=1.0.3b" />');
              $('.js-topbar-dialog-corral').append($settingsDialog);
 
              $soxSettingsDialog = $('#sox-settings-dialog');
