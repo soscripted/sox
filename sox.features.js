@@ -1910,7 +1910,7 @@ Toggle SBS?</div></li>';
 
         if(location.href.indexOf('/questions/') > -1) {
             $('.linked .spacer a.question-hyperlink').each(function() {
-                var id = $(this).attr('href').split('/')[4].split('?')[0];
+                var id = $(this).attr('href').split('/')[4];
                 if($('a[href*="' + id + '"]').not('.spacer a').length) {
                     $(this).append('<span title="Current question links to this question" style="color:black;font-size:15px;margin-left:5px;">&nearr;</span>');
                 } else {
