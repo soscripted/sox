@@ -1908,13 +1908,15 @@ Toggle SBS?</div></li>';
     linkedToFrom: function() {
         // Description: Add an arrow to linked posts in the sidebar to show whether they are linked to or linked from
 
-        $('.linked .spacer a.question-hyperlink').each(function() {
-            var id = $(this).attr('href').split('/')[4].split('?')[0];
-            if($('a[href*="' + id + '"]').not('.spacer a').length) {
-                $(this).append('<span title="Current question links to this question" style="color:black;font-size:15px;margin-left:5px;">&nearr;</span>');
-            } else {
-                $(this).append('<span title="Current question is linked from this question" style="color:black;font-size:15px;margin-left:5px;">&swarr;</span>');
-            }
-        });
+        if(location.href.indexOf('/questions/') > -1) {
+            $('.linked .spacer a.question-hyperlink').each(function() {
+                var id = $(this).attr('href').split('/')[4].split('?')[0];
+                if($('a[href*="' + id + '"]').not('.spacer a').length) {
+                    $(this).append('<span title="Current question links to this question" style="color:black;font-size:15px;margin-left:5px;">&nearr;</span>');
+                } else {
+                    $(this).append('<span title="Current question is linked from this question" style="color:black;font-size:15px;margin-left:5px;">&swarr;</span>');
+                }
+            });
+        }
     }
 };
