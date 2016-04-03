@@ -212,6 +212,15 @@
                 save(extras);
                 location.reload(); // reload page to reflect changed settings
             });
+            
+            $(document).click(function(e) { //close dialog if clicked outside it
+                $target = $(e.target);
+                if(!$target.is('#soxSettingsButton, #sox-settings-dialog') && !$target.parents("#soxSettingsButton, #sox-settings-dialog").is("#soxSettingsButton, #sox-settings-dialog")) {
+                    $soxSettingsDialog.hide();
+                    $('#soxSettingsButton').removeClass('topbar-icon-on');
+                }
+            });
+            
 
             $(document).on('click', 'a.getAccessToken', function() {
                 $that = $(this);
