@@ -23,7 +23,7 @@
 // @require      https://rawgit.com/soscripted/sox/dev/sox.enhanced_editor.js?v=1.0.3a
 // @require      https://rawgit.com/soscripted/sox/dev/sox.features.js?v=1.0.3b
 // @require      https://api.stackexchange.com/js/2.0/all.js
-// @resource     settingsDialog https://rawgit.com/soscripted/sox/dev/sox.dialog.html?v=1.0.3a
+// @resource     settingsDialog https://rawgit.com/soscripted/sox/dev/sox.dialog.html?v=1.0.3b
 // @resource     featuresJSON https://rawgit.com/soscripted/sox/dev/sox.features.info.json?v=1.0.3a
 // @grant        GM_setValue
 // @grant        GM_getValue
@@ -206,7 +206,7 @@
                 var extras = [];
                 $soxSettingsDialogFeatures.find('input[type=checkbox]:checked').each(function() {
                     var x = $(this).closest('.modal-content').attr('id') + '-' + $(this).attr('id');
-                    
+
                     extras.push(x); //Add the function's ID (also the checkbox's ID) to the array
                 });
                 save(extras);
