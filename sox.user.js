@@ -205,7 +205,7 @@
             $soxSettingsSave.on('click', function() {
                 var extras = [];
                 $soxSettingsDialogFeatures.find('input[type=checkbox]:checked').each(function() {
-                    var x = $(this).parents('.header').attr('id') + '-' + $(this).attr('id');
+                    var x = $(this).closest('.modal-content').attr('id') + '-' + $(this).attr('id');
                     extras.push(x); //Add the function's ID (also the checkbox's ID) to the array
                 });
                 save(extras);
