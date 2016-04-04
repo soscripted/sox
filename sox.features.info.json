@@ -44,13 +44,13 @@
             "desc": "Add extra CSS for voting signs and favourite button (currently only on Android SE)"
         },
         "standOutDupeCloseMigrated": {
-            "desc": "Add coloured, more obvious signs to closed/on hold/duplicate/migrated questions on question lists"
+            "desc": "Add highlighted tags to closed/on hold/duplicate/migrated questions on question lists"
         },
         "colorAnswerer": {
             "desc": "Color answerer's comments"
         },
         "highlightQuestions": {
-            "desc": "Highilght only the favourite tags for favourite questions"
+            "desc": "Highlight only the favourite tags for favourite questions"
         },
         "metaNewQuestionAlert": {
             "desc": "Add a mod diamond to the topbar to alert you of new questions on the site's child-meta",
@@ -135,7 +135,7 @@
             "desc": "Parse titles to links cross-SE-sites"
         },
         "confirmNavigateAway": {
-            "desc": "Add a confirmation dialog when navigating away on pages whilst you are still typing a comment"
+            "desc": "Add a confirmation dialog when navigating away on pages whilst still typing a comment"
         },
         "sortByBountyAmount": {
             "desc": "Add an option to filter bounties by their amount"
