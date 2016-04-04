@@ -70,7 +70,7 @@ var features = { //ALL the functions must go in here
 
         var url = 'https://api.stackexchange.com/2.2/users/{ids}?site={site}'
             .replace('{ids}', ids.join(';'))
-            .replace('{site}', SOHelper.getApiSiteParameter(StackExchange.options.site.name));
+            .replace('{site}', SOHelper.getApiSiteParameter(SOHelper.getSiteName()));
 
         $.ajax({
             url: url
@@ -1094,30 +1094,30 @@ var features = { //ALL the functions must go in here
         // Description: For adding cooler signs that a questions has been closed/migrated/put on hod/is a dupe
 
         $('head').append('<link rel="stylesheet" href="https://rawgit.com/shu8/SE-Answers_scripts/master/dupeClosedMigratedCSS.css" type="text/css" />'); //add the CSS
-    
+
         $('.question-summary').each(function() { //Find the questions and add their id's and statuses to an object
             var $anchor = $(this).find('.summary a:eq(0)');
             var text = $anchor.text().trim();
             var id = $anchor.attr('href').split('/')[2];
-            
+
             if(text.substr(text.length-11) == '[duplicate]') {
                 $anchor.text(text.substr(0, text.length-11)); //remove [duplicate]
                 $.get('//'+location.hostname+'/questions/'+id, function(d) {
                     $anchor.after("&nbsp;<a href='"+$(d).find('.question-status.question-originals-of-duplicate a:eq(0)').attr('href')+"'><span class='duplicate' title='click to visit duplicate'>&nbsp;duplicate&nbsp;</span></a>"); //add appropiate message
                 });
-                
+
             } else if(text.substr(text.length-8) == '[closed]') {
                 $anchor.text(text.substr(0, text.length-8)); //remove [closed]
                 $.get('//'+location.hostname+'/questions/'+id, function(d) {
                     $anchor.after("&nbsp;<span class='closed' title='"+$(d).find('.question-status h2').text()+"'>&nbsp;closed&nbsp;</span>"); //add appropiate message
                 });
-                
+
             } else if(text.substr(text.length-10) == '[migrated]') {
                 $anchor.text(text.substr(0, text.length-10)); //remove [migrated]
                 $.get("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20html%20where%20url%3D%22" + encodeURIComponent('http://'+location.hostname+'/questions/'+id) + "%22&diagnostics=true", function(d) {
                     $anchor.after("&nbsp;<span class='migrated' title='migrated to "+$(d).find('.current-site .site-icon').attr('title')+"'>&nbsp;migrated&nbsp;</span>"); //add appropiate message
                 });
-                
+
             } else if(text.substr(text.length-9) == '[on hold]') {
                 $anchor.text(text.substr(0, text.length-9)); //remove [on hold]
                 $.get('//'+location.hostname+'/questions/'+id, function(d) {
@@ -1768,7 +1768,7 @@ Toggle SBS?</div></li>';
     tabularReviewerStats: function() {
         // Description: Adds a notification to the inbox if a question you downvoted and watched is edited
         // Idea by lolreppeatlol @ http://meta.stackexchange.com/a/277446/260841 :)
-        
+
         if(location.href.indexOf('/review/suggested-edits') > -1) {
             var info = {};
             $('.review-more-instructions ul:eq(0) li').each(function() {
