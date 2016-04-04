@@ -21,10 +21,10 @@
 // @require      https://cdn.rawgit.com/camagu/jquery-feeds/master/jquery.feeds.js
 // @require      https://rawgit.com/soscripted/sox/dev/sox.helpers.js?v=1.0.3a
 // @require      https://rawgit.com/soscripted/sox/dev/sox.enhanced_editor.js?v=1.0.3a
-// @require      https://rawgit.com/soscripted/sox/dev/sox.features.js?v=1.0.3i
+// @require      https://rawgit.com/soscripted/sox/dev/sox.features.js?v=1.0.3j
 // @require      https://api.stackexchange.com/js/2.0/all.js
-// @resource     settingsDialog https://rawgit.com/soscripted/sox/dev/sox.dialog.html?v=1.0.3c
-// @resource     featuresJSON https://rawgit.com/soscripted/sox/dev/sox.features.info.json?v=1.0.3a
+// @resource     settingsDialog https://rawgit.com/soscripted/sox/dev/sox.dialog.html?v=1.0.3d
+// @resource     featuresJSON https://rawgit.com/soscripted/sox/dev/sox.features.info.json?v=1.0.3d
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_deleteValue
@@ -97,7 +97,10 @@
         }
 
         function addFeature(category, feature, desc) {
-            var $div = $('<div/>'),
+            var $div = $('<div/>', {
+                'class': 'feature',
+                'data-desc': desc
+            }),
                 $label = $('<label/>'),
                 $input = $('<input/>', {
                     id: feature,
@@ -152,6 +155,14 @@
                 for (var feature in featuresJSON[category]) {
                     addFeature(category, feature, featuresJSON[category][feature].desc);
                 }
+                //sorting features alphabetically. Thanks to http://stackoverflow.com/a/27836605/
+                var alphabeticallyOrderedDivs = $('#sox-settings-dialog-features #' + category + ' div.feature').sort(function(a, b) {
+                    return String.prototype.localeCompare.call($(a).data('desc').toLowerCase(), $(b).data('desc').toLowerCase());
+                });
+
+                var container = $("#"+category);
+                container.children().remove();
+                container.append(alphabeticallyOrderedDivs);
             }
 
             // add settings icon to navbar
