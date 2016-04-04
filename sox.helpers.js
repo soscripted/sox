@@ -1,6 +1,6 @@
 SOHelper = {
     getUserId: function() {
-        return StackExchange.options.user.userId;
+        return window.eval("StackExchange.options.user.userId");
     },
 
     getUsername: function() {
@@ -9,7 +9,7 @@ SOHelper = {
     },
 
     getReputation: function() {
-        return StackExchange.options.user.rep;
+        return window.eval("StackExchange.options.user.rep");
     },
 
     getSiteURL: function(type) {
@@ -17,7 +17,7 @@ SOHelper = {
     },
 
     getSiteName: function() {
-        return (SOHelper.getSiteType() === 'chat' ? $('#footer-logo a').attr('title') : StackExchange.options.site.name);
+        return (SOHelper.getSiteType() === 'chat' ? $('#footer-logo a').attr('title') : window.eval("StackExchange.options.site.name"));
     },
 
     getApiSiteParameter: function(siteName) {
@@ -341,11 +341,11 @@ SOHelper = {
     },
 
     getQuestionId: function() {
-        return StackExchange.question.getQuestionId();
+        return window.eval("StackExchange.question.getQuestionId()");
     },
 
     isLoggedIn: function() {
-        return StackExchange.options.user.isRegistered;
+        return window.eval("StackExchange.options.user.isRegistered");
     },
 
     getSiteIcon: function() {
@@ -380,8 +380,8 @@ SOHelper = {
         if (location.hostname.indexOf('chat.') > -1) {
             type = 'chat';
         } else {
-            if (StackExchange || window.StackExchange) {
-                if (StackExchange.options.site.isMetaSite) {
+            if (StackExchange || window.StackExchange || window.eval("StackExchange")) {
+                if (window.eval("StackExchange.options.site.isMetaSite")) {
                     type = 'meta';
                 }
             }
