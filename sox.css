@@ -33,7 +33,7 @@
 #sox-settings-dialog-features {
     /* padding: 0 10px 10px 10px; */
     overflow-y: scroll;
-    height: calc(100vh - 175px);
+    height: calc(100vh - 250px);
 }
 #sox-settings-dialog-features .modal-content div {
     margin-bottom: 3px;
