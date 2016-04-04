@@ -244,7 +244,7 @@
             });
 
             $searchReset.on('click', function(){
-                $searchBox.val('');
+                $searchBox.val('').focus();
                 $('#sox-settings-dialog label').fadeIn();
             }) ;
 
