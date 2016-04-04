@@ -123,14 +123,6 @@ var features = { //ALL the functions must go in here
 
     },
 
-    /*unHideAnswer: function() { // For unfading a downvoted answer on hover
-         $(".downvoted-answer").hover(function() {
-             $(this).removeClass("downvoted-answer");
-         }, function() {
-             $(this).addClass("downvoted-answer");
-         });
-     },*/
-
     fixedTopbar: function() {
         // Description: For making the topbar fixed (always stay at top of screen)
 
@@ -518,20 +510,6 @@ var features = { //ALL the functions must go in here
         });
     },
 
-    /*highlightClosedQuestions: function() { // For highlighting and slightly greying out closed questions when viewing question lists
-        $('.question-summary').each(function() {
-            if ($(this).find('.summary h3 a').text().indexOf('[on hold]') > -1 || $(this).find('.summary h3 a').text().indexOf('[closed]') > -1) {
-                if ($('.cp').length) {
-                    $(this).find('.cp').css('border', 'blue').css('border-style', 'dotted').css('border-width', 'thin').css('background-color', '#E0E0E0');
-                    $(this).css('opacity', '0.9');
-                } else {
-                    $(this).find('.votes').css('border', 'blue').css('border-style', 'dotted').css('border-width', 'thin').css('background-color', '#E0E0E0');
-                    $(this).css('opacity', '0.9');
-                }
-            }
-        });
-    },*/
-
     quickCommentShortcutsMain: function() {
         // Description: For adding shortcuts to insert pre-defined text into comment fields
 
@@ -775,88 +753,6 @@ var features = { //ALL the functions must go in here
                 }
             }
         });
-    },
-
-    /*answerCountSidebar: function() { //For adding the answer count as a tooltip to questions in the sidebar
-        $('.sidebar-linked .linked .spacer a, .sidebar-related .related .spacer a').each(function(i) {
-            if (!i % 2 == 0) { //odd only (ie. question title)
-                var id = $(this).attr('href').split('/')[2],
-                    sitename = $(location).attr('hostname').split('.')[0],
-                    that = $(this);
-                SOHelper.getFromAPI('questions', id,  sitename, function(json) {
-                    answers = json.items[0].answer_count;
-                    that.attr('title', answers + (answers == 1 ? ' answer' : ' answers'));
-                }, 'activity');
-            }
-        });
-    },*/
-
-    linkQuestionAuthorName: function() {
-        // Description: For adding a button to the editor toolbar to insert a link to a post and automatically add the author's name
-
-        var div = '<div id="addLinkAuthorName" class="wmd-prompt-dialog sox-centered" style="display:none"> \
-            <h5>Insert hyperlink with author\'s name</h5> \
-            <br /> \
-            <input id="link" placeholder="http://example.com/ \"optional title\"" size="50"> \
-            <input id="addLinkOk" value="OK" type="button" style="margin: 10px; display: inline; width: 7em;"><input id="addLinkCancel" value="Cancel" type="button" style="margin: 10px; display: inline; width: 7em;"> \
-           </div>';
-        $('body').append(div);
-        $('#addLinkAuthorName').css('top', '50%').css('position', 'fixed').css('height', '20%');
-
-        $('#addLinkAuthorName #addLinkCancel').on('click', function() {
-            $(this).parent().hide();
-        });
-
-        $('#addLinkAuthorName #addLinkOk').on('click', function() {
-            var textarea = $('#post-editor #wmd-input'),
-                link = $('#addLinkAuthorName #link').val(),
-                id = link.split('/')[4],
-                sitename = link.split('/')[2].split('.')[0],
-                title = link.split('"')[1];
-
-            if (link.split('/')[3].substr(0, 1) == 'a') { //for answers
-                SOHelper.getFromAPI('answers', id, sitename, function(json) {
-                    //Insert at caret thanks to http://stackoverflow.com/a/15977052/3541881
-                    var caretPos = document.getElementById('wmd-input').selectionStart,
-                        textAreaTxt = textarea.val(),
-                        txtToAdd;
-
-                    if (title) {
-                        txtToAdd = '[@' + json.items[0].owner.display_name + ' says](' + link + ' "' + title + '")';
-                    } else {
-                        txtToAdd = '[@' + json.items[0].owner.display_name + ' says](' + link + ')';
-                    }
-
-                    textarea.val(textAreaTxt.substring(0, caretPos) + txtToAdd + textAreaTxt.substring(caretPos));
-                    $('#addLinkAuthorName').hide();
-                }, 'activity');
-            } else { //for questions
-                SOHelper.getFromAPI('questions', id, sitename, function(json) {
-                    //Insert at caret thanks to http://stackoverflow.com/a/15977052/3541881
-                    var caretPos = document.getElementById('wmd-input').selectionStart,
-                        textAreaTxt = textarea.val(),
-                        txtToAdd;
-
-                    if (title) {
-                        txtToAdd = '[@' + json.items[0].owner.display_name + ' says](' + json.items[0].link + ' "' + title + '")';
-                    } else {
-                        txtToAdd = '[@' + json.items[0].owner.display_name + ' says](' + json.items[0].link + ')';
-                    }
-
-                    textarea.val(textAreaTxt.substring(0, caretPos) + txtToAdd + textAreaTxt.substring(caretPos));
-                    $('#addLinkAuthorName').hide();
-                }, 'activity');
-            }
-        });
-
-        var liSpan = '<li class="wmd-button" title="Hyperlink (with author name)" style="left: 450px;"><span id="wmd-author-link-button" style="background-position: -40px 0px;"></span></li>';
-
-        setTimeout(function() {
-            $('[id^="wmd-redo-button"]').after(liSpan);
-            $('#wmd-author-link-button').on('click', function() {
-                $('#addLinkAuthorName').show();
-            });
-        }, 1000);
     },
 
     confirmNavigateAway: function() {
