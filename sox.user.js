@@ -319,7 +319,7 @@
                                 features[featureId]();
                             }
                         } catch (err) {
-                            $soxSettingsDialogFeatures.find('#' + extras[i]).parent().css('color', 'red').attr('title', 'There was an error loading this feature. Please raise an issue on GitHub.');
+                            $soxSettingsDialogFeatures.find('#' + extras[i].split('-')[1]).parent().css('color', 'red').attr('title', 'There was an error loading this feature. Please raise an issue on GitHub.');
                             console.log('SOX error: There was an error loading the feature "' + extras[i] + '". Please raise an issue on GitHub, and copy the following error log.');
                             console.log(err);
                             i++;
