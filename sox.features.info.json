@@ -100,9 +100,6 @@
         "addSBSBtn": {
             "desc": "Add a button to the editor toolbar to start side-by-side editing"
         },
-        "linkQuestionAuthorName": {
-            "desc": "Add a button in the editor toolbar to insert a hyperlink to a post and add the author automatically"
-        },
         "titleEditDiff": {
             "desc": "Make title edits show seperately rather than merged in edit suggestions"
         },
