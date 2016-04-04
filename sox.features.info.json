@@ -44,7 +44,7 @@
             "desc": "Add extra CSS for voting signs and favourite button (currently only on Android SE)"
         },
         "standOutDupeCloseMigrated": {
-            "desc": "Add colourful, more apparent signs to questions that are on hold, duplicates, closed or migrated on question lists"
+            "desc": "Add coloured, more obvious signs to closed/on hold/duplicate/migrated questions on question lists"
         },
         "colorAnswerer": {
             "desc": "Color answerer's comments"
@@ -53,7 +53,7 @@
             "desc": "Highilght only the favourite tags for favourite questions"
         },
         "metaNewQuestionAlert": {
-            "desc": "Add an extra mod diamond to the topbar that alerts you if there is a new question posted on the child-meta of the current site",
+            "desc": "Add a mod diamond to the topbar to alert you of new questions on the site's child-meta",
             "disableOnSites": "chat"
         },
         "hideHotNetworkQuestions": {
@@ -116,7 +116,7 @@
             "desc": "Make title edits show seperately rather than merged in edit suggestions"
         },
         "enhancedEditor": {
-            "desc": "Add a bunch of features to the standard markdown editor (autocorrect, find+replace, Ace editor, and more!)"
+            "desc": "Add more features to the markdown editor (autocorrect, find+replace, Ace editor, and more!)"
         }
     },
     "Flags": {
@@ -135,7 +135,7 @@
             "desc": "Parse titles to links cross-SE-sites"
         },
         "confirmNavigateAway": {
-            "desc": "Add a confirmation dialog before navigating away on pages whilst you are still typing a comment"
+            "desc": "Add a confirmation dialog when navigating away on pages whilst you are still typing a comment"
         },
         "sortByBountyAmount": {
             "desc": "Add an option to filter bounties by their amount"
