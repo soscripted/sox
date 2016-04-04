@@ -65,7 +65,8 @@
             $soxSettingsAccessTokensToggle,
             $soxSettingsToggle,
             $soxSettingsClose,
-            $searchBox;
+            $searchBox,
+            $searchReset;
 
         function isAvailable() {
             return GM_getValue(SOX_SETTINGS, -1) != -1;
@@ -147,6 +148,7 @@
             $soxSettingsToggle = $soxSettingsDialog.find('#sox-settings-dialog-check-toggle');
             $soxSettingsClose = $soxSettingsDialog.find('#sox-settings-dialog-close');
             $searchBox =  $soxSettingsDialog.find('#search');
+            $searchReset = $soxSettingsDialog.find('#search-reset');
 
             $soxSettingsDialogVersion.text(SOX_VERSION != '??' ? ' v' + SOX_VERSION.toLowerCase() : '');
 
@@ -239,15 +241,20 @@
                 } else {
                     $('#sox-settings-dialog label').fadeIn();
                 }
-            }); 
-            
+            });
+
+            $searchReset.on('click', function(){
+                $searchBox.val('');
+                $('#sox-settings-dialog label').fadeIn();
+            }) ;
+
             $(document).click(function(e) { //close dialog if clicked outside it
                 $target = $(e.target);
                 if(!$target.is('#soxSettingsButton, #sox-settings-dialog') && !$target.parents("#soxSettingsButton, #sox-settings-dialog").is("#soxSettingsButton, #sox-settings-dialog")) {
                     $soxSettingsDialog.hide();
                     $('#soxSettingsButton').removeClass('topbar-icon-on');
                 }
-            });            
+            });
 
             $(document).on('click', 'a.getAccessToken', function() {
                 $that = $(this);
