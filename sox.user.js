@@ -115,14 +115,14 @@
 
         function addCategory(name) {
             var $div = $('<div/>', {
-                    'class': 'header'
+                    'class': 'header category'
                 }),
                 $h3 = $('<h3/>', {
                     text: name.toLowerCase()
                 }),
                 $content = $('<div/>',{
                     id: name,
-                    class: 'modal-content'
+                    class: 'modal-content features'
                 });
             $div.append($h3);
 
@@ -232,16 +232,24 @@
                 if($(this).val() != '') {
                     var t = $(this).val();
                     $('#sox-settings-dialog label').each(function() {
+                        var $features = $(this).closest('.features');
                         if($(this).text().toLowerCase().indexOf(t) == -1) {
-                            $(this).fadeOut();
+                            $(this).hide();
                         } else {
-                            $(this).fadeIn();
+                            $(this).show();
+                        }
+
+                        if($features.find('label:visible').length == 0 && $features.find('label[style*="display: inline"]').length == 0) {
+                            $features.hide().prev().hide();
+                        } else {
+                            $features.show().prev().show();
                         }
                     });
                 } else {
-                    $('#sox-settings-dialog label').fadeIn();
+                    $('.category, .features, #sox-settings-dialog label').fadeIn();
                 }
             });
+
 
             $searchReset.on('click', function(){
                 $searchBox.val('').focus();
