@@ -13,12 +13,22 @@
     max-height: none;
     min-height: inherit;
 }
-#sox-settings-dialog .header h3{
+#sox-settings-dialog .header h3 {
     width: 100%;
 }
 #sox-settings-dialog-version {
     float: right;
     font-size: 14px;
+}
+#sox-settings-dialog #search-container {
+    min-height: 0;
+}
+#sox-settings-dialog #search-container .fa-search {
+    margin-right: 10px;
+}
+#sox-settings-dialog #search-container #search {
+    width: 300px;
+    border-radius: 6px;
 }
 #sox-settings-dialog-features {
     /* padding: 0 10px 10px 10px; */
