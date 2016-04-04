@@ -21,9 +21,9 @@
 // @require      https://cdn.rawgit.com/camagu/jquery-feeds/master/jquery.feeds.js
 // @require      https://rawgit.com/soscripted/sox/dev/sox.helpers.js?v=1.0.3a
 // @require      https://rawgit.com/soscripted/sox/dev/sox.enhanced_editor.js?v=1.0.3a
-// @require      https://rawgit.com/soscripted/sox/dev/sox.features.js?v=1.0.3c
+// @require      https://rawgit.com/soscripted/sox/dev/sox.features.js?v=1.0.3i
 // @require      https://api.stackexchange.com/js/2.0/all.js
-// @resource     settingsDialog https://rawgit.com/soscripted/sox/dev/sox.dialog.html?v=1.0.3b
+// @resource     settingsDialog https://rawgit.com/soscripted/sox/dev/sox.dialog.html?v=1.0.3c
 // @resource     featuresJSON https://rawgit.com/soscripted/sox/dev/sox.features.info.json?v=1.0.3a
 // @grant        GM_setValue
 // @grant        GM_getValue
@@ -64,7 +64,8 @@
             $soxSettingsToggleAccessTokensDiv,
             $soxSettingsAccessTokensToggle,
             $soxSettingsToggle,
-            $soxSettingsClose;
+            $soxSettingsClose,
+            $searchBox;
 
         function isAvailable() {
             return GM_getValue(SOX_SETTINGS, -1) != -1;
@@ -129,7 +130,7 @@
 
             // add sox CSS file and font-awesome CSS file
             $('head').append('<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">')
-                     .append('<link rel="stylesheet" type="text/css" href="https://rawgit.com/soscripted/sox/dev/sox.css?v=1.0.3c" />');
+                     .append('<link rel="stylesheet" type="text/css" href="https://rawgit.com/soscripted/sox/dev/sox.css?v=1.0.3d" />');
             $('.js-topbar-dialog-corral').append($settingsDialog);
 
             $soxSettingsDialog = $('#sox-settings-dialog');
@@ -141,6 +142,7 @@
             $soxSettingsAccessTokensToggle = $soxSettingsToggleAccessTokensDiv.find('#toggle-access-token-links');
             $soxSettingsToggle = $soxSettingsDialog.find('#sox-settings-dialog-check-toggle');
             $soxSettingsClose = $soxSettingsDialog.find('#sox-settings-dialog-close');
+            $searchBox =  $soxSettingsDialog.find('#sox-settings-dialog #search');
 
             $soxSettingsDialogVersion.text(SOX_VERSION != '??' ? ' v' + SOX_VERSION.toLowerCase() : '');
 
@@ -212,6 +214,20 @@
                 save(extras);
                 location.reload(); // reload page to reflect changed settings
             });
+            $searchBox.on('keyup keydown', function() { //search box
+                if($(this).val() != '') {
+                    var t = $(this).val();
+                    $('#sox-settings-dialog label').each(function() {
+                        if($(this).text().toLowerCase().indexOf(t) == -1) {
+                            $(this).fadeOut();
+                        } else {
+                            $(this).fadeIn();
+                        }
+                    });
+                } else {
+                    $('#sox-settings-dialog label').fadeIn();
+                }
+            }); 
             
             $(document).click(function(e) { //close dialog if clicked outside it
                 $target = $(e.target);
@@ -219,8 +235,7 @@
                     $soxSettingsDialog.hide();
                     $('#soxSettingsButton').removeClass('topbar-icon-on');
                 }
-            });
-            
+            });            
 
             $(document).on('click', 'a.getAccessToken', function() {
                 $that = $(this);
