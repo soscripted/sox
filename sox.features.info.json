@@ -76,8 +76,22 @@
         },
         "linkedToFrom": {
             "desc": "Add an arrow to linked posts in the sidebar to show whether they are linked to or linked from"
+        },
+        "isQuestionHot": {
+            "desc": "Add a label on questions which are hot-network questions"
+        },
+        "answerTagsSearch": {
+            "desc": "Show tags for the question an answer belongs to on search pages (for better context)"
+        },
+        "metaChatBlogStackExchangeButton": {
+            "desc": "Show meta, chat and blog buttons on hover of a site under the StackExchange button"
+        },
+        "addAuthorNameToInboxNotifications": {
+            "desc": "Add the author's name to notifications in the inbox"
+        },
+        "scrollToTop": {
+            "desc": "Add Scroll To Top button"
         }
-
     },
     "Comments": {
         "copyCommentsLink": {
@@ -97,6 +111,9 @@
         },
         "showCommentScores": {
             "desc": "Show your comment and comment replies scores in your profile tabs"
+        },
+        "confirmNavigateAway": {
+            "desc": "Add a confirmation dialog when navigating away on pages whilst still typing a comment"
         }
     },
     "Editing": {
@@ -134,29 +151,11 @@
         "parseCrossSiteLinks": {
             "desc": "Parse titles to links cross-SE-sites"
         },
-        "confirmNavigateAway": {
-            "desc": "Add a confirmation dialog when navigating away on pages whilst still typing a comment"
-        },
         "sortByBountyAmount": {
             "desc": "Add an option to filter bounties by their amount"
         },
-        "isQuestionHot": {
-            "desc": "Add a label on questions which are hot-network questions"
-        },
-        "answerTagsSearch": {
-            "desc": "Show tags for the question an answer belongs to on search pages (for better context)"
-        },
-        "metaChatBlogStackExchangeButton": {
-            "desc": "Show meta, chat and blog buttons on hover of a site under the StackExchange button"
-        },
         "alwaysShowImageUploadLinkBox": {
             "desc": "Always show the 'Link from the web' box when uploading an image"
-        },
-        "addAuthorNameToInboxNotifications": {
-            "desc": "Add the author's name to notifications in the inbox"
-        },
-        "scrollToTop": {
-            "desc": "Add Scroll To Top button"
         },
         "linkedPostsInline": {
             "desc": "Display linked posts inline (with an arrow)"
