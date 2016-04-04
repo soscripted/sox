@@ -1197,33 +1197,37 @@ var features = { //ALL the functions must go in here
     standOutDupeCloseMigrated: function() {
         // Description: For adding cooler signs that a questions has been closed/migrated/put on hod/is a dupe
 
-        var questions = {};
-        $.each($('.question-summary'), function() { //Find the questions and add their id's and statuses to an object
-            if ($(this).find('.summary a:eq(0)').text().trim().substr($(this).find('.summary a:eq(0)').text().trim().length - 11) == '[duplicate]') {
-                questions[$(this).attr('id').split('-')[2]] = 'duplicate';
-                $(this).find('.summary a:eq(0)').text($(this).find('.summary a:eq(0)').text().trim().substr(0, $(this).find('.summary a:eq(0)').text().trim().length - 11)); //remove [duplicate]
-
-            } else if ($(this).find('.summary a:eq(0)').text().trim().substr($(this).find('.summary a:eq(0)').text().trim().length - 8) == '[closed]') {
-                questions[$(this).attr('id').split('-')[2]] = 'closed';
-                $(this).find('.summary a:eq(0)').text($(this).find('.summary a:eq(0)').text().trim().substr(0, $(this).find('.summary a:eq(0)').text().trim().length - 8)); //remove [closed]
-
-            } else if ($(this).find('.summary a:eq(0)').text().trim().substr($(this).find('.summary a:eq(0)').text().trim().length - 10) == '[migrated]') {
-                questions[$(this).attr('id').split('-')[2]] = 'migrated';
-                $(this).find('.summary a:eq(0)').text($(this).find('.summary a:eq(0)').text().trim().substr(0, $(this).find('.summary a:eq(0)').text().trim().length - 10)); //remove [migrated]
-
-            } else if ($(this).find('.summary a:eq(0)').text().trim().substr($(this).find('.summary a:eq(0)').text().trim().length - 9) == '[on hold]') {
-                questions[$(this).attr('id').split('-')[2]] = 'onhold';
-                $(this).find('.summary a:eq(0)').text($(this).find('.summary a:eq(0)').text().trim().substr(0, $(this).find('.summary a:eq(0)').text().trim().length - 9)); //remove [on hold]
+        $('head').append('<link rel="stylesheet" href="https://rawgit.com/shu8/SE-Answers_scripts/master/dupeClosedMigratedCSS.css" type="text/css" />'); //add the CSS
+    
+        $('.question-summary').each(function() { //Find the questions and add their id's and statuses to an object
+            var $anchor = $(this).find('.summary a:eq(0)');
+            var text = $anchor.text().trim();
+            var id = $anchor.attr('href').split('/')[2];
+            
+            if(text.substr(text.length-11) == '[duplicate]') {
+                $anchor.text(text.substr(0, text.length-11)); //remove [duplicate]
+                $.get('//'+location.hostname+'/questions/'+id, function(d) {
+                    $anchor.after("&nbsp;<a href='"+$(d).find('.question-status.question-originals-of-duplicate a:eq(0)').attr('href')+"'><span class='duplicate' title='click to visit duplicate'>&nbsp;duplicate&nbsp;</span></a>"); //add appropiate message
+                });
+                
+            } else if(text.substr(text.length-8) == '[closed]') {
+                $anchor.text(text.substr(0, text.length-8)); //remove [closed]
+                $.get('//'+location.hostname+'/questions/'+id, function(d) {
+                    $anchor.after("&nbsp;<span class='closed' title='"+$(d).find('.question-status h2').text()+"'>&nbsp;closed&nbsp;</span>"); //add appropiate message
+                });
+                
+            } else if(text.substr(text.length-10) == '[migrated]') {
+                $anchor.text(text.substr(0, text.length-10)); //remove [migrated]
+                $.get("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20html%20where%20url%3D%22" + encodeURIComponent('http://'+location.hostname+'/questions/'+id) + "%22&diagnostics=true", function(d) {
+                    $anchor.after("&nbsp;<span class='migrated' title='migrated to "+$(d).find('.current-site .site-icon').attr('title')+"'>&nbsp;migrated&nbsp;</span>"); //add appropiate message
+                });
+                
+            } else if(text.substr(text.length-9) == '[on hold]') {
+                $anchor.text(text.substr(0, text.length-9)); //remove [on hold]
+                $.get('//'+location.hostname+'/questions/'+id, function(d) {
+                    $anchor.after("&nbsp;<span class='onhold' title='"+$(d).find('.question-status h2').text()+"'>&nbsp;onhold&nbsp;</span>"); //add appropiate message
+                });
             }
-        });
-
-        $.each($('.question-summary'), function() { //loop through questions
-            var $that = $(this);
-            $.each(questions, function(key, val) { //loop through object of questions closed/dupes/migrated
-                if ($that.attr('id').split('-')[2] == key) {
-                    $that.find('.summary a:eq(0)').after('&nbsp;<span class="standOutDupeCloseMigrated-' + val + '">&nbsp;' + val + '&nbsp;</span>'); //add appropiate message
-                }
-            });
         });
     },
 
