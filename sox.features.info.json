@@ -75,16 +75,28 @@
             "desc": "Display reviewer stats on /review/suggested-edits in table form"
         },
         "linkedToFrom": {
-            "desc": "Add an arrow to linked posts in the sidebar to show whether they are linked to or linked from" 
+            "desc": "Add an arrow to linked posts in the sidebar to show whether they are linked to or linked from"
         }
 
     },
-    "Flags": {
-        "flagOutcomeTime": {
-            "desc": "Show the flag outcome time when viewing your Flag History"
+    "Comments": {
+        "copyCommentsLink": {
+            "desc": "Copy 'show x more comments' link to the top"
         },
-        "flagPercentages": {
-            "desc": "Show flagging percentages for each type in the Flag Summary"
+        "commentShortcuts": {
+            "desc": "Use Ctrl+I,B,K (to italicise, bolden and add code backticks) in comments"
+        },
+        "quickCommentShortcutsMain": {
+            "desc": "Add shortcuts to add pre-defined comments to comment fields"
+        },
+        "commentReplies": {
+            "desc": "Add reply links to comments for quick replying (without having to type someone's username)"
+        },
+        "autoShowCommentImages": {
+            "desc": "View linked images (to imgur) in comments inline"
+        },
+        "showCommentScores": {
+            "desc": "Show your comment and comment replies scores in your profile tabs"
         }
     },
     "Editing": {
@@ -107,24 +119,12 @@
             "desc": "Add a bunch of features to the standard markdown editor (autocorrect, find+replace, Ace editor, and more!)"
         }
     },
-    "Comments": {
-        "copyCommentsLink": {
-            "desc": "Copy 'show x more comments' link to the top"
+    "Flags": {
+        "flagOutcomeTime": {
+            "desc": "Show the flag outcome time when viewing your Flag History"
         },
-        "commentShortcuts": {
-            "desc": "Use Ctrl+I,B,K (to italicise, bolden and add code backticks) in comments"
-        },
-        "quickCommentShortcutsMain": {
-            "desc": "Add shortcuts to add pre-defined comments to comment fields"
-        },
-        "commentReplies": {
-            "desc": "Add reply links to comments for quick replying (without having to type someone's username)"
-        },
-        "autoShowCommentImages": {
-            "desc": "View linked images (to imgur) in comments inline"
-        },
-        "showCommentScores": {
-            "desc": "Show your comment and comment replies scores in your profile tabs"
+        "flagPercentages": {
+            "desc": "Show flagging percentages for each type in the Flag Summary"
         }
     },
     "Unsorted": {
