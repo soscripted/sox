@@ -142,7 +142,7 @@
             $soxSettingsAccessTokensToggle = $soxSettingsToggleAccessTokensDiv.find('#toggle-access-token-links');
             $soxSettingsToggle = $soxSettingsDialog.find('#sox-settings-dialog-check-toggle');
             $soxSettingsClose = $soxSettingsDialog.find('#sox-settings-dialog-close');
-            $searchBox =  $soxSettingsDialog.find('#sox-settings-dialog #search');
+            $searchBox =  $soxSettingsDialog.find('#search');
 
             $soxSettingsDialogVersion.text(SOX_VERSION != '??' ? ' v' + SOX_VERSION.toLowerCase() : '');
 
