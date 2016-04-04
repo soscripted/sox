@@ -90,7 +90,8 @@
                     'answerCountSidebar',
                     'highlightClosedQuestions',
                     'unHideAnswer',
-                    'flaggingPercentages'
+                    'flaggingPercentages',
+                    'linkQuestionAuthorName'
                 ];
             return (new RegExp('(' + deprecatedFeatures.join('|') + ')')).test(settings);
         }
