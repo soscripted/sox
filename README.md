@@ -17,7 +17,8 @@ Note: This project has no relation to Stack Overflow or Stack Exchange; it is si
     
 3. Go to any site in the Stack Exchange Network (eg. [Super User](http://superuser.com/) or [Stack Overflow](http://stackoverflow.com/)). You will automatically be asked to choose and save your settings. A toggle button (gears icon) will be added to your topbar where you can change these later on: 
 
-![sox-new-dialog](https://cloud.githubusercontent.com/assets/12533449/14230744/45684108-f919-11e5-9620-127df1c93ae5.png)
+![newdialog](https://cloud.githubusercontent.com/assets/12533449/14296194/c732b1b2-fb2d-11e5-9563-1e34b12eada9.png)
+
 
 ##What features are included?
 
