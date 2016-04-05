@@ -65,7 +65,7 @@
             $soxSettingsAccessTokensToggle,
             $soxSettingsToggle,
             $soxSettingsClose,
-            $searchBox;
+            $searchBox,
             $searchReset;
 
         function isAvailable() {
