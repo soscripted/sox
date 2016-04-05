@@ -193,14 +193,15 @@ var features = { //ALL the functions must go in here
         } else if (SOHelper.getSiteType() !== 'chat') { //for all the normal, unannoying sites, excluding chat ;)
             $('.topbar').css({
                 'position': 'fixed',
+                'top' : '0',
                 'z-index': '1001'
             });
 
             //Thanks ArtOfCode (http://worldbuilding.stackexchange.com/users/2685/artofcode) for fixing the topbar covering the header :)
             $('#header').css('margin-top', '34px');
-            $('.topbar').css('margin-top', '-34px');
+
         } else if (SOHelper.getSiteType() === 'chat') { //chat is a bit different
-            $('.topbar').css('position', 'fixed');
+            $('.topbar').css({'position': 'fixed', 'z-index': '1001'});
         }
 
         $('#rep-card-next .percent').after($('#rep-card-next .label').css('z-index', 0)).css('position', 'absolute');
@@ -1545,7 +1546,7 @@ Toggle SBS?</div></li>';
             $searchbar = $topbar.find('.search-container'),
             $search = $('<a/>', {
                 href: '/search',
-                title: 'Search ' + SOHelper.getSiteName()
+                title: 'Search ' + (SOHelper.getSiteName() != undefined ? SOHelper.getSiteName() : '')
             }).append($('<i/>', {
                 'class': 'fa fa-search'
             }));
