@@ -66,6 +66,7 @@
             $soxSettingsToggle,
             $soxSettingsClose,
             $searchBox;
+            $searchReset;
 
         function isAvailable() {
             return GM_getValue(SOX_SETTINGS, -1) != -1;
@@ -147,6 +148,7 @@
             $soxSettingsToggle = $soxSettingsDialog.find('#sox-settings-dialog-check-toggle');
             $soxSettingsClose = $soxSettingsDialog.find('#sox-settings-dialog-close');
             $searchBox =  $soxSettingsDialog.find('#search');
+            $searchReset = $soxSettingsDialog.find('#search-reset');
 
             $soxSettingsDialogVersion.text(SOX_VERSION != '??' ? ' v' + SOX_VERSION.toLowerCase() : '');
 
@@ -226,27 +228,34 @@
                 save(extras);
                 location.reload(); // reload page to reflect changed settings
             });
-            $searchBox.on('keyup keydown', function() { //search box 
-                if($(this).val() != '') { 
-                    var t = $(this).val(); 
-                    $('#sox-settings-dialog label').each(function() { 
-                        var $features = $(this).closest('.features'); 
-                        if($(this).text().toLowerCase().indexOf(t) == -1) { 
-                            $(this).hide(); 
-                        } else { 
-                            $(this).show(); 
-                        } 
+            $searchBox.on('keyup keydown', function() { //search box
+                if($(this).val() != '') {
+                    var t = $(this).val();
+                    $('#sox-settings-dialog label').each(function() {
+                        var $features = $(this).closest('.features');
+                        if($(this).text().toLowerCase().indexOf(t) == -1) {
+                            $(this).hide();
+                        } else {
+                            $(this).show();
+                        }
 
-                        if($features.find('label:visible').length == 0 && $features.find('label[style*="display: inline"]').length == 0) { 
-                            $features.hide().prev().hide(); 
-                        } else { 
-                            $features.show().prev().show(); 
-                        } 
-                    }); 
-                } else { 
-                    $('.category, .features, #sox-settings-dialog label').fadeIn(); 
-                } 
-            });     
+                        if($features.find('label:visible').length == 0 && $features.find('label[style*="display: inline"]').length == 0) {
+                            $features.hide().prev().hide();
+                        } else {
+                            $features.show().prev().show();
+                        }
+                    });
+                } else {
+                    $('.category, .features, #sox-settings-dialog label').fadeIn();
+                }
+            });
+
+            $searchReset.on('click', function(){
+                $('.category, .features, #sox-settings-dialog label').fadeIn();
+                $searchBox.val('').focus();
+
+            });
+
             $(document).click(function(e) { //close dialog if clicked outside it
                 $target = $(e.target);
                 if(!$target.is('#soxSettingsButton, #sox-settings-dialog') && !$target.parents("#soxSettingsButton, #sox-settings-dialog").is("#soxSettingsButton, #sox-settings-dialog")) {
@@ -258,7 +267,7 @@
                 $soxSettingsDialog.hide();
                 $('#soxSettingsButton').removeClass('topbar-icon-on');
             });
-            
+
             $(document).on('click', 'a.getAccessToken', function() {
                 $that = $(this);
                 var client_id = $(this).attr('data-client-id');
