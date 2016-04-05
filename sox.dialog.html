@@ -1,14 +1,32 @@
-<div id="sox-settings-dialog">
-    <div id="sox-settings-dialog-title">
-        <h3>Stack Overflow Extras - Settings</h3>
-        <div id="sox-settings-dialog-close"><a title="Close Settings Dialog">×</a></div>
+<div class="topbar-dialog achievements-dialog dno" id="sox-settings-dialog">
+    <div class="header">
+        <h3>sox settings<span id="sox-settings-dialog-version"> v1.0.3dev</span></h3>
+    </div>
+    <div class="header">
+        <h3>search</h3>
+    </div>
+    <div class="modal-content" id="search-container">
+        <input type="text" id="search" placeholder="looking for a specific feature?">
+        <i class="fa fa-search"></i>
+        <a id="search-reset">reset</a>
     </div>
     <div id="sox-settings-dialog-features">
+        <div id="sox-settings-dialog-access-tokens">
+            <div class="header">
+                <h3>access tokens</h3>
+            </div>
+            <div class="modal-content">
+                <p>Access Tokens are required for some features in order to receive a higher allowance for requests to the API.</p>
+                <p>Below are features that require access tokens. Click the links to get the token.</p>
+                <a class="expander-arrow-small-hide" id="toggle-access-token-links"></a>
+                <div id="sox-settings-dialog-access-tokens-links"></div>
+            </div>
+        </div>
     </div>
     <div id="sox-settings-dialog-actions">
         <input id="sox-settings-dialog-save" type="submit" value="Save Changes">
         <a id="sox-settings-dialog-reset">Reset</a>
         <a id="sox-settings-dialog-report" target="_blank" href="https://github.com/soscripted/sox/issues/new">Report Issue</a>
         <a id="sox-settings-dialog-check-toggle"><i class="fa fa-check-square-o"></i></a>
-  </div>
+    </div>
 </div>

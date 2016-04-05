@@ -255,7 +255,11 @@ var enhancedEditor = {
     },
     
     findReplace: function(s) {
-        $(s).prev().after("<div class='enhancedEditor-toolbar findReplace'><input id='find' type='text' placeholder='Find'><input id='modifier' type='text' placeholder='Modifier'><input id='replace' type='text' placeholder='Replace with'><input id='replaceGo' type='button' value='Go'></div>");
+        if($('.enhancedEditor-toolbar.findReplace').length) {
+            $('.enhancedEditor-toolbar.findReplace').remove();
+        } else {
+            $(s).prev().after("<div class='enhancedEditor-toolbar findReplace'><input id='find' type='text' placeholder='Find'><input id='modifier' type='text' placeholder='Modifier'><input id='replace' type='text' placeholder='Replace with'><input id='replaceGo' type='button' value='Go'></div>");
+        }
         $(document).on('click', '.findReplace #replaceGo', function() {
             regex = new RegExp($('.findReplace #find').val(), $('.findReplace #modifier').val());
             oldval = $(s).val();
