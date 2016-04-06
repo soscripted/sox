@@ -741,7 +741,7 @@ var features = { //ALL the functions must go in here
 
         var sites = ['stackexchange', 'stackoverflow', 'superuser', 'serverfault', 'askubuntu', 'stackapps', 'mathoverflow', 'programmers', 'bitcoin'];
 
-        $('.post-text a').each(function() {
+        $('.post-text a').not('.expand-post-sox').each(function() {
             var anchor = $(this);
             if (sites.indexOf($(this).attr('href').split('/')[2].split('.')[0]) > -1) { //if the link is to an SE site (not, for example, to google), do the necessary stuff
                 if ($(this).text() == $(this).attr('href')) { //if there isn't text on it (ie. bare url)
@@ -1810,14 +1810,16 @@ Toggle SBS?</div></li>';
         // Description: Add an arrow to linked posts in the sidebar to show whether they are linked to or linked from
 
         if(location.href.indexOf('/questions/') > -1) {
-            $('.linked .spacer a.question-hyperlink').each(function() {
-                var id = $(this).attr('href').split('/')[4];
-                if($('a[href*="' + id + '"]').not('.spacer a').length) {
-                    $(this).append('<span title="Current question links to this question" style="color:black;font-size:15px;margin-left:5px;">&nearr;</span>');
-                } else {
-                    $(this).append('<span title="Current question is linked from this question" style="color:black;font-size:15px;margin-left:5px;">&swarr;</span>');
-                }
-            });
+            setTimeout(function() {
+                $('.linked .spacer a.question-hyperlink').each(function() {
+                  var id = $(this).attr('href').split('/')[4];
+                  if($('a[href*="' + id + '"]').not('.spacer a').length) {
+                      $(this).append('<span title="Current question links to this question" style="color:black;font-size:15px;margin-left:5px;">&nearr;</span>');
+                  } else {
+                      $(this).append('<span title="Current question is linked from this question" style="color:black;font-size:15px;margin-left:5px;">&swarr;</span>');
+                  }
+                });
+            }, 2000);
         }
     }
 };
