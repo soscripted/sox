@@ -19,7 +19,7 @@
 // @require      https://cdn.rawgit.com/timdown/rangyinputs/master/rangyinputs-jquery-src.js
 // @require      https://cdn.rawgit.com/jeresig/jquery.hotkeys/master/jquery.hotkeys.js
 // @require      https://cdn.rawgit.com/camagu/jquery-feeds/master/jquery.feeds.js
-// @require      https://rawgit.com/soscripted/sox/dev/sox.helpers.js?v=1.0.4a
+// @require      https://rawgit.com/soscripted/sox/dev/sox.helpers.js?v=1.0.4b
 // @require      https://rawgit.com/soscripted/sox/dev/sox.enhanced_editor.js?v=1.0.4a
 // @require      https://rawgit.com/soscripted/sox/dev/sox.features.js?v=1.0.4a
 // @require      https://api.stackexchange.com/js/2.0/all.js
