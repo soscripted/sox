@@ -1,8 +1,18 @@
 SOHelper = {
-    StackExchange: (typeof StackExchange !== "undefined" ? StackExchange : window.eval("StackExchange")),
-    
+    StackExchange: function() {
+        if(location.hostname.indexOf('github.com') > -1) {
+            if(typeof StackExchange !== "undefined") {
+                return StackExchange;   
+            } else {
+                return window.eval("StackExchange");
+            }
+        } else {
+            return undefined;
+        }
+    },
+
     getUserId: function() {
-        return SOHelper.StackExchange.options.user.userId;
+        return SOHelper.StackExchange().options.user.userId;
     },
 
     getUsername: function() {
@@ -11,7 +21,7 @@ SOHelper = {
     },
 
     getReputation: function() {
-        return SOHelper.StackExchange.options.user.rep;
+        return SOHelper.StackExchange().options.user.rep;
     },
 
     getSiteURL: function(type) {
@@ -19,7 +29,7 @@ SOHelper = {
     },
 
     getSiteName: function() {
-        return (SOHelper.getSiteType() === 'chat' ? $('#footer-logo a').attr('title') : SOHelper.StackExchange.options.site.name);
+        return (SOHelper.getSiteType() === 'chat' ? $('#footer-logo a').attr('title') : SOHelper.StackExchange().options.site.name);
     },
 
     getApiSiteParameter: function(siteName) {
@@ -343,11 +353,11 @@ SOHelper = {
     },
 
     getQuestionId: function() {
-        return SOHelper.StackExchange.question.getQuestionId();
+        return SOHelper.StackExchange().question.getQuestionId();
     },
 
     isLoggedIn: function() {
-        return SOHelper.StackExchange.options.user.isRegistered;
+        return SOHelper.StackExchange().options.user.isRegistered;
     },
 
     getSiteIcon: function() {
@@ -382,8 +392,8 @@ SOHelper = {
         if (location.hostname.indexOf('chat.') > -1) {
             type = 'chat';
         } else {
-            if (SOHelper.StackExchange) {
-                if (SOHelper.StackExchange.options.site.isMetaSite) {
+            if (SOHelper.StackExchange()) {
+                if (SOHelper.StackExchange().options.site.isMetaSite) {
                     type = 'meta';
                 }
             }
