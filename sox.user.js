@@ -33,6 +33,7 @@
 // ==/UserScript==
 /*jshint multistr: true */
 (function(sox, $, undefined) {
+        console.log('a');
     var SOX_SETTINGS = 'SOXSETTINGS';
     var SOX_VERSION = (typeof GM_info !== "undefined" ? GM_info.script.version : "??");
     var SOX_MANAGER = (typeof GM_info == "undefined" ? "??" : GM_info.scriptHandler + "/Chrome" || "Greasemonkey" + "/Firefox");
@@ -40,6 +41,7 @@
     // auto-inject version number and environment information into GitHub issues
     // setInterval, because on GitHub, when you change page, the URL changes but the page itself is actually the same. So this will check every 2 seconds for whether the issue texatarea exists
     if (location.hostname.indexOf('github.com') > -1) {
+        console.log('a');
         setInterval(function() {
             if ($('#issue_body').length) {
                 var $issue = $('#issue_body'),
@@ -187,7 +189,31 @@
                     class: 'fa fa-cogs'
                 });
             $soxSettingsButton.append($icon).appendTo('div.network-items');
-
+            
+            $('#soxSettingsButton').hover(function() { //https://github.com/soscripted/sox/issues/44, open on hover, just like the normal dropdowns
+                if($('.topbar-icon').not('#soxSettingsButton').hasClass('topbar-icon-on')) {
+                    $('.topbar-dialog').hide();
+                    $('.topbar-icon').removeClass('topbar-icon-on').removeClass('icon-site-switcher-on');
+                    $(this).addClass('topbar-icon-on');
+                    $soxSettingsDialog.show();
+                } 
+            }, function() {
+                $('.topbar-icon').not('#soxSettingsButton').hover(function() {
+                    if($('#soxSettingsButton').hasClass('topbar-icon-on')) {
+                        $soxSettingsDialog.hide();
+                        $('#soxSettingsButton').removeClass('topbar-icon-on');
+                        var which = $(this).attr('class').match(/js[\w-]*\b/)[0].split('-')[1];
+                        if(which != 'site') { //site-switcher dropdown is slightly different
+                            $('.' + which + '-dialog').not('#sox-settings-dialog, #new-meta-questions-dialog').show();
+                            $(this).addClass('topbar-icon-on');
+                        } else {
+                            $('.siteSwitcher-dialog').show();
+                            $(this).addClass('topbar-icon-on').addClass('icon-site-switcher-on'); //icon-site-switcher-on is special to the site-switcher dropdown (StackExchange button)
+                        }
+                    } 
+                });
+            });
+            
             // add click handlers for the buttons in the settings dialog
             $soxSettingsClose.on('click', function() {
                 $soxSettingsDialog.hide();
