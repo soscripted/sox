@@ -38,21 +38,31 @@
     var SOX_MANAGER = (typeof GM_info == "undefined" ? "??" : GM_info.scriptHandler + "/Chrome" || "Greasemonkey" + "/Firefox");
 
     // auto-inject version number and environment information into GitHub issues
-    // setInterval, because on GitHub, when you change page, the URL changes but the page itself is actually the same. So this will check every 2 seconds for whether the issue texatarea exists
-    if (location.hostname.indexOf('github.com') > -1) {
-        setInterval(function() {
-            if ($('#issue_body').length) {
-                var $issue = $('#issue_body'),
-                    issueText = $issue.text();
+    function inject() {
+        var $issue = $('#issue_body');
+        if ($issue.length) {
+            $issue.prop('disabled', 'true');
+            var issueText = $issue.text();
 
-                issueText = issueText.replace('1.X.X', SOX_VERSION); //inject the SOX version by replacing the issue template's placeholder '1.X.X'
-                issueText = issueText.replace('Chrome/Tampermonkey', SOX_MANAGER); //inject the SOX userscript manager+platfirm by replacing the issue template's placeholder 'Chrome/Tampermonkey'
-                $issue.text(issueText);
-            }
-            // on GitHub, stop execution of the rest of the script.
+            issueText = issueText.replace('1.X.X', SOX_VERSION); //inject the SOX version by replacing the issue template's placeholder '1.X.X'
+            issueText = issueText.replace('Chrome/Tampermonkey', SOX_MANAGER); //inject the SOX userscript manager+platfirm by replacing the issue template's placeholder 'Chrome/Tampermonkey'
+            $('#issue_body').delay(500).text(issueText).prop('disabled', 'false');
+        }
+    }
+
+    if (location.href.indexOf('/issues/new') > -1) {
+        inject();
+        return;
+    }
+
+    $(document).on('pjax:complete', function() {
+        if (location.href.indexOf('/issues/new') > -1) {
+            inject();
             return;
-        }, 2000);
-    } else {
+        }
+    });
+
+    if (location.host != 'github.com') {
 
         var $settingsDialog = $(GM_getResourceText('settingsDialog')),
             featuresJSON = JSON.parse(GM_getResourceText('featuresJSON')),
@@ -99,9 +109,9 @@
 
         function addFeature(category, feature, desc) {
             var $div = $('<div/>', {
-                'class': 'feature',
-                'data-desc': desc
-            }),
+                    'class': 'feature',
+                    'data-desc': desc
+                }),
                 $label = $('<label/>'),
                 $input = $('<input/>', {
                     id: feature,
@@ -120,7 +130,7 @@
                 $h3 = $('<h3/>', {
                     text: name.toLowerCase()
                 }),
-                $content = $('<div/>',{
+                $content = $('<div/>', {
                     id: name,
                     class: 'modal-content features'
                 });
@@ -135,19 +145,19 @@
 
             // add sox CSS file and font-awesome CSS file
             $('head').append('<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">')
-                     .append('<link rel="stylesheet" type="text/css" href="https://rawgit.com/soscripted/sox/dev/sox.css?v=1.0.4b" />');
+                .append('<link rel="stylesheet" type="text/css" href="https://rawgit.com/soscripted/sox/dev/sox.css?v=1.0.4b" />');
             $('.js-topbar-dialog-corral').append($settingsDialog);
 
             $soxSettingsDialog = $('#sox-settings-dialog');
             $soxSettingsDialogFeatures = $soxSettingsDialog.find('#sox-settings-dialog-features');
-            $soxSettingsDialogVersion =  $soxSettingsDialog.find('#sox-settings-dialog-version');
+            $soxSettingsDialogVersion = $soxSettingsDialog.find('#sox-settings-dialog-version');
             $soxSettingsSave = $soxSettingsDialog.find('#sox-settings-dialog-save');
             $soxSettingsReset = $soxSettingsDialog.find('#sox-settings-dialog-reset');
             $soxSettingsToggleAccessTokensDiv = $soxSettingsDialog.find('#sox-settings-dialog-access-tokens');
             $soxSettingsAccessTokensToggle = $soxSettingsToggleAccessTokensDiv.find('#toggle-access-token-links');
             $soxSettingsToggle = $soxSettingsDialog.find('#sox-settings-dialog-check-toggle');
             $soxSettingsClose = $soxSettingsDialog.find('#sox-settings-dialog-close');
-            $searchBox =  $soxSettingsDialog.find('#search');
+            $searchBox = $soxSettingsDialog.find('#search');
             $searchReset = $soxSettingsDialog.find('#search-reset');
 
             $soxSettingsDialogVersion.text(SOX_VERSION != '??' ? ' v' + SOX_VERSION.toLowerCase() : '');
@@ -162,7 +172,7 @@
                     return String.prototype.localeCompare.call($(a).data('desc').toLowerCase(), $(b).data('desc').toLowerCase());
                 });
 
-                var container = $("#"+category);
+                var container = $("#" + category);
                 container.children().remove();
                 container.append(alphabeticallyOrderedDivs);
             }
@@ -187,31 +197,31 @@
                     class: 'fa fa-cogs'
                 });
             $soxSettingsButton.append($icon).appendTo('div.network-items');
-            
+
             $('#soxSettingsButton').hover(function() { //https://github.com/soscripted/sox/issues/44, open on hover, just like the normal dropdowns
-                if($('.topbar-icon').not('#soxSettingsButton').hasClass('topbar-icon-on')) {
+                if ($('.topbar-icon').not('#soxSettingsButton').hasClass('topbar-icon-on')) {
                     $('.topbar-dialog').hide();
                     $('.topbar-icon').removeClass('topbar-icon-on').removeClass('icon-site-switcher-on');
                     $(this).addClass('topbar-icon-on');
                     $soxSettingsDialog.show();
-                } 
+                }
             }, function() {
                 $('.topbar-icon').not('#soxSettingsButton').hover(function() {
-                    if($('#soxSettingsButton').hasClass('topbar-icon-on')) {
+                    if ($('#soxSettingsButton').hasClass('topbar-icon-on')) {
                         $soxSettingsDialog.hide();
                         $('#soxSettingsButton').removeClass('topbar-icon-on');
                         var which = $(this).attr('class').match(/js[\w-]*\b/)[0].split('-')[1];
-                        if(which != 'site') { //site-switcher dropdown is slightly different
+                        if (which != 'site') { //site-switcher dropdown is slightly different
                             $('.' + which + '-dialog').not('#sox-settings-dialog, #new-meta-questions-dialog').show();
                             $(this).addClass('topbar-icon-on');
                         } else {
                             $('.siteSwitcher-dialog').show();
                             $(this).addClass('topbar-icon-on').addClass('icon-site-switcher-on'); //icon-site-switcher-on is special to the site-switcher dropdown (StackExchange button)
                         }
-                    } 
+                    }
                 });
             });
-            
+
             // add click handlers for the buttons in the settings dialog
             $soxSettingsClose.on('click', function() {
                 $soxSettingsDialog.hide();
@@ -253,17 +263,17 @@
                 location.reload(); // reload page to reflect changed settings
             });
             $searchBox.on('keyup keydown', function() { //search box
-                if($(this).val() != '') {
+                if ($(this).val() != '') {
                     var t = $(this).val();
                     $('#sox-settings-dialog label').each(function() {
                         var $features = $(this).closest('.features');
-                        if($(this).text().toLowerCase().indexOf(t) == -1) {
+                        if ($(this).text().toLowerCase().indexOf(t) == -1) {
                             $(this).hide();
                         } else {
                             $(this).show();
                         }
 
-                        if($features.find('label:visible').length == 0 && $features.find('label[style*="display: inline"]').length == 0) {
+                        if ($features.find('label:visible').length == 0 && $features.find('label[style*="display: inline"]').length == 0) {
                             $features.hide().prev().hide();
                         } else {
                             $features.show().prev().show();
@@ -274,7 +284,7 @@
                 }
             });
 
-            $searchReset.on('click', function(){
+            $searchReset.on('click', function() {
                 $('.category, .features, #sox-settings-dialog label').fadeIn();
                 $searchBox.val('').focus();
 
@@ -282,7 +292,7 @@
 
             $(document).click(function(e) { //close dialog if clicked outside it
                 $target = $(e.target);
-                if(!$target.is('#soxSettingsButton, #sox-settings-dialog') && !$target.parents("#soxSettingsButton, #sox-settings-dialog").is("#soxSettingsButton, #sox-settings-dialog")) {
+                if (!$target.is('#soxSettingsButton, #sox-settings-dialog') && !$target.parents("#soxSettingsButton, #sox-settings-dialog").is("#soxSettingsButton, #sox-settings-dialog")) {
                     $soxSettingsDialog.hide();
                     $('#soxSettingsButton').removeClass('topbar-icon-on');
                 }
