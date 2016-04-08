@@ -1,6 +1,6 @@
 SOHelper = {
     StackExchange: function() {
-        if(location.hostname.indexOf('github.com') > -1) {
+        if(location.hostname.indexOf('github.com') === -1) { //if not on GH...
             if(typeof StackExchange !== "undefined") {
                 return StackExchange;   
             } else {
