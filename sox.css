@@ -382,9 +382,16 @@ hr.or:after {
 .chatEasyAccess b {
     cursor: pointer;
 }
+
+/*highlightQuestions -- for the tags*/
 .post-tag.favorite-tag-so {
-    border-color: rgba(0, 0, 0, .3);
-    background-color: #ffefc6;
+    border-color: rgba(0, 0, 0, .5);
+    background-color: #D7E6FB;
+}
+.post-tag .fa-star {
+    margin-left: 5px;
+    display: inline;
+    color: darkblue;
 }
 .post-tag.favorite-tag-su {
     border-color: rgba(0, 0, 0, .3);
