@@ -352,7 +352,7 @@ var features = { //ALL the functions must go in here
                         editCommentField.val(newEditComment).focus();
                     } else if (!this.checked) { //Remove it from the summary
                         editCommentField.val(editCommentField.val().replace($(this).val() + '; ', '')); //for middle/beginning values
-                        editCommentField.val(editCommentField.val().replace($(this).val(), '')); //for last value
+                        editCommentField.val(editCommentField.val().replace(new RegExp(';? ?' + $(this).val()), '')); //for last value
                     }
                 });
             }
