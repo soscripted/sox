@@ -21,7 +21,7 @@
 // @require      https://cdn.rawgit.com/camagu/jquery-feeds/master/jquery.feeds.js
 // @require      https://rawgit.com/soscripted/sox/dev/sox.helpers.js?v=1.0.4c
 // @require      https://rawgit.com/soscripted/sox/dev/sox.enhanced_editor.js?v=1.0.4a
-// @require      https://rawgit.com/soscripted/sox/dev/sox.features.js?v=1.0.4b
+// @require      https://rawgit.com/soscripted/sox/dev/sox.features.js?v=1.0.4c
 // @require      https://api.stackexchange.com/js/2.0/all.js
 // @resource     settingsDialog https://rawgit.com/soscripted/sox/dev/sox.dialog.html?v=1.0.4a
 // @resource     featuresJSON https://rawgit.com/soscripted/sox/dev/sox.features.info.json?v=1.0.4a
@@ -33,7 +33,6 @@
 // ==/UserScript==
 /*jshint multistr: true */
 (function(sox, $, undefined) {
-        console.log('a');
     var SOX_SETTINGS = 'SOXSETTINGS';
     var SOX_VERSION = (typeof GM_info !== "undefined" ? GM_info.script.version : "??");
     var SOX_MANAGER = (typeof GM_info == "undefined" ? "??" : GM_info.scriptHandler + "/Chrome" || "Greasemonkey" + "/Firefox");
@@ -41,7 +40,6 @@
     // auto-inject version number and environment information into GitHub issues
     // setInterval, because on GitHub, when you change page, the URL changes but the page itself is actually the same. So this will check every 2 seconds for whether the issue texatarea exists
     if (location.hostname.indexOf('github.com') > -1) {
-        console.log('a');
         setInterval(function() {
             if ($('#issue_body').length) {
                 var $issue = $('#issue_body'),
@@ -137,7 +135,7 @@
 
             // add sox CSS file and font-awesome CSS file
             $('head').append('<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">')
-                     .append('<link rel="stylesheet" type="text/css" href="https://rawgit.com/soscripted/sox/dev/sox.css?v=1.0.4a" />');
+                     .append('<link rel="stylesheet" type="text/css" href="https://rawgit.com/soscripted/sox/dev/sox.css?v=1.0.4b" />');
             $('.js-topbar-dialog-corral').append($settingsDialog);
 
             $soxSettingsDialog = $('#sox-settings-dialog');
