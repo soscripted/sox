@@ -212,9 +212,9 @@ var features = { //ALL the functions must go in here
         // Description: For highlighting only the tags of favorite questions
 
         var highlightClass = '';
-        if (/superuser/.test(window.hostname)) { //superuser
+        if (/superuser/.test(window.location.hostname)) { //superuser
             highlightClass = 'favorite-tag-su';
-        } else if (/stackoverflow/.test(window.hostname)) { //stackoverflow
+        } else if (/stackoverflow/.test(window.location.hostname)) { //stackoverflow
             highlightClass = 'favorite-tag-so';
         } else { //for all other sites
             highlightClass = 'favorite-tag-all';
