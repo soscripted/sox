@@ -377,13 +377,6 @@ hr.or:after {
     display: block;
 }
 
-/*downvotedPostsEditAlert - for the watch icon*/
-
-.downvotedPostsEditAlert-watchPostForEdits {
-    font-size: 20px;
-    margin-top: 5px;
-}
-
 /*chatEasyAccess - for the links (b elements)*/
 
 .chatEasyAccess b {
