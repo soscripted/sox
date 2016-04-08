@@ -1603,7 +1603,9 @@ Toggle SBS?</div></li>';
         var key = ")2kXF9IR5OHnfGRPDahCVg((";
         var access_token = SOHelper.getAccessToken('downvotedPostsEditAlert');
 
-        $('td.votecell > div.vote').find(':last-child').not('b').after("<i class='downvotedPostsEditAlert-watchPostForEdits fa fa-eye'></i>");
+        $('.post-menu').each(function() {
+            $(this).append("<span class='lsep'></span><a class='downvotedPostsEditAlert-watchPostForEdits'>notify on edit</a>");
+        });
         $('.downvotedPostsEditAlert-watchPostForEdits').click(function() {
             var $that = $(this);
             var $parent = $(this).closest('table').parent();
