@@ -219,22 +219,34 @@ var features = { //ALL the functions must go in here
         } else { //for all other sites
             highlightClass = 'favorite-tag-all';
         }
-
+        
         function highlight() {
             var interestingTagsDiv = $('#interestingTags').text();
             var interesting = interestingTagsDiv.split(' ');
             interesting.pop(); //Because there's one extra value at the end
-
+            var len = interesting.length;
+        
+            for(var i = 0; i<len; i++) {
+                if(interesting[i].indexOf('*') != -1) {
+                    interesting[i] = interesting[i].replace('*', '.*'); //replace wildcards with regex equivalents
+                }
+            }
+            
             $('.tagged-interesting > .summary > .tags > .post-tag').filter(function(index) {
-                return interesting.indexOf($(this).text()) > -1;
+                for(var i = 0; i<len; i++) {
+                    if ($(this).text().match(interesting[i])) { //check if it matches the regex (ie. the tag)
+                        $(this).append('<i class="fa fa-star" style="margin-left: 5px;display: inline;color: darkblue;"></i>');
+                        return true;
+                    }
+                }        
             }).addClass(highlightClass);
-
+        
             $('.tagged-interesting').removeClass('tagged-interesting');
         }
-
+        
         setTimeout(function() { //Need delay to make sure the CSS is applied
             highlight();
-
+        
             if ($('.question-summary').length) {
                 new MutationObserver(function(records) {
                     records.forEach(function(mutation) {
