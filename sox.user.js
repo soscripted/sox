@@ -52,13 +52,11 @@
 
     if (location.href.indexOf('/issues/new') > -1) {
         inject();
-        return;
     }
 
     $(document).on('pjax:complete', function() {
         if (location.href.indexOf('/issues/new') > -1) {
             inject();
-            return;
         }
     });
 
