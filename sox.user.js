@@ -46,7 +46,7 @@
 
             issueText = issueText.replace('1.X.X', SOX_VERSION); //inject the SOX version by replacing the issue template's placeholder '1.X.X'
             issueText = issueText.replace('Chrome/Tampermonkey', SOX_MANAGER); //inject the SOX userscript manager+platfirm by replacing the issue template's placeholder 'Chrome/Tampermonkey'
-            $('#issue_body').delay(500).text(issueText).prop('disabled', 'false');
+            $('#issue_body').delay(500).text(issueText).removeAttr('disabled');
         }
     }
 
