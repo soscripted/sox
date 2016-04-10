@@ -19,12 +19,12 @@
 // @require      https://cdn.rawgit.com/timdown/rangyinputs/master/rangyinputs-jquery-src.js
 // @require      https://cdn.rawgit.com/jeresig/jquery.hotkeys/master/jquery.hotkeys.js
 // @require      https://cdn.rawgit.com/camagu/jquery-feeds/master/jquery.feeds.js
-// @require      https://rawgit.com/soscripted/sox/dev/sox.helpers.js?v=1.0.4c
+// @require      https://rawgit.com/soscripted/sox/dev/sox.helpers.js?v=1.0.4d
 // @require      https://rawgit.com/soscripted/sox/dev/sox.enhanced_editor.js?v=1.0.4a
-// @require      https://rawgit.com/soscripted/sox/dev/sox.features.js?v=1.0.4d
+// @require      https://rawgit.com/soscripted/sox/dev/sox.features.js?v=1.0.4e
 // @require      https://api.stackexchange.com/js/2.0/all.js
 // @resource     settingsDialog https://rawgit.com/soscripted/sox/dev/sox.dialog.html?v=1.0.4a
-// @resource     featuresJSON https://rawgit.com/soscripted/sox/dev/sox.features.info.json?v=1.0.4a
+// @resource     featuresJSON https://rawgit.com/soscripted/sox/dev/sox.features.info.json?v=1.0.4c
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_deleteValue
@@ -61,7 +61,6 @@
     });
 
     if (location.host != 'github.com') {
-
         var $settingsDialog = $(GM_getResourceText('settingsDialog')),
             featuresJSON = JSON.parse(GM_getResourceText('featuresJSON')),
             $soxSettingsDialog,
@@ -305,25 +304,30 @@
                 var client_id = $(this).attr('data-client-id');
                 var key = $(this).attr('data-key');
                 var featureId = $(this).attr('data-feature-id');
-                SE.init({
-                    clientId: client_id,
-                    key: key,
-                    channelUrl: 'http://meta.stackexchange.com/blank',
-                    complete: function(d) {
-                        console.log('SE init');
-                    }
-                });
-                SE.authenticate({
-                    success: function(data) {
-                        accessToken = data.accessToken;
-                        console.log(accessToken);
-                        var accessTokens = JSON.parse(GM_getValue('SOX-accessTokens', "{}"));
-                        accessTokens[featureId] = accessToken;
-                        GM_setValue('SOX-accessTokens', JSON.stringify(accessTokens));
-                        $that.before(accessToken);
-                        $that.text(" New access token?");
-                    }
-                });
+                var oauthDomain = $(this).attr('data-oauth-domain');
+                if(location.hostname == oauthDomain) { //it only works on the Oauth Domain given when registering the app at Stack Apps
+                    SE.init({
+                        clientId: client_id,
+                        key: key,
+                        channelUrl: location.protocol + '//' + oauthDomain + '/blank',
+                        complete: function(d) {
+                            console.log('SE init');
+                        }
+                    });
+                    SE.authenticate({
+                        success: function(data) {
+                            accessToken = data.accessToken;
+                            console.log(accessToken);
+                            var accessTokens = JSON.parse(GM_getValue('SOX-accessTokens', "{}"));
+                            accessTokens[featureId] = accessToken;
+                            GM_setValue('SOX-accessTokens', JSON.stringify(accessTokens));
+                            $that.before(accessToken);
+                            $that.text(" New access token?");
+                        }
+                    });
+                } else {
+                    alert('You must be on ' + oauthDomain + ' to get this access token');
+                }
             });
 
             // check if settings exist and execute desired functions
@@ -341,9 +345,9 @@
                             if (feature['accessToken']) {
                                 var accessTokens = JSON.parse(GM_getValue('SOX-accessTokens', "{}"));
                                 if (!accessTokens[featureId]) {
-                                    $soxSettingsToggleAccessTokensDiv.find('#sox-settings-dialog-access-tokens-links').append(feature['desc'] + ': <a class="getAccessToken" data-feature-id="' + featureId + '" data-client-id="' + feature['accessToken']['clientId'] + '" data-key="' + feature['accessToken']['key'] + '">Get access token?</a>');
+                                    $soxSettingsToggleAccessTokensDiv.find('#sox-settings-dialog-access-tokens-links').append(feature['desc'] + ': <a class="getAccessToken" data-feature-id="' + featureId + '" data-oauth-domain="' + feature['accessToken']['oauth_domain'] + '" data-client-id="' + feature['accessToken']['clientId'] + '" data-key="' + feature['accessToken']['key'] + '">Get access token?</a>');
                                 } else if (accessTokens[featureId]) {
-                                    $soxSettingsToggleAccessTokensDiv.find('#sox-settings-dialog-access-tokens-links').append(feature['desc'] + ': ' + accessTokens[featureId] + ' <a class="getAccessToken" data-feature-id="' + featureId + '" data-client-id="' + feature['accessToken']['clientId'] + '" data-key="' + feature['accessToken']['key'] + '">New access token?</a>');
+                                    $soxSettingsToggleAccessTokensDiv.find('#sox-settings-dialog-access-tokens-links').append(feature['desc'] + ': ' + accessTokens[featureId] + ' <a class="getAccessToken" data-feature-id="' + featureId + '" data-oauth-domain="' + feature['accessToken']['oauth_domain'] + '" data-client-id="' + feature['accessToken']['clientId'] + '" data-key="' + feature['accessToken']['key'] + '">New access token?</a>');
                                 }
                             }
                             if (feature['enableOnSites']) {
