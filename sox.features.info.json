@@ -201,8 +201,9 @@
         "downvotedPostsEditAlert": {
             "desc": "Add a notification to your inbox when a question you downvote is edited",
             "accessToken": {
-                "clientId": "4999",
-                "key": ")2kXF9IR5OHnfGRPDahCVg(("
+                "clientId": "6873",
+                "key": "xhD3pqvaVsgwehQpDxtGdw((",
+                "oauth_domain" : "stackoverflow.com"
             },
             "meta-url": "http://meta.stackexchange.com/q/165962/260841"
         },
