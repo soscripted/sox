@@ -328,10 +328,7 @@ var features = { //ALL the functions must go in here
 
         function addCheckboxes() {
             $('#reasons').remove(); //remove the div containing everything, we're going to add/remove stuff now:
-            if (!$('[class^="inline-editor"]').length) { //if there is no inline editor, do nothing
-                return;
-            }
-            if (/\/edit/.test(window.location.href) || $('[class^="inline-editor"]').length) { //everything else
+            if (/\/edit/.test(window.location.href) || $('[class^="inline-editor"]').length) {
                 $('.form-submit').before('<div id="reasons"></div>');
 
                 $.each(JSON.parse(GM_getValue('editReasons')), function(i, obj) {
