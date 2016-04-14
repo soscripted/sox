@@ -193,7 +193,7 @@ var features = { //ALL the functions must go in here
         } else if (SOHelper.getSiteType() !== 'chat') { //for all the normal, unannoying sites, excluding chat ;)
             $('.topbar').css({
                 'position': 'fixed',
-                'top' : '0',
+                'top': '0',
                 'z-index': '1001'
             });
 
@@ -201,7 +201,10 @@ var features = { //ALL the functions must go in here
             $('#header').css('margin-top', '34px');
 
         } else if (SOHelper.getSiteType() === 'chat') { //chat is a bit different
-            $('.topbar').css({'position': 'fixed', 'z-index': '1001'});
+            $('.topbar').css({
+                'position': 'fixed',
+                'z-index': '1001'
+            });
         }
 
         $('#rep-card-next .percent').after($('#rep-card-next .label').css('z-index', 0)).css('position', 'absolute');
@@ -210,16 +213,6 @@ var features = { //ALL the functions must go in here
 
     highlightQuestions: function() {
         // Description: For highlighting only the tags of favorite questions
-        var color;
-        if (/superuser/.test(window.location.hostname)) { //superuser
-            color = '#00a1c9';
-        } else if (/stackoverflow/.test(window.location.hostname)) { //stackoverflow
-            color = '#f69c55';
-        } else { //for all other sites
-            color = $('.post-tag').css('color');
-        }
-
-        $('<style>.fav-tag:before{background: '+color+'}</style>').appendTo('head');
 
         function highlight() {
             var interestingTagsDiv = $('#interestingTags').text();
@@ -227,44 +220,59 @@ var features = { //ALL the functions must go in here
             interesting.pop(); //Because there's one extra value at the end
             var len = interesting.length;
 
-            for(var i = 0; i<len; i++) {
-                if(interesting[i].indexOf('*') != -1) {
-                    interesting[i] = interesting[i].replace('*', '.*'); //replace wildcards with regex equivalents
-                }
-            }
-
             $('.tagged-interesting > .summary > .tags > .post-tag').filter(function(index) {
                 var $summary = $(this).closest('.question-summary');
-                if (!$summary.hasClass('fav-tag')){
-                    for(var i = 0; i<len; i++) {
+                $summary.removeClass('tagged-interesting');
+                if (!$summary.hasClass('fav-tag')) {
+                    for (var i = 0; i < len; i++) {
+                        if (interesting[i].indexOf('*') != -1) {
+                            interesting[i] = interesting[i].replace('*', '.*'); //replace wildcards with regex equivalents
+                        }
+
                         if ($(this).text().match(interesting[i])) { //check if it matches the regex (ie. the tag)
-                            $(this).append('<i class="fa fa-tag" style="padding: 0 0 0 7px;"></>');//.css('border-color', color);
+                            $(this).append('<i class="fa fa-tag" style="padding: 0 0 0 7px;"></>'); //.css('border-color', color);
                             $summary.addClass('fav-tag');
                             return true;
                         }
                     }
                 }
             });
-
-            $('.tagged-interesting').removeClass('tagged-interesting');
         }
 
-        setTimeout(function() { //Need delay to make sure the CSS is applied
+        StackExchange.ready(function() {
+            var color;
+            if (/superuser/.test(window.location.hostname)) { //superuser
+                color = '#00a1c9';
+            } else if (/stackoverflow/.test(window.location.hostname)) { //stackoverflow
+                color = '#f69c55';
+            } else { //for all other sites
+                color = $('.post-tag').css('color');
+            }
+
+            $('<style>.fav-tag:before{background: ' + color + '}</style>').appendTo('head');
+
             highlight();
 
             if ($('.question-summary').length) {
-                new MutationObserver(function(records) {
-                    records.forEach(function(mutation) {
+                var target = document.querySelector('.question-summary');
+                var observer = new MutationObserver(function(mutations) {
+                    mutations.forEach(function(mutation) {
+                        console.log(mutation);
                         if (mutation.attributeName == 'class') {
                             highlight();
                         }
                     });
-                }).observe(document.querySelector('.question-summary'), {
-                    childList: true,
-                    attributes: true
                 });
+
+                var config = {
+                    attributes: true,
+                    childList: true,
+                    characterData: true
+                };
+
+                observer.observe(target, config);
             }
-        }, 300);
+        });
     },
 
     displayName: function() {
@@ -1115,28 +1123,28 @@ var features = { //ALL the functions must go in here
             var text = $anchor.text().trim();
             var id = $anchor.attr('href').split('/')[2];
 
-            if(text.substr(text.length-11) == '[duplicate]') {
-                $anchor.text(text.substr(0, text.length-11)); //remove [duplicate]
-                $.get('//'+location.hostname+'/questions/'+id, function(d) {
-                    $anchor.after("&nbsp;<a href='"+$(d).find('.question-status.question-originals-of-duplicate a:eq(0)').attr('href')+"'><span class='duplicate' title='click to visit duplicate'>&nbsp;duplicate&nbsp;</span></a>"); //add appropiate message
+            if (text.substr(text.length - 11) == '[duplicate]') {
+                $anchor.text(text.substr(0, text.length - 11)); //remove [duplicate]
+                $.get('//' + location.hostname + '/questions/' + id, function(d) {
+                    $anchor.after("&nbsp;<a href='" + $(d).find('.question-status.question-originals-of-duplicate a:eq(0)').attr('href') + "'><span class='duplicate' title='click to visit duplicate'>&nbsp;duplicate&nbsp;</span></a>"); //add appropiate message
                 });
 
-            } else if(text.substr(text.length-8) == '[closed]') {
-                $anchor.text(text.substr(0, text.length-8)); //remove [closed]
-                $.get('//'+location.hostname+'/questions/'+id, function(d) {
-                    $anchor.after("&nbsp;<span class='closed' title='"+$(d).find('.question-status h2').text()+"'>&nbsp;closed&nbsp;</span>"); //add appropiate message
+            } else if (text.substr(text.length - 8) == '[closed]') {
+                $anchor.text(text.substr(0, text.length - 8)); //remove [closed]
+                $.get('//' + location.hostname + '/questions/' + id, function(d) {
+                    $anchor.after("&nbsp;<span class='closed' title='" + $(d).find('.question-status h2').text() + "'>&nbsp;closed&nbsp;</span>"); //add appropiate message
                 });
 
-            } else if(text.substr(text.length-10) == '[migrated]') {
-                $anchor.text(text.substr(0, text.length-10)); //remove [migrated]
-                $.get("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20html%20where%20url%3D%22" + encodeURIComponent('http://'+location.hostname+'/questions/'+id) + "%22&diagnostics=true", function(d) {
-                    $anchor.after("&nbsp;<span class='migrated' title='migrated to "+$(d).find('.current-site .site-icon').attr('title')+"'>&nbsp;migrated&nbsp;</span>"); //add appropiate message
+            } else if (text.substr(text.length - 10) == '[migrated]') {
+                $anchor.text(text.substr(0, text.length - 10)); //remove [migrated]
+                $.get("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20html%20where%20url%3D%22" + encodeURIComponent('http://' + location.hostname + '/questions/' + id) + "%22&diagnostics=true", function(d) {
+                    $anchor.after("&nbsp;<span class='migrated' title='migrated to " + $(d).find('.current-site .site-icon').attr('title') + "'>&nbsp;migrated&nbsp;</span>"); //add appropiate message
                 });
 
-            } else if(text.substr(text.length-9) == '[on hold]') {
-                $anchor.text(text.substr(0, text.length-9)); //remove [on hold]
-                $.get('//'+location.hostname+'/questions/'+id, function(d) {
-                    $anchor.after("&nbsp;<span class='onhold' title='"+$(d).find('.question-status h2').text()+"'>&nbsp;onhold&nbsp;</span>"); //add appropiate message
+            } else if (text.substr(text.length - 9) == '[on hold]') {
+                $anchor.text(text.substr(0, text.length - 9)); //remove [on hold]
+                $.get('//' + location.hostname + '/questions/' + id, function(d) {
+                    $anchor.after("&nbsp;<span class='onhold' title='" + $(d).find('.question-status h2').text() + "'>&nbsp;onhold&nbsp;</span>"); //add appropiate message
                 });
             }
         });
@@ -1786,7 +1794,7 @@ Toggle SBS?</div></li>';
         // Description: Adds a notification to the inbox if a question you downvoted and watched is edited
         // Idea by lolreppeatlol @ http://meta.stackexchange.com/a/277446/260841 :)
 
-        if(location.href.indexOf('/review/suggested-edits') > -1) {
+        if (location.href.indexOf('/review/suggested-edits') > -1) {
             var info = {};
             $('.review-more-instructions ul:eq(0) li').each(function() {
                 var text = $(this).text(),
@@ -1808,13 +1816,13 @@ Toggle SBS?</div></li>';
                 editorApproved = $editor.text().match(/([0-9])/g)[0],
                 editorRejected = $editor.text().match(/([0-9])/g)[1];
             info[editorName] = {
-                    'editorLink': link,
-                    'approved': editorApproved,
-                    'rejected': editorRejected
-                };
+                'editorLink': link,
+                'approved': editorApproved,
+                'rejected': editorRejected
+            };
             var table = "<table><tbody><tr><th style='padding: 4px;'>User</th><th style='padding: 4px;'>Approved</th><th style='padding: 4px;'>Rejected</th><th style='padding: 4px;'>Improved</th style='padding: 4px;'></tr>";
             $.each(info, function(user, details) {
-               table += "<tr><td style='padding: 4px;'><a href='" + details.link + "'>" + user + "</a></td><td style='padding: 4px;'>" + details.approved + "</td><td style='padding: 4px;'>" + details.rejected + "</td><td style='padding: 4px;'>" + (details.improved ? details.improved : 'N/A') + "</td></tr>";
+                table += "<tr><td style='padding: 4px;'><a href='" + details.link + "'>" + user + "</a></td><td style='padding: 4px;'>" + details.approved + "</td><td style='padding: 4px;'>" + details.rejected + "</td><td style='padding: 4px;'>" + (details.improved ? details.improved : 'N/A') + "</td></tr>";
             });
             table += "</tbody></table>";
             $('.review-more-instructions p, .review-more-instructions ul').remove();
@@ -1825,15 +1833,15 @@ Toggle SBS?</div></li>';
     linkedToFrom: function() {
         // Description: Add an arrow to linked posts in the sidebar to show whether they are linked to or linked from
 
-        if(location.href.indexOf('/questions/') > -1) {
+        if (location.href.indexOf('/questions/') > -1) {
             setTimeout(function() {
                 $('.linked .spacer a.question-hyperlink').each(function() {
-                  var id = $(this).attr('href').split('/')[4];
-                  if($('a[href*="' + id + '"]').not('.spacer a').length) {
-                      $(this).append('<i class="fa fa-chevron-left"  title="Current question links to this question" style="color:black;margin-left:5px;"></i>');
-                  } else {
-                      $(this).append('<i class="fa fa-chevron-right" title="Current question is linked from this question" style="color:black;margin-left:5px;"></i>');
-                  }
+                    var id = $(this).attr('href').split('/')[4];
+                    if ($('a[href*="' + id + '"]').not('.spacer a').length) {
+                        $(this).append('<i class="fa fa-chevron-left"  title="Current question links to this question" style="color:black;margin-left:5px;"></i>');
+                    } else {
+                        $(this).append('<i class="fa fa-chevron-right" title="Current question is linked from this question" style="color:black;margin-left:5px;"></i>');
+                    }
                 });
             }, 2000);
         }
