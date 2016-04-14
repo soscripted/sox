@@ -1330,7 +1330,7 @@ Toggle SBS?</div></li>';
 
         function getAuthorName($node) {
             var type = $node.find('.item-header .item-type').text(),
-                sitename = $node.find('a').eq(0).attr('href').split('/')[2].split('.')[0],
+                sitename = $node.find('a').eq(0).attr('href').split('com/')[0].replace('http://', '')+'com',
                 link = $node.find('a').eq(0).attr('href'),
                 apiurl,
                 id;
