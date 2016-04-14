@@ -1793,41 +1793,43 @@ Toggle SBS?</div></li>';
     tabularReviewerStats: function() {
         // Description: Adds a notification to the inbox if a question you downvoted and watched is edited
         // Idea by lolreppeatlol @ http://meta.stackexchange.com/a/277446/260841 :)
-
-        if (location.href.indexOf('/review/suggested-edits') > -1) {
-            var info = {};
-            $('.review-more-instructions ul:eq(0) li').each(function() {
-                var text = $(this).text(),
-                    username = $(this).find('a').text(),
-                    link = $(this).find('a').attr('href'),
-                    approved = text.match(/approved (.*?)[a-zA-Z]/)[1],
-                    rejected = text.match(/rejected (.*?)[a-zA-Z]/)[1],
-                    improved = text.match(/improved (.*?)[a-zA-Z]/)[1];
-                info[username] = {
-                    'link': link,
-                    'approved': approved,
-                    'rejected': rejected,
-                    'improved': improved
+        
+        setTimeout(function() {
+            if (location.href.indexOf('/review/suggested-edits') > -1) {
+                var info = {};
+                $('.review-more-instructions ul:eq(0) li').each(function() {
+                    var text = $(this).text(),
+                        username = $(this).find('a').text(),
+                        link = $(this).find('a').attr('href'),
+                        approved = text.match(/approved (.*?)[a-zA-Z]/)[1],
+                        rejected = text.match(/rejected (.*?)[a-zA-Z]/)[1],
+                        improved = text.match(/improved (.*?)[a-zA-Z]/)[1];
+                    info[username] = {
+                        'link': link,
+                        'approved': approved,
+                        'rejected': rejected,
+                        'improved': improved
+                    };
+                });
+                var $editor = $('.review-more-instructions ul:eq(1) li'),
+                    editorName = $editor.find('a').text(),
+                    editorLink = $editor.find('a').attr('href'),
+                    editorApproved = $editor.text().match(/([0-9])/g)[0],
+                    editorRejected = $editor.text().match(/([0-9])/g)[1];
+                info[editorName] = {
+                    'link': editorLink,
+                    'approved': editorApproved,
+                    'rejected': editorRejected
                 };
-            });
-            var $editor = $('.review-more-instructions ul:eq(1) li'),
-                editorName = $editor.find('a').text(),
-                editorLink = $editor.find('a').attr('href'),
-                editorApproved = $editor.text().match(/([0-9])/g)[0],
-                editorRejected = $editor.text().match(/([0-9])/g)[1];
-            info[editorName] = {
-                'editorLink': link,
-                'approved': editorApproved,
-                'rejected': editorRejected
-            };
-            var table = "<table><tbody><tr><th style='padding: 4px;'>User</th><th style='padding: 4px;'>Approved</th><th style='padding: 4px;'>Rejected</th><th style='padding: 4px;'>Improved</th style='padding: 4px;'></tr>";
-            $.each(info, function(user, details) {
-                table += "<tr><td style='padding: 4px;'><a href='" + details.link + "'>" + user + "</a></td><td style='padding: 4px;'>" + details.approved + "</td><td style='padding: 4px;'>" + details.rejected + "</td><td style='padding: 4px;'>" + (details.improved ? details.improved : 'N/A') + "</td></tr>";
-            });
-            table += "</tbody></table>";
-            $('.review-more-instructions p, .review-more-instructions ul').remove();
-            $('.review-more-instructions').append(table);
-        }
+                var table = "<table><tbody><tr><th style='padding: 4px;'>User</th><th style='padding: 4px;'>Approved</th><th style='padding: 4px;'>Rejected</th><th style='padding: 4px;'>Improved</th style='padding: 4px;'></tr>";
+                $.each(info, function(user, details) {
+                    table += "<tr><td style='padding: 4px;'><a href='" + details.link + "'>" + user + "</a></td><td style='padding: 4px;'>" + details.approved + "</td><td style='padding: 4px;'>" + details.rejected + "</td><td style='padding: 4px;'>" + (details.improved ? details.improved : 'N/A') + "</td></tr>";
+                });
+                table += "</tbody></table>";
+                $('.review-more-instructions p, .review-more-instructions ul').remove();
+                $('.review-more-instructions').append(table);
+            }
+        }, 1000);
     },
 
     linkedToFrom: function() {
