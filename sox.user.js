@@ -21,7 +21,7 @@
 // @require      https://cdn.rawgit.com/camagu/jquery-feeds/master/jquery.feeds.js
 // @require      https://rawgit.com/soscripted/sox/dev/sox.helpers.js?v=1.0.4d
 // @require      https://rawgit.com/soscripted/sox/dev/sox.enhanced_editor.js?v=1.0.4a
-// @require      https://rawgit.com/soscripted/sox/dev/sox.features.js?v=1.0.4f
+// @require      https://rawgit.com/soscripted/sox/dev/sox.features.js?v=1.0.4g
 // @require      https://api.stackexchange.com/js/2.0/all.js
 // @resource     settingsDialog https://rawgit.com/soscripted/sox/dev/sox.dialog.html?v=1.0.4a
 // @resource     featuresJSON https://rawgit.com/soscripted/sox/dev/sox.features.info.json?v=1.0.4c
@@ -142,7 +142,7 @@
 
             // add sox CSS file and font-awesome CSS file
             $('head').append('<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">')
-                .append('<link rel="stylesheet" type="text/css" href="https://rawgit.com/soscripted/sox/dev/sox.css?v=1.0.4c" />');
+                .append('<link rel="stylesheet" type="text/css" href="https://rawgit.com/soscripted/sox/dev/sox.css?v=1.0.4d" />');
             $('.js-topbar-dialog-corral').append($settingsDialog);
 
             $soxSettingsDialog = $('#sox-settings-dialog');

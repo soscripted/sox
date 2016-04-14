@@ -384,24 +384,16 @@ hr.or:after {
 }
 
 /*highlightQuestions -- for the tags*/
-.post-tag.favorite-tag-so {
-    border-color: rgba(0, 0, 0, .5);
-    background-color: #D7E6FB;
+.fav-tag {
+    position: relative;
 }
-.post-tag .fa-star {
-    margin-left: 5px;
-    display: inline;
-    color: darkblue;
-}
-.post-tag.favorite-tag-su {
-    border-color: rgba(0, 0, 0, .3);
-    background-color: #a1eaff;
-}
-.post-tag.favorite-tag-all {
-    border-color: rgba(0, 0, 0, .3);
-    background-color: #c3dafa;
-}
-.post-tag.favorite-tag-all:before, .post-tag.favorite-tag-su:before, .post-tag.favorite-tag-so:before {
-    border-color: inherit;
-    background-color: inherit;
+.fav-tag:before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 2px;
+    height: 100%;
+    background: black;
 }
