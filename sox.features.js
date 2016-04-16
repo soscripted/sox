@@ -1837,10 +1837,23 @@ Toggle SBS?</div></li>';
 
         if (location.href.indexOf('/questions/') > -1) {
             setTimeout(function() {
+                var currentId = location.href.split('/')[4];
                 $('.linked .spacer a.question-hyperlink').each(function() {
                     var id = $(this).attr('href').split('/')[4];
                     if ($('a[href*="' + id + '"]').not('.spacer a').length) {
-                        $(this).append('<i class="fa fa-chevron-right"  title="Current question links to this question" style="color:black;margin-left:5px;"></i>');
+                        var $that = $(this);
+                        $that.append('<i class="fa fa-chevron-right"  title="Current question links to this question" style="color:black;margin-left:5px;"></i>');
+                        $.ajax({
+                            url: '/questions/' + id,
+                            type: 'get',
+                            dataType: 'html',
+                            async: 'false',
+                            success: function(d) {
+                                if($(d).find('a[href*="' + currentId + '"]').not('.spacer a').length) {
+                                    $that.append('<i class="fa fa-chevron-left" title="Current question is linked from this question" style="color:black;margin-left:5px;"></i>');
+                                }
+                            }
+                        });
                     } else {
                         $(this).append('<i class="fa fa-chevron-left" title="Current question is linked from this question" style="color:black;margin-left:5px;"></i>');
                     }
