@@ -1010,8 +1010,8 @@ var features = { //ALL the functions must go in here
         if (SOHelper.getSiteType() != 'main' || !$('.related-site').length) return; //DO NOT RUN ON META OR CHAT OR SITES WITHOUT A META
 
         var NEWQUESTIONS = 'metaNewQuestionAlert-lastQuestions',
-            DIAMONDON = 'new-meta-questions-diamondOn',
-            DIAMONDOFF = 'new-meta-questions-diamondOff';
+            DIAMONDON = 'metaNewQuestionAlert-diamondOn',
+            DIAMONDOFF = 'metaNewQuestionAlert-diamondOff';
 
         var favicon = $(".current-site a[href*='meta'] .site-icon").attr('class').split('favicon-')[1];
 
@@ -1019,7 +1019,7 @@ var features = { //ALL the functions must go in here
             lastQuestions = {},
             apiLink = 'https://api.stackexchange.com/2.2/questions?pagesize=5&order=desc&sort=activity&site=' + metaName;
         var $dialog = $('<div/>', {
-            id: 'new-meta-questions-dialog',
+            id: 'metaNewQuestionAlertDialog',
             'class': 'topbar-dialog achievements-dialog dno'
         });
         var $header = $('<div/>', {
@@ -1032,13 +1032,13 @@ var features = { //ALL the functions must go in here
         });
 
         var $questions = $('<ul/>', {
-            id: 'new-meta-questions-dialog-list',
+            id: 'metaNewQuestionAlertDialogList',
             'class': 'js-items items'
         });
 
         var $diamond = $('<a/>', {
-            id: 'new-meta-questions-button',
-            'class': 'topbar-icon yes-hover new-meta-questions-diamondOff',
+            id: 'metaNewQuestionAlertButton',
+            'class': 'topbar-icon yes-hover metaNewQuestionAlert-diamondOff',
             click: function() {
                 $diamond.toggleClass('topbar-icon-on');
                 $dialog.toggle();
@@ -1047,11 +1047,35 @@ var features = { //ALL the functions must go in here
 
         $dialog.append($header).append($content.append($questions)).prependTo('.js-topbar-dialog-corral');
         $('#soxSettingsButton').after($diamond);
+        
+         $('#metaNewQuestionAlertButton').hover(function() { //open on hover, just like the normal dropdowns
+            if ($('.topbar-icon').not('#metaNewQuestionAlertButton').hasClass('topbar-icon-on')) {
+                $('.topbar-dialog').hide();
+                $('.topbar-icon').removeClass('topbar-icon-on').removeClass('icon-site-switcher-on');
+                $(this).addClass('topbar-icon-on');
+                $('#metaNewQuestionAlertDialog').show();
+            }
+        }, function() {
+            $('.topbar-icon').not('#metaNewQuestionAlertButton').hover(function() {
+                if ($('#metaNewQuestionAlertButton').hasClass('topbar-icon-on')) {
+                    $('#metaNewQuestionAlertDialog').hide();
+                    $('#metaNewQuestionAlertButton').removeClass('topbar-icon-on');
+                    var which = $(this).attr('class').match(/js[\w-]*\b/)[0].split('-')[1];
+                    if (which != 'site') { //site-switcher dropdown is slightly different
+                        $('.' + which + '-dialog').not('#sox-settings-dialog, #metaNewQuestionAlertDialog').show();
+                        $(this).addClass('topbar-icon-on');
+                    } else {
+                        $('.siteSwitcher-dialog').show();
+                        $(this).addClass('topbar-icon-on').addClass('icon-site-switcher-on'); //icon-site-switcher-on is special to the site-switcher dropdown (StackExchange button)
+                    }
+                }
+            });
+        });
 
         $(document).mouseup(function(e) {
             if (!$dialog.is(e.target) &&
                 $dialog.has(e.target).length === 0 &&
-                !$(e.target).is('#new-meta-questions-button')) {
+                !$(e.target).is('#metaNewQuestionAlertButton')) {
                 $dialog.hide();
                 $diamond.removeClass("topbar-icon-on");
             }
@@ -1103,8 +1127,6 @@ var features = { //ALL the functions must go in here
             $link.append($icon).append($message).appendTo($li);
             $questions.append($li);
         }
-
-
     },
 
     betterCSS: function() {
