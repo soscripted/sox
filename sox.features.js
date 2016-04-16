@@ -745,14 +745,14 @@ var features = { //ALL the functions must go in here
             }
         });
 
-        $('span[id="replyLink"]').css('cursor', 'pointer').on('click', function() {
+        $('span#replyLink').css('cursor', 'pointer').on('click', function() {
             var parentDiv = $(this).parent().parent().parent().parent();
             var textToAdd = '@' + $(this).parent().find('.comment-text a.comment-user').text().replace(/\s/g, '').replace(/♦/, '') + ' '; //eg. @USERNAME [space]
 
             if (parentDiv.find('textarea').length) {
                 parentDiv.find('textarea').append(textToAdd); //add the name
             } else {
-                parentDiv.next('div').find('a').trigger('click'); //show the textarea
+                parentDiv.next('div').find('a.js-add-link')[0].click(); //show the textarea, http://stackoverflow.com/a/10559680/
                 parentDiv.find('textarea').append(textToAdd); //add the name
             }
         });
