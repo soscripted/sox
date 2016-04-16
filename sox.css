@@ -134,24 +134,24 @@
     background: #808080;
 }
 
-/*metaNewQuestionAlert for the mod diamond */
+/*metaNewQuestionAlert for the mod diamond and dialog */
 
-#new-meta-questions-button {
+#metaNewQuestionAlertButton {
     cursor: pointer;
     width: 32px;
 }
-.new-meta-questions-diamondOn {
+.metaNewQuestionAlert-diamondOn {
     background-position: -218px -86px;
 }
-.new-meta-questions-diamondOff {
+.metaNewQuestionAlert-diamondOff {
     background-position: -138px -86px;
 }
-#new-meta-questions-dialog {
+#metaNewQuestionAlertDialog {
     top: 34px;
     left: 264px;
     width: 377px;
 }
-#new-meta-questions-dialog-list:empty::after {
+#metaNewQuestionAlertDialogList:empty::after {
     content: "No new meta questions at this time.";
 }
 
@@ -181,8 +181,6 @@
 }
 
 /*fixedTopbar */
-
-
 /*Ubuntu CSS by @UnicornsAreVeryVeryYummy - http://stackapps.com/users/33746/unicorns-are-very-very-yummy */
 
 .fixedTopbar-links {
