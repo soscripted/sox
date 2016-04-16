@@ -1840,9 +1840,9 @@ Toggle SBS?</div></li>';
                 $('.linked .spacer a.question-hyperlink').each(function() {
                     var id = $(this).attr('href').split('/')[4];
                     if ($('a[href*="' + id + '"]').not('.spacer a').length) {
-                        $(this).append('<i class="fa fa-chevron-left"  title="Current question links to this question" style="color:black;margin-left:5px;"></i>');
+                        $(this).append('<i class="fa fa-chevron-right"  title="Current question links to this question" style="color:black;margin-left:5px;"></i>');
                     } else {
-                        $(this).append('<i class="fa fa-chevron-right" title="Current question is linked from this question" style="color:black;margin-left:5px;"></i>');
+                        $(this).append('<i class="fa fa-chevron-left" title="Current question is linked from this question" style="color:black;margin-left:5px;"></i>');
                     }
                 });
             }, 2000);
