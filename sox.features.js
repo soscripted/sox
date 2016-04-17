@@ -254,23 +254,20 @@ var features = { //ALL the functions must go in here
             highlight();
 
             if ($('.question-summary').length) {
-                var target = document.querySelector('.question-summary');
-                var observer = new MutationObserver(function(mutations) {
-                    mutations.forEach(function(mutation) {
-                        console.log(mutation);
+                var target = document.body;
+                new MutationObserver(function(mutations) {
+                    $.each(mutations, function(i, mutation) {
                         if (mutation.attributeName == 'class') {
                             highlight();
+                            return false; //no point looping through everything; if *something* has changed, assume everything has
                         }
                     });
+                }).observe(target, {
+                    "attributes": true,
+                    "childList": true,
+                    "characterData": true,
+                    "subtree": true
                 });
-
-                var config = {
-                    attributes: true,
-                    childList: true,
-                    characterData: true
-                };
-
-                observer.observe(target, config);
             }
         });
     },
