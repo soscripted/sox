@@ -15,18 +15,10 @@ var enhancedEditor = {
     },
     
     init: function(wmd) {
-        var urls = ['http://cdn.rawgit.com/dwieeb/jquery-textrange/1.x/jquery-textrange.js', 
-            'http://rawgit.com/ajaxorg/ace-builds/master/src-noconflict/ace.js',
-            'http://rawgit.com/ajaxorg/ace-builds/master/src-noconflict/ext-language_tools.js',
-            'http://rawgit.com/ajaxorg/ace-builds/master/src-noconflict/theme-github.js',
-            'http://rawgit.com/ajaxorg/ace-builds/master/src-noconflict/mode-javascript.js',
-            'http://rawgit.com/ajaxorg/ace-builds/master/src-noconflict/snippets/javascript.js'];
-
-        for (var i = 0; i < urls.length; i++) {
-            script = document.createElement('script');
-            script.src = urls[i];
-            document.head.appendChild(script);
-        }
+        var script = document.createElement('script');
+        script.src = 'http://cdn.rawgit.com/dwieeb/jquery-textrange/1.x/jquery-textrange.js';
+        document.head.appendChild(script);
+        
         $('head').append("<link rel='stylesheet' type='text/css' href='https://rawgit.com/soscripted/sox/experimental/enhancedEditor/sox.enhancedEditor.css' />");
 
         $('[id^="enhancedEditor"]').remove();
@@ -36,13 +28,8 @@ var enhancedEditor = {
         enhancedEditor.betterTabKey(s);
         enhancedEditor.keyboardShortcuts(s);
         
-        $(s).before("<span class='enhancedEditor-toolbar' id='enhancedEditor|"+s+"'>&nbsp;<span id='startAce'>Insert code (Ace editor)</span> | <span id='findReplace'>Find & Replace</span> | <span id='autoCorrect'>Auto correct</span></span>");
+        $(s).before("<span class='enhancedEditor-toolbar' id='enhancedEditor|"+s+"'>&nbsp;<span id='findReplace'>Find & Replace</span> | <span id='autoCorrect'>Auto correct</span></span>");
 
-        $('#startAce').click(function(e) {
-            enhancedEditor.startAceEditor(s);
-            e.preventDefault();
-            e.stopPropagation();
-        });
         $('#findReplace').click(function(e) {
             enhancedEditor.findReplace($(this).parent().attr('id').split('|')[1]);
             e.preventDefault();
@@ -62,73 +49,6 @@ var enhancedEditor = {
             if(!$(event.target).closest('#enhancedEditor-insertLinkDialog, #enhancedEditor-insertImageDialog').length) {
                 $('#enhancedEditor-insertLinkDialog, #enhancedEditor-insertImageDialog').hide()
             }
-        });
-    },
-    
-    startAceEditor: function(s) {
-        var aceDiv = "<div id='enhancedEditor-aceEditor' class='wmd-prompt-dialog enhancedEditor-centered' style='position:fixed;'> \
-              <select class='enhancedEditor-aceLanguages'></select>\
-              <button class='enhancedEditor-addCode'>Add code</button>\
-              <span class='enhancedEditor-closeDialog'>x</span>\
-              <h2>Ace Editor</h2>\
-              <div id='editor'></div>\
-          </div>";
-
-        var languages = {
-            'CoffeeScript': 'coffee',
-            'CSS': 'css',
-            'HTML': 'html',
-            'JavaScript': 'javascript',
-            'JSON': 'json',
-            'PHP': 'php',
-            'XML': 'xml',
-            'AppleScript': 'applescript',
-            'Cobol': 'cobol',
-            'C#': 'csharp',
-            'Python': 'python',
-            'Ruby': 'ruby'
-        };
-
-        $('body').append(aceDiv);
-
-        $.each(languages, function (lang, file) {
-            $('select.enhancedEditor-aceLanguages').append("<option value='"+file+"'>"+lang+"</option>");
-        });
-
-        $('select.enhancedEditor-aceLanguages option[value="javascript"]').prop('selected', true);
-        setTimeout(function() {
-            editor = ace.edit("editor");
-            editor.setTheme("ace/theme/github");
-            editor.getSession().setMode("ace/mode/javascript");
-            editor.setOptions({
-                enableBasicAutocompletion: true,
-                enableSnippets: true,
-                enableLiveAutocompletion: true
-            });
-        }, 2000);
-
-        $('select.enhancedEditor-aceLanguages').on('change', function() {
-            editor = ace.edit("editor");
-            editor.getSession().setMode("ace/mode/"+$(this).val());
-        });
-
-        $(document).on('click', '.enhancedEditor-addCode', function() {
-            editor = ace.edit("editor");
-            code = editor.getSession().getValue();
-            var codeToAdd = '',
-                gap = "    ",
-                lines = code.split("\n"),
-                pos = $(s).textrange('get', 'position'),
-                oldVal = $(s).val();
-
-            for(i = 0; i < lines.length; i++) {
-                codeToAdd += gap + lines[i] + '\n';
-            }
-
-            //http://stackoverflow.com/a/15977052/3541881:
-            $(s).val(oldVal.substring(0, pos) + codeToAdd + oldVal.substring(pos));
-            
-            enhancedEditor.refreshPreview();
         });
     },
     
@@ -361,12 +281,6 @@ var enhancedEditor = {
             }
          });
          $(s).keydown(function(e) {
-            if(e.which == 65 && e.ctrlKey) { //ctrl+a (ace editor)
-                $('#enhancedEditor-aceEditor').show(500);
-                e.stopPropagation();
-                e.preventDefault();
-                return false;                
-            }
             if(e.which == 70 && e.ctrlKey) { //ctrl+f (find+replace)
                 $('#findReplace').trigger('click');
                 e.stopPropagation();
