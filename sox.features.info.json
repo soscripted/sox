@@ -166,7 +166,7 @@
             "meta-url": "http://meta.stackexchange.com/questions/135710/please-show-changed-titles-separately-in-edit-diffs"
         },
         "enhancedEditor": {
-            "desc": "Add more features to the markdown editor (autocorrect, find+replace, Ace editor, and more!)"
+            "desc": "Add more features to the markdown editor"
         }
     },
     "Flags": {
