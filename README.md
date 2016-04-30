@@ -2,7 +2,7 @@
 
 [![Join the chat at https://gitter.im/soscripted/sox](https://badges.gitter.im/soscripted/sox.svg)](https://gitter.im/soscripted/sox?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-Stack Overflow Extras is a project that stemmed from the [Stack Overflow Optional Features (SOOF)](https://github.com/shu8/Stack-Overflow-Optional-Features) project. It has been written by [ᔕᖺᘎᕊ](https://stackexchange.com/users/4337810/) and [ᴉʞuǝ](https://stackoverflow.com/users/1454538/), has a new look, and features have been rewritten to be better!
+Stack Overflow Extras (*SOX*) is a project that stemmed from the [Stack Overflow Optional Features (SOOF)](https://github.com/shu8/Stack-Overflow-Optional-Features) project. 
 
 The SOX userscript adds a bunch of **optional** features to all sites in the Stack Exchange network. These can be toggled on or off from an easy to use control panel (see screenshot below).
 
@@ -29,8 +29,4 @@ A full list of all the features is available on the SOX wiki page [here](https:/
 ##Bugs and Feature Requests
 
 Please post bugs and feature requests as issues on [Github](https://github.com/soscripted/sox), where we can track them easily and push updates quickly. Please **do not** post them as answers on Stack Apps -- they are much harder to manage!
-
-##Changes
-
-Please see the change log [at Stack Apps](http://stackapps.com/a/6358).
 
