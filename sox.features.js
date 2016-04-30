@@ -219,21 +219,23 @@ var features = { //ALL the functions must go in here
             var interesting = interestingTagsDiv.split(' ');
             interesting.pop(); //Because there's one extra value at the end
             var len = interesting.length;
+            
+            for (var i = 0; i < len; i++) {
+                interesting[i] = "^" + interesting[i] + "$";
+                if (interesting[i].indexOf('*') != -1) {
+                    interesting[i] = interesting[i].replace('*', '.*'); //replace wildcards with regex equivalents
+                }
+            }
 
-            $('.tagged-interesting > .summary > .tags > .post-tag').filter(function(index) {
+            $('.tagged-interesting .post-tag').each(function(index) {
                 var $summary = $(this).closest('.question-summary');
                 $summary.removeClass('tagged-interesting');
-                if (!$summary.hasClass('fav-tag')) {
-                    for (var i = 0; i < len; i++) {
-                        if (interesting[i].indexOf('*') != -1) {
-                            interesting[i] = interesting[i].replace('*', '.*'); //replace wildcards with regex equivalents
-                        }
-
-                        if ($(this).text().match(interesting[i])) { //check if it matches the regex (ie. the tag)
+                for (var i = 0; i < len; i++) {
+                    if ($(this).text().match(new RegExp(interesting[i]))) { //check if it matches the regex (ie. the tag)
+                        if(!$(this).find('.fa-tag').length) {
                             $(this).append('<i class="fa fa-tag" style="padding: 0 0 0 7px;"></>'); //.css('border-color', color);
-                            $summary.addClass('fav-tag');
-                            return true;
                         }
+                        if(!$summary.hasClass('fav-tag')) $summary.addClass('fav-tag');
                     }
                 }
             });
