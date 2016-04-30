@@ -21,7 +21,7 @@ var enhancedEditor = {
         
         $('head').append("<link rel='stylesheet' type='text/css' href='https://rawgit.com/soscripted/sox/experimental/enhancedEditor/sox.enhancedEditor.css' />");
 
-        $('[id^="enhancedEditor"]').remove();
+        $('[id^="enhancedEditor"]').not('#sox-settings-dialog input').remove();
         var s = '#'+wmd; //s is the selector we pass onto each function so the action is applied to the correct textarea (and not, for example the 'add answer' textarea *and* the 'edit' textarea!)
         enhancedEditor.startInsertLink(s);
         enhancedEditor.startInsertImages(s);
