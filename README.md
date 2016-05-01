@@ -1,8 +1,12 @@
 #SOX
 
-Stack Overflow Extras is a project that stemmed from the [Stack Overflow Optional Features (SOOF)](https://github.com/shu8/Stack-Overflow-Optional-Features) project. It has been written by [ᔕᖺᘎᕊ](https://stackexchange.com/users/4337810/) and [ᴉʞuǝ](https://stackoverflow.com/users/1454538/), has a new look, and features have been rewritten to be better!
+[![Join the chat at https://gitter.im/soscripted/sox](https://badges.gitter.im/soscripted/sox.svg)](https://gitter.im/soscripted/sox?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
+Stack Overflow Extras (*SOX*) is a project that stemmed from the [Stack Overflow Optional Features (SOOF)](https://github.com/shu8/Stack-Overflow-Optional-Features) project. 
 
 The SOX userscript adds a bunch of **optional** features to all sites in the Stack Exchange network. These can be toggled on or off from an easy to use control panel (see screenshot below).
+
+Note: This project has no relation to Stack Overflow or Stack Exchange; it is simply a userscript that enhances the sites!
 
 ##Installation & Requirements
 
@@ -10,12 +14,13 @@ The SOX userscript adds a bunch of **optional** features to all sites in the Sta
 2. Install the script. Clicking on 'install' below will make your userscript manager prompt you automatically to install it.
     
     - Official Version: <kbd>[install](https://github.com/soscripted/sox/raw/v1.0.3/sox.user.js)</kbd>. <kbd>[view source](https://github.com/soscripted/sox/blob/v1.0.3/sox.user.js)</kbd>
-    - Development Version: <kbd>[install](https://github.com/soscripted/sox/raw/dev/sox.user.js)</kbd>. <kbd>[view source](https://github.com/soscripted/sox/blob/develop/sox.user.js)</kbd>
+    - Development Version: <kbd>[install](https://github.com/soscripted/sox/raw/dev/sox.user.js)</kbd>. <kbd>[view source](https://github.com/soscripted/sox/blob/dev/sox.user.js)</kbd>
     - Experimental Version: <kbd>[install](https://github.com/soscripted/sox/raw/experimental/sox.user.js)</kbd>. <kbd>[view source](https://github.com/soscripted/sox/blob/experimental/sox.user.js)</kbd>
     
 3. Go to any site in the Stack Exchange Network (eg. [Super User](http://superuser.com/) or [Stack Overflow](http://stackoverflow.com/)). You will automatically be asked to choose and save your settings. A toggle button (gears icon) will be added to your topbar where you can change these later on: 
 
-![sox dialog](https://cloud.githubusercontent.com/assets/12533449/14296194/c732b1b2-fb2d-11e5-9563-1e34b12eada9.png)
+![newdialog](https://cloud.githubusercontent.com/assets/12533449/14296194/c732b1b2-fb2d-11e5-9563-1e34b12eada9.png)
+
 
 ##What features are included?
 
@@ -25,8 +30,8 @@ A full list of all the features is available on the SOX wiki page [here](https:/
 
 Please post bugs and feature requests as issues on [Github](https://github.com/soscripted/sox), where we can track them easily and push updates quickly. Please **do not** post them as answers on Stack Apps -- they are much harder to manage!
 
-##Changes
+##Contributing
 
-Please see the change log [at Stack Apps](http://stackapps.com/a/6358).
+If you're interesting in contributing to SOX (by adding a feature, or fixing a bug), then please see our short [Contributing Wiki](https://github.com/soscripted/sox/wiki/Contributing), where we outline a few of the steps you should take.
 
-Note: This project has no relation to Stack Overflow or Stack Exchange; it is simply a userscript that enhances the sites!
+Thanks for helping! :)
