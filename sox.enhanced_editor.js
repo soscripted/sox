@@ -9,9 +9,9 @@ var enhancedEditor = {
                 $that = $(this);
                 setTimeout(function() {
                     enhancedEditor.init($that.parents('table').find('.inline-editor textarea.processed').attr('id'));
-                }, 2000);
+                }, 5000);
             });
-        }, 2000);        
+        }, 5000);        
     },
     
     init: function(wmd) {
