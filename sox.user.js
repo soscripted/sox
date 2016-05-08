@@ -34,6 +34,9 @@
 // ==/UserScript==
 (function(sox, $, undefined) {
     'use strict';
+
+    //some changes being made..
+
     var SOX_SETTINGS = 'SOXSETTINGS';
     var SOX_VERSION = (typeof GM_info !== 'undefined' ? GM_info.script.version : '??');
     var SOX_MANAGER = (typeof GM_info !== 'undefined' ? GM_info.scriptHandler : '??');
@@ -50,9 +53,6 @@
             GM_deleteValue(SOX_SETTINGS);
         }
     }
-
-
-
 
 
 
