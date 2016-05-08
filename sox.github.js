@@ -16,17 +16,18 @@
                 }
             }
 
-            if (location.href.indexOf('/issues/new') > -1) {
-                inject();
-                return;
-            }
-
-            $(document).on('pjax:complete', function() {
+            if(location.host == "github.com"){
                 if (location.href.indexOf('/issues/new') > -1) {
                     inject();
-                    return;
                 }
-            });
+
+                $(document).on('pjax:complete', function() {
+                    if (location.href.indexOf('/issues/new') > -1) {
+                        inject();
+                    }
+                });
+                return;
+            }
         }
     };
 })(window.sox = window.sox || {},jQuery);
