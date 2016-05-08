@@ -35,7 +35,7 @@
 (function(sox, $, undefined) {
     'use strict';
 
-    //some changes being made..
+    // making some changes to commit...
 
     var SOX_SETTINGS = 'SOXSETTINGS';
     var SOX_VERSION = (typeof GM_info !== 'undefined' ? GM_info.script.version : '??');
