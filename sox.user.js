@@ -75,11 +75,7 @@
 
     }
 
-    $(function() { //TODO: Move doc.ready to sox.ready function
-        // document is ready
 
-        sox.ready(init);
-    });
-
+    sox.ready(init);
 
 })(window.sox = window.sox || {}, jQuery);
