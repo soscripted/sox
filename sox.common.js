@@ -4,7 +4,11 @@
     var StackExchange = window.StackExchange ? window.StackExchange : undefined;
     var Chat = window.CHAT ? window.CHAT : undefined;
 
-
+    sox.ready = function(func) {
+        $(function() {
+            return StackExchange ? StackExchange.ready(func) : func();
+        });
+    };
 
     sox.helpers = {
         // eg: sox.helpers.notify('message one', 'message two');
@@ -106,14 +110,5 @@
             return this.on('/questions');
         }
     };
-
-    sox.ready = function(func) {
-        $(function() {
-            sox.helpers.notify('ready');
-
-            return StackExchange ? StackExchange.ready(func) : func();
-        });
-    };
-
 
 })(window.sox = window.sox || {}, jQuery);

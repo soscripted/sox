@@ -19,14 +19,14 @@
 // @require      https://cdn.rawgit.com/timdown/rangyinputs/master/rangyinputs-jquery-src.js
 // @require      https://cdn.rawgit.com/jeresig/jquery.hotkeys/master/jquery.hotkeys.js
 // @require      https://cdn.rawgit.com/camagu/jquery-feeds/master/jquery.feeds.js
-// @require      https://rawgit.com/soscripted/sox/2.0/sox.common.js
-// @require      https://rawgit.com/soscripted/sox/2.0/sox.github.js
-// @require      https://rawgit.com/soscripted/sox/2.0/sox.dialog.js
-// @require      https://rawgit.com/soscripted/sox/2.0/sox.features.js
-// @resource     css https://rawgit.com/soscripted/sox/2.0/sox.css
-// @resource     dialog https://rawgit.com/soscripted/sox/2.0/sox.dialog.html
-// @resource     features https://rawgit.com/soscripted/sox/2.0/sox.features.info.json
-// @resource     common https://rawgit.com/soscripted/sox/2.0/so.json
+// @require      https://rawgit.com/soscripted/sox/refactor/sox.common.js
+// @require      https://rawgit.com/soscripted/sox/refactor/sox.github.js
+// @require      https://rawgit.com/soscripted/sox/refactor/sox.dialog.js
+// @require      https://rawgit.com/soscripted/sox/refactor/sox.features.js
+// @resource     css https://rawgit.com/soscripted/sox/refactor/sox.css
+// @resource     dialog https://rawgit.com/soscripted/sox/refactor/sox.dialog.html
+// @resource     features https://rawgit.com/soscripted/sox/refactor/sox.features.info.json
+// @resource     common https://rawgit.com/soscripted/sox/refactor/so.json
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_deleteValue
