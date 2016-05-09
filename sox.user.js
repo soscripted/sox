@@ -51,7 +51,7 @@
         reset: function() {
             GM_deleteValue(SOX_SETTINGS);
         }
-    }
+    };
 
 
     function init() {
@@ -69,7 +69,7 @@
 
         }
 
-        sox.dialog.init()
+        sox.dialog.init();
 
         // sox.features.init()
         // |->  execute enabled features
