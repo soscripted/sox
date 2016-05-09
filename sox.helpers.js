@@ -5,11 +5,11 @@
     var Chat = window.CHAT ? window.CHAT : undefined;
 
     sox.ready = function(func) {
-      $(function() {
-        console.log('sox.ready');
+        $(function() {
+            console.log('sox.ready');
 
-        return StackExchange ? StackExchange.ready(func) : func();
-      });
+            return StackExchange ? StackExchange.ready(func) : func();
+        });
     };
 
     sox.helpers = {
@@ -47,7 +47,7 @@
             return StackExchange ? StackExchange.options.user.isRegistered : undefined;
         },
         hasPrivelage: function(privelage) {
-          var privelages = {}; // load from so.json file
+            var privelages = {}; // load from so.json file
             if (user.loggedIn) {
                 var rep = site.type == beta ? privelages.beta[privelage] : privelages.graduated[privelage];
                 return user.rep > rep;
@@ -99,5 +99,19 @@
         icon: undefined
 
     };
+
+    sox.location = {
+        // location helpers
+        on: function(location) {
+            return window.location.href.indexOf(location) > -1 ? true : false;
+        },
+        get onUserProfile() {
+            return this.on('/users');
+        },
+        get onQuestion() {
+            return this.on('/questions');
+        }
+    };
+
 
 })(window.sox = window.sox || {}, jQuery);
