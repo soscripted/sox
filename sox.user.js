@@ -19,7 +19,7 @@
 // @require      https://cdn.rawgit.com/timdown/rangyinputs/master/rangyinputs-jquery-src.js
 // @require      https://cdn.rawgit.com/jeresig/jquery.hotkeys/master/jquery.hotkeys.js
 // @require      https://cdn.rawgit.com/camagu/jquery-feeds/master/jquery.feeds.js
-// @require      https://rawgit.com/soscripted/sox/2.0/sox.helpers.js
+// @require      https://rawgit.com/soscripted/sox/2.0/sox.common.js
 // @require      https://rawgit.com/soscripted/sox/2.0/sox.github.js
 // @require      https://rawgit.com/soscripted/sox/2.0/sox.dialog.js
 // @require      https://rawgit.com/soscripted/sox/2.0/sox.features.js
@@ -55,7 +55,7 @@
 
 
     function init() {
-        sox.notify('initializing');
+        sox.helpers.notify('initializing');
 
         sox.github.init(SOX_VERSION, SOX_MANAGER);
 
@@ -63,15 +63,16 @@
             sox.settings.load();
         } else {
             // no settings available => first return
-            sox.notify('first run');
+            sox.helpers.notify('first run');
 
             // request oath access if it hasn't been granted previously <- this will take some checking via the api, doable though
 
         }
 
-        sox.dialog.init({
+        /*sox.dialog.init({
           html: GM_getResourceText('dialog')
         });
+        */
 
         // sox.features.init()
         // |->  execute enabled features
