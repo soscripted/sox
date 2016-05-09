@@ -69,7 +69,9 @@
 
         }
 
-        sox.dialog.init();
+        sox.dialog.init({
+          html: GM_getResourceText('dialog')
+        });
 
         // sox.features.init()
         // |->  execute enabled features

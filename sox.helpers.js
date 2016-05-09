@@ -90,7 +90,7 @@
         },
         url: location.hostname,
         href: location.href,
-        get apiParameter(site) {
+        apiParameter: function(site) {
             var sites = {}; // load from so.json file
             if (sites.hasOwnProperty(site)) {
                 return (sites[site]);
