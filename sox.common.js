@@ -1,12 +1,12 @@
 (function(sox, $, undefined) {
     'use strict';
 
-    var StackExchange = window.StackExchange ? window.StackExchange : undefined;
-    var Chat = window.CHAT ? window.CHAT : undefined;
+    var Stack = typeof StackExchange === "undefined" ? undefined : StackExchange;
+    var Chat = typeof CHAT === "undefined" ? undefined : CHAT;
 
     sox.ready = function(func) {
         $(function() {
-            return StackExchange ? StackExchange.ready(func) : func();
+            return Stack ? Stack.ready(func) : func();
         });
     };
 
@@ -19,56 +19,28 @@
         }
     };
 
-    sox.user = {
-        get id() {
-            if (sox.site.type == sox.site.types.chat) {
-                return Chat ? Chat.RoomUsers.current().id : undefined;
-            } else {
-                return StackExchange ? StackExchange.options.user.id : undefined;
-            }
-        },
-        get rep() {
-            if (sox.site.type == sox.site.types.chat) {
-                return Chat ? Chat.RoomUsers.current().reputation : undefined;
-            } else {
-                return StackExchange ? StackExchange.options.user.rep : undefined;
-            }
-        },
-        get name() {
-            if (sox.site.type == sox.site.types.chat) {
-                return Chat ? Chat.RoomUsers.current().name : undefined;
-            } else {
-                return StackExchange ? decodeURI(StackExchange.options.user.profileUrl.split('/')[5]) : undefined;
-            }
-        },
-        get loggedIn() {
-            return StackExchange ? StackExchange.options.user.isRegistered : undefined;
-        },
-        hasPrivelage: function(privelage) {
-            var privelages = {}; // load from so.json file
-            if (user.loggedIn) {
-                var rep = site.type == beta ? privelages.beta[privelage] : privelages.graduated[privelage];
-                return user.rep > rep;
-            }
-            return false;
-        }
-    };
 
     sox.site = {
-        id: StackExchange ? StackExchange.options.site.id : undefined,
+        id: Stack ? Stack.options.site.id : undefined,
         get name() {
             if (Chat) {
-                $('#footer-logo a').attr('title')
-            } else if (StackExchange) {
-                StackExchange.options.site.name
+                return $('#footer-logo a').attr('title');
+            } else if (Stack) {
+                return Stack.options.site.name;
             }
             return undefined;
+        },
+        types: {
+            main: 'main',
+            meta: 'meta',
+            chat: 'chat',
+            beta: 'beta'
         },
         get type() {
             if (Chat) {
                 return sox.site.types.chat;
-            } else if (StackExchange) {
-                if (StackExchange.options.site.isMetaSite) {
+            } else if (Stack) {
+                if (Stack.options.site.isMetaSite) {
                     return sox.site.types.meta;
                 } else {
                     // check if site is in beta or graduated
@@ -80,12 +52,7 @@
                 }
             }
         },
-        types: {
-            main: 'main',
-            meta: 'meta',
-            chat: 'chat',
-            beta: 'beta'
-        },
+
         url: location.hostname,
         href: location.href,
         apiParameter: function(site) {
@@ -110,5 +77,41 @@
             return this.on('/questions');
         }
     };
+
+    sox.user = {
+        get id() {
+            if (sox.site.type == sox.site.types.chat) {
+                return Chat ? Chat.RoomUsers.current().id : undefined;
+            } else {
+                return Stack ? Stack.options.user.userId : undefined;
+            }
+        },
+        get rep() {
+            if (sox.site.type == sox.site.types.chat) {
+                return Chat ? Chat.RoomUsers.current().reputation : undefined;
+            } else {
+                return Stack ? Stack.options.user.rep : undefined;
+            }
+        },
+        get name() {
+            if (sox.site.type == sox.site.types.chat) {
+                return Chat ? Chat.RoomUsers.current().name : undefined;
+            } else {
+                return Stack ? decodeURI(Stack.options.user.profileUrl.split('/')[5]) : undefined;
+            }
+        },
+        get loggedIn() {
+            return Stack ? Stack.options.user.isRegistered : undefined;
+        },
+        hasPrivelage: function(privelage) {
+            /*var privelages = {}; // load from so.json file
+            if (user.loggedIn) {
+                var rep = (site.type == beta ? privelages.beta[privelage] : privelages.graduated[privelage]);
+                return user.rep > rep;
+            }*/
+            return false;
+        }
+    };
+
 
 })(window.sox = window.sox || {}, jQuery);

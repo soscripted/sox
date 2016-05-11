@@ -27,6 +27,5 @@
                 });
                 return;
             }
-        }
     };
 })(window.sox = window.sox || {}, jQuery);

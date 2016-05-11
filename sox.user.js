@@ -15,14 +15,8 @@
 // @match        *://*.mathoverflow.net/*
 // @match        *://github.com/soscripted/*
 // @require      https://code.jquery.com/jquery-2.1.4.min.js
-// @require      https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js
-// @require      https://cdn.rawgit.com/timdown/rangyinputs/master/rangyinputs-jquery-src.js
-// @require      https://cdn.rawgit.com/jeresig/jquery.hotkeys/master/jquery.hotkeys.js
-// @require      https://cdn.rawgit.com/camagu/jquery-feeds/master/jquery.feeds.js
-// @require      https://rawgit.com/soscripted/sox/refactor/sox.common.js
-// @require      https://rawgit.com/soscripted/sox/refactor/sox.github.js
-// @require      https://rawgit.com/soscripted/sox/refactor/sox.dialog.js
-// @require      https://rawgit.com/soscripted/sox/refactor/sox.features.js
+// @require      sox.common.js
+// @require      sox.github.js
 // @resource     css https://rawgit.com/soscripted/sox/refactor/sox.css
 // @resource     dialog https://rawgit.com/soscripted/sox/refactor/sox.dialog.html
 // @resource     features https://rawgit.com/soscripted/sox/refactor/sox.features.info.json
@@ -33,6 +27,11 @@
 // @grant        GM_getResourceText
 // @grant        GM_info
 // ==/UserScript==
+
+// @require      sox.github.js
+// @require      sox.dialog.js
+// @require      sox.features.js
+jQuery.noConflict();
 (function(sox, $, undefined) {
     'use strict';
 
@@ -60,14 +59,17 @@
         sox.github.init(SOX_VERSION, SOX_MANAGER);
 
         if (sox.settings.available) {
-            sox.settings.load();
+            //sox.settings.load();
         } else {
             // no settings available => first return
             sox.helpers.notify('first run');
 
             // request oath access if it hasn't been granted previously <- this will take some checking via the api, doable though
 
+
         }
+
+        sox.helpers.notify(sox.user.rep, sox.user.name, sox.user.id, sox.site.type, sox.site.name);
 
         /*sox.dialog.init({
           html: GM_getResourceText('dialog')
