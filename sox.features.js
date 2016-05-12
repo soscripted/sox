@@ -1322,7 +1322,7 @@ Toggle SBS?</div></li>';
     alwaysShowImageUploadLinkBox: function() {
         // Description: For always showing the 'Link from the web' box when uploading an image.
 
-        var body = document.getElementById('body'); //Code courtesy of Siguza <http://meta.stackoverflow.com/a/306901/3541881>! :)
+        var body = document.querySelector('body'); //Code courtesy of Siguza <http://meta.stackoverflow.com/a/306901/3541881>! :)
         if (body) {
             new MutationObserver(function(records) {
                 records.forEach(function(r) {
