@@ -350,7 +350,6 @@ hr.or:after {
     display: inherit;
     border-left: 1px solid #ccc;
     border-right: 1px solid #ccc;
-    padding-right: 147px;
 }
 .enhancedEditor-toolbar > span {
     cursor: pointer;
