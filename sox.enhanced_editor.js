@@ -322,6 +322,6 @@ var enhancedEditor = {
     },
     
     refreshPreview: function() {
-        StackExchange.MarkdownEditor.refreshAllPreviews();
+        SOHelper.StackExchange().MarkdownEditor.refreshAllPreviews();
     }
 };
