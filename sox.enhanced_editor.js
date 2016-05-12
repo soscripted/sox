@@ -15,12 +15,6 @@ var enhancedEditor = {
     },
     
     init: function(wmd) {
-        var script = document.createElement('script');
-        script.src = 'http://cdn.rawgit.com/dwieeb/jquery-textrange/1.x/jquery-textrange.js';
-        document.head.appendChild(script);
-        
-        $('head').append("<link rel='stylesheet' type='text/css' href='https://rawgit.com/soscripted/sox/experimental/enhancedEditor/sox.enhancedEditor.css' />");
-
         $('[id^="enhancedEditor"]').not('#sox-settings-dialog input').remove();
         var s = '#'+wmd; //s is the selector we pass onto each function so the action is applied to the correct textarea (and not, for example the 'add answer' textarea *and* the 'edit' textarea!)
         enhancedEditor.startInsertLink(s);
