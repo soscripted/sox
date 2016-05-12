@@ -80,7 +80,7 @@ var enhancedEditor = {
                 $('#DDG-credit a').attr('href', 'http://google.com');
                 $('#enhancedEditor-insertLinkDialog').show(500);
                 setTimeout(function () {
-                    query = $(s).textrange();
+                    query = $(s).getSelection();
 
                     $.getJSON("http://api.duckduckgo.com/?q=" + query.text + "&format=json&t=stackExchangeEditorPro&callback=?", function (json) {
                         $('#DDG-header').append("<a href='" + json.AbstractURL + "'>" + json.Heading + "</a>");
@@ -127,7 +127,7 @@ var enhancedEditor = {
             $('#wmd-image-button > span').click(function(e) {
                 $('#enhancedEditor-insertImageDialog').show(500);
                 setTimeout(function () {
-                    query = $(s).textrange();
+                    query = $(s).getSelection();
 
                     $('#ownGoImage').click(function() {
                         $check = $(this).next();
@@ -253,7 +253,7 @@ var enhancedEditor = {
     }, 
     
     addLink: function(query, url, s) {
-        $(s).textrange('replace', '['+query.text+']('+url+')');
+        $(s).replaceSelectedText('['+query.text+']('+url+')');
         $('#enhancedEditor-insertLinkDialog').hide();
         enhancedEditor.refreshPreview();
     },
@@ -313,9 +313,9 @@ var enhancedEditor = {
         if($check.find('input').is(':checked')) {
             urlsplit = url.split('/')[3].split('.');
             urlToUse = 'http://i.imgur.com/'+urlsplit[0]+'m.'+urlsplit[1];
-            $(s).textrange('replace', '[!['+query.text+']('+urlToUse+')]('+url+')\n\n<sub>click image for larger variant</sub>');
+            $(s).replaceSelectedText('[!['+query.text+']('+urlToUse+')]('+url+')\n\n<sub>click image for larger variant</sub>');
         } else {
-            $(s).textrange('replace', '!['+query.text+']('+url+')');
+            $(s).replaceSelectedText('!['+query.text+']('+url+')');
         }
         $('#enhancedEditor-insertImageDialog').hide();
         enhancedEditor.refreshPreview();
