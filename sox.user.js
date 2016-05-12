@@ -18,11 +18,11 @@
 // @require      https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js
 // @require      https://cdn.rawgit.com/timdown/rangyinputs/master/rangyinputs-jquery-src.js
 // @require      https://cdn.rawgit.com/jeresig/jquery.hotkeys/master/jquery.hotkeys.js
-// @require      https://cdn.rawgit.com/camagu/jquery-feeds/master/jquery.feeds.js
+// @require      https://cdn.rawgit.com/dwieeb/jquery-textrange/1.x/jquery-textrange.js
 // @require      https://cdn.rawgit.com/BrockA/2625891/raw/9c97aa67ff9c5d56be34a55ad6c18a314e5eb548/waitForKeyElements.js
 // @require      https://rawgit.com/soscripted/sox/dev/sox.helpers.js?v=1.0.4g
-// @require      https://rawgit.com/soscripted/sox/dev/sox.enhanced_editor.js?v=1.0.4c
-// @require      https://rawgit.com/soscripted/sox/dev/sox.features.js?v=1.0.4p
+// @require      https://rawgit.com/soscripted/sox/dev/sox.enhanced_editor.js?v=1.0.4e
+// @require      https://rawgit.com/soscripted/sox/dev/sox.features.js?v=1.0.4r
 // @require      https://api.stackexchange.com/js/2.0/all.js
 // @resource     settingsDialog https://rawgit.com/soscripted/sox/dev/sox.dialog.html?v=1.0.4b
 // @resource     featuresJSON https://rawgit.com/soscripted/sox/dev/sox.features.info.json?v=1.0.4e
