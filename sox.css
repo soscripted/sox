@@ -347,6 +347,7 @@ hr.or:after {
     margin-right: 5px;
 }
 .enhancedEditor-toolbar {
+    display: inherit;
     border-left: 1px solid #ccc;
     border-right: 1px solid #ccc;
     padding-right: 147px;
