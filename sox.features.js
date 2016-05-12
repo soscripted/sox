@@ -854,7 +854,7 @@ var features = { //ALL the functions must go in here
         // Description: For auto-inlining any links to imgur images in comments
 
         $('.comment .comment-text .comment-copy a').each(function() {
-            if ($(this).attr('href').indexOf('imgur.com') != -1) {
+            if ($(this).attr('href').indexOf('imgur.com') != -1 && $(this).attr('href').match(/jpg|png|jpeg|gif/)) {
                 var image = $(this).attr('href');
                 if (image.indexOf($(this).text()) != -1) {
                     $(this).replaceWith('<img src="' + image + '" width="100%">');
