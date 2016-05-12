@@ -19,12 +19,13 @@
 // @require      https://cdn.rawgit.com/timdown/rangyinputs/master/rangyinputs-jquery-src.js
 // @require      https://cdn.rawgit.com/jeresig/jquery.hotkeys/master/jquery.hotkeys.js
 // @require      https://cdn.rawgit.com/camagu/jquery-feeds/master/jquery.feeds.js
-// @require      https://rawgit.com/soscripted/sox/dev/sox.helpers.js?v=1.0.4e
-// @require      https://rawgit.com/soscripted/sox/dev/sox.enhanced_editor.js?v=1.0.4b
-// @require      https://rawgit.com/soscripted/sox/dev/sox.features.js?v=1.0.4o
+// @require      https://cdn.rawgit.com/BrockA/2625891/raw/9c97aa67ff9c5d56be34a55ad6c18a314e5eb548/waitForKeyElements.js
+// @require      https://rawgit.com/soscripted/sox/dev/sox.helpers.js?v=1.0.4g
+// @require      https://rawgit.com/soscripted/sox/dev/sox.enhanced_editor.js?v=1.0.4c
+// @require      https://rawgit.com/soscripted/sox/dev/sox.features.js?v=1.0.4p
 // @require      https://api.stackexchange.com/js/2.0/all.js
 // @resource     settingsDialog https://rawgit.com/soscripted/sox/dev/sox.dialog.html?v=1.0.4b
-// @resource     featuresJSON https://rawgit.com/soscripted/sox/dev/sox.features.info.json?v=1.0.4d
+// @resource     featuresJSON https://rawgit.com/soscripted/sox/dev/sox.features.info.json?v=1.0.4e
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_deleteValue
@@ -306,6 +307,7 @@
                 var featureId = $(this).attr('data-feature-id');
                 var oauthDomain = $(this).attr('data-oauth-domain');
                 if(location.hostname == oauthDomain) { //it only works on the Oauth Domain given when registering the app at Stack Apps
+                    console.log(SE.init);
                     SE.init({
                         clientId: client_id,
                         key: key,
