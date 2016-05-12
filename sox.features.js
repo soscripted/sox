@@ -324,7 +324,7 @@ var features = { //ALL the functions must go in here
             $('#wmd-bullet-button').on('click', function() {
                 addBullets();
             });
-        }, 2000);
+        }, 3000);
 
         $('[id^="wmd-input"]').bind('keydown', 'alt+l', function() {
             addBullets();
