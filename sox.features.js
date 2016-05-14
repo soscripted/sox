@@ -1345,18 +1345,18 @@ Toggle SBS?</div></li>';
             switch (type) {
                 case 'comment':
                     id = link.split('/')[5].split('?')[0],
-                        apiurl = 'https://api.stackexchange.com/2.2/comments/' + id + '?order=desc&sort=creation&site=' + sitename
+                        apiurl = 'https://api.stackexchange.com/2.2/comments/' + id + '?order=desc&sort=creation&site=' + sitename;
                     break;
                 case 'answer':
                     id = link.split('/')[4].split('?')[0];
-                    apiurl = 'https://api.stackexchange.com/2.2/answers/' + id + '?order=desc&sort=creation&site=' + sitename
+                    apiurl = 'https://api.stackexchange.com/2.2/answers/' + id + '?order=desc&sort=creation&site=' + sitename;
                     break;
                 case 'edit suggested':
                     id = link.split('/')[4],
-                        apiurl = 'https://api.stackexchange.com/2.2/suggested-edits/' + id + '?order=desc&sort=creation&site=' + sitename
+                        apiurl = 'https://api.stackexchange.com/2.2/suggested-edits/' + id + '?order=desc&sort=creation&site=' + sitename;
                     break;
                 default:
-                    console.log('SOX does not currently support get author information for type: ' + type)
+                    console.log('SOX does not currently support get author information for type: ' + type);
                     return;
             }
 
@@ -1376,14 +1376,14 @@ Toggle SBS?</div></li>';
                 $header.empty().append($type).append($author).append($creation);
 
             });
-        };
+        }
 
         new MutationObserver(function(mutations) {
             mutations.forEach(function(mutation) {
                 var length = mutation.addedNodes.length;
                 for (var i = 0; i < length; i++) {
                     var $addedNode = $(mutation.addedNodes[i]);
-                    if (!$addedNode.hasClass('inbox-dialog') return;
+                    if (!$addedNode.hasClass('inbox-dialog')) return;
 
                     for (var x = 0; x < 21; x++) { //first 20 items
                         getAuthorName($addedNode.find('.inbox-item').eq(x));
