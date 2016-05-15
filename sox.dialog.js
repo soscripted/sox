@@ -55,6 +55,69 @@
             $soxSettingsDialogVersion.text(SOX_VERSION != '??' ? ' v' + SOX_VERSION.toLowerCase() : '');
 
             // wire up event handlers
+            $soxSettingsClose.on('click', function() {
+                $soxSettingsDialog.hide();
+            });
+            $soxSettingsReset.on('click', function() {
+                reset();
+                location.reload(); // reload page to reflect changed settings
+            });
+
+            $soxSettingsToggle.on('click', function() {
+                var $icon = $(this).find('i'),
+                    checked = $icon.hasClass('fa-check-square-o') ? true : false;
+
+                if (checked) {
+                    $icon.removeClass('fa-check-square-o').addClass('fa-square-o');
+                    $soxSettingsDialogFeatures.find('input').prop('checked', false);
+                } else {
+                    $icon.removeClass('fa-square-o').addClass('fa-check-square-o');
+                    $soxSettingsDialogFeatures.find('input').prop('checked', true);
+                }
+            });
+
+            $searchReset.on('click', function() {
+                $('.category, .features, #sox-settings-dialog label').fadeIn();
+                $searchBox.val('').focus();
+
+            });
+
+            $soxSettingsSave.on('click', function() {
+                alert('save button');
+                /*var extras = [];
+                $soxSettingsDialogFeatures.find('input[type=checkbox]:checked').each(function() {
+                    var x = $(this).closest('.modal-content').attr('id') + '-' + $(this).attr('id');
+
+                    extras.push(x); //Add the function's ID (also the checkbox's ID) to the array
+                });
+                save(extras);
+                location.reload(); // reload page to reflect changed settings
+                */
+            });
+
+            $searchBox.on('keyup keydown', function() { //search box
+                if ($(this).val() != '') {
+                    var t = $(this).val();
+                    $('#sox-settings-dialog label').each(function() {
+                        var $features = $(this).closest('.features');
+                        if ($(this).text().toLowerCase().indexOf(t) == -1) {
+                            $(this).hide();
+                        } else {
+                            $(this).show();
+                        }
+
+                        if ($features.find('label:visible').length == 0 && $features.find('label[style*="display: inline"]').length == 0) {
+                            $features.hide().prev().hide();
+                        } else {
+                            $features.show().prev().show();
+                        }
+                    });
+                } else {
+                    $('.category, .features, #sox-settings-dialog label').fadeIn();
+                }
+            });
+
+
 
 
             // append the dialog to the dialog corral

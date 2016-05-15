@@ -71,10 +71,13 @@
             return window.location.href.indexOf(location) > -1 ? true : false;
         },
         get onUserProfile() {
-            return this.on('/users');
+            return this.on('/users/' + sox.user.id);
         },
         get onQuestion() {
             return this.on('/questions');
+        }
+        get onGitHub() {
+          return this.on('github.com/');
         }
     };
 

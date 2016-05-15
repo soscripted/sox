@@ -56,7 +56,12 @@ jQuery.noConflict();
     function init() {
         sox.helpers.notify('initializing');
 
-        sox.github.init(SOX_VERSION, SOX_MANAGER);
+        if (sox.location.onGitHub) {
+            sox.github.init(SOX_VERSION, SOX_MANAGER);
+            return;
+        }
+
+
 
         if (sox.settings.available) {
             //sox.settings.load();
