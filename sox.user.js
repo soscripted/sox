@@ -20,7 +20,7 @@
 // @resource     css https://rawgit.com/soscripted/sox/refactor/sox.css
 // @resource     dialog https://rawgit.com/soscripted/sox/refactor/sox.dialog.html
 // @resource     features https://rawgit.com/soscripted/sox/refactor/sox.features.info.json
-// @resource     common https://rawgit.com/soscripted/sox/refactor/so.json
+// @resource     common https://rawgit.com/soscripted/sox/refactor/sox.common.info.json
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_deleteValue
@@ -39,6 +39,9 @@ jQuery.noConflict();
     var SOX_VERSION = (typeof GM_info !== 'undefined' ? GM_info.script.version : '??');
     var SOX_MANAGER = (typeof GM_info !== 'undefined' ? GM_info.scriptHandler : '??');
 
+    var SOX_FEATURES = GM_getResourceText('features');
+    var SOX_DIALOG = GM_getValue('dialog');
+
     sox.settings = {
         available: GM_getValue(SOX_SETTINGS, -1) != -1,
         load: function() {
@@ -56,15 +59,24 @@ jQuery.noConflict();
     function init() {
         sox.helpers.notify('initializing');
 
-        if (sox.location.onGitHub) {
+        if (sox.location.on('github.com/soscripted')) {
             sox.github.init(SOX_VERSION, SOX_MANAGER);
             return;
         }
 
 
+        var settings = sox.settings.load();
+
+        sox.dialog.init({
+            version: SOX_VERSION,
+            html: SOX_DIALOG,
+            features: SOX_FEATURES
+            settings = settings
+        });
 
         if (sox.settings.available) {
-            //sox.settings.load();
+          // execute features
+
         } else {
             // no settings available => first return
             sox.helpers.notify('first run');
@@ -73,16 +85,6 @@ jQuery.noConflict();
 
 
         }
-
-        sox.helpers.notify(sox.user.rep, sox.user.name, sox.user.id, sox.site.type, sox.site.name);
-
-        /*sox.dialog.init({
-          html: GM_getResourceText('dialog')
-        });
-        */
-
-        // sox.features.init()
-        // |->  execute enabled features
 
     }
 

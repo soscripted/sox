@@ -1,5 +1,4 @@
 /*jshint multistr: true */
-//TODO: what are post_contents and author for?
 var features = { //ALL the functions must go in here
 
     grayOutVotes: function() {
@@ -35,14 +34,6 @@ var features = { //ALL the functions must go in here
         if (SOHelper.getSiteType() === 'chat') {
             document.title = 'Chat - ' + document.title;
         }
-    },
-
-    exclaim: function() {
-        // Description: Removes exclamation marks
-
-        var old = $('td.comment-actions > div > div > div.message-text');
-        var newText = old.text().replace("!", ".");
-        old.html(newText);
     },
 
     markEmployees: function() {
@@ -219,7 +210,7 @@ var features = { //ALL the functions must go in here
             var interesting = interestingTagsDiv.split(' ');
             interesting.pop(); //Because there's one extra value at the end
             var len = interesting.length;
-            
+
             for (var i = 0; i < len; i++) {
                 interesting[i] = "^" + interesting[i] + "$";
                 if (interesting[i].indexOf('*') != -1) {
@@ -1046,7 +1037,7 @@ var features = { //ALL the functions must go in here
 
         $dialog.append($header).append($content.append($questions)).prependTo('.js-topbar-dialog-corral');
         $('#soxSettingsButton').after($diamond);
-        
+
          $('#metaNewQuestionAlertButton').hover(function() { //open on hover, just like the normal dropdowns
             if ($('.topbar-icon').not('#metaNewQuestionAlertButton').hasClass('topbar-icon-on')) {
                 $('.topbar-dialog').hide();
@@ -1814,7 +1805,7 @@ Toggle SBS?</div></li>';
     tabularReviewerStats: function() {
         // Description: Adds a notification to the inbox if a question you downvoted and watched is edited
         // Idea by lolreppeatlol @ http://meta.stackexchange.com/a/277446/260841 :)
-        
+
         setTimeout(function() {
             if (location.href.indexOf('/review/suggested-edits') > -1) {
                 var info = {};

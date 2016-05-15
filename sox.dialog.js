@@ -3,7 +3,7 @@
 
     sox.dialog = {
         init: function(options) {
-            // options { dialog html, features data, sox version}
+
 
             var $soxSettingsDialog = $(options.html),
                 $soxSettingsDialogFeatures = $soxSettingsDialog.find('#sox-settings-dialog-features'),
@@ -18,20 +18,19 @@
                 $searchReset = $soxSettingsDialog.find('#search-reset');
 
 
-            function addFeature(category, feature, desc) {
+            function addFeature(options) {
                 var $div = $('<div/>', {
-                        'class': 'feature',
-                        'data-desc': desc
+                        'class': 'feature'
                     }),
                     $label = $('<label/>'),
                     $input = $('<input/>', {
-                        id: feature,
+                        id: options.name,
                         type: 'checkbox'
                     });
                 $div.append($label);
                 $label.append($input);
-                $input.after(desc);
-                $soxSettingsDialogFeatures.find('#' + category).append($div);
+                $input.after(options.desc);
+                $soxSettingsDialogFeatures.find('#' + options.category).append($div);
             }
 
             function addCategory(name) {
@@ -52,7 +51,7 @@
             }
 
             // display sox version number in the dialog
-            $soxSettingsDialogVersion.text(SOX_VERSION != '??' ? ' v' + SOX_VERSION.toLowerCase() : '');
+            $soxSettingsDialogVersion.text(options.version != '??' ? ' v' + options.version.toLowerCase() : '');
 
             // wire up event handlers
             $soxSettingsClose.on('click', function() {
@@ -83,7 +82,9 @@
             });
 
             $soxSettingsSave.on('click', function() {
-                alert('save button');
+
+                // TODO: need to access sox.settings.save here.
+
                 /*var extras = [];
                 $soxSettingsDialogFeatures.find('input[type=checkbox]:checked').each(function() {
                     var x = $(this).closest('.modal-content').attr('id') + '-' + $(this).attr('id');
@@ -177,6 +178,30 @@
                 $soxSettingsDialog.hide();
                 $('#soxSettingsButton').removeClass('topbar-icon-on');
             });
+
+
+            // load features into dialog
+            for (var category in options.features.categories) {
+                addCategory(category);
+
+                for (var feature in data.categories[category]) {
+                    addFeature({
+                        category: category,
+                        name: data.categories[category][feature].name,
+                        description: data.categories[category][feature].desc
+                    });
+                }
+            }
+            if (options.settings) {
+                // TODO: check all enabled features
+
+
+            } else {
+
+                // no settings found, mark all inputs as checked and display settings dialog
+                $soxSettingsDialogFeatures.find('input').prop('checked', true);
+                $soxSettingsDialog.show();
+            }
 
 
             // add dialog to corral and sox button to topbar
