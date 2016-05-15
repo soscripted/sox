@@ -35,35 +35,16 @@ jQuery.noConflict();
 (function(sox, $, undefined) {
     'use strict';
 
-    var SOX_SETTINGS = 'SOXSETTINGS';
-    var SOX_VERSION = (typeof GM_info !== 'undefined' ? GM_info.script.version : '??');
-    var SOX_MANAGER = (typeof GM_info !== 'undefined' ? GM_info.scriptHandler : '??');
-
     var SOX_FEATURES = GM_getResourceText('features');
     var SOX_DIALOG = GM_getValue('dialog');
-
-    sox.settings = {
-        available: GM_getValue(SOX_SETTINGS, -1) != -1,
-        load: function() {
-            return JSON.parse(GM_getValue(SOX_SETTINGS));
-        },
-        save: function(options) {
-            GM_setValue(SOX_SETTINGS, JSON.stringify(options));
-        },
-        reset: function() {
-            GM_deleteValue(SOX_SETTINGS);
-        }
-    };
-
 
     function init() {
         sox.helpers.notify('initializing');
 
         if (sox.location.on('github.com/soscripted')) {
-            sox.github.init(SOX_VERSION, SOX_MANAGER);
+            sox.github.init(sox.info.version, sox.info.handler);
             return;
         }
-
 
         var settings = sox.settings.load();
 
@@ -85,9 +66,7 @@ jQuery.noConflict();
 
 
         }
-
     }
-
 
     sox.ready(init);
 
