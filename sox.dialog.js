@@ -3,7 +3,7 @@
 
     sox.dialog = {
         init: function(options) {
-
+            sox.helpers.notify('dialog init');
 
             var $soxSettingsDialog = $(options.html),
                 $soxSettingsDialogFeatures = $soxSettingsDialog.find('#sox-settings-dialog-features'),
@@ -78,22 +78,20 @@
             $searchReset.on('click', function() {
                 $('.category, .features, #sox-settings-dialog label').fadeIn();
                 $searchBox.val('').focus();
-
             });
 
             $soxSettingsSave.on('click', function() {
+                var settings = [];
 
-                // TODO: need to access sox.settings.save here.
-
-                /*var extras = [];
                 $soxSettingsDialogFeatures.find('input[type=checkbox]:checked').each(function() {
                     var x = $(this).closest('.modal-content').attr('id') + '-' + $(this).attr('id');
 
-                    extras.push(x); //Add the function's ID (also the checkbox's ID) to the array
+                    settings.push(x); //Add the function's ID (also the checkbox's ID) to the array
                 });
-                save(extras);
+
+                sox.settings.save(settings);
+
                 location.reload(); // reload page to reflect changed settings
-                */
             });
 
             $searchBox.on('keyup keydown', function() { //search box
