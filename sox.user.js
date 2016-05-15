@@ -35,8 +35,8 @@ jQuery.noConflict();
 (function(sox, $, undefined) {
     'use strict';
 
-    var SOX_FEATURES = GM_getResourceText('features');
-    var SOX_DIALOG = GM_getValue('dialog');
+    var features = GM_getResourceText('features');
+
 
     function init() {
         sox.helpers.notify('initializing');
@@ -49,14 +49,30 @@ jQuery.noConflict();
         var settings = sox.settings.load();
 
         sox.dialog.init({
-            version: SOX_VERSION,
-            html: SOX_DIALOG,
-            features: SOX_FEATURES
+            version: sox.info.version
+            features: features,
             settings = settings
         });
 
         if (sox.settings.available) {
-          // execute features
+            // execute features
+            for (var i = 0; i < settings.length; ++i) {
+                try {
+                    /*
+                      var featureHeader = settings[i].split('-')[0];
+                      var featureId = settings[i].split('-')[1];
+                      var feature = featuresJSON[featureHeader][featureId];
+                    */
+
+                } catch (err) {
+                    /*
+                      $('').find('#' + extras[i].split('-')[1]).parent().css('color', 'red').attr('title', 'There was an error loading this feature. Please raise an issue on GitHub.');
+                      console.log('SOX error: There was an error loading the feature "' + extras[i] + '". Please raise an issue on GitHub, and copy the following error log.');
+                      console.log(err);
+                      i++;
+                    */
+                }
+            }
 
         } else {
             // no settings available => first return

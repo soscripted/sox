@@ -3,9 +3,15 @@
 
     sox.dialog = {
         init: function(options) {
+            var version = options.version,
+                features = options.features,
+                settings = options.settings;
+
+            var html = GM_getResourceText('dialog');
+
             sox.helpers.notify('dialog init');
 
-            var $soxSettingsDialog = $(options.html),
+            var $soxSettingsDialog = $(html),
                 $soxSettingsDialogFeatures = $soxSettingsDialog.find('#sox-settings-dialog-features'),
                 $soxSettingsDialogVersion = $soxSettingsDialog.find('#sox-settings-dialog-version'),
                 $soxSettingsSave = $soxSettingsDialog.find('#sox-settings-dialog-save'),
@@ -51,7 +57,7 @@
             }
 
             // display sox version number in the dialog
-            $soxSettingsDialogVersion.text(options.version != '??' ? ' v' + options.version.toLowerCase() : '');
+            $soxSettingsDialogVersion.text(options.version != 'unknown' ? ' v' + version.toLowerCase() : '');
 
             // wire up event handlers
             $soxSettingsClose.on('click', function() {
@@ -179,20 +185,20 @@
 
 
             // load features into dialog
-            for (var category in options.features.categories) {
+            for (var category in features.categories) {
                 addCategory(category);
 
-                for (var feature in data.categories[category]) {
+                for (var feature in features.categories[category]) {
                     addFeature({
                         category: category,
-                        name: data.categories[category][feature].name,
-                        description: data.categories[category][feature].desc
+                        name: features.categories[category][feature].name,
+                        description: features.categories[category][feature].desc
                     });
                 }
             }
-            if (options.settings) {
-                for (var i = 0; i < options.settings.length; ++i) {
-                    $soxSettingsDialogFeatures.find('#' + options.settings[i].split('-')[1]).prop('checked', true);
+            if (settings) {
+                for (var i = 0; i < settings.length; ++i) {
+                    $soxSettingsDialogFeatures.find('#' + settings[i].split('-')[1]).prop('checked', true);
                 }
             } else {
                 // no settings found, mark all inputs as checked and display settings dialog
