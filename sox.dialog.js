@@ -163,8 +163,6 @@
                 });
             });
 
-
-
             //close dialog if clicked outside it
             $(document).click(function(e) {
                 $target = $(e.target);
@@ -180,10 +178,10 @@
                 $('#soxSettingsButton').removeClass('topbar-icon-on');
             });
 
-            // add dialog to corral and sox button to topbar
 
-$soxSettingsButton.append($icon).appendTo('div.network-items');
-  $('.js-topbar-dialog-corral').append($settingsDialog);
+            // add dialog to corral and sox button to topbar
+            $soxSettingsButton.append($icon).appendTo('div.network-items');
+            $('.js-topbar-dialog-corral').append($settingsDialog);
         }
     };
 
