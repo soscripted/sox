@@ -332,20 +332,6 @@ hr.or:after {
 .DDG-credit {
     font-size: 0.8em;
 }
-#enhancedEditor-aceEditor>#editor {
-    position: absolute;
-    top: 10%;
-    right: 0;
-    bottom: 0;
-    left: 0;
-}
-.enhancedEditor-aceLanguages {
-    float: right;
-}
-.enhancedEditor-addCode {
-    float: right;
-    margin-right: 5px;
-}
 .enhancedEditor-toolbar {
     display: inherit;
     border-left: 1px solid #ccc;
