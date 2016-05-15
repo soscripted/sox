@@ -118,12 +118,72 @@
             });
 
 
+            // create sox settings button
+            var $soxSettingsButton = $('<a/>', {
+                    id: 'soxSettingsButton',
+                    class: 'topbar-icon yes-hover sox-settings-button',
+                    title: 'Change SOX Settings',
+                    style: 'color: #A1A1A1',
+                    click: function(e) {
+                        e.preventDefault();
+                        $('#sox-settings-dialog').toggle();
+                        if ($soxSettingsDialog.is(':visible')) {
+                            $(this).addClass('topbar-icon-on');
+                        } else {
+                            $(this).removeClass('topbar-icon-on');
+                        }
+                    }
+                }),
+                $icon = $('<i/>', {
+                    class: 'fa fa-cogs'
+                });
+
+            //open dialog on hover if another dialog is already open
+            $('#soxSettingsButton').hover(function() { //https://github.com/soscripted/sox/issues/44, open on hover, just like the normal dropdowns
+                if ($('.topbar-icon').not('#soxSettingsButton').hasClass('topbar-icon-on')) {
+                    $('.topbar-dialog').hide();
+                    $('.topbar-icon').removeClass('topbar-icon-on').removeClass('icon-site-switcher-on');
+                    $(this).addClass('topbar-icon-on');
+                    $soxSettingsDialog.show();
+                }
+            }, function() {
+                $('.topbar-icon').not('#soxSettingsButton').hover(function() {
+                    if ($('#soxSettingsButton').hasClass('topbar-icon-on')) {
+                        $soxSettingsDialog.hide();
+                        $('#soxSettingsButton').removeClass('topbar-icon-on');
+                        var which = $(this).attr('class').match(/js[\w-]*\b/)[0].split('-')[1];
+                        if (which != 'site') { //site-switcher dropdown is slightly different
+                            $('.' + which + '-dialog').not('#sox-settings-dialog, #metaNewQuestionAlertDialog').show();
+                            $(this).addClass('topbar-icon-on');
+                        } else {
+                            $('.siteSwitcher-dialog').show();
+                            $(this).addClass('topbar-icon-on').addClass('icon-site-switcher-on'); //icon-site-switcher-on is special to the site-switcher dropdown (StackExchange button)
+                        }
+                    }
+                });
+            });
 
 
-            // append the dialog to the dialog corral
-            $('.js-topbar-dialog-corral').append($settingsDialog);
 
+            //close dialog if clicked outside it
+            $(document).click(function(e) {
+                $target = $(e.target);
+                if (!$target.is('#soxSettingsButton, #sox-settings-dialog') && !$target.parents("#soxSettingsButton, #sox-settings-dialog").is("#soxSettingsButton, #sox-settings-dialog")) {
+                    $soxSettingsDialog.hide();
+                    $('#soxSettingsButton').removeClass('topbar-icon-on');
+                }
+            });
 
+            //close dialog if one of the links on the topbar is clicked
+            $('.topbar-icon').not('.sox-settings-button').click(function() {
+                $soxSettingsDialog.hide();
+                $('#soxSettingsButton').removeClass('topbar-icon-on');
+            });
+
+            // add dialog to corral and sox button to topbar
+
+$soxSettingsButton.append($icon).appendTo('div.network-items');
+  $('.js-topbar-dialog-corral').append($settingsDialog);
         }
     };
 
