@@ -191,16 +191,14 @@
                 }
             }
             if (options.settings) {
-                // TODO: check all enabled features
-
-
+                for (var i = 0; i < options.settings.length; ++i) {
+                    $soxSettingsDialogFeatures.find('#' + options.settings[i].split('-')[1]).prop('checked', true);
+                }
             } else {
-
                 // no settings found, mark all inputs as checked and display settings dialog
                 $soxSettingsDialogFeatures.find('input').prop('checked', true);
                 $soxSettingsDialog.show();
             }
-
 
             // add dialog to corral and sox button to topbar
             $soxSettingsButton.append($icon).appendTo('div.network-items');
