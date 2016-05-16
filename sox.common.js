@@ -56,16 +56,16 @@
         },
         get type() {
             if (Chat) {
-                return sox.site.types.chat;
+                return this.site.types.chat;
             } else if (Stack) {
                 if (Stack.options.site.isMetaSite) {
-                    return sox.sites.type.meta;
+                    return this.sites.types.meta;
                 } else {
                     // check if site is in beta or graduated
                     if ($('.beta-title').length > 0) {
-                        return sox.site.types.beta;
+                        return this.site.types.beta;
                     } else {
-                        return sox.site.types.main;
+                        return this.site.types.main;
                     }
                 }
             }
