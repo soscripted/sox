@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Stack Overflow Extras (SOX)
+// @name         SOX2R
 // @namespace    https://github.com/soscripted/sox
 // @version      2.0.0 REFACTOR
 // @description  Extra features for Stack Overflow and Stack Exchange sites
@@ -17,6 +17,7 @@
 // @require      https://code.jquery.com/jquery-2.1.4.min.js
 // @require      sox.common.js
 // @require      sox.github.js
+// @require      sox.dialog.js
 // @resource     css https://rawgit.com/soscripted/sox/refactor/sox.css
 // @resource     dialog https://rawgit.com/soscripted/sox/refactor/sox.dialog.html
 // @resource     features https://rawgit.com/soscripted/sox/refactor/sox.features.info.json
@@ -39,29 +40,44 @@ jQuery.noConflict();
 
 
     function init() {
+      alert('test');
         sox.helpers.notify('initializing');
+        sox.helpers.notify(sox.user.rep, sox.user.name, sox.user.id, sox.site.type, sox.site.name);
 
         if (sox.location.on('github.com/soscripted')) {
-            sox.github.init(sox.info.version, sox.info.handler);
-            return;
+            try {
+                sox.github.init(sox.info.version, sox.info.handler);
+            } catch (e) {
+                throw ('SOX: There was an error while attempting to initialize the sox.github.js file, please report this on GitHub.\n' + e);
+            } finally {
+                return;
+            }
         }
 
-        var settings = sox.settings.load();
+        var settings = sox.settings.load() || undefined;
 
-        sox.dialog.init({
-            version: sox.info.version
-            features: features,
-            settings = settings
-        });
+        try {
+            sox.dialog.init({
+                version: sox.info.version,
+                features: features,
+                settings: settings
+            });
+        } catch (e) {
+            throw ('SOX: There was an error while attempting to initialize the SOX Settings Dialog, please report this on GitHub.\n' + e);
+        }
 
         if (sox.settings.available) {
+
+            sox.helpers.notify(settings);
+
             // execute features
             for (var i = 0; i < settings.length; ++i) {
                 try {
+
                     /*
                       var featureHeader = settings[i].split('-')[0];
                       var featureId = settings[i].split('-')[1];
-                      var feature = featuresJSON[featureHeader][featureId];
+                      var feature = features[featureHeader][featureId];
                     */
 
                 } catch (err) {

@@ -2,13 +2,13 @@
     'use strict';
     var SOX_SETTINGS = 'SOXSETTINGS';
 
-    var Stack = typeof StackExchange === "undefined" ? undefined : StackExchange;
-    var Chat = typeof CHAT === "undefined" ? undefined : CHAT;
+    var Stack = (typeof StackExchange === "undefined" ? undefined : StackExchange);
+    var Chat = (typeof CHAT === "undefined" ? undefined : CHAT);
 
     sox.info = {
       version: typeof GM_info !== 'undefined' ? GM_info.script.version : 'unknown',
       handler: typeof GM_info !== 'undefined' ? GM_info.scriptHandler : 'unknown'
-    }
+    };
 
     sox.ready = function(func) {
         $(function() {
@@ -19,7 +19,7 @@
     sox.settings = {
         available: GM_getValue(SOX_SETTINGS, -1) != -1,
         load: function() {
-            return JSON.parse(GM_getValue(SOX_SETTINGS));
+            return JSON.parse(GM_getValue(SOX_SETTINGS, ''));
         },
         save: function(settings) {
             GM_setValue(SOX_SETTINGS, JSON.stringify(settings));
@@ -71,7 +71,6 @@
                 }
             }
         },
-
         url: location.hostname,
         href: location.href,
         apiParameter: function(site) {
@@ -81,7 +80,6 @@
             }
         },
         icon: undefined
-
     };
 
     sox.location = {
@@ -94,7 +92,7 @@
         },
         get onQuestion() {
             return this.on('/questions');
-        }
+        },
         match: function(pattern) {
 
             var currentSiteScheme = location.protocol,
@@ -154,7 +152,8 @@
             return Stack ? Stack.options.user.isRegistered : undefined;
         },
         hasPrivelage: function(privelage) {
-            /*var privelages = {}; // load from so.json file
+          // TODO: pull privelages from common.info.json file
+            /*var privelages = {};
             if (user.loggedIn) {
                 var rep = (site.type == beta ? privelages.beta[privelage] : privelages.graduated[privelage]);
                 return user.rep > rep;
@@ -162,6 +161,5 @@
             return false;
         }
     };
-
 
 })(window.sox = window.sox || {}, jQuery);
