@@ -1,5 +1,5 @@
 /*jshint multistr: true */
-var features = { //ALL the functions must go in here
+var features = { //SOX functions must go in here
 
     grayOutVotes: function() {
         // Description: Grays out votes AND vote count

@@ -4,12 +4,10 @@
     sox.dialog = {
         init: function(options) {
             var version = options.version,
-                features = options.features,
+                features = options.featuresJSON,
                 settings = options.settings;
 
             var html = GM_getResourceText('dialog');
-
-            sox.helpers.notify('dialog init');
 
             var $soxSettingsDialog = $(html),
                 $soxSettingsDialogFeatures = $soxSettingsDialog.find('#sox-settings-dialog-features'),
@@ -22,7 +20,6 @@
                 $soxSettingsClose = $soxSettingsDialog.find('#sox-settings-dialog-close'),
                 $searchBox = $soxSettingsDialog.find('#search'),
                 $searchReset = $soxSettingsDialog.find('#search-reset');
-
 
             function addFeature(options) {
                 var $div = $('<div/>', {
@@ -91,12 +88,11 @@
 
                 $soxSettingsDialogFeatures.find('input[type=checkbox]:checked').each(function() {
                     var x = $(this).closest('.modal-content').attr('id') + '-' + $(this).attr('id');
-
                     settings.push(x); //Add the function's ID (also the checkbox's ID) to the array
                 });
 
                 sox.settings.save(settings);
-
+                sox.helpers.notify(settings);
                 location.reload(); // reload page to reflect changed settings
             });
 
@@ -121,7 +117,6 @@
                     $('.category, .features, #sox-settings-dialog label').fadeIn();
                 }
             });
-
 
             // create sox settings button
             var $soxSettingsButton = $('<a/>', {
@@ -171,7 +166,8 @@
             //close dialog if clicked outside it
             $(document).click(function(e) {
                 $target = $(e.target);
-                if (!$target.is('#soxSettingsButton, #sox-settings-dialog') && !$target.parents("#soxSettingsButton, #sox-settings-dialog").is("#soxSettingsButton, #sox-settings-dialog")) {
+                if (!$target.is('#soxSettingsButton, #sox-settings-dialog')
+                && !$target.parents("#soxSettingsButton, #sox-settings-dialog").is("#soxSettingsButton, #sox-settings-dialog")) {
                     $soxSettingsDialog.hide();
                     $('#soxSettingsButton').removeClass('topbar-icon-on');
                 }
@@ -182,7 +178,6 @@
                 $soxSettingsDialog.hide();
                 $('#soxSettingsButton').removeClass('topbar-icon-on');
             });
-
 
             // load features into dialog
             for (var category in features.categories) {
@@ -196,6 +191,7 @@
                     });
                 }
             }
+
             if (settings) {
                 for (var i = 0; i < settings.length; ++i) {
                     $soxSettingsDialogFeatures.find('#' + settings[i].split('-')[1]).prop('checked', true);

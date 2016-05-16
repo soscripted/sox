@@ -11,18 +11,18 @@
                     var issueText = $issue.text();
 
                     issueText = issueText.replace('1.X.X', version); //inject the SOX version by replacing the issue template's placeholder '1.X.X'
-                    issueText = issueText.replace('Chrome/Tampermonkey', handler); //inject the SOX userscript manager+platfirm by replacing the issue template's placeholder 'Chrome/Tampermonkey'
+                    issueText = issueText.replace('Chrome/Tampermonkey', handler); //inject the SOX userscript manager+platform by replacing the issue template's placeholder 'Chrome/Tampermonkey'
                     $('#issue_body').delay(500).text(issueText).removeAttr('disabled');
                 }
             }
-
-            inject();
 
             $(document).on('pjax:complete', function() {
                 if (sox.location.on('github.com')) {
                     inject();
                 }
             });
+
+            inject();
         }
     };
 })(window.sox = window.sox || {}, jQuery);

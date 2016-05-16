@@ -308,7 +308,7 @@
         "Latin Language": "latin",
         "Latin Language Meta": "meta.latin"
     },
-    "privelages": {
+    "privileges": {
         "beta": {
             "access review queues": 350,
             "access to moderator tools": 2000,
