@@ -58,13 +58,6 @@
                 "exclude": ""
             },
             {
-                "name": "exclaim",
-                "desc": "Remove exclamation mark on message",
-                "meta": "http://meta.stackexchange.com/questions/244375/you-can-only-undo-a-comment-vote-within-the-first-60-seconds",
-                "match": "",
-                "exclude": ""
-            },
-            {
                 "name": "fixedTopbar",
                 "desc": "Fix topbar position",
                 "meta": "http://meta.stackexchange.com/questions/101385/should-the-top-navigation-be-frozen-optional",
@@ -95,13 +88,6 @@
             {
                 "name": "hideHotNetworkQuestions",
                 "desc": "Hide the Hot Network Questions module",
-                "meta": "",
-                "match": "",
-                "exclude": ""
-            },
-            {
-                "name": "hideSearchBar",
-                "desc": "Replace the search bar with a link to the search page",
                 "meta": "",
                 "match": "",
                 "exclude": ""

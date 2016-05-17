@@ -22,8 +22,8 @@
 // @require      sox.features.js
 // @resource     css sox.css
 // @resource     dialog sox.dialog.html
-// @resource     featuresJSON https://rawgit.com/soscripted/sox/refactor/sox.features.info.json
-// @resource     common https://rawgit.com/soscripted/sox/refactor/sox.common.info.json
+// @resource     featuresJSON sox.features.info.json
+// @resource     common sox.common.info.json
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_deleteValue
@@ -34,6 +34,8 @@
 jQuery.noConflict();
 (function(sox, $, undefined) {
     'use strict';
+
+    //sox.settings.reset();
 
     var featureInfo = JSON.parse(GM_getResourceText('featuresJSON'));
 

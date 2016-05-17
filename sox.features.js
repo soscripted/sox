@@ -211,49 +211,53 @@
             // Description: For highlighting only the tags of favorite questions
 
             function highlight() {
-
-                $('.tagged-interesting').removeClass('tagged-interesting fav-tag').addClass('fav-tag');
+                $('.tagged-interesting').removeClass('tagged-interesting sox-tagged-interesting').addClass('sox-tagged-interesting');
             }
 
-            StackExchange.ready(function() {
-                var color;
-                if (/superuser/.test(window.location.hostname)) { //superuser
-                    color = '#00a1c9';
-                } else if (/stackoverflow/.test(window.location.hostname)) { //stackoverflow
-                    color = '#f69c55';
-                } else { //for all other sites
-                    color = $('.post-tag').css('color');
-                }
+            var color;
+            if (/superuser/.test(window.location.hostname)) { //superuser
+                color = '#00a1c9';
+            } else if (/stackoverflow/.test(window.location.hostname)) { //stackoverflow
+                color = '#f69c55';
+            } else { //for all other sites
+                color = $('.post-tag').css('color');
+            }
 
-                $('<style>.fav-tag:before{background: ' + color + '}</style>').appendTo('head');
+            $('<style type="text/css">.sox-tagged-interesting:before{background: ' + color + ';}</style>').appendTo('head');
 
-                highlight();
+            highlight();
 
-                if ($('.question-summary').length) {
-                    var target = document.body;
-                    new MutationObserver(function(mutations) {
-                        $.each(mutations, function(i, mutation) {
-                            if (mutation.attributeName == 'class') {
-                                highlight();
-                                return false; //no point looping through everything; if *something* has changed, assume everything has
-                            }
-                        });
-                    }).observe(target, {
-                        "attributes": true,
-                        "childList": true,
-                        "characterData": true,
-                        "subtree": true
+            if ($('.question-summary').length) {
+                var target = document.body;
+                new MutationObserver(function(mutations) {
+                    $.each(mutations, function(i, mutation) {
+                        if (mutation.attributeName == 'class') {
+                            highlight();
+                            return false; //no point looping through everything; if *something* has changed, assume everything has
+                        }
                     });
-                }
-            });
+                }).observe(target, {
+                    "attributes": true,
+                    "childList": true,
+                    "characterData": true,
+                    "subtree": true
+                });
+            }
+
         },
 
         displayName: function() {
             // Description: For displaying username next to avatar on topbar
 
-            var uname = sox.user.name;
-            var insertme = '<span class="reputation links-container" style="color:white;" title="' + uname + '">' + uname + '</span>"';
-            $(insertme).insertBefore('.gravatar-wrapper-24');
+            var name = sox.user.name;
+            var $span = $('<span/>', {
+                class: 'reputation links-container',
+                style: 'color: white;',
+                title: name,
+                text: name
+            });
+            //var insertme = '<span class="reputation links-container" style="color:white;" title="' + name + '">' + name + '</span>"';
+            $span.insertBefore('.gravatar-wrapper-24');
         },
 
         colorAnswerer: function() {
@@ -1559,24 +1563,6 @@ Toggle SBS?</div></li>';
 
             $('#sidebar .community-bulletin').remove();
         },
-
-        hideSearchBar: function() {
-            // Description: Replace the search box with a button that takes you to the search page
-
-            var $topbar = $('.topbar'),
-                $links = $topbar.find('.topbar-menu-links'),
-                $searchbar = $topbar.find('.search-container'),
-                $search = $('<a/>', {
-                    href: '/search',
-                    title: 'Search ' + (sox.site.name != undefined ? sox.site.name : '')
-                }).append($('<i/>', {
-                    'class': 'fa fa-search'
-                }));
-
-            $searchbar.remove();
-            $links.append($search);
-        },
-
         enhancedEditor: function() {
             // Description: Add a bunch of features to the standard markdown editor (autocorrect, find+replace, Ace editor, and more!)
 

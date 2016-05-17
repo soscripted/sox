@@ -379,10 +379,10 @@ hr.or:after {
 }
 
 /*highlightQuestions -- for the tags*/
-.fav-tag {
+.sox-tagged-interesting {
     position: relative;
 }
-.fav-tag:before {
+.sox-tagged-interesting:before {
     content: '';
     display: block;
     position: absolute;
