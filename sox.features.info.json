@@ -321,7 +321,7 @@
                 "name": "chatEasyAccess",
                 "desc": "Add buttons to user profiles to change user write access directly from a chat room",
                 "meta": "http://meta.stackexchange.com/q/203480/260841",
-                "match": "",
+                "match": "*://chat.stackoverfow.com/*,*://chat.meta.stackexchange.com/*,*://chat.stackexchange.com/*",
                 "exclude": ""
             },
             {
