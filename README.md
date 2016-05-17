@@ -11,3 +11,5 @@ Installing from this branch is not recommended.
 - deprecated feature that hides the search bar
 - deprecated feature that removes excessive exclamation marks from comments
 - bug fixes
+- fixed timing issues
+- setting dialog UI updates
