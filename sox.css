@@ -24,11 +24,10 @@
 }
 #sox-settings-dialog #search-container .fa-search {
     position: relative;
-    left: -350px;
+    left: -475px;
 }
 #sox-settings-dialog #search-container #search {
-    width: 350px;
-    border-radius: 6px;
+    width: 470px;
     text-indent: 20px;
 }
 #sox-settings-dialog-features {
