@@ -24,8 +24,8 @@
 // @require      https://rawgit.com/soscripted/sox/refactor/sox.enhanced_editor.js?v=refactor
 // @resource     css https://rawgit.com/soscripted/sox/refactor/sox.css?v=refactor
 // @resource     dialog https://rawgit.com/soscripted/sox/refactor/sox.dialog.html?v=refactor
-// @resource     featuresJSON https://rawgit.com/soscripted/sox/refactor/sox.features.info.json?v=refactor
-// @resource     common https://rawgit.com/soscripted/sox/refactor/sox.common.info.json?v=refactor
+// @resource     featuresJSON https://rawgit.com/soscripted/sox/refactor/sox.features.info.json?v=refactora
+// @resource     common https://rawgit.com/soscripted/sox/refactor/sox.common.info.json?v=refactora
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_deleteValue
@@ -37,10 +37,7 @@ jQuery.noConflict();
 (function(sox, $, undefined) {
     'use strict';
 
-    //sox.settings.reset();
-
     var featureInfo = JSON.parse(GM_getResourceText('featuresJSON'));
-
 
     function init() {
         if (sox.location.on('github.com/soscripted')) {
@@ -55,7 +52,6 @@ jQuery.noConflict();
 
         GM_addStyle(GM_getResourceText('css'));
         $('head').append('<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">');
-        sox.helpers.notify(sox.user.name, sox.user.rep, sox.user.id, sox.site.type, sox.site.types);
 
         var settings = sox.settings.load(); //returns null if not set
 
@@ -70,7 +66,6 @@ jQuery.noConflict();
         }
 
         if (sox.settings.available) {
-            console.log(settings);
             // execute features
             for (var i = 0; i < settings.length; ++i) {
                 try {
@@ -82,11 +77,10 @@ jQuery.noConflict();
                         runFeature = true,
                         sites,
                         pattern;
-                    console.log('category', category, 'featureId', featureId, 'feature info', feature);
-                        //NOTE: there is no else if() because it is possible to have both match and exclude patterns..
-                        //which could have minor exceptions making it neccessary to check both
+
+                    //NOTE: there is no else if() because it is possible to have both match and exclude patterns..
+                    //which could have minor exceptions making it neccessary to check both
                     if (feature.match != '') {
-                        console.log('feature match rule found');
                         sites = feature.match.split(',');
 
                         for (pattern = 0; pattern < sites.length; pattern++) {
@@ -99,7 +93,6 @@ jQuery.noConflict();
                         }
                     }
                     if (feature.exclude != '') {
-                        console.log('feature exclude rule found');
                         sites = feature.exclude.split(',');
 
                         for (pattern = 0; pattern < sites.length; pattern++) {
@@ -110,7 +103,6 @@ jQuery.noConflict();
                         }
                     }
                     if (runFeature) {
-                        console.log('running feature');
                         sox.features[featureId](); //run the feature if match and exclude conditions are met
                     }
                 } catch (err) {
@@ -119,35 +111,33 @@ jQuery.noConflict();
                     i++;
                 }
             }
-        } else { //first run, no settings saved
-            if (GM_getValue('SOX-accessToken', -1) == -1) {
-                if (location.hostname !== 'stackoverflow.com') {
-                    // TODO: find a more user friendly way of handling this
-                    window.prompt("Please go to stackoverflow.com to get your access token for certain SOX features");
-                    sox.helpers.notify("Please go to stackoverflow.com to get your access token for certain SOX features");
-                } else {
-                    SE.init({
-                        clientId: 7138, //SOX client ID
-                        key: 'lL1S1jr2m*DRwOvXMPp26g((', //SOX key
-                        channelUrl: location.protocol + '//stackoverflow.com/blank',
-                        complete: function(d) {
-                            console.log('SE init');
-                        }
-                    });
-                    SE.authenticate({
-                        success: function(data) {
-                            GM_setValue('SOX-accessToken', data.accessToken);
-                        },
-                        error: function(data) {
-                            sox.helpers.notify(data);
-                        },
-                        scope: ['read_inbox', 'write_access', 'no_expiry']
-                    });
-                }
+        }
+        if (GM_getValue('SOX-accessToken', -1) == -1) {
+            if (location.hostname !== 'stackoverflow.com') {
+                // TODO: find a more user friendly way of handling this
+                window.prompt("Please go to stackoverflow.com to get your access token for certain SOX features");
+                sox.helpers.notify("Please go to stackoverflow.com to get your access token for certain SOX features");
+            } else {
+                SE.init({
+                    clientId: 7138, //SOX client ID
+                    key: 'lL1S1jr2m*DRwOvXMPp26g((', //SOX key
+                    channelUrl: location.protocol + '//stackoverflow.com/blank',
+                    complete: function(d) {
+                        console.log('SE init');
+                    }
+                });
+                SE.authenticate({
+                    success: function(data) {
+                        GM_setValue('SOX-accessToken', data.accessToken);
+                    },
+                    error: function(data) {
+                        sox.helpers.notify(data);
+                    },
+                    scope: ['read_inbox', 'write_access', 'no_expiry']
+                });
             }
         }
     }
-
     sox.ready(init);
 
 })(window.sox = window.sox || {}, jQuery);
