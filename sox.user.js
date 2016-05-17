@@ -15,15 +15,17 @@
 // @match        *://*.mathoverflow.net/*
 // @match        *://github.com/soscripted/*
 // @require      https://code.jquery.com/jquery-2.1.4.min.js
+// @require      https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js
 // @require      https://api.stackexchange.com/js/2.0/all.js
-// @require      sox.common.js
-// @require      sox.github.js
-// @require      sox.dialog.js
-// @require      sox.features.js
-// @resource     css sox.css
-// @resource     dialog sox.dialog.html
-// @resource     featuresJSON sox.features.info.json
-// @resource     common sox.common.info.json
+// @require      https://rawgit.com/soscripted/sox/refactor/sox.common.js?v=refactor
+// @require      https://rawgit.com/soscripted/sox/refactor/sox.github.js?v=refactor
+// @require      https://rawgit.com/soscripted/sox/refactor/sox.dialog.js?v=refactor
+// @require      https://rawgit.com/soscripted/sox/refactor/sox.features.js?v=refactor
+// @require      https://rawgit.com/soscripted/sox/refactor/sox.enhanced_editor.js?v=refactor
+// @resource     css https://rawgit.com/soscripted/sox/refactor/sox.css?v=refactor
+// @resource     dialog https://rawgit.com/soscripted/sox/refactor/sox.dialog.html?v=refactor
+// @resource     featuresJSON https://rawgit.com/soscripted/sox/refactor/sox.features.info.json?v=refactor
+// @resource     common https://rawgit.com/soscripted/sox/refactor/sox.common.info.json?v=refactor
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_deleteValue
@@ -68,20 +70,22 @@ jQuery.noConflict();
         }
 
         if (sox.settings.available) {
+            console.log(settings);
             // execute features
             for (var i = 0; i < settings.length; ++i) {
                 try {
-
-                    var featureHeader = settings[i].split('-')[0],
+                    var category = settings[i].split('-')[0],
                         featureId = settings[i].split('-')[1],
-                        feature = featureInfo.categories[featureHeader][i],
+                        feature = featureInfo.categories[category].filter(function(obj) {
+                            return obj.name == featureId;
+                        })[0],
                         runFeature = true,
                         sites,
                         pattern;
-                    console.log('category', featureHeader, 'featureId', featureId, 'feature info', feature);
+                    console.log('category', category, 'featureId', featureId, 'feature info', feature);
                         //NOTE: there is no else if() because it is possible to have both match and exclude patterns..
                         //which could have minor exceptions making it neccessary to check both
-                    if (feature.match) {
+                    if (feature.match != '') {
                         console.log('feature match rule found');
                         sites = feature.match.split(',');
 
@@ -94,7 +98,7 @@ jQuery.noConflict();
                             }
                         }
                     }
-                    if (feature.exclude) {
+                    if (feature.exclude != '') {
                         console.log('feature exclude rule found');
                         sites = feature.exclude.split(',');
 
