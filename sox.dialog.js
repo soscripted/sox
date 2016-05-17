@@ -3,7 +3,7 @@
 
     sox.dialog = {
         init: function(options) {
-            sox.helpers.notify('dialog init');
+            sox.helpers.notify('initializing SOX dialog');
 
             var version = options.version,
                 features = options.features,
@@ -24,19 +24,19 @@
                 $searchReset = $soxSettingsDialog.find('#search-reset');
 
 
-            function addFeature(options) {
+            function addFeature(category, name, description) {
                 var $div = $('<div/>', {
                         'class': 'feature'
                     }),
                     $label = $('<label/>'),
                     $input = $('<input/>', {
-                        id: options.name,
+                        id: name,
                         type: 'checkbox'
                     });
                 $div.append($label);
                 $label.append($input);
-                $input.after(options.desc);
-                $soxSettingsDialogFeatures.find('#' + options.category).append($div);
+                $input.after(description);
+                $soxSettingsDialogFeatures.find('#' + category).append($div);
             }
 
             function addCategory(name) {
@@ -52,7 +52,7 @@
                     });
                 $div.append($h3);
 
-                $soxSettingsDialogFeatures.find('#sox-settings-dialog-access-tokens').before($div);
+                $soxSettingsDialogFeatures.append($div);
                 $div.after($content);
             }
 
@@ -185,15 +185,16 @@
 
 
             // load features into dialog
+            sox.helpers.notify('injecting features into dialog');
             for (var category in features.categories) {
                 addCategory(category);
 
                 for (var feature in features.categories[category]) {
-                    addFeature({
-                        category: category,
-                        name: features.categories[category][feature].name,
-                        description: features.categories[category][feature].desc
-                    });
+                    addFeature(
+                        category,
+                        features.categories[category][feature].name,
+                        features.categories[category][feature].desc
+                    );
                 }
             }
             if (settings) {
@@ -208,7 +209,7 @@
 
             // add dialog to corral and sox button to topbar
             $soxSettingsButton.append($icon).appendTo('div.network-items');
-            $('.js-topbar-dialog-corral').append($settingsDialog);
+            $('.js-topbar-dialog-corral').append($soxSettingsDialog);
         }
     };
 

@@ -56,31 +56,30 @@
         },
         get type() {
             if (Chat) {
-                return this.site.types.chat;
+                return this.types.chat;
             } else if (Stack) {
                 if (Stack.options.site.isMetaSite) {
-                    return this.sites.types.meta;
+                    return this.types.meta;
                 } else {
                     // check if site is in beta or graduated
                     if ($('.beta-title').length > 0) {
-                        return this.site.types.beta;
+                        return this.types.beta;
                     } else {
-                        return this.site.types.main;
+                        return this.types.main;
                     }
                 }
             }
         },
         url: location.hostname,
         href: location.href,
-        apiParameter: function(site) {
+        apiParameter: function(siteName) {
             //TODO: pull from sox.common.info.json
             /*var sites = {}; // load from so.json file
             if (sites.hasOwnProperty(site)) {
                 return (sites[site]);
             }*/
         },
-        icon: return "favicon-" + $(".current-site a:not([href*='meta']) .site-icon").attr('class').split('favicon-')[1],
-        metaIcon: return "favicon-" + $(".current-site a[href*='meta'] .site-icon").attr('class').split('favicon-')[1]
+        icon: undefined // TODO wire this up
     };
 
     sox.location = {
@@ -126,14 +125,14 @@
         },
         get rep() {
             if (sox.site.type == sox.site.types.chat) {
-                return Chat ? Chat.RoomUsers.current().reputation : undefined;
+                return Chat.RoomUsers.current().reputation;
             } else {
                 return Stack ? Stack.options.user.rep : undefined;
             }
         },
         get name() {
             if (sox.site.type == sox.site.types.chat) {
-                return Chat ? Chat.RoomUsers.current().name : undefined;
+                return Chat.RoomUsers.current().name;
             } else {
                 return Stack ? decodeURI(Stack.options.user.profileUrl.split('/')[5]) : undefined;
             }

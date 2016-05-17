@@ -15,25 +15,28 @@
 // @match        *://*.mathoverflow.net/*
 // @match        *://github.com/soscripted/*
 // @require      https://code.jquery.com/jquery-2.1.4.min.js
+// @require      https://api.stackexchange.com/js/2.0/all.js
 // @require      sox.common.js
 // @require      sox.github.js
 // @require      sox.dialog.js
 // @require      sox.features.js
-// @resource     css https://rawgit.com/soscripted/sox/refactor/sox.css
-// @resource     dialog https://rawgit.com/soscripted/sox/refactor/sox.dialog.html
+// @resource     css sox.css
+// @resource     dialog sox.dialog.html
 // @resource     featuresJSON https://rawgit.com/soscripted/sox/refactor/sox.features.info.json
 // @resource     common https://rawgit.com/soscripted/sox/refactor/sox.common.info.json
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_deleteValue
 // @grant        GM_getResourceText
+// @grant        GM_addStyle
 // @grant        GM_info
 // ==/UserScript==
 jQuery.noConflict();
 (function(sox, $, undefined) {
     'use strict';
 
-    var featuresJSON = GM_getResourceText('featuresJSON');
+    var featureInfo = JSON.parse(GM_getResourceText('featuresJSON'));
+
 
     function init() {
         if (sox.location.on('github.com/soscripted')) {
@@ -46,12 +49,16 @@ jQuery.noConflict();
             }
         }
 
+        GM_addStyle(GM_getResourceText('css'));
+        $('head').append('<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">');
+        sox.helpers.notify(sox.user.name, sox.user.rep, sox.user.id, sox.site.type, sox.site.types);
+
         var settings = sox.settings.load(); //returns null if not set
 
         try {
             sox.dialog.init({
                 version: sox.info.version,
-                features: featuresJSON,
+                features: featureInfo,
                 settings: settings
             });
         } catch (e) {
@@ -62,16 +69,18 @@ jQuery.noConflict();
             // execute features
             for (var i = 0; i < settings.length; ++i) {
                 try {
+
                     var featureHeader = settings[i].split('-')[0],
                         featureId = settings[i].split('-')[1],
-                        feature = featuresJSON[featureHeader][featureId],
+                        feature = featureInfo.categories[featureHeader][i],
                         runFeature = true,
                         sites,
                         pattern;
-
-                    //NOTE: there is no else if() because it is possible to have both match and exclude patterns..
-                    //which could have minor exceptions making it neccessary to check both
+                    console.log('category', featureHeader, 'featureId', featureId, 'feature info', feature);
+                        //NOTE: there is no else if() because it is possible to have both match and exclude patterns..
+                        //which could have minor exceptions making it neccessary to check both
                     if (feature.match) {
+                        console.log('feature match rule found');
                         sites = feature.match.split(',');
 
                         for (pattern = 0; pattern < sites.length; pattern++) {
@@ -84,6 +93,7 @@ jQuery.noConflict();
                         }
                     }
                     if (feature.exclude) {
+                        console.log('feature exclude rule found');
                         sites = feature.exclude.split(',');
 
                         for (pattern = 0; pattern < sites.length; pattern++) {
@@ -93,7 +103,10 @@ jQuery.noConflict();
                             }
                         }
                     }
-                    if (runFeature) features[featureId](); //run the feature if match and exclude conditions are met
+                    if (runFeature) {
+                        console.log('running feature');
+                        sox.features[featureId](); //run the feature if match and exclude conditions are met
+                    }
                 } catch (err) {
                     $('#sox-settings-dialog-features').find('#' + settings[i].split('-')[1]).parent().css('color', 'red').attr('title', 'There was an error loading this feature. Please raise an issue on GitHub.');
                     console.log('SOX error: There was an error loading the feature "' + settings[i] + '". Please raise an issue on GitHub, and copy the following error log:\n' + err);
@@ -103,6 +116,7 @@ jQuery.noConflict();
         } else { //first run, no settings saved
             if (GM_getValue('SOX-accessToken', -1) == -1) {
                 if (location.hostname !== 'stackoverflow.com') {
+                    // TODO: find a more user friendly way of handling this
                     window.prompt("Please go to stackoverflow.com to get your access token for certain SOX features");
                     sox.helpers.notify("Please go to stackoverflow.com to get your access token for certain SOX features");
                 } else {
@@ -119,7 +133,7 @@ jQuery.noConflict();
                             GM_setValue('SOX-accessToken', data.accessToken);
                         },
                         error: function(data) {
-                          sox.helpers.notify(data);
+                            sox.helpers.notify(data);
                         },
                         scope: ['read_inbox', 'write_access', 'no_expiry']
                     });
