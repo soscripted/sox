@@ -89,7 +89,7 @@ jQuery.noConflict();
 
                     //NOTE: there is no else if() because it is possible to have both match and exclude patterns..
                     //which could have minor exceptions making it neccessary to check both
-                    if (feature.match != '') {
+                    if (feature.match !== '') {
                         sites = feature.match.split(',');
 
                         for (pattern = 0; pattern < sites.length; pattern++) {
@@ -101,7 +101,7 @@ jQuery.noConflict();
                             }
                         }
                     }
-                    if (feature.exclude != '') {
+                    if (feature.exclude !== '') {
                         sites = feature.exclude.split(',');
 
                         for (pattern = 0; pattern < sites.length; pattern++) {
@@ -122,9 +122,9 @@ jQuery.noConflict();
             }
         }
         if (GM_getValue('SOX-accessToken', -1) == -1) {
-            if (location.hostname !== 'stackoverflow.com') {
+            if (location.hostname !== 'stackoverflow.com' && location.indexOf('oauth/login_success') == -1) {
                 // TODO: find a more user friendly way of handling this
-                window.prompt("Please go to stackoverflow.com to get your access token for certain SOX features");
+                window.alert("Please go to stackoverflow.com to get your access token for certain SOX features");
                 sox.helpers.notify("Please go to stackoverflow.com to get your access token for certain SOX features");
             } else {
                 SE.init({
@@ -135,14 +135,17 @@ jQuery.noConflict();
                         console.log('SE init');
                     }
                 });
-                SE.authenticate({
-                    success: function(data) {
-                        GM_setValue('SOX-accessToken', data.accessToken);
-                    },
-                    error: function(data) {
-                        sox.helpers.notify(data);
-                    },
-                    scope: ['read_inbox', 'write_access', 'no_expiry']
+                $('#soxSettingsButton').click(function() {
+                    //TODO: this only works when something is clicked -- what should we make the user click?
+                    SE.authenticate({
+                        success: function(data) {
+                            GM_setValue('SOX-accessToken', data.accessToken);
+                        },
+                        error: function(data) {
+                            console.log(data);
+                        },
+                        scope: ['read_inbox', 'write_access', 'no_expiry']
+                    });
                 });
             }
         }
