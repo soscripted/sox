@@ -275,7 +275,7 @@
                 "name": "enhancedEditor",
                 "desc": "Add more features to the markdown editor",
                 "meta": "",
-                "match": "",
+                "match": "*://*/questions*",
                 "exclude": ""
             },
             {

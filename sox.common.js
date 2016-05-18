@@ -102,7 +102,7 @@
                 matchPath = matchSplit.slice(matchSplit.length == 4 ? -1 : -2).join('/');
 
             matchScheme = matchScheme.replace(/\*/g, ".*");
-            matchHost = matchHost.replace(/\./g, "\\.").replace(/\*\\\./g, ".*.?").replace(/\\\.\*/g, ".*");
+            matchHost = matchHost.replace(/\./g, "\\.").replace(/\*\\\./g, ".*.?").replace(/\\\.\*/g, ".*").replace(/\*$/g, ".*");;
             matchPath = matchPath.replace(/\//g, "\\/").replace(/\*/g, ".*");
 
             if (currentSiteScheme.match(new RegExp(matchScheme))

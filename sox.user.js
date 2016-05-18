@@ -14,6 +14,7 @@
 // @match        *://*.stackapps.com/*
 // @match        *://*.mathoverflow.net/*
 // @match        *://github.com/soscripted/*
+
 // @require      https://code.jquery.com/jquery-2.1.4.min.js
 // @require      https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js
 // @require      https://api.stackexchange.com/js/2.0/all.js
@@ -22,10 +23,12 @@
 // @require      sox.dialog.js
 // @require      sox.features.js
 // @require      sox.enhanced_editor.js
+
 // @resource     css sox.css
 // @resource     dialog sox.dialog.html
-// @resource     featuresJSON sox.features.info.json
+// @resource     featuresJSON sox.features.info.json?v=1
 // @resource     common sox.common.info.json
+
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_deleteValue
@@ -46,8 +49,6 @@ jQuery.noConflict();
         sox.site.apiParameter(sox.site.name)
     );
 
-    var featureInfo = JSON.parse(GM_getResourceText('featuresJSON'));
-
     function init() {
         if (sox.location.on('github.com/soscripted')) {
             try {
@@ -62,7 +63,8 @@ jQuery.noConflict();
         GM_addStyle(GM_getResourceText('css'));
         $('head').append('<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">');
 
-        var settings = sox.settings.load(); //returns null if not set
+        var settings = sox.settings.load(), //returns null if not set
+            featureInfo = JSON.parse(GM_getResourceText('featuresJSON'));
 
         try {
             sox.dialog.init({
@@ -137,6 +139,7 @@ jQuery.noConflict();
                 });
                 $('#soxSettingsButton').click(function() {
                     //TODO: this only works when something is clicked -- what should we make the user click?
+                    //make the cogs button red?
                     SE.authenticate({
                         success: function(data) {
                             GM_setValue('SOX-accessToken', data.accessToken);
