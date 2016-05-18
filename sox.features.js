@@ -997,7 +997,7 @@
 
             var favicon = $(".current-site a[href*='meta'] .site-icon").attr('class').split('favicon-')[1];
 
-            var metaName = 'meta.', // TODO use helpers to get meta api param
+            var metaName = 'meta.' + sox.site.apiParameter(sox.site.name) , // TODO use helpers to get meta api param
                 lastQuestions = {},
                 apiLink = 'https://api.stackexchange.com/2.2/questions?pagesize=5&order=desc&sort=activity&site=' + metaName;
             var $dialog = $('<div/>', {

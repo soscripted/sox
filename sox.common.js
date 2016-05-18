@@ -1,6 +1,7 @@
 (function(sox, $, undefined) {
     'use strict';
     var SOX_SETTINGS = 'SOXSETTINGS';
+    var commonInfo = JSON.parse(GM_getResourceText('common'));
 
     var Stack = (typeof StackExchange === "undefined" ? undefined : StackExchange);
     var Chat = (typeof CHAT === "undefined" ? undefined : CHAT);
@@ -73,11 +74,9 @@
         url: location.hostname,
         href: location.href,
         apiParameter: function(siteName) {
-            //TODO: pull from sox.common.info.json
-            /*var sites = {}; // load from so.json file
-            if (sites.hasOwnProperty(site)) {
-                return (sites[site]);
-            }*/
+            if(commonInfo.apiParameters.hasOwnProperty(siteName)){
+              return commonInfo.apiParameters[siteName];
+            }
         },
         icon: undefined // TODO wire this up
     };

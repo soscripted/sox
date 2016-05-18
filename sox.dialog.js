@@ -169,18 +169,21 @@
             });
 
             //close dialog if clicked outside it
-            $(document).click(function(e) {
-                $target = $(e.target);
-                if (!$target.is('#soxSettingsButton, #sox-settings-dialog') && !$target.parents("#soxSettingsButton, #sox-settings-dialog").is("#soxSettingsButton, #sox-settings-dialog")) {
+            /*$(document).click(function(e) { //close agenda dialog if clicked outside it
+                var target = $(e.target),
+                    isToggle = target.is('#soxSettingsButton'),
+                    isChild = target.closest('#sox-settings-dialog').length == 1 ? true : false;
+
+                if ($soxSettingsDialog.is(':visible') && !isToggle && !isChild) {
+                    $soxSettingsButton.removeClass('topbar-icon-on');
                     $soxSettingsDialog.hide();
-                    $('#soxSettingsButton').removeClass('topbar-icon-on');
                 }
-            });
+            });*/
 
             //close dialog if one of the links on the topbar is clicked
             $('.topbar-icon').not('.sox-settings-button').click(function() {
                 $soxSettingsDialog.hide();
-                $('#soxSettingsButton').removeClass('topbar-icon-on');
+                $soxSettingsButton.removeClass('topbar-icon-on');
             });
 
 

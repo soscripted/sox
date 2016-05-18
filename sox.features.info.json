@@ -94,7 +94,7 @@
             },
             {
                 "name": "highlightQuestions",
-                "desc": "Highlight only the favourite tags for favourite questions",
+                "desc": "Change highlighting for questions with favorite tags",
                 "meta": "http://meta.stackexchange.com/questions/238591/should-favorite-tag-highlighting-in-question-lists-be-changed",
                 "match": "",
                 "exclude": ""
@@ -321,7 +321,7 @@
                 "name": "chatEasyAccess",
                 "desc": "Add buttons to user profiles to change user write access directly from a chat room",
                 "meta": "http://meta.stackexchange.com/q/203480/260841",
-                "match": "*://chat.stackoverfow.com/*,*://chat.meta.stackexchange.com/*,*://chat.stackexchange.com/*",
+                "match": "",
                 "exclude": ""
             },
             {

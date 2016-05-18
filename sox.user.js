@@ -17,15 +17,15 @@
 // @require      https://code.jquery.com/jquery-2.1.4.min.js
 // @require      https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js
 // @require      https://api.stackexchange.com/js/2.0/all.js
-// @require      https://rawgit.com/soscripted/sox/refactor/sox.common.js?v=refactor
-// @require      https://rawgit.com/soscripted/sox/refactor/sox.github.js?v=refactor
-// @require      https://rawgit.com/soscripted/sox/refactor/sox.dialog.js?v=refactor
-// @require      https://rawgit.com/soscripted/sox/refactor/sox.features.js?v=refactor
-// @require      https://rawgit.com/soscripted/sox/refactor/sox.enhanced_editor.js?v=refactor
-// @resource     css https://rawgit.com/soscripted/sox/refactor/sox.css?v=refactor
-// @resource     dialog https://rawgit.com/soscripted/sox/refactor/sox.dialog.html?v=refactor
-// @resource     featuresJSON https://rawgit.com/soscripted/sox/refactor/sox.features.info.json?v=refactora
-// @resource     common https://rawgit.com/soscripted/sox/refactor/sox.common.info.json?v=refactora
+// @require      sox.common.js
+// @require      sox.github.js
+// @require      sox.dialog.js
+// @require      sox.features.js
+// @require      sox.enhanced_editor.js
+// @resource     css sox.css
+// @resource     dialog sox.dialog.html
+// @resource     featuresJSON sox.features.info.json
+// @resource     common sox.common.info.json
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_deleteValue
@@ -36,6 +36,15 @@
 jQuery.noConflict();
 (function(sox, $, undefined) {
     'use strict';
+    // TODO: ** please leave this until we're all <done> refactoring **
+    sox.helpers.notify(
+        sox.user.name,
+        sox.user.rep,
+        sox.user.id,
+        sox.site.name,
+        sox.site.type,
+        sox.site.apiParameter(sox.site.name)
+    );
 
     var featureInfo = JSON.parse(GM_getResourceText('featuresJSON'));
 
