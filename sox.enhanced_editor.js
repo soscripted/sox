@@ -11,23 +11,16 @@ var enhancedEditor = {
                     enhancedEditor.init($that.parents('table').find('.inline-editor textarea.processed').attr('id'));
                 }, 5000);
             });
-        }, 5000);        
+        }, 5000);
     },
-    
-    init: function(wmd) {
-        var script = document.createElement('script');
-        script.src = 'http://cdn.rawgit.com/dwieeb/jquery-textrange/1.x/jquery-textrange.js';
-        document.head.appendChild(script);
-        
-        $('head').append("<link rel='stylesheet' type='text/css' href='https://rawgit.com/soscripted/sox/experimental/enhancedEditor/sox.enhancedEditor.css' />");
 
+    init: function(wmd) {
         $('[id^="enhancedEditor"]').not('#sox-settings-dialog input').remove();
         var s = '#'+wmd; //s is the selector we pass onto each function so the action is applied to the correct textarea (and not, for example the 'add answer' textarea *and* the 'edit' textarea!)
         enhancedEditor.startInsertLink(s);
-        enhancedEditor.startInsertImages(s);
         enhancedEditor.betterTabKey(s);
         enhancedEditor.keyboardShortcuts(s);
-        
+
         $(s).before("<span class='enhancedEditor-toolbar' id='enhancedEditor|"+s+"'>&nbsp;<span id='findReplace'>Find & Replace</span> | <span id='autoCorrect'>Auto correct</span></span>");
 
         $('#findReplace').click(function(e) {
@@ -41,17 +34,17 @@ var enhancedEditor = {
             e.stopPropagation();
         });
         $(document).on('click', '.enhancedEditor-closeDialog', function() {
-            $(this).parent().hide(); 
+            $(this).parent().hide();
         });
-        
-        $(document).click(function(event) { 
+
+        $(document).click(function(event) {
             //doesn't work with #enhancedEditor-aceEditor for some reason... so skip it
             if(!$(event.target).closest('#enhancedEditor-insertLinkDialog, #enhancedEditor-insertImageDialog').length) {
                 $('#enhancedEditor-insertLinkDialog, #enhancedEditor-insertImageDialog').hide()
             }
         });
     },
-    
+
     startInsertLink: function(s) {
         var linkDiv = "<div id='enhancedEditor-insertLinkDialog' class='wmd-prompt-dialog enhancedEditor-centered' style='position:fixed; display:none;'> \
               <span class='enhancedEditor-closeDialog'>x</span>\
@@ -86,7 +79,7 @@ var enhancedEditor = {
                 $('#DDG-credit a').attr('href', 'http://google.com');
                 $('#enhancedEditor-insertLinkDialog').show(500);
                 setTimeout(function () {
-                    query = $(s).textrange();
+                    query = $(s).getSelection();
 
                     $.getJSON("http://api.duckduckgo.com/?q=" + query.text + "&format=json&t=stackExchangeEditorPro&callback=?", function (json) {
                         $('#DDG-header').append("<a href='" + json.AbstractURL + "'>" + json.Heading + "</a>");
@@ -98,7 +91,7 @@ var enhancedEditor = {
                         enhancedEditor.addLink(query, $(this).prev().val(), s);
                     });
                     $('#suggestGo').click(function() {
-                        enhancedEditor.addLink(query, $('#DDG-header a').attr('href'), s); 
+                        enhancedEditor.addLink(query, $('#DDG-header a').attr('href'), s);
                     });
                 }, 1000);
                 e.stopPropagation();
@@ -107,54 +100,7 @@ var enhancedEditor = {
             });
         }, 3000);
     },
-    
-    startInsertImages: function(s) {
-        var imagesDiv = "<div id='enhancedEditor-insertImageDialog' class='wmd-prompt-dialog enhancedEditor-centered' style='position:fixed; display:none;'> \
-              <span class='enhancedEditor-closeDialog'>x</span>\
-              <h2>Insert image</h2>\
-              <div class='addImage'>\
-                  <div class='addOwnImage-container'>Select file:\
-                      <input class='ownImage' type='file' />\
-                      <input class='go' id='ownGoImage' type='button' value='insert' />\
-                      <label class='enhancedEditor-asLinkContainer'><input type='checkbox' id='enhancedEditor-imageAsLink'>Insert smaller image with link to bigger?</label>\
-                  </div>\
-                  <br>\
-                  <hr class='or'>\
-                  <div class='addLinkImage-container'>Enter URL:\
-                      <input class='URLImage' type='url' value='http://' />\
-                      <input class='go' id='goImage' type='button' value='insert' />\
-                      <label class='enhancedEditor-asLinkContainer'><input type='checkbox' id='enhancedEditor-imageAsLink'>Insert smaller image with link to bigger?</label>\
-                  </div>\
-              </div>\
-          </div>";
-        $('body').append(imagesDiv);
 
-        setTimeout(function() {
-            $('#wmd-image-button > span').click(function(e) {
-                $('#enhancedEditor-insertImageDialog').show(500);
-                setTimeout(function () {
-                    query = $(s).textrange();
-
-                    $('#ownGoImage').click(function() {
-                        $check = $(this).next();
-                        enhancedEditor.uploadToImgur('file', $(this).prev(), function(url) {
-                            enhancedEditor.addImageLink(query, url, $check, s);
-                        });
-                    });
-                    $('#goImage').click(function() {
-                        $check = $(this).next();
-                        enhancedEditor.uploadToImgur('url', $(this).prev(), function(url) {
-                            enhancedEditor.addImageLink(query, url, $check, s);                     
-                        });
-                    });
-                }, 1000);
-                e.stopPropagation();
-                e.preventDefault();
-                return false;
-            });
-        }, 3000);
-    },
-    
     betterTabKey: function(s) {
         $(s).on('keydown', function(e) {
             if (e.which === 9) { //http://stackoverflow.com/a/25430815/3541881
@@ -165,15 +111,15 @@ var enhancedEditor = {
                 var selected = val.substring(start, end);
                 var re = /^/gm;
                 var count = selected.match(re).length;
-        
-        
+
+
                 this.value = val.substring(0, start) + selected.replace(re, '\t') + val.substring(end);
                 this.selectionStart = start;
                 this.selectionEnd = end + count;
             }
         });
     },
-    
+
     findReplace: function(s) {
         if($('.enhancedEditor-toolbar.findReplace').length) {
             $('.enhancedEditor-toolbar.findReplace').remove();
@@ -188,7 +134,7 @@ var enhancedEditor = {
             enhancedEditor.refreshPreview();
         });
     },
-    
+
     autoCorrect: function(s) {
         var oldVal = $(s).val();
         var newVal = oldVal.replace(/\bi\b/g, "I") //capitalise 'I'
@@ -254,17 +200,17 @@ var enhancedEditor = {
             return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
         });
         $(s).val(newVal);
-        
+
         enhancedEditor.refreshPreview();
-    }, 
-    
+    },
+
     addLink: function(query, url, s) {
-        $(s).textrange('replace', '['+query.text+']('+url+')');
+        $(s).replaceSelectedText('['+query.text+']('+url+')');
         $('#enhancedEditor-insertLinkDialog').hide();
         enhancedEditor.refreshPreview();
     },
-    
-    keyboardShortcuts: function(s) {        
+
+    keyboardShortcuts: function(s) {
         //Replace default SE bindings
         $(document).keydown(function(e) {
             if(e.which == 71 && e.ctrlKey) { //ctrl+g (images)
@@ -277,7 +223,7 @@ var enhancedEditor = {
                 $('#enhancedEditor-insertLinkDialog').show(500);
                 e.stopPropagation();
                 e.preventDefault();
-                return false;                
+                return false;
             }
          });
          $(s).keydown(function(e) {
@@ -285,49 +231,12 @@ var enhancedEditor = {
                 $('#findReplace').trigger('click');
                 e.stopPropagation();
                 e.preventDefault();
-                return false;                
-            }  
-        });        
-    },
-    
-    uploadToImgur: function(type, $fileData, callback) {
-        var formData = new FormData(),
-            data = '';
-        if (type=='file') {
-            formData.append("image", $fileData[0].files[0]);
-        } else {
-            data = $fileData.val();
-        }
-
-        $.ajax({
-            url: "https://api.imgur.com/3/image",
-            type: "POST",
-            headers: {
-                'Authorization': 'Client-ID 1ebf24e58286774'
-            },
-            data: (type=='file' ? formData : data),
-            success: function(response) {
-                callback(response.data.link);
-            },
-            processData: false,
-            contentType: false
-        });   
-
+                return false;
+            }
+        });
     },
 
-    addImageLink: function(query, url, $check, s) {
-        if($check.find('input').is(':checked')) {
-            urlsplit = url.split('/')[3].split('.');
-            urlToUse = 'http://i.imgur.com/'+urlsplit[0]+'m.'+urlsplit[1];
-            $(s).textrange('replace', '[!['+query.text+']('+urlToUse+')]('+url+')\n\n<sub>click image for larger variant</sub>');
-        } else {
-            $(s).textrange('replace', '!['+query.text+']('+url+')');
-        }
-        $('#enhancedEditor-insertImageDialog').hide();
-        enhancedEditor.refreshPreview();
-    },
-    
     refreshPreview: function() {
-        StackExchange.MarkdownEditor.refreshAllPreviews();
+        SOHelper.StackExchange().MarkdownEditor.refreshAllPreviews();
     }
 };

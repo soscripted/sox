@@ -16,8 +16,11 @@
 // @match        *://github.com/soscripted/*
 
 // @require      https://code.jquery.com/jquery-2.1.4.min.js
-// @require      https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js
+// @require      https://code.jquery.com/ui/1.11.4/jquery-ui.min.js
 // @require      https://api.stackexchange.com/js/2.0/all.js
+// @require      https://cdn.rawgit.com/timdown/rangyinputs/master/rangyinputs-jquery-src.js
+// @require      https://cdn.rawgit.com/jeresig/jquery.hotkeys/master/jquery.hotkeys.js
+
 // @require      sox.common.js
 // @require      sox.github.js
 // @require      sox.dialog.js
@@ -88,7 +91,6 @@ jQuery.noConflict();
                         runFeature = true,
                         sites,
                         pattern;
-
                     //NOTE: there is no else if() because it is possible to have both match and exclude patterns..
                     //which could have minor exceptions making it neccessary to check both
                     if (feature.match !== '') {
@@ -117,14 +119,20 @@ jQuery.noConflict();
                         sox.features[featureId](); //run the feature if match and exclude conditions are met
                     }
                 } catch (err) {
-                    $('#sox-settings-dialog-features').find('#' + settings[i].split('-')[1]).parent().css('color', 'red').attr('title', 'There was an error loading this feature. Please raise an issue on GitHub.');
-                    console.log('SOX error: There was an error loading the feature "' + settings[i] + '". Please raise an issue on GitHub, and copy the following error log:\n' + err);
+                    if(!sox.features[featureId]) { //remove deprecated/'corrupt' feature IDs from saved settings
+                        settings.splice(i, 1);
+                        sox.settings.save(settings);
+                        $('#sox-settings-dialog-features').find('#' + settings[i].split('-')[1]).parent().parent().remove();
+                    } else {
+                      $('#sox-settings-dialog-features').find('#' + settings[i].split('-')[1]).parent().css('color', 'red').attr('title', 'There was an error loading this feature. Please raise an issue on GitHub.');
+                      console.log('SOX error: There was an error loading the feature "' + settings[i] + '". Please raise an issue on GitHub, and copy the following error log:\n' + err);
+                    }
                     i++;
                 }
             }
         }
         if (GM_getValue('SOX-accessToken', -1) == -1) {
-            if (location.hostname !== 'stackoverflow.com' && location.indexOf('oauth/login_success') == -1) {
+            if (location.hostname !== 'stackoverflow.com' && location.href.indexOf('oauth/login_success') == -1) {
                 // TODO: find a more user friendly way of handling this
                 window.alert("Please go to stackoverflow.com to get your access token for certain SOX features");
                 sox.helpers.notify("Please go to stackoverflow.com to get your access token for certain SOX features");

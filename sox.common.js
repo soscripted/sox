@@ -36,6 +36,13 @@
             for (var arg = 0; arg < arguments.length; ++arg) {
                 console.log('SOX: ', arguments[arg]);
             }
+        },
+        get soxAccessToken() {
+            return GM_getValue('SOX-accessToken', false);
+        },
+        soxApiKey: 'lL1S1jr2m*DRwOvXMPp26g((',
+        getFromAPI: function(type, id, sitename, callback, sortby) {
+          $.getJSON('https://api.stackexchange.com/2.2/' + type + '/' + id + '?order=desc&sort=' + (sortby || 'creation') + '&site=' + sitename, callback);
         }
     };
 
@@ -55,6 +62,16 @@
             }
             return undefined;
         },
+        get apiSiteName() {
+            if (Chat || Stack) {
+                return this.apiParameter(this.name);
+            }
+        },
+        get metaApiSiteName() {
+            if (Chat || Stack) {
+                return 'meta.' + this.apiSiteName;
+            }
+        },
         get type() {
             if (Chat) {
                 return this.types.chat;
@@ -71,14 +88,16 @@
                 }
             }
         },
-        url: location.hostname,
-        href: location.href,
         apiParameter: function(siteName) {
             if(commonInfo.apiParameters.hasOwnProperty(siteName)){
               return commonInfo.apiParameters[siteName];
             }
         },
-        icon: undefined // TODO wire this up
+        get icon() {
+          return "favicon-" + $(".current-site a:not([href*='meta']) .site-icon").attr('class').split('favicon-')[1];
+        },
+        url: location.hostname,
+        href: location.href
     };
 
     sox.location = {
@@ -87,30 +106,31 @@
             return window.location.href.indexOf(location) > -1 ? true : false;
         },
         get onUserProfile() {
-            return this.on('/users/' + sox.user.id);
+            return this.on('/users/');
         },
         get onQuestion() {
-            return this.on('/questions');
+            return this.on('/questions/');
         },
         match: function(pattern) { //commented version @ https://jsfiddle.net/shub01/t90kx2dv/
-            var currentSiteScheme = location.protocol,
-                currentSiteHost = location.hostname,
-                currentSitePath = location.pathname,
-                matchSplit = pattern.split('/'),
-                matchScheme = matchSplit[0],
-                matchHost = matchSplit[2],
-                matchPath = matchSplit.slice(matchSplit.length == 4 ? -1 : -2).join('/');
+          var currentSiteScheme = location.protocol,
+              currentSiteHost = location.hostname,
+              currentSitePath = location.pathname,
+              matchSplit = pattern.split('/'),
+              matchScheme = matchSplit[0],
+              matchHost = matchSplit[2],
+              matchPath = matchSplit.slice(-(matchSplit.length-3)).join('/');
 
-            matchScheme = matchScheme.replace(/\*/g, ".*");
-            matchHost = matchHost.replace(/\./g, "\\.").replace(/\*\\\./g, ".*.?").replace(/\\\.\*/g, ".*").replace(/\*$/g, ".*");;
-            matchPath = matchPath.replace(/\//g, "\\/").replace(/\*/g, ".*");
+          matchScheme = matchScheme.replace(/\*/g, ".*");
+          matchHost = matchHost.replace(/\./g, "\\.").replace(/\*\\\./g, ".*.?").replace(/\\\.\*/g, ".*").replace(/\*$/g, ".*");;
+          matchPath = '^\/' + matchPath.replace(/\//g, "\\/").replace(/\*/g, ".*");
+          console.log(matchScheme, matchHost, matchPath)
 
-            if (currentSiteScheme.match(new RegExp(matchScheme))
-            && currentSiteHost.match(new RegExp(matchHost))
-            && currentSitePath.match(new RegExp(matchPath))) {
-                return true;
-            }
-            return false;
+          if (currentSiteScheme.match(new RegExp(matchScheme))
+          && currentSiteHost.match(new RegExp(matchHost))
+          && currentSitePath.match(new RegExp(matchPath))) {
+              return true;
+          }
+          return false;
         }
     };
 
@@ -140,12 +160,11 @@
             return Stack ? Stack.options.user.isRegistered : undefined;
         },
         hasPrivilege: function(privilege) {
-            //TODO: pull privilege from common.info.json file
-            /*var privilege = {};
+            var privilege = {};
             if (user.loggedIn) {
-                var rep = (site.type == beta ? privilege.beta[privilege] : privilege.graduated[privilege]);
+                var rep = (sox.site.type == 'beta' ? commonInfo.privileges.beta[privilege] : commonInfo.privileges.graduated[privilege]);
                 return user.rep > rep;
-            }*/
+            }
             return false;
         }
     };

@@ -144,7 +144,7 @@
                 });
 
             //open dialog on hover if another dialog is already open
-            $('#soxSettingsButton').hover(function() { //https://github.com/soscripted/sox/issues/44, open on hover, just like the normal dropdowns
+            $soxSettingsButton.hover(function() { //https://github.com/soscripted/sox/issues/44, open on hover, just like the normal dropdowns
                 if ($('.topbar-icon').not('#soxSettingsButton').hasClass('topbar-icon-on')) {
                     $('.topbar-dialog').hide();
                     $('.topbar-icon').removeClass('topbar-icon-on').removeClass('icon-site-switcher-on');
@@ -152,7 +152,7 @@
                     $soxSettingsDialog.show();
                 }
             }, function() {
-                $('.topbar-icon').not('#soxSettingsButton').hover(function() {
+                $('.topbar-icon').not('#soxSettingsButton').hover(function(e) {
                     if ($('#soxSettingsButton').hasClass('topbar-icon-on')) {
                         $soxSettingsDialog.hide();
                         $('#soxSettingsButton').removeClass('topbar-icon-on');
@@ -161,31 +161,45 @@
                             $('.' + which + '-dialog').not('#sox-settings-dialog, #metaNewQuestionAlertDialog').show();
                             $(this).addClass('topbar-icon-on');
                         } else {
+                            if($(this).css('top') != '34px') {
+                                  $('.siteSwitcher-dialog').css('top', '34px').css('left', '0px');
+                            }
                             $('.siteSwitcher-dialog').show();
                             $(this).addClass('topbar-icon-on').addClass('icon-site-switcher-on'); //icon-site-switcher-on is special to the site-switcher dropdown (StackExchange button)
                         }
+                    } else {
+                        if(!$(e.toElement).is('.icon-site-switcher')) {
+                          if($('.siteSwitcher-dialog').is(':visible')) {
+                            $('.siteSwitcher-dialog').hide();
+                          }
+                        }
                     }
+                }, function(e) {
+                  if($(e.toElement).is('.topbar-icon')) { //only hide the StackExchange dialog if the un-hover is onto another topbar dialog button
+                    if($('.siteSwitcher-dialog').is(':visible')) {
+                      $('.siteSwitcher-dialog').hide();
+                    }
+                  }
                 });
             });
 
             //close dialog if clicked outside it
-            /*$(document).click(function(e) { //close agenda dialog if clicked outside it
-                var target = $(e.target),
-                    isToggle = target.is('#soxSettingsButton'),
-                    isChild = target.closest('#sox-settings-dialog').length == 1 ? true : false;
+            $(document).click(function(e) { //close agenda dialog if clicked outside it
+                var $target = $(e.target),
+                    isToggle = $target.is('#soxSettingsButton, #sox-settings-dialog'),
+                    isChild = $target.parents('#soxSettingsButton, #sox-settings-dialog').is("#soxSettingsButton, #sox-settings-dialog");
 
-                if ($soxSettingsDialog.is(':visible') && !isToggle && !isChild) {
-                    $soxSettingsButton.removeClass('topbar-icon-on');
+                if (!isToggle && !isChild) {
                     $soxSettingsDialog.hide();
+                    $soxSettingsButton.removeClass('topbar-icon-on');
                 }
-            });*/
+            });
 
             //close dialog if one of the links on the topbar is clicked
             $('.topbar-icon').not('.sox-settings-button').click(function() {
                 $soxSettingsDialog.hide();
                 $soxSettingsButton.removeClass('topbar-icon-on');
             });
-
 
             // load features into dialog
             sox.helpers.notify('injecting features into dialog');
