@@ -1649,31 +1649,63 @@ Toggle SBS?</div></li>';
         },
 
         quickAuthorInfo: function() {
-          var answerers = {};
-          $('.question, .answer').each(function() {
-            var $userDetails = $(this).find('.post-signature .user-details');
-            var userid = $userDetails.find('a').attr('href').split('/')[2];
-            var username = $userDetails.find('a').text();
-            answerers[userid] = username;
-          });
-          var apiUrl = "https://api.stackexchange.com/users/" + Object.keys(answerers).join(';') + "?site=" + sox.site.apiSiteName;
-          $.get(apiUrl, function(data) {
-            var userDetailsFromAPI = {};
-            $.each(data.items, function() {
-                var cur = $(this)[0];
-                userDetailsFromAPI[cur.user_id] = {
-                    'last_seen': new Date(cur.last_access_date*1000).toUTCString(),
-                    'creation': new Date(cur.creation_date*1000).toUTCString(),
-                    'type': cur.user_type
-                };
-            });
+            var answerers = {};
             $('.question, .answer').each(function() {
-                var id = $(this).find('.post-signature .user-details a').attr('href').split('/')[2];
-                if(userDetailsFromAPI[id]) {
-                    $(this).find('.comments tbody:eq(0)').prepend("<tr class='comment'><td class='comment-actions'></td><td class='comment-text'><div style='display: block;' class='comment-body'>last seen: " + userDetailsFromAPI[id].last_seen + " | type: " + userDetailsFromAPI[id].type + "</div></td></tr>");
+              var $userDetails = $(this).find('.post-signature .user-details');
+              var userid = $userDetails.find('a').attr('href').split('/')[2];
+              var username = $userDetails.find('a').text();
+              answerers[userid] = username;
+            });
+            var apiUrl = "https://api.stackexchange.com/users/" + Object.keys(answerers).join(';') + "?site=" + sox.site.apiSiteName;
+            $.get(apiUrl, function(data) {
+              var userDetailsFromAPI = {};
+              $.each(data.items, function() {
+                  var cur = $(this)[0];
+                  userDetailsFromAPI[cur.user_id] = {
+                      'last_seen': new Date(cur.last_access_date*1000).toUTCString(),
+                      'creation': new Date(cur.creation_date*1000).toUTCString(),
+                      'type': cur.user_type
+                  };
+              });
+              $('.question, .answer').each(function() {
+                  var id = $(this).find('.post-signature .user-details a').attr('href').split('/')[2];
+                  if(userDetailsFromAPI[id]) {
+                      $(this).find('.comments tbody:eq(0)').prepend("<tr class='comment'><td class='comment-actions'></td><td class='comment-text'><div style='display: block;' class='comment-body'>last seen: " + userDetailsFromAPI[id].last_seen + " | type: " + userDetailsFromAPI[id].type + "</div></td></tr>");
+                  }
+              });
+            });
+        },
+
+        hiddenCommentsIndicator: function() {
+            $('.question, .answer').each(function() {
+                if($(this).find('.js-show-link.comments-link:visible').length) {
+                    var postId = $(this).attr('data-questionid') || $(this).attr('data-answerid'),
+                        x=[],
+                        y=[],
+                        protocol = location.protocol,
+                        hostname = location.hostname,
+                        baseUrl = protocol + '//' + hostname;
+                    $.get(baseUrl + '/posts/' + postId + '/comments', function(d) {
+                        var $commentCopy = $('#comments-' + postId + ' .comment-text .comment-copy');
+
+                        $(d).find('.comment-text').each(function(i) {
+                            x.push($(this).find('.comment-copy').text());
+                        });
+
+                        $commentCopy.filter(function(d) {
+                            y.push(x.indexOf($commentCopy.eq(d).text()));
+                        });
+
+                        for(var i=0;i<y.length;i++){
+                            if(y[i] != y[i+1]-1) {
+                                $commentCopy.filter(function(d) {
+                                    return $(this).text() == x[y[i]];
+                                }).parent().parent().parent().find('.comment-actions, .comment-text').css('border-bottom-color', 'gray');
+                            }
+                        }
+                    });
                 }
             });
-          });
         }
     };
 })(window.sox = window.sox || {}, jQuery);

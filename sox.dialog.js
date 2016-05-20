@@ -24,6 +24,26 @@
                 $searchReset = $soxSettingsDialog.find('#search-reset');
 
 
+            function addCategory(name) {
+                var $div = $('<div/>', {
+                        'class': 'header category',
+                        'id': 'header-for-' + name
+                    }),
+                    $h3 = $('<h3/>', {
+                        text: name.toLowerCase()
+                    }),
+                    $content = $('<div/>', {
+                        id: name,
+                        class: 'modal-content features'
+                    });
+                $div.append($h3);
+
+                if(!$soxSettingsDialogFeatures.find('div#header-for-' + name).length) {
+                  $soxSettingsDialogFeatures.append($div);
+                  $div.after($content);
+                }
+            }
+
             function addFeature(category, name, description) {
                 var $div = $('<div/>', {
                         'class': 'feature'
@@ -39,23 +59,6 @@
                 $soxSettingsDialogFeatures.find('#' + category).append($div);
             }
 
-            function addCategory(name) {
-                var $div = $('<div/>', {
-                        'class': 'header category'
-                    }),
-                    $h3 = $('<h3/>', {
-                        text: name.toLowerCase()
-                    }),
-                    $content = $('<div/>', {
-                        id: name,
-                        class: 'modal-content features'
-                    });
-                $div.append($h3);
-
-                $soxSettingsDialogFeatures.append($div);
-                $div.after($content);
-            }
-
             // display sox version number in the dialog
             $soxSettingsDialogVersion.text(options.version != 'unknown' ? ' v' + version.toLowerCase() : '');
 
@@ -64,7 +67,7 @@
                 $soxSettingsDialog.hide();
             });
             $soxSettingsReset.on('click', function() {
-                reset();
+                sox.settings.reset();
                 location.reload(); // reload page to reflect changed settings
             });
 
@@ -212,6 +215,11 @@
                         features.categories[category][feature].name,
                         features.categories[category][feature].desc
                     );
+                    //TODO: per-feature settings panel
+                    /*if(features.categories[category][feature].hasSettings) {
+                        addCategory("Per-feature settings");
+                        $soxSettingsDialogFeatures.find('#'+features.categories[category][feature].name)
+                    }*/
                 }
             }
             if (settings) {

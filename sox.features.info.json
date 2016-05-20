@@ -79,6 +79,13 @@
                 "exclude": ""
             },
             {
+                "name": "hiddenCommentsIndicator",
+                "desc": "Add a darker border underneath comments if there are some hidden after it",
+                "meta": "http://meta.stackoverflow.com/q/296582/3541881",
+                "match": "*://*/questions*",
+                "exclude": ""
+            },
+            {
                 "name": "hideCommunityBulletin",
                 "desc": "Hide the Community Bulletin module",
                 "meta": "",
