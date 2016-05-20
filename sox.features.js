@@ -24,17 +24,8 @@
         dragBounty: function() {
             // Description: Makes the bounty window draggable
 
-            new MutationObserver(function(mutations, observer) {
-                for(var i=0; i<mutations.length; i++) {
-                    for(var j=0; j<mutations[i].addedNodes.length; j++) {
-                        if(mutations[i].addedNodes[j].id == "start-bounty-popup") {
-                            $('#start-bounty-popup').draggable().css('cursor', 'move');
-                        }
-                    }
-                }
-            }).observe(document.body, {
-              childList: true,
-              subtree: true
+            sox.helpers.observe('#start-bounty-popup', function() {
+                $('#start-bounty-popup').draggable().css('cursor', 'move');
             });
         },
 
@@ -250,7 +241,6 @@
                     "subtree": true
                 });
             }
-
         },
 
         displayName: function() {
@@ -263,7 +253,6 @@
                 title: name,
                 text: name
             });
-            //var insertme = '<span class="reputation links-container" style="color:white;" title="' + name + '">' + name + '</span>"';
             $span.insertBefore('.gravatar-wrapper-24');
         },
 
@@ -278,18 +267,8 @@
                     }
                 });
             });
-            new MutationObserver(function(mutations, observer) {
-                for(var i=0; i<mutations.length; i++) {
-                    for(var j=0; j<mutations[i].addedNodes.length; j++) {
-                        var cl = mutations[i].addedNodes[j].classList;
-                        if(cl != undefined && cl.contains('comment')) {
-                            sox.features.colorAnswerer();
-                        }
-                    }
-                }
-            }).observe(document.body, {
-              childList: true,
-              subtree: true
+            sox.helpers.observe('.comment', function() {
+              sox.features.colorAnswerer();
             });
         },
 
@@ -474,20 +453,10 @@
         shareLinksMarkdown: function() {
             // Description: For changing the 'share' button link to the format [name](link)
 
-            new MutationObserver(function(mutations, observer) {
-                for(var i=0; i<mutations.length; i++) {
-                    for(var j=0; j<mutations[i].addedNodes.length; j++) {
-                        var cl = mutations[i].addedNodes[j].classList;
-                        if(cl !== undefined && cl.contains('share-tip')) {
-                          var link = $('.share-tip input').val();
-                          $('.share-tip input').val('[' + $('#question-header a').html() + '](' + link + ')');
-                          $('.share-tip input').select();
-                        }
-                    }
-                }
-            }).observe(document.body, {
-              childList: true,
-              subtree: true
+            sox.helpers.observe('.share-tip', function() {
+                var link = $('.share-tip input').val();
+                $('.share-tip input').val('[' + $('#question-header a').html() + '](' + link + ')');
+                $('.share-tip input').select();
             });
         },
 
@@ -763,27 +732,17 @@
         titleEditDiff: function() {
             // Description: For showing the new version of a title in a diff separately rather than loads of crossing outs in red and additions in green
 
-            new MutationObserver(function(mutations, observer) {
-                for(var i=0; i<mutations.length; i++) {
-                    for(var j=0; j<mutations[i].addedNodes.length; j++) {
-                        var cl = mutations[i].addedNodes[j].classList;
-                        if(cl !== undefined && cl.contains('review-status')) {
-                          var $questionHyperlink = $('.summary h2 .question-hyperlink').clone(),
-                              $questionHyperlinkTwo = $('.summary h2 .question-hyperlink').clone(),
-                              link = $('.summary h2 .question-hyperlink').attr('href'),
-                              added = ($questionHyperlinkTwo.find('.diff-delete').remove().end().text()),
-                              removed = ($questionHyperlink.find('.diff-add').remove().end().text());
+            sox.helpers.observe('.review-status', function() {
+                var $questionHyperlink = $('.summary h2 .question-hyperlink').clone(),
+                    $questionHyperlinkTwo = $('.summary h2 .question-hyperlink').clone(),
+                    link = $('.summary h2 .question-hyperlink').attr('href'),
+                    added = ($questionHyperlinkTwo.find('.diff-delete').remove().end().text()),
+                    removed = ($questionHyperlink.find('.diff-add').remove().end().text());
 
-                          if ($('.summary h2 .question-hyperlink').find('.diff-delete, .diff-add').length) {
-                              $('.summary h2 .question-hyperlink').hide();
-                              $('.summary h2 .question-hyperlink').after('<a href="' + link + '" class="question-hyperlink"><span class="diff-delete">' + removed + '</span><span class="diff-add">' + added + '</span></a>');
-                          }
-                        }
-                    }
+                if ($('.summary h2 .question-hyperlink').find('.diff-delete, .diff-add').length) {
+                    $('.summary h2 .question-hyperlink').hide();
+                    $('.summary h2 .question-hyperlink').after('<a href="' + link + '" class="question-hyperlink"><span class="diff-delete">' + removed + '</span><span class="diff-add">' + added + '</span></a>');
                 }
-            }).observe(document.body, {
-              childList: true,
-              subtree: true
             });
         },
 
@@ -1129,28 +1088,9 @@ Toggle SBS?</div></li>';
         alwaysShowImageUploadLinkBox: function() {
             // Description: For always showing the 'Link from the web' box when uploading an image.
 
-            var body = document.getElementById('body'); //Code courtesy of Siguza <http://meta.stackoverflow.com/a/306901/3541881>! :)
-            if (body) {
-                new MutationObserver(function(records) {
-                    records.forEach(function(r) {
-                        Array.prototype.forEach.call(r.addedNodes, function(n) {
-                            if (n.classList.contains('image-upload')) {
-                                new MutationObserver(function(records, self) {
-                                    var link = n.querySelector('.modal-options-default.tab-page a');
-                                    if (link) {
-                                        link.click();
-                                        self.disconnect();
-                                    }
-                                }).observe(n, {
-                                    childList: true
-                                });
-                            }
-                        });
-                    });
-                }).observe(body, {
-                    childList: true
-                });
-            }
+            sox.helpers.observe('.image-upload form', function(n) {
+              $('.image-upload form div.modal-options-default.tab-page > a')[0].click();
+            });
         },
 
         addAuthorNameToInboxNotifications: function() {
@@ -1201,24 +1141,11 @@ Toggle SBS?</div></li>';
                 });
             };
 
-            new MutationObserver(function(mutations) {
-                mutations.forEach(function(mutation) {
-                    var length = mutation.addedNodes.length;
-                    for (var i = 0; i < length; i++) {
-                        var $addedNode = $(mutation.addedNodes[i]);
-                        if (!$addedNode.hasClass('inbox-dialog')) {
-                            return;
-                        }
-
-                        for (var x = 0; x < 21; x++) { //first 20 items
-                            getAuthorName($addedNode.find('.inbox-item').eq(x));
-                        }
-                    }
-                });
-            }).observe(document.body, {
-                childList: true,
-                attributes: true,
-                subtree: true
+            sox.helpers.observe('.inbox-dialog', function(node) {
+              var $addedNode = $(node);
+              for (var x = 0; x < 21; x++) { //first 20 items
+                  getAuthorName($addedNode.find('.inbox-item').eq(x));
+              }
             });
         },
 
@@ -1390,7 +1317,7 @@ Toggle SBS?</div></li>';
         enhancedEditor: function() {
             // Description: Add a bunch of features to the standard markdown editor (autocorrect, find+replace, Ace editor, and more!)
 
-            enhancedEditor.startFeature();
+            sox.enhancedEditor.startFeature();
         },
 
         downvotedPostsEditAlert: function() {
@@ -1501,48 +1428,32 @@ Toggle SBS?</div></li>';
         chatEasyAccess: function() {
             // Description: Adds options to give a user read/write/no access in chat from their user popup dialog
 
-            new MutationObserver(function(mutations) {
-                mutations.forEach(function(mutation) {
-                    var newNodes = mutation.addedNodes;
-                    if (newNodes !== null) {
-                        var $nodes = $(newNodes);
-                        $nodes.each(function() {
-                            var $node = $(this);
-                            if ($node.hasClass("user-popup")) {
-                                setTimeout(function() {
-                                    var id = $node.find('a')[0].href.split('/')[4];
-                                    if ($('.chatEasyAccess').length) {
-                                        $('.chatEasyAccess').remove();
-                                    }
-                                    $node.find('div:last-child').after('<div class="chatEasyAccess">give <b id="read-only">read</b> / <b id="read-write">write</b> / <b id="remove">no</b> access</div>');
-                                    $(document).on('click', '.chatEasyAccess b', function() {
-                                        $that = $(this);
-                                        $.ajax({
-                                            url: 'http://chat.stackexchange.com/rooms/setuseraccess/' + location.href.split('/')[4],
-                                            type: 'post',
-                                            data: {
-                                                'fkey': fkey().fkey,
-                                                'userAccess': $that.attr('id'),
-                                                'aclUserId': id
-                                            },
-                                            success: function(d) {
-                                                if (d == '') {
-                                                    alert('Successfully changed user access');
-                                                } else {
-                                                    alert(d);
-                                                }
-                                            }
-                                        });
-                                    });
-                                }, 1000);
+            sox.helpers.observe('.user-popup .last-dates', function(node) {
+                var $node = $(node).parent();
+                var id = $node.find('a')[0].href.split('/')[4];
+                if ($('.chatEasyAccess').length) $('.chatEasyAccess').remove();
+
+                $node.find('div:last-child').last().after('<div class="chatEasyAccess">give <b id="read-only">read</b> / <b id="read-write">write</b> / <b id="remove">no</b> access</div>');
+                $(document).on('click', '.chatEasyAccess b', function() {
+                    $that = $(this);
+                    $.ajax({
+                        url: 'http://chat.stackexchange.com/rooms/setuseraccess/' + location.href.split('/')[4],
+                        type: 'post',
+                        data: {
+                            'fkey': fkey().fkey,
+                            'userAccess': $that.attr('id'),
+                            'aclUserId': id
+                        },
+                        success: function(d) {
+                            if (d == '') {
+                                alert('Successfully changed user access');
+                            } else {
+                                alert(d);
                             }
-                        });
-                    }
+                        }
+                    });
                 });
-            }).observe(document.getElementById('chat-body'), {
-                childList: true,
-                attributes: true
-            });
+            }, document.getElementById('chat-body'));
         },
 
         topAnswers: function() {
@@ -1645,31 +1556,29 @@ Toggle SBS?</div></li>';
         linkedToFrom: function() {
             // Description: Add an arrow to linked posts in the sidebar to show whether they are linked to or linked from
 
-            if (location.href.indexOf('/questions/') > -1) {
-                setTimeout(function() {
-                    var currentId = location.href.split('/')[4];
-                    $('.linked .spacer a.question-hyperlink').each(function() {
-                        var id = $(this).attr('href').split('/')[4];
-                        if ($('a[href*="' + id + '"]').not('.spacer a').length) {
-                            var $that = $(this);
-                            $that.append('<i class="fa fa-chevron-right"  title="Current question links to this question" style="color:black;margin-left:5px;"></i>');
-                            $.ajax({
-                                url: '/questions/' + id,
-                                type: 'get',
-                                dataType: 'html',
-                                async: 'false',
-                                success: function(d) {
-                                    if ($(d).find('a[href*="' + currentId + '"]').not('.spacer a').length) {
-                                        $that.append('<i class="fa fa-chevron-left" title="Current question is linked from this question" style="color:black;margin-left:5px;"></i>');
-                                    }
+            setTimeout(function() {
+                var currentId = location.href.split('/')[4];
+                $('.linked .spacer a.question-hyperlink').each(function() {
+                    var id = $(this).attr('href').split('/')[4];
+                    if ($('a[href*="' + id + '"]').not('.spacer a').length) {
+                        var $that = $(this);
+                        $that.append('<i class="fa fa-chevron-right"  title="Current question links to this question" style="color:black;margin-left:5px;"></i>');
+                        $.ajax({
+                            url: '/questions/' + id,
+                            type: 'get',
+                            dataType: 'html',
+                            async: 'false',
+                            success: function(d) {
+                                if ($(d).find('a[href*="' + currentId + '"]').not('.spacer a').length) {
+                                    $that.append('<i class="fa fa-chevron-left" title="Current question is linked from this question" style="color:black;margin-left:5px;"></i>');
                                 }
-                            });
-                        } else {
-                            $(this).append('<i class="fa fa-chevron-left" title="Current question is linked from this question" style="color:black;margin-left:5px;"></i>');
-                        }
-                    });
-                }, 2000);
-            }
+                            }
+                        });
+                    } else {
+                        $(this).append('<i class="fa fa-chevron-left" title="Current question is linked from this question" style="color:black;margin-left:5px;"></i>');
+                    }
+                });
+            }, 2000);
         },
 
         alignBadgesByClass: function() {
