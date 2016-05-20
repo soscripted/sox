@@ -1517,7 +1517,7 @@ Toggle SBS?</div></li>';
             // Description: Adds a notification to the inbox if a question you downvoted and watched is edited
             // Idea by lolreppeatlol @ http://meta.stackexchange.com/a/277446/260841 :)
 
-            setTimeout(function() {
+            sox.helpers.observe('.review-more-instructions ul', function() {
                 var info = {};
                 $('.review-more-instructions ul:eq(0) li').each(function() {
                     var text = $(this).text(),
@@ -1550,35 +1550,33 @@ Toggle SBS?</div></li>';
                 table += "</tbody></table>";
                 $('.review-more-instructions p, .review-more-instructions ul').remove();
                 $('.review-more-instructions').append(table);
-            }, 1000);
+            });
         },
 
         linkedToFrom: function() {
             // Description: Add an arrow to linked posts in the sidebar to show whether they are linked to or linked from
 
-            setTimeout(function() {
-                var currentId = location.href.split('/')[4];
-                $('.linked .spacer a.question-hyperlink').each(function() {
-                    var id = $(this).attr('href').split('/')[4];
-                    if ($('a[href*="' + id + '"]').not('.spacer a').length) {
-                        var $that = $(this);
-                        $that.append('<i class="fa fa-chevron-right"  title="Current question links to this question" style="color:black;margin-left:5px;"></i>');
-                        $.ajax({
-                            url: '/questions/' + id,
-                            type: 'get',
-                            dataType: 'html',
-                            async: 'false',
-                            success: function(d) {
-                                if ($(d).find('a[href*="' + currentId + '"]').not('.spacer a').length) {
-                                    $that.append('<i class="fa fa-chevron-left" title="Current question is linked from this question" style="color:black;margin-left:5px;"></i>');
-                                }
+            var currentId = location.href.split('/')[4];
+            $('.linked .spacer a.question-hyperlink').each(function() {
+                var id = $(this).attr('href').split('/')[4];
+                if ($('a[href*="' + id + '"]').not('.spacer a').length) {
+                    var $that = $(this);
+                    $that.append('<i class="fa fa-chevron-right"  title="Current question links to this question" style="color:black;margin-left:5px;"></i>');
+                    $.ajax({
+                        url: '/questions/' + id,
+                        type: 'get',
+                        dataType: 'html',
+                        async: 'false',
+                        success: function(d) {
+                            if ($(d).find('a[href*="' + currentId + '"]').not('.spacer a').length) {
+                                $that.append('<i class="fa fa-chevron-left" title="Current question is linked from this question" style="color:black;margin-left:5px;"></i>');
                             }
-                        });
-                    } else {
-                        $(this).append('<i class="fa fa-chevron-left" title="Current question is linked from this question" style="color:black;margin-left:5px;"></i>');
-                    }
-                });
-            }, 2000);
+                        }
+                    });
+                } else {
+                    $(this).append('<i class="fa fa-chevron-left" title="Current question is linked from this question" style="color:black;margin-left:5px;"></i>');
+                }
+            });
         },
 
         alignBadgesByClass: function() {
