@@ -33,7 +33,7 @@
                 "name": "betterCSS",
                 "desc": "Add extra CSS for voting signs and favourite button (currently only on Android SE)",
                 "meta": "http://meta.stackexchange.com/questions/252685/i-want-to-have-those-voting-animations-like-on-android-se-pretty-please",
-                "match": "",
+                "match": "*://*/questions*",
                 "exclude": ""
             },
             {
@@ -47,7 +47,7 @@
                 "name": "colorAnswerer",
                 "desc": "Color answerer's comments",
                 "meta": "http://meta.stackexchange.com/questions/19574/highlight-comments-from-answer-author-in-addition-to-question-author",
-                "match": "",
+                "match": "*://*/questions*",
                 "exclude": ""
             },
             {
@@ -61,7 +61,7 @@
                 "name": "dragBounty",
                 "desc": "Make bounty box draggable",
                 "meta": "http://meta.stackexchange.com/questions/170125/make-bounty-custom-message-dialog-box-draggable",
-                "match": "",
+                "match": "*://*/questions*",
                 "exclude": ""
             },
             {
@@ -73,9 +73,16 @@
             },
             {
                 "name": "grayOutVotes",
-                "desc": "Gray out deleted votes",
+                "desc": "Gray out deleted vote buttons",
                 "meta": "http://meta.stackexchange.com/a/174806/260841",
-                "match": "",
+                "match": "*://*/questions*",
+                "exclude": ""
+            },
+            {
+                "name": "hiddenCommentsIndicator",
+                "desc": "Add a darker border underneath comments if there are some hidden after it",
+                "meta": "http://meta.stackoverflow.com/q/296582/3541881",
+                "match": "*://*/questions*",
                 "exclude": ""
             },
             {
@@ -110,14 +117,14 @@
                 "name": "isQuestionHot",
                 "desc": "Add a label on questions which are hot-network questions",
                 "meta": "http://meta.stackexchange.com/questions/245390/let-mods-and-10k-know-when-questions-go-hot",
-                "match": "",
+                "match": "*://*/questions*",
                 "exclude": ""
             },
             {
                 "name": "linkedToFrom",
                 "desc": "Add an arrow to linked posts in the sidebar to show whether they are linked to or linked from",
                 "meta": "http://meta.stackexchange.com/q/276235/260841",
-                "match": "",
+                "match": "*://*/questions*",
                 "exclude": ""
             },
             {
@@ -145,14 +152,14 @@
                 "name": "moveBounty",
                 "desc": "Move 'start bounty' to top",
                 "meta": "http://meta.stackexchange.com/questions/234095/can-we-move-start-a-bounty-to-a-more-intuitive-location",
-                "match": "",
+                "match": "*://*/questions*",
                 "exclude": ""
             },
             {
                 "name": "renameChat",
                 "desc": "Prepend 'Chat - ' to chat tabs' titles",
                 "meta": "http://meta.stackexchange.com/questions/246289/change-the-browser-tab-title-on-chat-pages-to-chat-sitename-or-chat-room-name",
-                "match": "",
+                "match": "*://chat.*.com/*",
                 "exclude": ""
             },
             {
@@ -166,7 +173,7 @@
                 "name": "spoilerTip",
                 "desc": "Differentiate spoilers from empty blockquotes",
                 "meta": "http://meta.stackexchange.com/questions/104085/differentiate-spoilers-from-empty-block-quotes",
-                "match": "",
+                "match": "*://*/questions*",
                 "exclude": ""
             },
             {
@@ -180,7 +187,7 @@
                 "name": "stickyVoteButtons",
                 "desc": "Make vote buttons next to posts sticky whilst scrolling on that post",
                 "meta": "http://meta.stackexchange.com/a/35047/260841",
-                "match": "",
+                "match": "*://*/questions*",
                 "exclude": ""
             },
             {
@@ -194,14 +201,14 @@
                 "name": "topAnswers",
                 "desc": "Improve answer visibility by listing top answers",
                 "meta": "",
-                "match": "",
+                "match": "*://*/questions*",
                 "exclude": ""
             },
             {
                 "name": "unspoil",
                 "desc": "Add a link to the bottom of a post to reveal all spoilers in a post",
                 "meta": "http://meta.stackexchange.com/questions/249808/add-a-way-to-reveal-all-spoiler-blocks-in-a-post-at-once",
-                "match": "",
+                "match": "*://*/questions*",
                 "exclude": ""
             }
         ],
@@ -210,42 +217,42 @@
                 "name": "autoShowCommentImages",
                 "desc": "View linked images (to imgur) in comments inline",
                 "meta": "",
-                "match": "",
+                "match": "*://*/questions*",
                 "exclude": ""
             },
             {
                 "name": "commentReplies",
                 "desc": "Add reply links to comments for quick replying (without having to type someone's username)",
                 "meta": "http://meta.stackexchange.com/questions/74778/add-reply-link-to-comment-that-pre-populates-comment-box-with-username",
-                "match": "",
+                "match": "*://*/questions*",
                 "exclude": ""
             },
             {
                 "name": "commentShortcuts",
                 "desc": "Use Ctrl+I,B,K (to italicise, bolden and add code backticks) in comments",
                 "meta": "http://meta.stackexchange.com/questions/14756/formatting-keyboard-shortcuts-for-comments",
-                "match": "",
+                "match": "*://*/questions*",
                 "exclude": ""
             },
             {
                 "name": "confirmNavigateAway",
                 "desc": "Add a confirmation dialog when navigating away on pages whilst still typing a comment",
                 "meta": "http://meta.stackexchange.com/questions/252205/add-are-you-sure-you-want-to-navigate-away-from-this-page-when-writing-a-comm",
-                "match": "",
+                "match": "*://*/questions*",
                 "exclude": ""
             },
             {
                 "name": "copyCommentsLink",
                 "desc": "Copy 'show x more comments' link to the top",
                 "meta": "http://meta.stackexchange.com/questions/55020/add-a-show-more-comments-button-to-the-top-of-a-list-of-comments",
-                "match": "",
+                "match": "*://*/questions*",
                 "exclude": ""
             },
             {
                 "name": "showCommentScores",
                 "desc": "Show your comment and comment replies scores in your profile tabs",
                 "meta": "http://meta.stackexchange.com/questions/38285/display-the-number-of-comment-upvotes-in-recent-activity-pages",
-                "match": "",
+                "match": "*://*/users/*",
                 "exclude": ""
             }
         ],
@@ -268,7 +275,7 @@
                 "name": "editReasonTooltip",
                 "desc": "Add a tooltip to posts showing the latest revision's comment on 'edited [date] at [time]'",
                 "meta": "http://meta.stackexchange.com/questions/2315/show-reason-for-edit-without-clicking-through-to-diff",
-                "match": "",
+                "match": "*://*/questions*",
                 "exclude": ""
             },
             {
@@ -314,7 +321,7 @@
                 "name": "alwaysShowImageUploadLinkBox",
                 "desc": "Always show the 'Link from the web' box when uploading an image",
                 "meta": "http://meta.stackoverflow.com/q/306888/3541881",
-                "match": "",
+                "match": "*://*/questions*",
                 "exclude": ""
             },
             {
@@ -332,17 +339,25 @@
                 "exclude": ""
             },
             {
+                "name": "hotNetworkQuestionsFiltering",
+                "desc": "Filter the hot network questions by their attributes",
+                "meta": "",
+                "match": "",
+                "exclude": "",
+                "hasSettings": true
+            },
+            {
                 "name": "linkedPostsInline",
                 "desc": "Display linked posts inline (with an arrow)",
                 "meta": "",
-                "match": "",
+                "match": "*://*/questions*",
                 "exclude": ""
             },
             {
                 "name": "parseCrossSiteLinks",
                 "desc": "Parse titles to links cross-SE-sites",
                 "meta": "http://meta.stackexchange.com/questions/251183/parse-question-links-from-other-se-sites",
-                "match": "",
+                "match": "*://*/questions*",
                 "exclude": ""
             },
             {
@@ -357,7 +372,7 @@
                 "name": "shareLinksMarkdown",
                 "desc": "Change 'share' link to format of [post-name](url)",
                 "meta": "http://meta.stackexchange.com/questions/126544/add-a-second-share-button-to-posts-with-comment-ready-links",
-                "match": "",
+                "match": "*://*/questions*",
                 "exclude": ""
             },
             {

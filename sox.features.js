@@ -24,6 +24,7 @@
         dragBounty: function() {
             // Description: Makes the bounty window draggable
 
+<<<<<<< HEAD
             new MutationObserver(function(mutations, observer) {
                 for (var i = 0; i < mutations.length; i++) {
                     for (var j = 0; j < mutations[i].addedNodes.length; j++) {
@@ -35,6 +36,10 @@
             }).observe(document.body, {
                 childList: true,
                 subtree: true
+=======
+            sox.helpers.observe('#start-bounty-popup', function() {
+                $('#start-bounty-popup').draggable().css('cursor', 'move');
+>>>>>>> 6bcf84c6b2d90aea18212c5110ab385712c96bae
             });
         },
 
@@ -251,7 +256,6 @@
                     "subtree": true
                 });
             }
-
         },
 
         displayName: function() {
@@ -264,7 +268,6 @@
                 title: name,
                 text: name
             });
-            //var insertme = '<span class="reputation links-container" style="color:white;" title="' + name + '">' + name + '</span>"';
             $span.insertBefore('.gravatar-wrapper-24');
         },
 
@@ -279,6 +282,7 @@
                     }
                 });
             });
+<<<<<<< HEAD
             new MutationObserver(function(mutations, observer) {
                 for (var i = 0; i < mutations.length; i++) {
                     for (var j = 0; j < mutations[i].addedNodes.length; j++) {
@@ -291,6 +295,10 @@
             }).observe(document.body, {
                 childList: true,
                 subtree: true
+=======
+            sox.helpers.observe('.comment', function() {
+              sox.features.colorAnswerer();
+>>>>>>> 6bcf84c6b2d90aea18212c5110ab385712c96bae
             });
         },
 
@@ -475,6 +483,7 @@
         shareLinksMarkdown: function() {
             // Description: For changing the 'share' button link to the format [name](link)
 
+<<<<<<< HEAD
             new MutationObserver(function(mutations, observer) {
                 for (var i = 0; i < mutations.length; i++) {
                     for (var j = 0; j < mutations[i].addedNodes.length; j++) {
@@ -489,6 +498,12 @@
             }).observe(document.body, {
                 childList: true,
                 subtree: true
+=======
+            sox.helpers.observe('.share-tip', function() {
+                var link = $('.share-tip input').val();
+                $('.share-tip input').val('[' + $('#question-header a').html() + '](' + link + ')');
+                $('.share-tip input').select();
+>>>>>>> 6bcf84c6b2d90aea18212c5110ab385712c96bae
             });
         },
 
@@ -764,6 +779,7 @@
         titleEditDiff: function() {
             // Description: For showing the new version of a title in a diff separately rather than loads of crossing outs in red and additions in green
 
+<<<<<<< HEAD
             new MutationObserver(function(mutations, observer) {
                 for (var i = 0; i < mutations.length; i++) {
                     for (var j = 0; j < mutations[i].addedNodes.length; j++) {
@@ -785,6 +801,19 @@
             }).observe(document.body, {
                 childList: true,
                 subtree: true
+=======
+            sox.helpers.observe('.review-status', function() {
+                var $questionHyperlink = $('.summary h2 .question-hyperlink').clone(),
+                    $questionHyperlinkTwo = $('.summary h2 .question-hyperlink').clone(),
+                    link = $('.summary h2 .question-hyperlink').attr('href'),
+                    added = ($questionHyperlinkTwo.find('.diff-delete').remove().end().text()),
+                    removed = ($questionHyperlink.find('.diff-add').remove().end().text());
+
+                if ($('.summary h2 .question-hyperlink').find('.diff-delete, .diff-add').length) {
+                    $('.summary h2 .question-hyperlink').hide();
+                    $('.summary h2 .question-hyperlink').after('<a href="' + link + '" class="question-hyperlink"><span class="diff-delete">' + removed + '</span><span class="diff-add">' + added + '</span></a>');
+                }
+>>>>>>> 6bcf84c6b2d90aea18212c5110ab385712c96bae
             });
         },
 
@@ -1130,28 +1159,9 @@ Toggle SBS?</div></li>';
         alwaysShowImageUploadLinkBox: function() {
             // Description: For always showing the 'Link from the web' box when uploading an image.
 
-            var body = document.getElementById('body'); //Code courtesy of Siguza <http://meta.stackoverflow.com/a/306901/3541881>! :)
-            if (body) {
-                new MutationObserver(function(records) {
-                    records.forEach(function(r) {
-                        Array.prototype.forEach.call(r.addedNodes, function(n) {
-                            if (n.classList.contains('image-upload')) {
-                                new MutationObserver(function(records, self) {
-                                    var link = n.querySelector('.modal-options-default.tab-page a');
-                                    if (link) {
-                                        link.click();
-                                        self.disconnect();
-                                    }
-                                }).observe(n, {
-                                    childList: true
-                                });
-                            }
-                        });
-                    });
-                }).observe(body, {
-                    childList: true
-                });
-            }
+            sox.helpers.observe('.image-upload form', function(n) {
+              $('.image-upload form div.modal-options-default.tab-page > a')[0].click();
+            });
         },
 
         addAuthorNameToInboxNotifications: function() {
@@ -1202,24 +1212,11 @@ Toggle SBS?</div></li>';
                 });
             };
 
-            new MutationObserver(function(mutations) {
-                mutations.forEach(function(mutation) {
-                    var length = mutation.addedNodes.length;
-                    for (var i = 0; i < length; i++) {
-                        var $addedNode = $(mutation.addedNodes[i]);
-                        if (!$addedNode.hasClass('inbox-dialog')) {
-                            return;
-                        }
-
-                        for (var x = 0; x < 21; x++) { //first 20 items
-                            getAuthorName($addedNode.find('.inbox-item').eq(x));
-                        }
-                    }
-                });
-            }).observe(document.body, {
-                childList: true,
-                attributes: true,
-                subtree: true
+            sox.helpers.observe('.inbox-dialog', function(node) {
+              var $addedNode = $(node);
+              for (var x = 0; x < 21; x++) { //first 20 items
+                  getAuthorName($addedNode.find('.inbox-item').eq(x));
+              }
             });
         },
 
@@ -1391,7 +1388,7 @@ Toggle SBS?</div></li>';
         enhancedEditor: function() {
             // Description: Add a bunch of features to the standard markdown editor (autocorrect, find+replace, Ace editor, and more!)
 
-            enhancedEditor.startFeature();
+            sox.enhancedEditor.startFeature();
         },
 
         downvotedPostsEditAlert: function() {
@@ -1502,48 +1499,32 @@ Toggle SBS?</div></li>';
         chatEasyAccess: function() {
             // Description: Adds options to give a user read/write/no access in chat from their user popup dialog
 
-            new MutationObserver(function(mutations) {
-                mutations.forEach(function(mutation) {
-                    var newNodes = mutation.addedNodes;
-                    if (newNodes !== null) {
-                        var $nodes = $(newNodes);
-                        $nodes.each(function() {
-                            var $node = $(this);
-                            if ($node.hasClass("user-popup")) {
-                                setTimeout(function() {
-                                    var id = $node.find('a')[0].href.split('/')[4];
-                                    if ($('.chatEasyAccess').length) {
-                                        $('.chatEasyAccess').remove();
-                                    }
-                                    $node.find('div:last-child').after('<div class="chatEasyAccess">give <b id="read-only">read</b> / <b id="read-write">write</b> / <b id="remove">no</b> access</div>');
-                                    $(document).on('click', '.chatEasyAccess b', function() {
-                                        $that = $(this);
-                                        $.ajax({
-                                            url: 'http://chat.stackexchange.com/rooms/setuseraccess/' + location.href.split('/')[4],
-                                            type: 'post',
-                                            data: {
-                                                'fkey': fkey().fkey,
-                                                'userAccess': $that.attr('id'),
-                                                'aclUserId': id
-                                            },
-                                            success: function(d) {
-                                                if (d == '') {
-                                                    alert('Successfully changed user access');
-                                                } else {
-                                                    alert(d);
-                                                }
-                                            }
-                                        });
-                                    });
-                                }, 1000);
+            sox.helpers.observe('.user-popup .last-dates', function(node) {
+                var $node = $(node).parent();
+                var id = $node.find('a')[0].href.split('/')[4];
+                if ($('.chatEasyAccess').length) $('.chatEasyAccess').remove();
+
+                $node.find('div:last-child').last().after('<div class="chatEasyAccess">give <b id="read-only">read</b> / <b id="read-write">write</b> / <b id="remove">no</b> access</div>');
+                $(document).on('click', '.chatEasyAccess b', function() {
+                    $that = $(this);
+                    $.ajax({
+                        url: 'http://chat.stackexchange.com/rooms/setuseraccess/' + location.href.split('/')[4],
+                        type: 'post',
+                        data: {
+                            'fkey': fkey().fkey,
+                            'userAccess': $that.attr('id'),
+                            'aclUserId': id
+                        },
+                        success: function(d) {
+                            if (d == '') {
+                                alert('Successfully changed user access');
+                            } else {
+                                alert(d);
                             }
-                        });
-                    }
+                        }
+                    });
                 });
-            }).observe(document.getElementById('chat-body'), {
-                childList: true,
-                attributes: true
-            });
+            }, document.getElementById('chat-body'));
         },
 
         topAnswers: function() {
@@ -1607,7 +1588,7 @@ Toggle SBS?</div></li>';
             // Description: Adds a notification to the inbox if a question you downvoted and watched is edited
             // Idea by lolreppeatlol @ http://meta.stackexchange.com/a/277446/260841 :)
 
-            setTimeout(function() {
+            sox.helpers.observe('.review-more-instructions ul', function() {
                 var info = {};
                 $('.review-more-instructions ul:eq(0) li').each(function() {
                     var text = $(this).text(),
@@ -1640,40 +1621,38 @@ Toggle SBS?</div></li>';
                 table += "</tbody></table>";
                 $('.review-more-instructions p, .review-more-instructions ul').remove();
                 $('.review-more-instructions').append(table);
-            }, 1000);
+            });
         },
 
         linkedToFrom: function() {
             // Description: Add an arrow to linked posts in the sidebar to show whether they are linked to or linked from
 
-            if (location.href.indexOf('/questions/') > -1) {
-                setTimeout(function() {
-                    var currentId = location.href.split('/')[4];
-                    $('.linked .spacer a.question-hyperlink').each(function() {
-                        var id = $(this).attr('href').split('/')[4];
-                        if ($('a[href*="' + id + '"]').not('.spacer a').length) {
-                            var $that = $(this);
-                            $that.append('<i class="fa fa-chevron-right"  title="Current question links to this question" style="color:black;margin-left:5px;"></i>');
-                            $.ajax({
-                                url: '/questions/' + id,
-                                type: 'get',
-                                dataType: 'html',
-                                async: 'false',
-                                success: function(d) {
-                                    if ($(d).find('a[href*="' + currentId + '"]').not('.spacer a').length) {
-                                        $that.append('<i class="fa fa-chevron-left" title="Current question is linked from this question" style="color:black;margin-left:5px;"></i>');
-                                    }
-                                }
-                            });
-                        } else {
-                            $(this).append('<i class="fa fa-chevron-left" title="Current question is linked from this question" style="color:black;margin-left:5px;"></i>');
+            var currentId = location.href.split('/')[4];
+            $('.linked .spacer a.question-hyperlink').each(function() {
+                var id = $(this).attr('href').split('/')[4];
+                if ($('a[href*="' + id + '"]').not('.spacer a').length) {
+                    var $that = $(this);
+                    $that.append('<i class="fa fa-chevron-right"  title="Current question links to this question" style="color:black;margin-left:5px;"></i>');
+                    $.ajax({
+                        url: '/questions/' + id,
+                        type: 'get',
+                        dataType: 'html',
+                        async: 'false',
+                        success: function(d) {
+                            if ($(d).find('a[href*="' + currentId + '"]').not('.spacer a').length) {
+                                $that.append('<i class="fa fa-chevron-left" title="Current question is linked from this question" style="color:black;margin-left:5px;"></i>');
+                            }
                         }
                     });
-                }, 2000);
-            }
+                } else {
+                    $(this).append('<i class="fa fa-chevron-left" title="Current question is linked from this question" style="color:black;margin-left:5px;"></i>');
+                }
+            });
         },
 
         alignBadgesByClass: function() {
+            // Description: Aligns badges by their class (bronze/silver/gold) on user profiles
+
             var numbers = {
                     'gold': 0,
                     'silver': 0,
@@ -1743,6 +1722,7 @@ Toggle SBS?</div></li>';
         },
 
         quickAuthorInfo: function() {
+<<<<<<< HEAD
             var answerers = {};
             $('.question, .answer').each(function() {
                 var $userDetails = $(this).find('.post-signature .user-details');
@@ -1768,6 +1748,144 @@ Toggle SBS?</div></li>';
                     }
                 });
             });
+=======
+          // Description: Shows when the post's author was last active and their registration state in the comments section
+
+          var answerers = {};
+            $('.question, .answer').each(function() {
+              var $userDetails = $(this).find('.post-signature .user-details');
+              var userid = $userDetails.find('a').attr('href').split('/')[2];
+              var username = $userDetails.find('a').text();
+              answerers[userid] = username;
+            });
+            var apiUrl = "https://api.stackexchange.com/users/" + Object.keys(answerers).join(';') + "?site=" + sox.site.apiSiteName;
+            $.get(apiUrl, function(data) {
+              var userDetailsFromAPI = {};
+              $.each(data.items, function() {
+                  var cur = $(this)[0];
+                  userDetailsFromAPI[cur.user_id] = {
+                      'last_seen': new Date(cur.last_access_date*1000).toUTCString(),
+                      'creation': new Date(cur.creation_date*1000).toUTCString(),
+                      'type': cur.user_type
+                  };
+              });
+              $('.question, .answer').each(function() {
+                  var id = $(this).find('.post-signature .user-details a').attr('href').split('/')[2];
+                  if(userDetailsFromAPI[id]) {
+                      $(this).find('.comments tbody:eq(0)').prepend("<tr class='comment'><td class='comment-actions'></td><td class='comment-text'><div style='display: block;' class='comment-body'>last seen: " + userDetailsFromAPI[id].last_seen + " | type: " + userDetailsFromAPI[id].type + "</div></td></tr>");
+                  }
+              });
+            });
+        },
+
+        hiddenCommentsIndicator: function() {
+          // Description: Darkens the border underneath comments if there are hidden comments underneath it
+
+            $('.question, .answer').each(function() {
+                if($(this).find('.js-show-link.comments-link:visible').length) {
+                    var postId = $(this).attr('data-questionid') || $(this).attr('data-answerid'),
+                        x=[],
+                        y=[],
+                        protocol = location.protocol,
+                        hostname = location.hostname,
+                        baseUrl = protocol + '//' + hostname;
+                    $.get(baseUrl + '/posts/' + postId + '/comments', function(d) {
+                        var $commentCopy = $('#comments-' + postId + ' .comment-text .comment-copy');
+
+                        $(d).find('.comment-text').each(function(i) {
+                            x.push($(this).find('.comment-copy').text());
+                        });
+
+                        $commentCopy.filter(function(d) {
+                            y.push(x.indexOf($commentCopy.eq(d).text()));
+                        });
+
+                        for(var i=0;i<y.length;i++){
+                            if(y[i] != y[i+1]-1) {
+                                $commentCopy.filter(function(d) {
+                                    return $(this).text() == x[y[i]];
+                                }).parent().parent().parent().find('.comment-actions, .comment-text').css('border-bottom-color', 'gray');
+                            }
+                        }
+                    });
+                }
+            });
+        },
+
+        hotNetworkQuestionsFiltering: function() {
+            // Description: Filter hot network questions in the sidebar based on their attributes such as title, site, etc..
+
+            var settings = JSON.parse(GM_getValue('hotNetworkQuestionsFilteringSettings', '{"wordsToBlock": "", "sitesToBlock": ""}'));
+            console.log(settings);
+            $('#hot-network-questions li a').each(function() {
+                if(settings.wordsToBlock != '') {
+                    var words = $(this).text().split(' '),
+                        wordsToBlock = settings.wordsToBlock.split(' ');
+                    for(var i=0; i<wordsToBlock.length; i++) {
+                        if(words.indexOf(wordsToBlock[i]) != -1) {
+                            $(this).parent().hide();
+                        }
+                    }
+                }
+                if(settings.sitesToBlock != '') {
+                    var site = $(this).attr('href'),
+                        sitesToBlock = settings.sitesToBlock.split(' ');
+                    for(var i=0; i<sitesToBlock.length; i++) {
+                        console.log(sitesToBlock[i]);
+                        if(sox.location.match(sitesToBlock[i], site)) {
+                            $(this).parent().hide();
+                        }
+                    }
+                }
+                $(this).append('<i class="fa fa-tags getQuestionTags"></i>');
+            });
+
+            $('.getQuestionTags').hover(function(e) {
+                if(!$(this).attr('data-tags')) {
+                    var $that = $(this),
+                        id = $(this).parent().attr('href').split('/')[4],
+                        sitename = $(this).parent().attr('href').split('/')[2];
+
+                    sox.helpers.getFromAPI('questions', id, sitename, function(d) {
+                        $that.attr('data-tags', d.items[0].tags.join(', '));
+                    });
+                }
+            }, function() {
+                if(!$(this).next().hasClass('tooltip') && $(this).attr('data-tags')) {
+                    $(this).after('<span class="tooltip" style="display: block;margin-left: 5px;background-color: #eeeefe;border: 1px solid darkgrey;font-size: 11px;padding: 1px;">' + $(this).attr('data-tags') + '</span>');
+                    $(this).remove();
+                }
+            });
+
+            var $wordsToBlockFromTitle = $('<textarea/>', {
+                    id: 'wordsToBlockFromTitle',
+                    style: 'padding: 5px; resize: horizontal;',
+                    text: settings.wordsToBlock
+                }),
+                $sitesToBlock = $('<textarea/>', {
+                    id: 'sitesToBlock',
+                    style: 'padding: 5px; resize: horizontal;',
+                    text: settings.sitesToBlock
+                }),
+                $save = $('<span/>', {
+                  id: 'saveSettings-hotNetworkQuestionsFiltering',
+                  text: 'save',
+                  style: 'cursor: pointer; display: block;'
+                });
+
+            $('#soxSettingsPanel-hotNetworkQuestionsFiltering')
+            .append('Words to block from title (comma-separated):<br>')
+            .append($wordsToBlockFromTitle)
+            .append('<br>Sites to block (comma-separated match patterns):<br>')
+            .append($sitesToBlock)
+            .append($save);
+
+            $('#saveSettings-hotNetworkQuestionsFiltering').click(function() {
+                settings.wordsToBlock = $(this).parent().find('#wordsToBlockFromTitle').val();
+                settings.sitesToBlock = $(this).parent().find('#sitesToBlock').val();
+                GM_setValue('hotNetworkQuestionsFilteringSettings', JSON.stringify(settings));
+            });
+>>>>>>> 6bcf84c6b2d90aea18212c5110ab385712c96bae
         }
     };
 })(window.sox = window.sox || {}, jQuery);

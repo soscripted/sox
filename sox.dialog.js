@@ -24,7 +24,27 @@
                 $searchReset = $soxSettingsDialog.find('#search-reset');
 
 
-            function addFeature(category, name, description) {
+            function addCategory(name) {
+                var $div = $('<div/>', {
+                        'class': 'header category',
+                        'id': 'header-for-' + name
+                    }),
+                    $h3 = $('<h3/>', {
+                        text: name.toLowerCase()
+                    }),
+                    $content = $('<div/>', {
+                        id: name,
+                        class: 'modal-content features'
+                    });
+                $div.append($h3);
+
+                if(!$soxSettingsDialogFeatures.find('div#header-for-' + name).length) {
+                  $soxSettingsDialogFeatures.find('#header-for-per-feature-settings').before($div);
+                  $div.after($content);
+                }
+            }
+
+            function addFeature(category, name, description, withSettings) {
                 var $div = $('<div/>', {
                         'class': 'feature'
                     }),
@@ -37,23 +57,28 @@
                 $label.append($input);
                 $input.after(description);
                 $soxSettingsDialogFeatures.find('#' + category).append($div);
-            }
 
-            function addCategory(name) {
-                var $div = $('<div/>', {
-                        'class': 'header category'
-                    }),
-                    $h3 = $('<h3/>', {
-                        text: name.toLowerCase()
-                    }),
-                    $content = $('<div/>', {
-                        id: name,
-                        class: 'modal-content features'
-                    });
-                $div.append($h3);
-
-                $soxSettingsDialogFeatures.append($div);
-                $div.after($content);
+                if(withSettings) {
+                    var $settingsDiv = $('<div/>', {
+                            id: 'soxSettingsPanel-' + name,
+                            style: 'display: none; margin-top: 5px;'
+                        }),
+                        $expanderArrow = $('<a/>', {
+                            'class': 'expander-arrow-small-hide show-sox-settings-panel',
+                            style: 'margin-left: 5px',
+                            click: function(e) {
+                                e.preventDefault(); //don't uncheck the checkbox
+                                if($(this).hasClass('expander-arrow-small-hide')) {
+                                    $(this).parent().find('#soxSettingsPanel-' + name).fadeIn();
+                                    $(this).removeClass('expander-arrow-small-hide').addClass('expander-arrow-small-show');
+                                } else if($(this).hasClass('expander-arrow-small-show')) {
+                                    $(this).parent().find('#soxSettingsPanel-' + name).fadeOut();
+                                    $(this).removeClass('expander-arrow-small-show').addClass('expander-arrow-small-hide');
+                                }
+                            }
+                        });
+                    $soxSettingsDialogFeatures.find('input#' + name).parent().append($expanderArrow).append($settingsDiv);
+                }
             }
 
             // display sox version number in the dialog
@@ -64,7 +89,7 @@
                 $soxSettingsDialog.hide();
             });
             $soxSettingsReset.on('click', function() {
-                reset();
+                sox.settings.reset();
                 location.reload(); // reload page to reflect changed settings
             });
 
@@ -207,10 +232,12 @@
                 addCategory(category);
 
                 for (var feature in features.categories[category]) {
+                    var currentFeature = features.categories[category][feature];
                     addFeature(
                         category,
-                        features.categories[category][feature].name,
-                        features.categories[category][feature].desc
+                        currentFeature.name,
+                        currentFeature.desc,
+                        (currentFeature.hasSettings ? true : false) //add the settings panel for this feautre if indicated in the JSON
                     );
                 }
             }

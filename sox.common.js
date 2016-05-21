@@ -38,12 +38,23 @@
                 console.log('SOX: ', arguments[arg]);
             }
         },
-        get soxAccessToken() { // TODO: Move to sox.settings.accessToken() - get or set
-            return GM_getValue('SOX-accessToken', false);
-        },
-
         getFromAPI: function(type, id, sitename, callback, sortby) {
           $.getJSON('https://api.stackexchange.com/2.2/' + type + '/' + id + '?order=desc&sort=' + (sortby || 'creation') + '&site=' + sitename, callback);
+        },
+        observe(elements, callback, toObserve) {
+            new MutationObserver(function(mutations, observer) {
+                for(var i=0; i<mutations.length; i++) {
+                    for(var j=0; j<mutations[i].addedNodes.length; j++) {
+                        var $o = $(mutations[i].addedNodes[j]);
+                        if($o && $o.is((Array.isArray(elements) ? elements.join(',') : elements))) {
+                            callback(mutations[i].addedNodes[j]);
+                        }
+                    }
+                }
+            }).observe(toObserve || document.body, {
+              childList: true,
+              subtree: true
+            });
         }
     };
 
@@ -113,11 +124,20 @@
         get onQuestion() {
             return this.on('/questions/');
         },
-        match: function(pattern) { //commented version @ https://jsfiddle.net/shub01/t90kx2dv/
-          var currentSiteScheme = location.protocol,
-              currentSiteHost = location.hostname,
-              currentSitePath = location.pathname,
-              matchSplit = pattern.split('/'),
+        match: function(pattern, urlToMatchWith) { //commented version @ https://jsfiddle.net/shub01/t90kx2dv/
+          var currentSiteScheme, currentSiteHost, currentSitePath;
+          if(urlToMatchWith) {
+              var split = urlToMatchWith.split('/');
+              currentSiteScheme = split[0];
+              currentSiteHost = split[2];
+              currentSitePath = '/' + split.slice(-(split.length-3)).join('/');
+          } else {
+              currentSiteScheme = location.protocol;
+              currentSiteHost = location.hostname;
+              currentSitePath = location.pathname;
+          }
+
+          var matchSplit = pattern.split('/'),
               matchScheme = matchSplit[0],
               matchHost = matchSplit[2],
               matchPath = matchSplit.slice(-(matchSplit.length-3)).join('/');
@@ -125,7 +145,6 @@
           matchScheme = matchScheme.replace(/\*/g, ".*");
           matchHost = matchHost.replace(/\./g, "\\.").replace(/\*\\\./g, ".*.?").replace(/\\\.\*/g, ".*").replace(/\*$/g, ".*");;
           matchPath = '^\/' + matchPath.replace(/\//g, "\\/").replace(/\*/g, ".*");
-          console.log(matchScheme, matchHost, matchPath)
 
           if (currentSiteScheme.match(new RegExp(matchScheme))
           && currentSiteHost.match(new RegExp(matchHost))
