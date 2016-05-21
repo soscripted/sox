@@ -44,7 +44,7 @@
                 }
             }
 
-            function addFeature(category, name, description, withSettings) {
+            function addFeature(category, name, description, settings) {
                 var $div = $('<div/>', {
                         'class': 'feature'
                     }),
@@ -58,7 +58,7 @@
                 $input.after(description);
                 $soxSettingsDialogFeatures.find('#' + category).append($div);
 
-                if(withSettings) {
+                if(settings) {
                     var $settingsDiv = $('<div/>', {
                             id: 'soxSettingsPanel-' + name,
                             style: 'display: none; margin-top: 5px;'
@@ -77,6 +77,30 @@
                                 }
                             }
                         });
+                    for(var i=0; i<settings.length; i++) {
+                        var currentSetting = settings[i];
+                        $settingsDiv
+                        .append(currentSetting.desc).append('<br>')
+                        .append($('<' + currentSetting.type + '/>', {
+                            id: currentSetting.id,
+                            'class': 'featureSetting'
+                        })).append('<br>');
+                    }
+                    var $saveSpan = $('<span/>', {
+                        id: 'saveSettings-' + name,
+                        style: 'cursor: pointer',
+                        text: 'save',
+                        click: function(e) {
+                            e.preventDefault(); //don't uncheck the checkbox
+                            var settings = {};
+                            $(this).parent().find('.featureSetting').each(function() {
+                                settings[$(this).attr('id')] = $(this).val();
+                            });
+                            console.log(settings);
+                            GM_setValue('SOX-' + name + '-settings', JSON.stringify(settings));
+                        }
+                    });
+                    $settingsDiv.append($saveSpan);
                     $soxSettingsDialogFeatures.find('input#' + name).parent().append($expanderArrow).append($settingsDiv);
                 }
             }
@@ -237,7 +261,7 @@
                         category,
                         currentFeature.name,
                         currentFeature.desc,
-                        (currentFeature.hasSettings ? true : false) //add the settings panel for this feautre if indicated in the JSON
+                        (currentFeature.settings ? currentFeature.settings : false) //add the settings panel for this feautre if indicated in the JSON
                     );
                 }
             }

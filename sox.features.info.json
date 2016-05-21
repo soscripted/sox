@@ -344,7 +344,18 @@
                 "meta": "",
                 "match": "",
                 "exclude": "",
-                "hasSettings": true
+                "settings": [
+                    {
+                        "id": "wordsToBlock",
+                        "type": "textarea",
+                        "desc": "Words to block from titles (comma-separated)"
+                    },
+                    {
+                        "id": "sitesToBlock",
+                        "type": "textarea",
+                        "desc": "Sites to block (comma-separated match patterns)"
+                    }
+                ]
             },
             {
                 "name": "linkedPostsInline",
