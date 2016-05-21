@@ -39,12 +39,12 @@
                 $div.append($h3);
 
                 if(!$soxSettingsDialogFeatures.find('div#header-for-' + name).length) {
-                  $soxSettingsDialogFeatures.append($div);
+                  $soxSettingsDialogFeatures.find('#header-for-per-feature-settings').before($div);
                   $div.after($content);
                 }
             }
 
-            function addFeature(category, name, description) {
+            function addFeature(category, name, description, withSettings) {
                 var $div = $('<div/>', {
                         'class': 'feature'
                     }),
@@ -57,6 +57,28 @@
                 $label.append($input);
                 $input.after(description);
                 $soxSettingsDialogFeatures.find('#' + category).append($div);
+
+                if(withSettings) {
+                    var $settingsDiv = $('<div/>', {
+                            id: 'soxSettingsPanel-' + name,
+                            style: 'display: none; margin-top: 5px;'
+                        }),
+                        $expanderArrow = $('<a/>', {
+                            'class': 'expander-arrow-small-hide show-sox-settings-panel',
+                            style: 'margin-left: 5px',
+                            click: function(e) {
+                                e.preventDefault(); //don't uncheck the checkbox
+                                if($(this).hasClass('expander-arrow-small-hide')) {
+                                    $(this).parent().find('#soxSettingsPanel-' + name).fadeIn();
+                                    $(this).removeClass('expander-arrow-small-hide').addClass('expander-arrow-small-show');
+                                } else if($(this).hasClass('expander-arrow-small-show')) {
+                                    $(this).parent().find('#soxSettingsPanel-' + name).fadeOut();
+                                    $(this).removeClass('expander-arrow-small-show').addClass('expander-arrow-small-hide');
+                                }
+                            }
+                        });
+                    $soxSettingsDialogFeatures.find('input#' + name).parent().append($expanderArrow).append($settingsDiv);
+                }
             }
 
             // display sox version number in the dialog
@@ -210,16 +232,13 @@
                 addCategory(category);
 
                 for (var feature in features.categories[category]) {
+                    var currentFeature = features.categories[category][feature];
                     addFeature(
                         category,
-                        features.categories[category][feature].name,
-                        features.categories[category][feature].desc
+                        currentFeature.name,
+                        currentFeature.desc,
+                        (currentFeature.hasSettings ? true : false) //add the settings panel for this feautre if indicated in the JSON
                     );
-                    //TODO: per-feature settings panel
-                    /*if(features.categories[category][feature].hasSettings) {
-                        addCategory("Per-feature settings");
-                        $soxSettingsDialogFeatures.find('#'+features.categories[category][feature].name)
-                    }*/
                 }
             }
             if (settings) {

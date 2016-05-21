@@ -1580,6 +1580,8 @@ Toggle SBS?</div></li>';
         },
 
         alignBadgesByClass: function() {
+            // Description: Aligns badges by their class (bronze/silver/gold) on user profiles
+
             var numbers = {
                     'gold': 0,
                     'silver': 0,
@@ -1649,7 +1651,9 @@ Toggle SBS?</div></li>';
         },
 
         quickAuthorInfo: function() {
-            var answerers = {};
+          // Description: Shows when the post's author was last active and their registration state in the comments section
+
+          var answerers = {};
             $('.question, .answer').each(function() {
               var $userDetails = $(this).find('.post-signature .user-details');
               var userid = $userDetails.find('a').attr('href').split('/')[2];
@@ -1677,6 +1681,8 @@ Toggle SBS?</div></li>';
         },
 
         hiddenCommentsIndicator: function() {
+          // Description: Darkens the border underneath comments if there are hidden comments underneath it
+
             $('.question, .answer').each(function() {
                 if($(this).find('.js-show-link.comments-link:visible').length) {
                     var postId = $(this).attr('data-questionid') || $(this).attr('data-answerid'),
@@ -1705,6 +1711,81 @@ Toggle SBS?</div></li>';
                         }
                     });
                 }
+            });
+        },
+
+        hotNetworkQuestionsFiltering: function() {
+            // Description: Filter hot network questions in the sidebar based on their attributes such as title, site, etc..
+
+            var settings = JSON.parse(GM_getValue('hotNetworkQuestionsFilteringSettings', '{"wordsToBlock": "", "sitesToBlock": ""}'));
+            console.log(settings);
+            $('#hot-network-questions li a').each(function() {
+                if(settings.wordsToBlock != '') {
+                    var words = $(this).text().split(' '),
+                        wordsToBlock = settings.wordsToBlock.split(' ');
+                    for(var i=0; i<wordsToBlock.length; i++) {
+                        if(words.indexOf(wordsToBlock[i]) != -1) {
+                            $(this).parent().hide();
+                        }
+                    }
+                }
+                if(settings.sitesToBlock != '') {
+                    var site = $(this).attr('href'),
+                        sitesToBlock = settings.sitesToBlock.split(' ');
+                    for(var i=0; i<sitesToBlock.length; i++) {
+                        console.log(sitesToBlock[i]);
+                        if(sox.location.match(sitesToBlock[i], site)) {
+                            $(this).parent().hide();
+                        }
+                    }
+                }
+                $(this).append('<i class="fa fa-tags getQuestionTags"></i>');
+            });
+
+            $('.getQuestionTags').hover(function(e) {
+                if(!$(this).attr('data-tags')) {
+                    var $that = $(this),
+                        id = $(this).parent().attr('href').split('/')[4],
+                        sitename = $(this).parent().attr('href').split('/')[2];
+
+                    sox.helpers.getFromAPI('questions', id, sitename, function(d) {
+                        $that.attr('data-tags', d.items[0].tags.join(', '));
+                    });
+                }
+            }, function() {
+                if(!$(this).next().hasClass('tooltip') && $(this).attr('data-tags')) {
+                    $(this).after('<span class="tooltip" style="display: block;margin-left: 5px;background-color: #eeeefe;border: 1px solid darkgrey;font-size: 11px;padding: 1px;">' + $(this).attr('data-tags') + '</span>');
+                    $(this).remove();
+                }
+            });
+
+            var $wordsToBlockFromTitle = $('<textarea/>', {
+                    id: 'wordsToBlockFromTitle',
+                    style: 'padding: 5px; resize: horizontal;',
+                    text: settings.wordsToBlock
+                }),
+                $sitesToBlock = $('<textarea/>', {
+                    id: 'sitesToBlock',
+                    style: 'padding: 5px; resize: horizontal;',
+                    text: settings.sitesToBlock
+                }),
+                $save = $('<span/>', {
+                  id: 'saveSettings-hotNetworkQuestionsFiltering',
+                  text: 'save',
+                  style: 'cursor: pointer; display: block;'
+                });
+
+            $('#soxSettingsPanel-hotNetworkQuestionsFiltering')
+            .append('Words to block from title (comma-separated):<br>')
+            .append($wordsToBlockFromTitle)
+            .append('<br>Sites to block (comma-separated match patterns):<br>')
+            .append($sitesToBlock)
+            .append($save);
+
+            $('#saveSettings-hotNetworkQuestionsFiltering').click(function() {
+                settings.wordsToBlock = $(this).parent().find('#wordsToBlockFromTitle').val();
+                settings.sitesToBlock = $(this).parent().find('#sitesToBlock').val();
+                GM_setValue('hotNetworkQuestionsFilteringSettings', JSON.stringify(settings));
             });
         }
     };

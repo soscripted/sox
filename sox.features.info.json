@@ -339,6 +339,14 @@
                 "exclude": ""
             },
             {
+                "name": "hotNetworkQuestionsFiltering",
+                "desc": "Filter the hot network questions by their attributes",
+                "meta": "",
+                "match": "",
+                "exclude": "",
+                "hasSettings": true
+            },
+            {
                 "name": "linkedPostsInline",
                 "desc": "Display linked posts inline (with an arrow)",
                 "meta": "",

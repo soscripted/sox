@@ -126,11 +126,20 @@
         get onQuestion() {
             return this.on('/questions/');
         },
-        match: function(pattern) { //commented version @ https://jsfiddle.net/shub01/t90kx2dv/
-          var currentSiteScheme = location.protocol,
-              currentSiteHost = location.hostname,
-              currentSitePath = location.pathname,
-              matchSplit = pattern.split('/'),
+        match: function(pattern, urlToMatchWith) { //commented version @ https://jsfiddle.net/shub01/t90kx2dv/
+          var currentSiteScheme, currentSiteHost, currentSitePath;
+          if(urlToMatchWith) {
+              var split = urlToMatchWith.split('/');
+              currentSiteScheme = split[0];
+              currentSiteHost = split[2];
+              currentSitePath = '/' + split.slice(-(split.length-3)).join('/');
+          } else {
+              currentSiteScheme = location.protocol;
+              currentSiteHost = location.hostname;
+              currentSitePath = location.pathname;
+          }
+
+          var matchSplit = pattern.split('/'),
               matchScheme = matchSplit[0],
               matchHost = matchSplit[2],
               matchPath = matchSplit.slice(-(matchSplit.length-3)).join('/');
@@ -138,7 +147,6 @@
           matchScheme = matchScheme.replace(/\*/g, ".*");
           matchHost = matchHost.replace(/\./g, "\\.").replace(/\*\\\./g, ".*.?").replace(/\\\.\*/g, ".*").replace(/\*$/g, ".*");;
           matchPath = '^\/' + matchPath.replace(/\//g, "\\/").replace(/\*/g, ".*");
-          console.log(matchScheme, matchHost, matchPath)
 
           if (currentSiteScheme.match(new RegExp(matchScheme))
           && currentSiteHost.match(new RegExp(matchHost))
