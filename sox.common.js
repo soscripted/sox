@@ -27,7 +27,11 @@
             GM_setValue(SOX_SETTINGS, JSON.stringify(settings));
         },
         reset: function() {
-            GM_deleteValue(SOX_SETTINGS);
+            var keys = GM_listValues();
+            for (i = 0; i < keys.length; i++) {
+                var key = keys[i];
+                GM_deleteValue(key);
+            }
         },
         get accessToken() {
             return GM_getValue('SOX-accessToken', false);

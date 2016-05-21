@@ -121,89 +121,19 @@
         fixedTopbar: function() {
             // Description: For making the topbar fixed (always stay at top of screen)
 
-            if (sox.site.url == 'askubuntu.com') { //AskUbuntu is annoying. UnicornsAreVeryVeryYummy made the below code for AskUbuntu: https://github.com/shu8/Stack-Overflow-Optional-Features/issues/11 Thanks!
-                var newUbuntuLinks = $('<div/>', {
-                        'class': 'fixedTopbar-links'
-                    }),
-                    linksWrapper = $('<div/>', {
-                        'class': 'fixedTopbar-linksList'
-                    }),
-                    listOfSites = $('<ul/>', {
-                        'class': 'fixedTopbar-siteLink'
-                    }),
-                    more = $('<li/>', {
-                        html: '<a href="#">More</a>',
-                        'class': 'fixedTopbar-siteLink'
-                    }),
-                    sites = {
-                        Ubuntu: 'ubuntu.com',
-                        Community: 'community.ubuntu.com',
-                        'Ask!': 'askubuntu.com',
-                        Developer: 'developer.ubuntu.com',
-                        Design: 'design.ubuntu.com',
-                        Discourse: 'discourse.ubuntu.com',
-                        Hardware: 'www.ubuntu.com/certification',
-                        Insights: 'insights.ubuntu.com',
-                        Juju: 'juju.ubuntu.com',
-                        Shop: 'shop.ubuntu.com'
-                    },
-                    moreSites = {
-                        Apps: 'apps.ubuntu.com',
-                        Help: 'help.ubuntu.com',
-                        Forum: 'ubuntuforums.org',
-                        Launchpad: 'launchpad.net',
-                        MAAS: 'maas.ubuntu.com',
-                        Canonical: 'canonical' //TODO
-                    };
-                var addSite = function(link, name) {
-                    listOfSites.append($('<li/>', {
-                        html: '<a href="http://' + link + '">' + name + '</a>',
-                        'class': 'fixedTopbar-siteLink'
-                    }));
-                };
-                for (var name in sites) {
-                    addSite(sites[name], name);
-                }
-                listOfSites.append(more);
-                var moreList = $('li', $(more));
-                var addMoreSite = function(link, name) {
-                    moreList.append($('<li/>', {
-                        html: '<a href="http://' + link + '">' + name + '</a>',
-                        'class': 'fixedTopbar-siteLink'
-                    }));
-                };
-                for (name in moreSites) {
-                    addMoreSite(moreSites[name], name);
-                }
-                $('.nav-global').remove(); //Ubuntu links
-                $('#custom-header').remove();
-                linksWrapper.append(listOfSites);
-                newUbuntuLinks.append(linksWrapper);
-                $('.topbar-wrapper').after(newUbuntuLinks);
-                $('.topbar').addClass('fixedTopbar-stickyToolbar');
-                $('.topbar').before($('<div/>', {
-                    html: '<br/><br/>'
-                }));
-                $('#header').css('margin-top', '22px');
-            } else if (sox.site.type != sox.site.types.chat) { //for all the normal, unannoying sites, excluding chat ;)
                 $('.topbar').css({
                     'position': 'fixed',
                     'top': '0',
-                    'z-index': '1001'
+                    'z-index': '1001',
+                    'width': '100%'
                 });
 
-                //Thanks ArtOfCode (http://worldbuilding.stackexchange.com/users/2685/artofcode) for fixing the topbar covering the header :)
-                $('#header').css('margin-top', '34px');
+                $('body > .page, body .container, div.wrapper > header').css('padding-top', '34px');
+                $('body .custom-header, body #custom-header, div#scroller,div.review-bar').css('top', '34px');
+                $('div#custom-header').css('margin-top', '34px');
+                $('.new-topbar .container').css('background-position', 'center 0');
+                $('#overlay-header').css('top', '34px');
 
-            } else if (sox.site.type == sox.site.types.chat) { //chat is a bit different
-                $('.topbar').css({
-                    'position': 'fixed',
-                    'z-index': '1001'
-                });
-            }
-
-            $('#rep-card-next .percent').after($('#rep-card-next .label').css('z-index', 0)).css('position', 'absolute');
-            $('#badge-card-next .percent').after($('#badge-card-next .label').css('z-index', 0)).css('position', 'absolute');
         },
 
         highlightQuestions: function() {

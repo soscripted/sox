@@ -35,6 +35,7 @@
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_deleteValue
+// @grant        GM_listValues
 // @grant        GM_getResourceText
 // @grant        GM_addStyle
 // @grant        GM_info
@@ -61,7 +62,7 @@ jQuery.noConflict();
             sox.user.id,
             sox.site.name,
             sox.site.type,
-            sox.site.apiParameter(sox.site.name)
+            sox.site.currentApiParameter
         );
 
         GM_addStyle(GM_getResourceText('css'));
@@ -120,12 +121,7 @@ jQuery.noConflict();
                         }
                     }
                     if (runFeature) {
-                        if(feature.settings) {
-                            settings = JSON.parse(GM_getValue("SOX-"+featureId+"-settings"), "{}");
-                            sox.features[featureId](settings); //run the feature if match and exclude conditions are met, pass on settings object
-                        } else {
-                            sox.features[featureId](); //run the feature if match and exclude conditions are met
-                        }
+                        sox.features[featureId](); //run the feature if match and exclude conditions are met
                     }
                 } catch (err) {
                     if(!sox.features[featureId]) { //remove deprecated/'corrupt' feature IDs from saved settings
