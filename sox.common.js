@@ -7,9 +7,9 @@
     var Chat = (typeof CHAT === "undefined" ? undefined : CHAT);
 
     sox.info = {
-      version: (typeof GM_info !== 'undefined' ? GM_info.script.version : 'unknown'),
-      handler: (typeof GM_info !== 'undefined' ? GM_info.scriptHandler : 'unknown'),
-      apikey: 'lL1S1jr2m*DRwOvXMPp26g(('
+        version: (typeof GM_info !== 'undefined' ? GM_info.script.version : 'unknown'),
+        handler: (typeof GM_info !== 'undefined' ? GM_info.scriptHandler : 'unknown'),
+        apikey: 'lL1S1jr2m*DRwOvXMPp26g(('
     };
 
     sox.ready = function(func) {
@@ -42,21 +42,21 @@
             }
         },
         getFromAPI: function(type, id, sitename, callback, sortby) {
-          $.getJSON('https://api.stackexchange.com/2.2/' + type + '/' + id + '?order=desc&sort=' + (sortby || 'creation') + '&site=' + sitename, callback);
+            $.getJSON('https://api.stackexchange.com/2.2/' + type + '/' + id + '?order=desc&sort=' + (sortby || 'creation') + '&site=' + sitename, callback);
         },
-        observe(elements, callback, toObserve) {
+        observe: function(elements, callback, toObserve) {
             new MutationObserver(function(mutations, observer) {
-                for(var i=0; i<mutations.length; i++) {
-                    for(var j=0; j<mutations[i].addedNodes.length; j++) {
+                for (var i = 0; i < mutations.length; i++) {
+                    for (var j = 0; j < mutations[i].addedNodes.length; j++) {
                         var $o = $(mutations[i].addedNodes[j]);
-                        if($o && $o.is((Array.isArray(elements) ? elements.join(',') : elements))) {
+                        if ($o && $o.is((Array.isArray(elements) ? elements.join(',') : elements))) {
                             callback(mutations[i].addedNodes[j]);
                         }
                     }
                 }
             }).observe(toObserve || document.body, {
-              childList: true,
-              subtree: true
+                childList: true,
+                subtree: true
             });
         }
     };
@@ -95,8 +95,13 @@
             }
         },
         apiParameter: function(siteName) {
-            if(commonInfo.apiParameters.hasOwnProperty(siteName)){
-              return commonInfo.apiParameters[siteName];
+            if (commonInfo.apiParameters.hasOwnProperty(siteName)) {
+                return commonInfo.apiParameters[siteName];
+            }
+        },
+        metaApiParameter: function(siteName) {
+            if (Chat || Stack && this.apiParameter(siteName)) {
+                return 'meta.' + this.apiParameter(siteName);
             }
         },
         get currentApiParameter() {
@@ -104,13 +109,8 @@
                 return this.apiParameter(this.name);
             }
         },
-        get metaApiParameter() {
-            if (Chat || Stack) {
-                return 'meta.' + this.apiSiteName;
-            }
-        },
         get icon() {
-          return "favicon-" + $(".current-site a:not([href*='meta']) .site-icon").attr('class').split('favicon-')[1];
+            return "favicon-" + $(".current-site a:not([href*='meta']) .site-icon").attr('class').split('favicon-')[1];
         },
         url: location.hostname,
         href: location.href
@@ -128,33 +128,31 @@
             return this.on('/questions/');
         },
         match: function(pattern, urlToMatchWith) { //commented version @ https://jsfiddle.net/shub01/t90kx2dv/
-          var currentSiteScheme, currentSiteHost, currentSitePath;
-          if(urlToMatchWith) {
-              var split = urlToMatchWith.split('/');
-              currentSiteScheme = split[0];
-              currentSiteHost = split[2];
-              currentSitePath = '/' + split.slice(-(split.length-3)).join('/');
-          } else {
-              currentSiteScheme = location.protocol;
-              currentSiteHost = location.hostname;
-              currentSitePath = location.pathname;
-          }
+            var currentSiteScheme, currentSiteHost, currentSitePath;
+            if (urlToMatchWith) {
+                var split = urlToMatchWith.split('/');
+                currentSiteScheme = split[0];
+                currentSiteHost = split[2];
+                currentSitePath = '/' + split.slice(-(split.length - 3)).join('/');
+            } else {
+                currentSiteScheme = location.protocol;
+                currentSiteHost = location.hostname;
+                currentSitePath = location.pathname;
+            }
 
-          var matchSplit = pattern.split('/'),
-              matchScheme = matchSplit[0],
-              matchHost = matchSplit[2],
-              matchPath = matchSplit.slice(-(matchSplit.length-3)).join('/');
+            var matchSplit = pattern.split('/'),
+                matchScheme = matchSplit[0],
+                matchHost = matchSplit[2],
+                matchPath = matchSplit.slice(-(matchSplit.length - 3)).join('/');
 
-          matchScheme = matchScheme.replace(/\*/g, ".*");
-          matchHost = matchHost.replace(/\./g, "\\.").replace(/\*\\\./g, ".*.?").replace(/\\\.\*/g, ".*").replace(/\*$/g, ".*");;
-          matchPath = '^\/' + matchPath.replace(/\//g, "\\/").replace(/\*/g, ".*");
+            matchScheme = matchScheme.replace(/\*/g, ".*");
+            matchHost = matchHost.replace(/\./g, "\\.").replace(/\*\\\./g, ".*.?").replace(/\\\.\*/g, ".*").replace(/\*$/g, ".*");;
+            matchPath = '^\/' + matchPath.replace(/\//g, "\\/").replace(/\*/g, ".*");
 
-          if (currentSiteScheme.match(new RegExp(matchScheme))
-          && currentSiteHost.match(new RegExp(matchHost))
-          && currentSitePath.match(new RegExp(matchPath))) {
-              return true;
-          }
-          return false;
+            if (currentSiteScheme.match(new RegExp(matchScheme)) && currentSiteHost.match(new RegExp(matchHost)) && currentSitePath.match(new RegExp(matchPath))) {
+                return true;
+            }
+            return false;
         }
     };
 
