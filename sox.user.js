@@ -64,7 +64,10 @@ jQuery.noConflict();
         }
 
         GM_addStyle(GM_getResourceText('css'));
-        $('head').append('<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">');
+        $('<link/>', {
+            rel: 'stylesheet',
+            href: 'https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css'
+        }).appendTo('head');
 
         var settings = sox.settings.load(), //returns null if not set
             featureInfo = JSON.parse(GM_getResourceText('featuresJSON'));
@@ -132,7 +135,7 @@ jQuery.noConflict();
             }
         }
         if (GM_getValue('SOX-accessToken', -1) == -1) {
-            if (location.hostname !== 'stackoverflow.com' && location.href.indexOf('oauth/login_success') == -1) {
+            if (!sox.location.on('stackoverflow.com') && !sox.location.on('oauth/login_success')) {
                 // TODO: find a more user friendly way of handling this
                 window.alert("Please go to stackoverflow.com to get your access token for certain SOX features");
                 sox.helpers.notify("Please go to stackoverflow.com to get your access token for certain SOX features");

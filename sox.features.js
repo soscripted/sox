@@ -25,16 +25,16 @@
             // Description: Makes the bounty window draggable
 
             new MutationObserver(function(mutations, observer) {
-                for(var i=0; i<mutations.length; i++) {
-                    for(var j=0; j<mutations[i].addedNodes.length; j++) {
-                        if(mutations[i].addedNodes[j].id == "start-bounty-popup") {
+                for (var i = 0; i < mutations.length; i++) {
+                    for (var j = 0; j < mutations[i].addedNodes.length; j++) {
+                        if (mutations[i].addedNodes[j].id == "start-bounty-popup") {
                             $('#start-bounty-popup').draggable().css('cursor', 'move');
                         }
                     }
                 }
             }).observe(document.body, {
-              childList: true,
-              subtree: true
+                childList: true,
+                subtree: true
             });
         },
 
@@ -72,9 +72,10 @@
             var url = 'https://api.stackexchange.com/2.2/users/{ids}?site={site}&key={key}&access_token={access_token}'
                 .replace('{ids}', ids.join(';'))
                 .replace('{site}', sox.site.apiSiteName)
-            		.replace('{key}', sox.helpers.soxApiKey)
-            		.replace('{access_token}', sox.helpers.soxAccessToken);
+                .replace('{key}', sox.helpers.soxApiKey)
+                .replace('{access_token}', sox.helpers.soxAccessToken);
 
+            // TODO: use access token to prevent rate limiting
             $.ajax({
                 url: url
             }).success(function(data) {
@@ -279,17 +280,17 @@
                 });
             });
             new MutationObserver(function(mutations, observer) {
-                for(var i=0; i<mutations.length; i++) {
-                    for(var j=0; j<mutations[i].addedNodes.length; j++) {
+                for (var i = 0; i < mutations.length; i++) {
+                    for (var j = 0; j < mutations[i].addedNodes.length; j++) {
                         var cl = mutations[i].addedNodes[j].classList;
-                        if(cl != undefined && cl.contains('comment')) {
+                        if (cl != undefined && cl.contains('comment')) {
                             sox.features.colorAnswerer();
                         }
                     }
                 }
             }).observe(document.body, {
-              childList: true,
-              subtree: true
+                childList: true,
+                subtree: true
             });
         },
 
@@ -475,19 +476,19 @@
             // Description: For changing the 'share' button link to the format [name](link)
 
             new MutationObserver(function(mutations, observer) {
-                for(var i=0; i<mutations.length; i++) {
-                    for(var j=0; j<mutations[i].addedNodes.length; j++) {
+                for (var i = 0; i < mutations.length; i++) {
+                    for (var j = 0; j < mutations[i].addedNodes.length; j++) {
                         var cl = mutations[i].addedNodes[j].classList;
-                        if(cl !== undefined && cl.contains('share-tip')) {
-                          var link = $('.share-tip input').val();
-                          $('.share-tip input').val('[' + $('#question-header a').html() + '](' + link + ')');
-                          $('.share-tip input').select();
+                        if (cl !== undefined && cl.contains('share-tip')) {
+                            var link = $('.share-tip input').val();
+                            $('.share-tip input').val('[' + $('#question-header a').html() + '](' + link + ')');
+                            $('.share-tip input').select();
                         }
                     }
                 }
             }).observe(document.body, {
-              childList: true,
-              subtree: true
+                childList: true,
+                subtree: true
             });
         },
 
@@ -604,8 +605,8 @@
             if ($('.bounty-indicator').length) { //if there is at least one bounty on the page
                 $('.question-summary').each(function() {
                     var bountyAmount = $(this).find('.bounty-indicator').text().replace('+', '');
-                    if(bountyAmount) {
-                      $(this).attr('data-bountyamount', bountyAmount).addClass('hasBounty'); //add a 'bountyamount' attribute to all the questions
+                    if (bountyAmount) {
+                        $(this).attr('data-bountyamount', bountyAmount).addClass('hasBounty'); //add a 'bountyamount' attribute to all the questions
                     }
                 });
 
@@ -764,26 +765,26 @@
             // Description: For showing the new version of a title in a diff separately rather than loads of crossing outs in red and additions in green
 
             new MutationObserver(function(mutations, observer) {
-                for(var i=0; i<mutations.length; i++) {
-                    for(var j=0; j<mutations[i].addedNodes.length; j++) {
+                for (var i = 0; i < mutations.length; i++) {
+                    for (var j = 0; j < mutations[i].addedNodes.length; j++) {
                         var cl = mutations[i].addedNodes[j].classList;
-                        if(cl !== undefined && cl.contains('review-status')) {
-                          var $questionHyperlink = $('.summary h2 .question-hyperlink').clone(),
-                              $questionHyperlinkTwo = $('.summary h2 .question-hyperlink').clone(),
-                              link = $('.summary h2 .question-hyperlink').attr('href'),
-                              added = ($questionHyperlinkTwo.find('.diff-delete').remove().end().text()),
-                              removed = ($questionHyperlink.find('.diff-add').remove().end().text());
+                        if (cl !== undefined && cl.contains('review-status')) {
+                            var $questionHyperlink = $('.summary h2 .question-hyperlink').clone(),
+                                $questionHyperlinkTwo = $('.summary h2 .question-hyperlink').clone(),
+                                link = $('.summary h2 .question-hyperlink').attr('href'),
+                                added = ($questionHyperlinkTwo.find('.diff-delete').remove().end().text()),
+                                removed = ($questionHyperlink.find('.diff-add').remove().end().text());
 
-                          if ($('.summary h2 .question-hyperlink').find('.diff-delete, .diff-add').length) {
-                              $('.summary h2 .question-hyperlink').hide();
-                              $('.summary h2 .question-hyperlink').after('<a href="' + link + '" class="question-hyperlink"><span class="diff-delete">' + removed + '</span><span class="diff-add">' + added + '</span></a>');
-                          }
+                            if ($('.summary h2 .question-hyperlink').find('.diff-delete, .diff-add').length) {
+                                $('.summary h2 .question-hyperlink').hide();
+                                $('.summary h2 .question-hyperlink').after('<a href="' + link + '" class="question-hyperlink"><span class="diff-delete">' + removed + '</span><span class="diff-add">' + added + '</span></a>');
+                            }
                         }
                     }
                 }
             }).observe(document.body, {
-              childList: true,
-              subtree: true
+                childList: true,
+                subtree: true
             });
         },
 
@@ -1742,31 +1743,31 @@ Toggle SBS?</div></li>';
         },
 
         quickAuthorInfo: function() {
-          var answerers = {};
-          $('.question, .answer').each(function() {
-            var $userDetails = $(this).find('.post-signature .user-details');
-            var userid = $userDetails.find('a').attr('href').split('/')[2];
-            var username = $userDetails.find('a').text();
-            answerers[userid] = username;
-          });
-          var apiUrl = "https://api.stackexchange.com/users/" + Object.keys(answerers).join(';') + "?site=" + sox.site.apiSiteName;
-          $.get(apiUrl, function(data) {
-            var userDetailsFromAPI = {};
-            $.each(data.items, function() {
-                var cur = $(this)[0];
-                userDetailsFromAPI[cur.user_id] = {
-                    'last_seen': new Date(cur.last_access_date*1000).toUTCString(),
-                    'creation': new Date(cur.creation_date*1000).toUTCString(),
-                    'type': cur.user_type
-                };
-            });
+            var answerers = {};
             $('.question, .answer').each(function() {
-                var id = $(this).find('.post-signature .user-details a').attr('href').split('/')[2];
-                if(userDetailsFromAPI[id]) {
-                    $(this).find('.comments tbody:eq(0)').prepend("<tr class='comment'><td class='comment-actions'></td><td class='comment-text'><div style='display: block;' class='comment-body'>last seen: " + userDetailsFromAPI[id].last_seen + " | type: " + userDetailsFromAPI[id].type + "</div></td></tr>");
-                }
+                var $userDetails = $(this).find('.post-signature .user-details');
+                var userid = $userDetails.find('a').attr('href').split('/')[2];
+                var username = $userDetails.find('a').text();
+                answerers[userid] = username;
             });
-          });
+            var apiUrl = "https://api.stackexchange.com/users/" + Object.keys(answerers).join(';') + "?site=" + sox.site.apiSiteName;
+            $.get(apiUrl, function(data) {
+                var userDetailsFromAPI = {};
+                $.each(data.items, function() {
+                    var cur = $(this)[0];
+                    userDetailsFromAPI[cur.user_id] = {
+                        'last_seen': new Date(cur.last_access_date * 1000).toUTCString(),
+                        'creation': new Date(cur.creation_date * 1000).toUTCString(),
+                        'type': cur.user_type
+                    };
+                });
+                $('.question, .answer').each(function() {
+                    var id = $(this).find('.post-signature .user-details a').attr('href').split('/')[2];
+                    if (userDetailsFromAPI[id]) {
+                        $(this).find('.comments tbody:eq(0)').prepend("<tr class='comment'><td class='comment-actions'></td><td class='comment-text'><div style='display: block;' class='comment-body'>last seen: " + userDetailsFromAPI[id].last_seen + " | type: " + userDetailsFromAPI[id].type + "</div></td></tr>");
+                    }
+                });
+            });
         }
     };
 })(window.sox = window.sox || {}, jQuery);

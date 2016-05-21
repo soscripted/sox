@@ -8,7 +8,8 @@
 
     sox.info = {
       version: (typeof GM_info !== 'undefined' ? GM_info.script.version : 'unknown'),
-      handler: (typeof GM_info !== 'undefined' ? GM_info.scriptHandler : 'unknown')
+      handler: (typeof GM_info !== 'undefined' ? GM_info.scriptHandler : 'unknown'),
+      apikey: 'lL1S1jr2m*DRwOvXMPp26g(('
     };
 
     sox.ready = function(func) {
@@ -37,10 +38,10 @@
                 console.log('SOX: ', arguments[arg]);
             }
         },
-        get soxAccessToken() {
+        get soxAccessToken() { // TODO: Move to sox.settings.accessToken() - get or set
             return GM_getValue('SOX-accessToken', false);
         },
-        soxApiKey: 'lL1S1jr2m*DRwOvXMPp26g((',
+
         getFromAPI: function(type, id, sitename, callback, sortby) {
           $.getJSON('https://api.stackexchange.com/2.2/' + type + '/' + id + '?order=desc&sort=' + (sortby || 'creation') + '&site=' + sitename, callback);
         }
@@ -62,16 +63,7 @@
             }
             return undefined;
         },
-        get apiSiteName() {
-            if (Chat || Stack) {
-                return this.apiParameter(this.name);
-            }
-        },
-        get metaApiSiteName() {
-            if (Chat || Stack) {
-                return 'meta.' + this.apiSiteName;
-            }
-        },
+
         get type() {
             if (Chat) {
                 return this.types.chat;
@@ -91,6 +83,16 @@
         apiParameter: function(siteName) {
             if(commonInfo.apiParameters.hasOwnProperty(siteName)){
               return commonInfo.apiParameters[siteName];
+            }
+        },
+        get currentApiParameter() {
+            if (Chat || Stack) {
+                return this.apiParameter(this.name);
+            }
+        },
+        get metaApiParameter() {
+            if (Chat || Stack) {
+                return 'meta.' + this.apiSiteName;
             }
         },
         get icon() {
@@ -161,9 +163,9 @@
         },
         hasPrivilege: function(privilege) {
             var privilege = {};
-            if (user.loggedIn) {
+            if (this.loggedIn) {
                 var rep = (sox.site.type == 'beta' ? commonInfo.privileges.beta[privilege] : commonInfo.privileges.graduated[privilege]);
-                return user.rep > rep;
+                return this.rep > rep;
             }
             return false;
         }
