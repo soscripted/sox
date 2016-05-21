@@ -42,15 +42,6 @@
 jQuery.noConflict();
 (function(sox, $, undefined) {
     'use strict';
-    // TODO: ** please leave this until we're all <done> refactoring **
-    sox.helpers.notify(
-        sox.user.name,
-        sox.user.rep,
-        sox.user.id,
-        sox.site.name,
-        sox.site.type,
-        sox.site.apiParameter(sox.site.name)
-    );
 
     function init() {
         if (sox.location.on('github.com/soscripted')) {
@@ -62,6 +53,16 @@ jQuery.noConflict();
                 return;
             }
         }
+
+        // TODO: ** please leave this until we're all <done> refactoring **
+        sox.helpers.notify(
+            sox.user.name,
+            sox.user.rep,
+            sox.user.id,
+            sox.site.name,
+            sox.site.type,
+            sox.site.apiParameter(sox.site.name)
+        );
 
         GM_addStyle(GM_getResourceText('css'));
         $('<link/>', {
@@ -134,6 +135,7 @@ jQuery.noConflict();
                 }
             }
         }
+
         if (GM_getValue('SOX-accessToken', -1) == -1) {
             if (!sox.location.on('stackoverflow.com') && !sox.location.on('oauth/login_success')) {
                 // TODO: find a more user friendly way of handling this

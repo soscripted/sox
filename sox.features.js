@@ -24,23 +24,10 @@
         dragBounty: function() {
             // Description: Makes the bounty window draggable
 
-<<<<<<< HEAD
-            new MutationObserver(function(mutations, observer) {
-                for (var i = 0; i < mutations.length; i++) {
-                    for (var j = 0; j < mutations[i].addedNodes.length; j++) {
-                        if (mutations[i].addedNodes[j].id == "start-bounty-popup") {
-                            $('#start-bounty-popup').draggable().css('cursor', 'move');
-                        }
-                    }
-                }
-            }).observe(document.body, {
-                childList: true,
-                subtree: true
-=======
             sox.helpers.observe('#start-bounty-popup', function() {
                 $('#start-bounty-popup').draggable().css('cursor', 'move');
->>>>>>> 6bcf84c6b2d90aea18212c5110ab385712c96bae
             });
+
         },
 
         renameChat: function() {
@@ -282,23 +269,9 @@
                     }
                 });
             });
-<<<<<<< HEAD
-            new MutationObserver(function(mutations, observer) {
-                for (var i = 0; i < mutations.length; i++) {
-                    for (var j = 0; j < mutations[i].addedNodes.length; j++) {
-                        var cl = mutations[i].addedNodes[j].classList;
-                        if (cl != undefined && cl.contains('comment')) {
-                            sox.features.colorAnswerer();
-                        }
-                    }
-                }
-            }).observe(document.body, {
-                childList: true,
-                subtree: true
-=======
+
             sox.helpers.observe('.comment', function() {
               sox.features.colorAnswerer();
->>>>>>> 6bcf84c6b2d90aea18212c5110ab385712c96bae
             });
         },
 
@@ -483,27 +456,10 @@
         shareLinksMarkdown: function() {
             // Description: For changing the 'share' button link to the format [name](link)
 
-<<<<<<< HEAD
-            new MutationObserver(function(mutations, observer) {
-                for (var i = 0; i < mutations.length; i++) {
-                    for (var j = 0; j < mutations[i].addedNodes.length; j++) {
-                        var cl = mutations[i].addedNodes[j].classList;
-                        if (cl !== undefined && cl.contains('share-tip')) {
-                            var link = $('.share-tip input').val();
-                            $('.share-tip input').val('[' + $('#question-header a').html() + '](' + link + ')');
-                            $('.share-tip input').select();
-                        }
-                    }
-                }
-            }).observe(document.body, {
-                childList: true,
-                subtree: true
-=======
             sox.helpers.observe('.share-tip', function() {
                 var link = $('.share-tip input').val();
                 $('.share-tip input').val('[' + $('#question-header a').html() + '](' + link + ')');
                 $('.share-tip input').select();
->>>>>>> 6bcf84c6b2d90aea18212c5110ab385712c96bae
             });
         },
 
@@ -779,29 +735,7 @@
         titleEditDiff: function() {
             // Description: For showing the new version of a title in a diff separately rather than loads of crossing outs in red and additions in green
 
-<<<<<<< HEAD
-            new MutationObserver(function(mutations, observer) {
-                for (var i = 0; i < mutations.length; i++) {
-                    for (var j = 0; j < mutations[i].addedNodes.length; j++) {
-                        var cl = mutations[i].addedNodes[j].classList;
-                        if (cl !== undefined && cl.contains('review-status')) {
-                            var $questionHyperlink = $('.summary h2 .question-hyperlink').clone(),
-                                $questionHyperlinkTwo = $('.summary h2 .question-hyperlink').clone(),
-                                link = $('.summary h2 .question-hyperlink').attr('href'),
-                                added = ($questionHyperlinkTwo.find('.diff-delete').remove().end().text()),
-                                removed = ($questionHyperlink.find('.diff-add').remove().end().text());
 
-                            if ($('.summary h2 .question-hyperlink').find('.diff-delete, .diff-add').length) {
-                                $('.summary h2 .question-hyperlink').hide();
-                                $('.summary h2 .question-hyperlink').after('<a href="' + link + '" class="question-hyperlink"><span class="diff-delete">' + removed + '</span><span class="diff-add">' + added + '</span></a>');
-                            }
-                        }
-                    }
-                }
-            }).observe(document.body, {
-                childList: true,
-                subtree: true
-=======
             sox.helpers.observe('.review-status', function() {
                 var $questionHyperlink = $('.summary h2 .question-hyperlink').clone(),
                     $questionHyperlinkTwo = $('.summary h2 .question-hyperlink').clone(),
@@ -813,7 +747,6 @@
                     $('.summary h2 .question-hyperlink').hide();
                     $('.summary h2 .question-hyperlink').after('<a href="' + link + '" class="question-hyperlink"><span class="diff-delete">' + removed + '</span><span class="diff-add">' + added + '</span></a>');
                 }
->>>>>>> 6bcf84c6b2d90aea18212c5110ab385712c96bae
             });
         },
 
@@ -1722,7 +1655,7 @@ Toggle SBS?</div></li>';
         },
 
         quickAuthorInfo: function() {
-<<<<<<< HEAD
+// Description: Shows when the post's author was last active and their registration state in the comments section
             var answerers = {};
             $('.question, .answer').each(function() {
                 var $userDetails = $(this).find('.post-signature .user-details');
@@ -1747,34 +1680,6 @@ Toggle SBS?</div></li>';
                         $(this).find('.comments tbody:eq(0)').prepend("<tr class='comment'><td class='comment-actions'></td><td class='comment-text'><div style='display: block;' class='comment-body'>last seen: " + userDetailsFromAPI[id].last_seen + " | type: " + userDetailsFromAPI[id].type + "</div></td></tr>");
                     }
                 });
-            });
-=======
-          // Description: Shows when the post's author was last active and their registration state in the comments section
-
-          var answerers = {};
-            $('.question, .answer').each(function() {
-              var $userDetails = $(this).find('.post-signature .user-details');
-              var userid = $userDetails.find('a').attr('href').split('/')[2];
-              var username = $userDetails.find('a').text();
-              answerers[userid] = username;
-            });
-            var apiUrl = "https://api.stackexchange.com/users/" + Object.keys(answerers).join(';') + "?site=" + sox.site.apiSiteName;
-            $.get(apiUrl, function(data) {
-              var userDetailsFromAPI = {};
-              $.each(data.items, function() {
-                  var cur = $(this)[0];
-                  userDetailsFromAPI[cur.user_id] = {
-                      'last_seen': new Date(cur.last_access_date*1000).toUTCString(),
-                      'creation': new Date(cur.creation_date*1000).toUTCString(),
-                      'type': cur.user_type
-                  };
-              });
-              $('.question, .answer').each(function() {
-                  var id = $(this).find('.post-signature .user-details a').attr('href').split('/')[2];
-                  if(userDetailsFromAPI[id]) {
-                      $(this).find('.comments tbody:eq(0)').prepend("<tr class='comment'><td class='comment-actions'></td><td class='comment-text'><div style='display: block;' class='comment-body'>last seen: " + userDetailsFromAPI[id].last_seen + " | type: " + userDetailsFromAPI[id].type + "</div></td></tr>");
-                  }
-              });
             });
         },
 
@@ -1885,7 +1790,6 @@ Toggle SBS?</div></li>';
                 settings.sitesToBlock = $(this).parent().find('#sitesToBlock').val();
                 GM_setValue('hotNetworkQuestionsFilteringSettings', JSON.stringify(settings));
             });
->>>>>>> 6bcf84c6b2d90aea18212c5110ab385712c96bae
         }
     };
 })(window.sox = window.sox || {}, jQuery);

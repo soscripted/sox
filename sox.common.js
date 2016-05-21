@@ -9,7 +9,8 @@
     sox.info = {
       version: (typeof GM_info !== 'undefined' ? GM_info.script.version : 'unknown'),
       handler: (typeof GM_info !== 'undefined' ? GM_info.scriptHandler : 'unknown'),
-      apikey: 'lL1S1jr2m*DRwOvXMPp26g(('
+      apikey: ''
+
     };
 
     sox.ready = function(func) {

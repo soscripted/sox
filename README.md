@@ -17,3 +17,7 @@ Installing from this branch is not recommended.
 - script now request oauth access after installing to prevent rate limiting on certain features
 - deprecated quickCommentShortcuts feature
 - added alignBadgesByClass and quickAuthorInfo features
+
+
+- function rewrites:
+  - fixedTopBar
