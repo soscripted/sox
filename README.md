@@ -10,14 +10,10 @@ Installing from this branch is **not recommended**.
 - complete rewrite of user.js file
 - deprecated feature that hides the search bar
 - deprecated feature that removes excessive exclamation marks from comments
+- deprecated quickCommentShortcuts feature
 - removed Ace Editor from the enhanced editor feature
 - bug fixes
 - fixed timing issues
 - setting dialog UI updates
 - script now request oauth access after installing to prevent rate limiting on certain features
-- deprecated quickCommentShortcuts feature
 - added alignBadgesByClass and quickAuthorInfo features
-
-
-- function rewrites:
-  - fixedTopBar
