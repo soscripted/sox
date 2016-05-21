@@ -63,11 +63,10 @@
 
             var url = 'https://api.stackexchange.com/2.2/users/{ids}?site={site}&key={key}&access_token={access_token}'
                 .replace('{ids}', ids.join(';'))
-                .replace('{site}', sox.site.apiSiteName)
-                .replace('{key}', sox.helpers.soxApiKey)
-                .replace('{access_token}', sox.helpers.soxAccessToken);
+                .replace('{site}', sox.site.currentApiParameter)
+                .replace('{key}', sox.info.apikey)
+                .replace('{access_token}', sox.settings.accessToken);
 
-            // TODO: use access token to prevent rate limiting
             $.ajax({
                 url: url
             }).success(function(data) {

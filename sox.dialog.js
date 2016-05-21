@@ -39,7 +39,7 @@
                 $div.append($h3);
 
                 if(!$soxSettingsDialogFeatures.find('div#header-for-' + name).length) {
-                  $soxSettingsDialogFeatures.find('#header-for-per-feature-settings').before($div);
+                  $soxSettingsDialogFeatures.append($div);
                   $div.after($content);
                 }
             }

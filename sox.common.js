@@ -9,8 +9,7 @@
     sox.info = {
       version: (typeof GM_info !== 'undefined' ? GM_info.script.version : 'unknown'),
       handler: (typeof GM_info !== 'undefined' ? GM_info.scriptHandler : 'unknown'),
-      apikey: ''
-
+      apikey: 'lL1S1jr2m*DRwOvXMPp26g(('
     };
 
     sox.ready = function(func) {
@@ -29,6 +28,9 @@
         },
         reset: function() {
             GM_deleteValue(SOX_SETTINGS);
+        },
+        get accessToken() {
+            return GM_getValue('SOX-accessToken', false);
         }
     };
 
