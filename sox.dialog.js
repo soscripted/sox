@@ -38,9 +38,9 @@
                     });
                 $div.append($h3);
 
-                if(!$soxSettingsDialogFeatures.find('div#header-for-' + name).length) {
-                  $soxSettingsDialogFeatures.append($div);
-                  $div.after($content);
+                if (!$soxSettingsDialogFeatures.find('div#header-for-' + name).length) {
+                    $soxSettingsDialogFeatures.append($div);
+                    $div.after($content);
                 }
             }
 
@@ -58,7 +58,7 @@
                 $input.after(description);
                 $soxSettingsDialogFeatures.find('#' + category).append($div);
 
-                if(settings) {
+                if (settings) {
                     var $settingsDiv = $('<div/>', {
                             id: 'soxSettingsPanel-' + name,
                             style: 'display: none; margin-top: 5px;'
@@ -68,23 +68,25 @@
                             style: 'margin-left: 5px',
                             click: function(e) {
                                 e.preventDefault(); //don't uncheck the checkbox
-                                if($(this).hasClass('expander-arrow-small-hide')) {
+                                if ($(this).hasClass('expander-arrow-small-hide')) {
                                     $(this).parent().find('#soxSettingsPanel-' + name).fadeIn();
                                     $(this).removeClass('expander-arrow-small-hide').addClass('expander-arrow-small-show');
-                                } else if($(this).hasClass('expander-arrow-small-show')) {
+                                } else if ($(this).hasClass('expander-arrow-small-show')) {
                                     $(this).parent().find('#soxSettingsPanel-' + name).fadeOut();
                                     $(this).removeClass('expander-arrow-small-show').addClass('expander-arrow-small-hide');
                                 }
                             }
                         });
-                    for(var i=0; i<settings.length; i++) {
+                    for (var i = 0; i < settings.length; i++) {
                         var currentSetting = settings[i];
                         $settingsDiv
-                        .append(currentSetting.desc).append('<br>')
-                        .append($('<' + currentSetting.type + '/>', {
-                            id: currentSetting.id,
-                            'class': 'featureSetting'
-                        })).append('<br>');
+                            .append(currentSetting.desc)
+                            .append('<br>')
+                            .append(sox.helpers.newElement(currentSetting.type, { //use newElement helper so the type can be things like 'checkbox' or 'radio'
+                                id: currentSetting.id,
+                                'class': 'featureSetting'
+                            }))
+                            .append('<br>');
                     }
                     var $saveSpan = $('<span/>', {
                         id: 'saveSettings-' + name,
@@ -96,7 +98,6 @@
                             $(this).parent().find('.featureSetting').each(function() {
                                 settings[$(this).attr('id')] = $(this).val();
                             });
-                            console.log(settings);
                             GM_setValue('SOX-' + name + '-settings', JSON.stringify(settings));
                         }
                     });
@@ -210,25 +211,25 @@
                             $('.' + which + '-dialog').not('#sox-settings-dialog, #metaNewQuestionAlertDialog').show();
                             $(this).addClass('topbar-icon-on');
                         } else {
-                            if($(this).css('top') != '34px') {
-                                  $('.siteSwitcher-dialog').css('top', '34px').css('left', '0px');
+                            if ($(this).css('top') != '34px') {
+                                $('.siteSwitcher-dialog').css('top', '34px').css('left', '0px');
                             }
                             $('.siteSwitcher-dialog').show();
                             $(this).addClass('topbar-icon-on').addClass('icon-site-switcher-on'); //icon-site-switcher-on is special to the site-switcher dropdown (StackExchange button)
                         }
                     } else {
-                        if(!$(e.toElement).is('.icon-site-switcher')) {
-                          if($('.siteSwitcher-dialog').is(':visible')) {
-                            $('.siteSwitcher-dialog').hide();
-                          }
+                        if (!$(e.toElement).is('.icon-site-switcher')) {
+                            if ($('.siteSwitcher-dialog').is(':visible')) {
+                                $('.siteSwitcher-dialog').hide();
+                            }
                         }
                     }
                 }, function(e) {
-                  if($(e.toElement).is('.topbar-icon')) { //only hide the StackExchange dialog if the un-hover is onto another topbar dialog button
-                    if($('.siteSwitcher-dialog').is(':visible')) {
-                      $('.siteSwitcher-dialog').hide();
+                    if ($(e.toElement).is('.topbar-icon')) { //only hide the StackExchange dialog if the un-hover is onto another topbar dialog button
+                        if ($('.siteSwitcher-dialog').is(':visible')) {
+                            $('.siteSwitcher-dialog').hide();
+                        }
                     }
-                  }
                 });
             });
 

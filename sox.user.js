@@ -121,16 +121,20 @@ jQuery.noConflict();
                         }
                     }
                     if (runFeature) {
-                        sox.features[featureId](); //run the feature if match and exclude conditions are met
+                        if (feature.settings) {
+                            settings = JSON.parse(GM_getValue("SOX-" + featureId + "-settings"), "{}"); //run the feature if match and exclude conditions are met, pass on settings object
+                        } else {
+                            sox.features[featureId](); //run the feature if match and exclude conditions are met
+                        }
                     }
                 } catch (err) {
-                    if(!sox.features[featureId]) { //remove deprecated/'corrupt' feature IDs from saved settings
+                    if (!sox.features[featureId]) { //remove deprecated/'corrupt' feature IDs from saved settings
                         settings.splice(i, 1);
                         sox.settings.save(settings);
                         $('#sox-settings-dialog-features').find('#' + settings[i].split('-')[1]).parent().parent().remove();
                     } else {
-                      $('#sox-settings-dialog-features').find('#' + settings[i].split('-')[1]).parent().css('color', 'red').attr('title', 'There was an error loading this feature. Please raise an issue on GitHub.');
-                      console.log('SOX error: There was an error loading the feature "' + settings[i] + '". Please raise an issue on GitHub, and copy the following error log:\n' + err);
+                        $('#sox-settings-dialog-features').find('#' + settings[i].split('-')[1]).parent().css('color', 'red').attr('title', 'There was an error loading this feature. Please raise an issue on GitHub.');
+                        console.log('SOX error: There was an error loading the feature "' + settings[i] + '". Please raise an issue on GitHub, and copy the following error log:\n' + err);
                     }
                     i++;
                 }

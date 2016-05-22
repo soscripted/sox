@@ -62,6 +62,29 @@
                 childList: true,
                 subtree: true
             });
+        },
+        newElement: function(type, elementDetails) {
+          var extras = {},
+              allowed = ['text', 'checkbox', 'radio', 'textarea', 'span'];
+          if(allowed.indexOf(type) != -1) {
+              if(type == 'text') {
+                  type = 'input';
+                  extras['type'] = 'input';
+              } else if (type == 'checkbox') {
+                  type = 'input';
+                  extras['type'] = 'checkbox';
+              } else if (type == 'radio') {
+                  type = 'input';
+                  extras['type'] = 'radio';
+              }
+
+              $.each(elementDetails, function(k, v) {
+                extras[k] = v;
+              });
+              return $('<' + type + '/>', extras);
+          } else {
+              return false;
+          }
         }
     };
 
