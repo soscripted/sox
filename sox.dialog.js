@@ -44,7 +44,7 @@
                 }
             }
 
-            function addFeature(category, name, description, settings) {
+            function addFeature(category, name, description, featureSettings) {
                 var $div = $('<div/>', {
                         'class': 'feature'
                     }),
@@ -58,7 +58,7 @@
                 $input.after(description);
                 $soxSettingsDialogFeatures.find('#' + category).append($div);
 
-                if (settings) {
+                if (featureSettings) {
                     var $settingsDiv = $('<div/>', {
                             id: 'soxSettingsPanel-' + name,
                             style: 'display: none; margin-top: 5px;'
@@ -77,16 +77,16 @@
                                 }
                             }
                         });
-                    console.log(JSON.parse(GM_getValue("SOX-" + name + "-settings")));
-                    for (var i = 0; i < settings.length; i++) {
-                        var currentSetting = settings[i];
+
+                    for (var i = 0; i < featureSettings.length; i++) {
+                        var currentSetting = featureSettings[i];
                         $settingsDiv
                             .append(currentSetting.desc)
                             .append('<br>')
                             .append(sox.helpers.newElement(currentSetting.type, { //use newElement helper so the type can be things like 'checkbox' or 'radio'
                                 id: currentSetting.id,
                                 'class': 'featureSetting',
-                                value: JSON.parse(GM_getValue("SOX-" + name + "-settings"))[currentSetting.id]
+                                value: (GM_getValue("SOX-" + name + "-settings", -1) == -1 ? '' : JSON.parse(GM_getValue("SOX-" + name + "-settings"))[currentSetting.id])
                             }))
                             .append('<br>');
                     }
@@ -96,11 +96,11 @@
                         text: 'save',
                         click: function(e) {
                             e.preventDefault(); //don't uncheck the checkbox
-                            var settings = {};
+                            var settingsToSave = {};
                             $(this).parent().find('.featureSetting').each(function() {
-                                settings[$(this).attr('id')] = $(this).val();
+                                settingsToSave[$(this).attr('id')] = $(this).val();
                             });
-                            GM_setValue('SOX-' + name + '-settings', JSON.stringify(settings));
+                            GM_setValue('SOX-' + name + '-settings', JSON.stringify(settingsToSave));
                         }
                     });
                     $settingsDiv.append($saveSpan);
@@ -109,7 +109,7 @@
             }
 
             // display sox version number in the dialog
-            $soxSettingsDialogVersion.text(options.version != 'unknown' ? ' v' + version.toLowerCase() : '');
+            $soxSettingsDialogVersion.text(version != 'unknown' ? ' v' + version.toLowerCase() : '');
 
             // wire up event handlers
             $soxSettingsClose.on('click', function() {
@@ -140,15 +140,12 @@
 
             $soxSettingsSave.on('click', function() {
                 var settings = [];
-
                 $soxSettingsDialogFeatures.find('input[type=checkbox]:checked').each(function() {
                     var x = $(this).closest('.modal-content').attr('id') + '-' + $(this).attr('id');
-
                     settings.push(x); //Add the function's ID (also the checkbox's ID) to the array
                 });
 
                 sox.settings.save(settings);
-
                 location.reload(); // reload page to reflect changed settings
             });
 
@@ -257,7 +254,6 @@
             sox.helpers.notify('injecting features into dialog');
             for (var category in features.categories) {
                 addCategory(category);
-
                 for (var feature in features.categories[category]) {
                     var currentFeature = features.categories[category][feature];
                     addFeature(
@@ -268,6 +264,7 @@
                     );
                 }
             }
+
             if (settings) {
                 for (var i = 0; i < settings.length; ++i) {
                     $soxSettingsDialogFeatures.find('#' + settings[i].split('-')[1]).prop('checked', true);

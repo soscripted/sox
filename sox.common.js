@@ -21,7 +21,8 @@
     sox.settings = {
         available: GM_getValue(SOX_SETTINGS, -1) != -1,
         load: function() {
-            return JSON.parse(GM_getValue(SOX_SETTINGS, 'null'));
+          var settings = GM_getValue(SOX_SETTINGS);
+          return settings == undefined ? undefined : JSON.parse(settings);
         },
         save: function(settings) {
             GM_setValue(SOX_SETTINGS, JSON.stringify(settings));
@@ -35,6 +36,14 @@
         },
         get accessToken() {
             return GM_getValue('SOX-accessToken', false);
+        },
+        writeToConsole: function() {
+            console.log('logging sox stored values --- ');
+            var keys = GM_listValues();
+            for (i = 0; i < keys.length; i++) {
+                var key = keys[i];
+                console.log(key, GM_getValue(key));
+            }
         }
     };
 
@@ -206,7 +215,7 @@
             if (sox.site.type == sox.site.types.chat) {
                 return Chat.RoomUsers.current().name;
             } else {
-                return Stack ? decodeURI(Stack.options.user.profileUrl.split('/')[5]) : undefined;
+                return Stack && this.loggedIn ? decodeURI(Stack.options.user.profileUrl.split('/')[5]) : undefined;
             }
         },
         get loggedIn() {

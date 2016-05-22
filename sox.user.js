@@ -71,7 +71,7 @@ jQuery.noConflict();
             href: 'https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css'
         }).appendTo('head');
 
-        var settings = sox.settings.load(), //returns null if not set
+        var settings = sox.settings.load(), //returns undefined if not set
             featureInfo = JSON.parse(GM_getResourceText('featuresJSON'));
 
         try {
