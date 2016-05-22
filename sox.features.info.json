@@ -300,6 +300,10 @@
                 "id": "sitesToBlock",
                 "type": "textarea",
                 "desc": "Sites to block (comma-separated match patterns)"
+            }, {
+                "id": "titlesToHideRegex",
+                "type": "textarea",
+                "desc": "Titles to hide (comma-separated regexes)"
             }]
         }, {
             "name": "linkedPostsInline",

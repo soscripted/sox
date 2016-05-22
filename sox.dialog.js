@@ -77,6 +77,7 @@
                                 }
                             }
                         });
+                    console.log(JSON.parse(GM_getValue("SOX-" + name + "-settings")));
                     for (var i = 0; i < settings.length; i++) {
                         var currentSetting = settings[i];
                         $settingsDiv
@@ -84,7 +85,8 @@
                             .append('<br>')
                             .append(sox.helpers.newElement(currentSetting.type, { //use newElement helper so the type can be things like 'checkbox' or 'radio'
                                 id: currentSetting.id,
-                                'class': 'featureSetting'
+                                'class': 'featureSetting',
+                                value: JSON.parse(GM_getValue("SOX-" + name + "-settings"))[currentSetting.id]
                             }))
                             .append('<br>');
                     }

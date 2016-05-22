@@ -76,6 +76,10 @@
               } else if (type == 'radio') {
                   type = 'input';
                   extras['type'] = 'radio';
+              } else if (type == 'textarea') {
+                  if(!elementDetails.text) {
+                      elementDetails.text = elementDetails.value;
+                  }
               }
 
               $.each(elementDetails, function(k, v) {

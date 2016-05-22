@@ -1656,7 +1656,7 @@ Toggle SBS?</div></li>';
             $('#hot-network-questions li a').each(function() {
                 if (settings.wordsToBlock != '') {
                     var words = $(this).text().split(' '),
-                        wordsToBlock = settings.wordsToBlock.split(' ');
+                        wordsToBlock = settings.wordsToBlock.split(',');
                     for (var i = 0; i < wordsToBlock.length; i++) {
                         if (words.indexOf(wordsToBlock[i]) != -1) {
                             $(this).parent().hide();
@@ -1665,9 +1665,18 @@ Toggle SBS?</div></li>';
                 }
                 if (settings.sitesToBlock != '') {
                     var site = $(this).attr('href'),
-                        sitesToBlock = settings.sitesToBlock.split(' ');
+                        sitesToBlock = settings.sitesToBlock.split(',');
                     for (var i = 0; i < sitesToBlock.length; i++) {
                         if (sox.location.match(sitesToBlock[i], site)) {
+                            $(this).parent().hide();
+                        }
+                    }
+                }
+                if (settings.titlesToHideRegex != '') {
+                    var title = $(this).text(),
+                        titlesToHide = settings.titlesToHideRegex.split(',');
+                    for (var i = 0; i < titlesToHide.length; i++) {
+                        if (title.match(new RegExp(titlesToHide))) {
                             $(this).parent().hide();
                         }
                     }
