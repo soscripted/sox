@@ -121,18 +121,18 @@
         fixedTopbar: function() {
             // Description: For making the topbar fixed (always stay at top of screen)
 
-                $('.topbar').css({
-                    'position': 'fixed',
-                    'top': '0',
-                    'z-index': '1001',
-                    'width': '100%'
-                });
+            $('.topbar').css({
+                'position': 'fixed',
+                'top': '0',
+                'z-index': '1001',
+                'width': '100%'
+            });
 
-                $('body > .page, body .container, div.wrapper > header').css('padding-top', '34px');
-                $('body .custom-header, body #custom-header, div#scroller,div.review-bar').css('top', '34px');
-                $('div#custom-header').css('margin-top', '34px');
-                $('.new-topbar .container').css('background-position', 'center 0');
-                $('#overlay-header').css('top', '34px');
+            $('body > .page, body .container, div.wrapper > header').css('padding-top', '34px');
+            $('body .custom-header, body #custom-header, div#scroller,div.review-bar').css('top', '34px');
+            $('div#custom-header').css('margin-top', '34px');
+            $('.new-topbar .container').css('background-position', 'center 0');
+            $('#overlay-header').css('top', '34px');
 
         },
 
@@ -144,10 +144,12 @@
             }
 
             var color;
-            if (/superuser/.test(window.location.hostname)) { //superuser
+            if (sox.location.on('superuser.com')) { //superuser
                 color = '#00a1c9';
-            } else if (/stackoverflow/.test(window.location.hostname)) { //stackoverflow
+            } else if (sox.location.on('stackoverflow.com')) { //stackoverflow
                 color = '#f69c55';
+            } else if (sox.location.on('serverfault.com')) {
+                color = '#EA292C';
             } else { //for all other sites
                 color = $('.post-tag').css('color');
             }
@@ -158,6 +160,8 @@
 
             if ($('.question-summary').length) {
                 var target = document.body;
+                // TODO use new observer helper
+
                 new MutationObserver(function(mutations) {
                     $.each(mutations, function(i, mutation) {
                         if (mutation.attributeName == 'class') {
@@ -200,7 +204,7 @@
             });
 
             sox.helpers.observe('.comment', function() {
-              sox.features.colorAnswerer();
+                sox.features.colorAnswerer();
             });
         },
 
@@ -1022,7 +1026,7 @@ Toggle SBS?</div></li>';
             // Description: For always showing the 'Link from the web' box when uploading an image.
 
             sox.helpers.observe('.image-upload form', function(n) {
-              $('.image-upload form div.modal-options-default.tab-page > a')[0].click();
+                $('.image-upload form div.modal-options-default.tab-page > a')[0].click();
             });
         },
 
@@ -1075,10 +1079,10 @@ Toggle SBS?</div></li>';
             };
 
             sox.helpers.observe('.inbox-dialog', function(node) {
-              var $addedNode = $(node);
-              for (var x = 0; x < 21; x++) { //first 20 items
-                  getAuthorName($addedNode.find('.inbox-item').eq(x));
-              }
+                var $addedNode = $(node);
+                for (var x = 0; x < 21; x++) { //first 20 items
+                    getAuthorName($addedNode.find('.inbox-item').eq(x));
+                }
             });
         },
 
@@ -1102,7 +1106,7 @@ Toggle SBS?</div></li>';
                         e.preventDefault();
                         $('html, body').animate({
                             scrollTop: 0
-                        }, 800);
+                        }, 50);
                         return false;
                     }
                 }).append($('<i/>', {
@@ -1584,7 +1588,7 @@ Toggle SBS?</div></li>';
         },
 
         quickAuthorInfo: function() {
-// Description: Shows when the post's author was last active and their registration state in the comments section
+            // Description: Shows when the post's author was last active and their registration state in the comments section
             var answerers = {};
             $('.question, .answer').each(function() {
                 var $userDetails = $(this).find('.post-signature .user-details');
@@ -1613,13 +1617,13 @@ Toggle SBS?</div></li>';
         },
 
         hiddenCommentsIndicator: function() {
-          // Description: Darkens the border underneath comments if there are hidden comments underneath it
+            // Description: Darkens the border underneath comments if there are hidden comments underneath it
 
             $('.question, .answer').each(function() {
-                if($(this).find('.js-show-link.comments-link:visible').length) {
+                if ($(this).find('.js-show-link.comments-link:visible').length) {
                     var postId = $(this).attr('data-questionid') || $(this).attr('data-answerid'),
-                        x=[],
-                        y=[],
+                        x = [],
+                        y = [],
                         protocol = location.protocol,
                         hostname = location.hostname,
                         baseUrl = protocol + '//' + hostname;
@@ -1634,8 +1638,8 @@ Toggle SBS?</div></li>';
                             y.push(x.indexOf($commentCopy.eq(d).text()));
                         });
 
-                        for(var i=0;i<y.length;i++){
-                            if(y[i] != y[i+1]-1) {
+                        for (var i = 0; i < y.length; i++) {
+                            if (y[i] != y[i + 1] - 1) {
                                 $commentCopy.filter(function(d) {
                                     return $(this).text() == x[y[i]];
                                 }).parent().parent().parent().find('.comment-actions, .comment-text').css('border-bottom-color', 'gray');
@@ -1650,20 +1654,20 @@ Toggle SBS?</div></li>';
             // Description: Filter hot network questions in the sidebar based on their attributes such as title, site, etc..
 
             $('#hot-network-questions li a').each(function() {
-                if(settings.wordsToBlock != '') {
+                if (settings.wordsToBlock != '') {
                     var words = $(this).text().split(' '),
                         wordsToBlock = settings.wordsToBlock.split(' ');
-                    for(var i=0; i<wordsToBlock.length; i++) {
-                        if(words.indexOf(wordsToBlock[i]) != -1) {
+                    for (var i = 0; i < wordsToBlock.length; i++) {
+                        if (words.indexOf(wordsToBlock[i]) != -1) {
                             $(this).parent().hide();
                         }
                     }
                 }
-                if(settings.sitesToBlock != '') {
+                if (settings.sitesToBlock != '') {
                     var site = $(this).attr('href'),
                         sitesToBlock = settings.sitesToBlock.split(' ');
-                    for(var i=0; i<sitesToBlock.length; i++) {
-                        if(sox.location.match(sitesToBlock[i], site)) {
+                    for (var i = 0; i < sitesToBlock.length; i++) {
+                        if (sox.location.match(sitesToBlock[i], site)) {
                             $(this).parent().hide();
                         }
                     }
@@ -1672,7 +1676,7 @@ Toggle SBS?</div></li>';
             });
 
             $('.getQuestionTags').hover(function(e) {
-                if(!$(this).attr('data-tags')) {
+                if (!$(this).attr('data-tags')) {
                     var $that = $(this),
                         id = $(this).parent().attr('href').split('/')[4],
                         sitename = $(this).parent().attr('href').split('/')[2];
@@ -1682,7 +1686,7 @@ Toggle SBS?</div></li>';
                     });
                 }
             }, function() {
-                if(!$(this).next().hasClass('tooltip') && $(this).attr('data-tags')) {
+                if (!$(this).next().hasClass('tooltip') && $(this).attr('data-tags')) {
                     $(this).after('<span class="tooltip" style="display: block;margin-left: 5px;background-color: #eeeefe;border: 1px solid darkgrey;font-size: 11px;padding: 1px;">' + $(this).attr('data-tags') + '</span>');
                     $(this).remove();
                 }
