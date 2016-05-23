@@ -122,8 +122,8 @@ jQuery.noConflict();
                     }
                     if (runFeature) {
                         if (feature.settings) {
-                            settings = JSON.parse(GM_getValue("SOX-" + featureId + "-settings"), "{}");
-                            sox.features[featureId](settings);  //run the feature if match and exclude conditions are met, pass on settings object
+                            var settingsToPass = GM_getValue("SOX-" + featureId + "-settings") ? JSON.parse(GM_getValue("SOX-" + featureId + "-settings")) : {};
+                            sox.features[featureId](settingsToPass);  //run the feature if match and exclude conditions are met, pass on settings object
                         } else {
                             sox.features[featureId](); //run the feature if match and exclude conditions are met
                         }

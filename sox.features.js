@@ -1251,12 +1251,13 @@ Toggle SBS?</div></li>';
 
             $('#sidebar .community-bulletin').remove();
         },
+
         enhancedEditor: function() {
             // Description: Add a bunch of features to the standard markdown editor (autocorrect, find+replace, Ace editor, and more!)
 
             sox.enhancedEditor.startFeature();
         },
-
+        
         downvotedPostsEditAlert: function() {
             // Description: Adds a notification to the inbox if a question you downvoted and watched is edited
 
@@ -1652,9 +1653,9 @@ Toggle SBS?</div></li>';
 
         hotNetworkQuestionsFiltering: function(settings) {
             // Description: Filter hot network questions in the sidebar based on their attributes such as title, site, etc..
-
             $('#hot-network-questions li a').each(function() {
-                if (settings.wordsToBlock != '') {
+                if (settings.wordsToBlock && settings.wordsToBlock != '') {
+                  console.log('a');
                     var words = $(this).text().split(' '),
                         wordsToBlock = settings.wordsToBlock.split(',');
                     for (var i = 0; i < wordsToBlock.length; i++) {
@@ -1663,7 +1664,7 @@ Toggle SBS?</div></li>';
                         }
                     }
                 }
-                if (settings.sitesToBlock != '') {
+                if (settings.sitesToBlock && settings.sitesToBlock != '') {
                     var site = $(this).attr('href'),
                         sitesToBlock = settings.sitesToBlock.split(',');
                     for (var i = 0; i < sitesToBlock.length; i++) {
@@ -1672,7 +1673,7 @@ Toggle SBS?</div></li>';
                         }
                     }
                 }
-                if (settings.titlesToHideRegex != '') {
+                if (settings.titlesToHideRegex && settings.titlesToHideRegex != '') {
                     var title = $(this).text(),
                         titlesToHide = settings.titlesToHideRegex.split(',');
                     for (var i = 0; i < titlesToHide.length; i++) {
