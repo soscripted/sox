@@ -1,6 +1,6 @@
 # REFACTORING
 
-This branch is for refactoring the existing userscript into something more manageable.
+This branch is for refactoring the existing userscript into something more manageable (v2.0.0)
 
 Installing from this branch is **not recommended**.
 
@@ -16,4 +16,4 @@ Installing from this branch is **not recommended**.
 - fixed timing issues
 - setting dialog UI updates
 - script now request oauth access after installing to prevent rate limiting on certain features
-- added alignBadgesByClass and quickAuthorInfo features
+- added alignBadgesByClass, quickAuthorInfo, warnNotLoggedIn, hotNetworkQuestionsFiltering, hiddenCommentsIndicator features
