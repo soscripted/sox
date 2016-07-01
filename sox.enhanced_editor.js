@@ -6,13 +6,13 @@
         startFeature: function() {
             setTimeout(function() {
                 $.each($('textarea[id^="wmd-input"].processed'), function() {
-                    enhancedEditor.init($(this).attr('id'));
+                    sox.enhancedEditor.init($(this).attr('id'));
                 });
 
                 $('.edit-post').click(function() {
                     $that = $(this);
                     setTimeout(function() {
-                        enhancedEditor.init($that.parents('table').find('.inline-editor textarea.processed').attr('id'));
+                        sox.enhancedEditor.init($that.parents('table').find('.inline-editor textarea.processed').attr('id'));
                     }, 5000);
                 });
             }, 5000);
@@ -21,19 +21,19 @@
         init: function(wmd) {
             $('[id^="enhancedEditor"]').not('#sox-settings-dialog input').remove();
             var s = '#'+wmd; //s is the selector we pass onto each function so the action is applied to the correct textarea (and not, for example the 'add answer' textarea *and* the 'edit' textarea!)
-            enhancedEditor.startInsertLink(s);
-            enhancedEditor.betterTabKey(s);
-            enhancedEditor.keyboardShortcuts(s);
+            sox.enhancedEditor.startInsertLink(s);
+            sox.enhancedEditor.betterTabKey(s);
+            sox.enhancedEditor.keyboardShortcuts(s);
 
             $(s).before("<span class='enhancedEditor-toolbar' id='enhancedEditor|"+s+"'>&nbsp;<span id='findReplace'>Find & Replace</span> | <span id='autoCorrect'>Auto correct</span></span>");
 
             $('#findReplace').click(function(e) {
-                enhancedEditor.findReplace($(this).parent().attr('id').split('|')[1]);
+                sox.enhancedEditor.findReplace($(this).parent().attr('id').split('|')[1]);
                 e.preventDefault();
                 e.stopPropagation();
             });
             $('#autoCorrect').click(function(e) {
-                enhancedEditor.autoCorrect($(this).parent().attr('id').split('|')[1]);
+                sox.enhancedEditor.autoCorrect($(this).parent().attr('id').split('|')[1]);
                 e.preventDefault();
                 e.stopPropagation();
             });
@@ -92,10 +92,10 @@
                         });
 
                         $('#ownGo').click(function() {
-                            enhancedEditor.addLink(query, $(this).prev().val(), s);
+                            sox.enhancedEditor.addLink(query, $(this).prev().val(), s);
                         });
                         $('#suggestGo').click(function() {
-                            enhancedEditor.addLink(query, $('#DDG-header a').attr('href'), s);
+                            sox.enhancedEditor.addLink(query, $('#DDG-header a').attr('href'), s);
                         });
                     }, 1000);
                     e.stopPropagation();
@@ -135,7 +135,7 @@
                 oldval = $(s).val();
                 newval = oldval.replace(regex, $('.findReplace #replace').val());
                 $(s).val(newval);
-                enhancedEditor.refreshPreview();
+                sox.enhancedEditor.refreshPreview();
             });
         },
 
@@ -205,13 +205,13 @@
             });
             $(s).val(newVal);
 
-            enhancedEditor.refreshPreview();
+            sox.enhancedEditor.refreshPreview();
         },
 
         addLink: function(query, url, s) {
             $(s).replaceSelectedText('['+query.text+']('+url+')');
             $('#enhancedEditor-insertLinkDialog').hide();
-            enhancedEditor.refreshPreview();
+            sox.enhancedEditor.refreshPreview();
         },
 
         keyboardShortcuts: function(s) {
@@ -244,4 +244,4 @@
             SOHelper.StackExchange().MarkdownEditor.refreshAllPreviews();
         }
     };
-});
+})(window.sox = window.sox || {}, jQuery);

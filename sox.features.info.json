@@ -336,6 +336,12 @@
             "meta": "http://meta.stackexchange.com/questions/7753/please-give-us-the-ability-to-sort-featured-tab-by-bounty-amount",
             "match": "",
             "exclude": "*://*/users/*"
+        }, {
+            "name": "warnNotLoggedIn",
+            "desc": "Warn you when you are not logged in",
+            "meta": "",
+            "match": "",
+            "exclude": ""
         }]
     }
 }

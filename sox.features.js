@@ -1,4 +1,5 @@
 /*jshint multistr: true */
+/*global GM_getValue, GM_setValue, waitForKeyElements, fkey*/
 (function(sox, $, undefined) {
     'use strict';
 
@@ -475,16 +476,19 @@
             var sites = ['stackexchange', 'stackoverflow', 'superuser', 'serverfault', 'askubuntu', 'stackapps', 'mathoverflow', 'programmers', 'bitcoin'];
 
             $('.post-text a').not('.expand-post-sox').each(function() {
-                var anchor = $(this);
-                if (sites.indexOf($(this).attr('href').split('/')[2].split('.')[0]) > -1) { //if the link is to an SE site (not, for example, to google), do the necessary stuff
-                    if ($(this).text() == $(this).attr('href')) { //if there isn't text on it (ie. bare url)
-                        var sitename = $(this).attr('href').split('/')[2].split('.')[0],
-                            id = $(this).attr('href').split('/')[4];
+                var anchor = $(this),
+                    href = $(this).attr('href');
+                if (sites.indexOf(href.split('/')[2].split('.')[0]) > -1) { //if the link is to an SE site (not, for example, to google), do the necessary stuff
+                  if(href.indexOf('/questions/') > -1) { //if the link is to a question
+                    if ($(this).text() == href) { //if there isn't text on it (ie. bare url)
+                        var sitename = href.split('/')[2].split('.')[0],
+                            id = href.split('/')[4];
 
                         sox.helpers.getFromAPI('questions', id, sitename, function(json) {
                             anchor.html(json.items[0].title); //Get the title and add it in
                         }, 'activity');
                     }
+                  }
                 }
             });
         },
@@ -564,11 +568,7 @@
             $('.comment .comment-text .comment-copy a').each(function() {
                 if ($(this).attr('href').indexOf('imgur.com') != -1) {
                     var image = $(this).attr('href');
-                    if (image.indexOf($(this).text()) != -1) {
-                        $(this).replaceWith('<img src="' + image + '" width="100%">');
-                    } else {
-                        $(this).after('<img src="' + image + '" width="100%">');
-                    }
+                    $(this).parent().append('<img src="' + image + '" width="100%">'); //add image to end of comments, but keep link in same position
                 }
             });
         },
@@ -1042,24 +1042,23 @@ Toggle SBS?</div></li>';
 
                 switch (type) {
                     case 'comment':
-                        id = link.split('/')[5].split('?')[0],
-                            apiurl = 'https://api.stackexchange.com/2.2/comments/' + id + '?order=desc&sort=creation&site=' + sitename
+                        id = link.split('/')[5].split('?')[0];
+                        apiurl = 'https://api.stackexchange.com/2.2/comments/' + id + '?order=desc&sort=creation&site=' + sitename;
                         break;
                     case 'answer':
                         id = link.split('/')[4].split('?')[0];
-                        apiurl = 'https://api.stackexchange.com/2.2/answers/' + id + '?order=desc&sort=creation&site=' + sitename
+                        apiurl = 'https://api.stackexchange.com/2.2/answers/' + id + '?order=desc&sort=creation&site=' + sitename;
                         break;
                     case 'edit suggested':
-                        id = link.split('/')[4],
-                            apiurl = 'https://api.stackexchange.com/2.2/suggested-edits/' + id + '?order=desc&sort=creation&site=' + sitename
+                        id = link.split('/')[4];
+                        apiurl = 'https://api.stackexchange.com/2.2/suggested-edits/' + id + '?order=desc&sort=creation&site=' + sitename;
                         break;
                     default:
-                        console.log('sox does not currently support get author information for type' + type)
+                        console.log('sox does not currently support get author information for type' + type);
                         return;
                 }
 
                 $.getJSON(apiurl, function(json) {
-
                     var author = json.items[0].owner.display_name,
                         $author = $('<span/>', {
                             class: 'author',
@@ -1074,9 +1073,8 @@ Toggle SBS?</div></li>';
 
                     //fix conflict with soup fix mse207526 - https://github.com/vyznev/soup/blob/master/SOUP.user.js#L489
                     $header.empty().append($type).append($author).append($creation);
-
                 });
-            };
+            }
 
             sox.helpers.observe('.inbox-dialog', function(node) {
                 var $addedNode = $(node);
@@ -1210,7 +1208,7 @@ Toggle SBS?</div></li>';
 
             $('.post-text a, .comments .comment-copy a').each(function() {
                 var url = $(this).attr('href');
-                if (url && url.indexOf(sox.site.url) > -1 & url.indexOf('#comment') == -1) {
+                if (url && url.indexOf(sox.site.url) > -1 && url.indexOf('#comment') == -1) {
                     $(this).css('color', '#0033ff');
                     $(this).before('<a class="expander-arrow-small-hide expand-post-sox"></a>');
                 }
@@ -1257,7 +1255,7 @@ Toggle SBS?</div></li>';
 
             sox.enhancedEditor.startFeature();
         },
-        
+
         downvotedPostsEditAlert: function() {
             // Description: Adds a notification to the inbox if a question you downvoted and watched is edited
 
@@ -1284,12 +1282,12 @@ Toggle SBS?</div></li>';
 
             function addNumber() { //count the number of elements in the 'unread' object, and display that number on the inbox icon
                 var count = 0;
-                for (i in unread) {
+                for (var i in unread) {
                     if (unread.hasOwnProperty(i)) {
                         count++;
                     }
                 }
-                if (count != 0 && $('div.topbar .icon-inbox span.unread-count').text() == '') { //display the number
+                if (count !== 0 && $('div.topbar .icon-inbox span.unread-count').text() === '') { //display the number
                     $('div.topbar .icon-inbox span.unread-count').css('display', 'inline-block').text(count);
                 }
             }
@@ -1373,7 +1371,7 @@ Toggle SBS?</div></li>';
 
                 $node.find('div:last-child').last().after('<div class="chatEasyAccess">give <b id="read-only">read</b> / <b id="read-write">write</b> / <b id="remove">no</b> access</div>');
                 $(document).on('click', '.chatEasyAccess b', function() {
-                    $that = $(this);
+                    var $that = $(this);
                     $.ajax({
                         url: 'http://chat.stackexchange.com/rooms/setuseraccess/' + location.href.split('/')[4],
                         type: 'post',
@@ -1383,7 +1381,7 @@ Toggle SBS?</div></li>';
                             'aclUserId': id
                         },
                         success: function(d) {
-                            if (d == '') {
+                            if (d === '') {
                                 alert('Successfully changed user access');
                             } else {
                                 alert(d);
@@ -1546,20 +1544,20 @@ Toggle SBS?</div></li>';
                 };
             });
             $.each(acs, function(k, v) {
-                $badgesTd = $('.user-accounts tr .badges').eq(k);
+                var $badgesTd = $('.user-accounts tr .badges').eq(k);
                 $badgesTd.html('');
-                if (acs[k]['gold']) {
-                    $badgesTd.append('<span title="' + acs[k]['gold'] + ' gold badges"><span class="badge1"></span><span class="badgecount">' + acs[k]['gold'] + '</span></span>');
+                if (acs[k].gold) {
+                    $badgesTd.append('<span title="' + acs[k].gold + ' gold badges"><span class="badge1"></span><span class="badgecount">' + acs[k].gold + '</span></span>');
                 } else {
                     $badgesTd.append('<span><span class="badge1" style="background-image:none"></span><span class="badgecount">&nbsp;&nbsp;</span></span>');
                 }
-                if (acs[k]['silver']) {
-                    $badgesTd.append('<span title="' + acs[k]['silver'] + ' silver badges"><span class="badge2"></span><span class="badgecount">' + acs[k]['silver'] + '</span></span>');
+                if (acs[k].silver) {
+                    $badgesTd.append('<span title="' + acs[k].silver + ' silver badges"><span class="badge2"></span><span class="badgecount">' + acs[k].silver + '</span></span>');
                 } else {
                     $badgesTd.append('<span><span class="badge1" style="background-image:none"></span><span class="badgecount">&nbsp;&nbsp;</span></span>');
                 }
-                if (acs[k]['bronze']) {
-                    $badgesTd.append('<span title="' + acs[k]['bronze'] + ' bronze badges"><span class="badge3"></span><span class="badgecount">' + acs[k]['bronze'] + '</span></span>');
+                if (acs[k].bronze) {
+                    $badgesTd.append('<span title="' + acs[k].bronze + ' bronze badges"><span class="badge3"></span><span class="badgecount">' + acs[k].bronze + '</span></span>');
                 } else {
                     $badgesTd.append('<span><span class="badge1" style="background-image:none"></span><span class="badgecount">&nbsp;&nbsp;</span></span>');
                 }
@@ -1570,14 +1568,14 @@ Toggle SBS?</div></li>';
                 var $thisClassSpan = $('.user-accounts .badges span[title*="' + className + '"]');
                 if ($thisClassSpan.length) {
                     $thisClassSpan.each(function() {
-                        text = $(this).text();
+                        var text = $(this).text();
                         if (text.length > numbers[className]) {
                             numbers[className] = text.length;
                         }
                     });
                 }
                 $thisClassSpan.each(function() {
-                    len = $(this).text().length;
+                    var len = $(this).text().length;
                     if (len < numbers[className]) {
                         for (var i = 0; i < numbers[className] - len; i++) {
                             $(this).append('&nbsp;&nbsp;');
@@ -1590,6 +1588,7 @@ Toggle SBS?</div></li>';
 
         quickAuthorInfo: function() {
             // Description: Shows when the post's author was last active and their registration state in the comments section
+
             var answerers = {};
             $('.question, .answer').each(function() {
                 var $userDetails = $(this).find('.post-signature .user-details');
@@ -1653,9 +1652,9 @@ Toggle SBS?</div></li>';
 
         hotNetworkQuestionsFiltering: function(settings) {
             // Description: Filter hot network questions in the sidebar based on their attributes such as title, site, etc..
+
             $('#hot-network-questions li a').each(function() {
-                if (settings.wordsToBlock && settings.wordsToBlock != '') {
-                  console.log('a');
+                if (settings.wordsToBlock && settings.wordsToBlock !== '') {
                     var words = $(this).text().split(' '),
                         wordsToBlock = settings.wordsToBlock.split(',');
                     for (var i = 0; i < wordsToBlock.length; i++) {
@@ -1664,7 +1663,7 @@ Toggle SBS?</div></li>';
                         }
                     }
                 }
-                if (settings.sitesToBlock && settings.sitesToBlock != '') {
+                if (settings.sitesToBlock && settings.sitesToBlock !== '') {
                     var site = $(this).attr('href'),
                         sitesToBlock = settings.sitesToBlock.split(',');
                     for (var i = 0; i < sitesToBlock.length; i++) {
@@ -1673,7 +1672,7 @@ Toggle SBS?</div></li>';
                         }
                     }
                 }
-                if (settings.titlesToHideRegex && settings.titlesToHideRegex != '') {
+                if (settings.titlesToHideRegex && settings.titlesToHideRegex !== '') {
                     var title = $(this).text(),
                         titlesToHide = settings.titlesToHideRegex.split(',');
                     for (var i = 0; i < titlesToHide.length; i++) {
@@ -1701,6 +1700,23 @@ Toggle SBS?</div></li>';
                     $(this).remove();
                 }
             });
+        },
+
+        warnNotLoggedIn: function() {
+            var div = $('<div/>', {
+                id: 'loggedInReminder',
+                style: 'position: fixed; right: 0; bottom: 50px; background-color: rgba(200, 200, 200, 1); width: 200px; height: 35px; text-align: center; padding: 3px; color: red;',
+                html: 'You are not logged in. You should <a href="/users/login">log in</a> to continue enjoying SE.'
+            });
+            function checkAndAddReminder() {
+                if(!sox.user.loggedIn) {
+                    if(!$('#loggedInReminder').length) $('body').append(div);
+                } else {
+                    $('#loggedInReminder').remove();
+                }
+            }
+            checkAndAddReminder();
+            setInterval(checkAndAddReminder, 300000); //5 mins
         }
     };
 })(window.sox = window.sox || {}, jQuery);
