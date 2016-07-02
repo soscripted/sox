@@ -1,215 +1,347 @@
 {
-    "Appearance": {
-        "grayOutVotes": {
-            "desc": "Gray out deleted votes",
-            "meta-url": "http://meta.stackexchange.com/a/174806/260841"
-        },
-        "moveBounty": {
-            "desc": "Move 'start bounty' to top",
-            "meta-url": "http://meta.stackexchange.com/questions/234095/can-we-move-start-a-bounty-to-a-more-intuitive-location"
-        },
-        "dragBounty": {
-            "desc": "Make bounty box draggable",
-            "meta-url": "http://meta.stackexchange.com/questions/170125/make-bounty-custom-message-dialog-box-draggable"
-        },
-        "renameChat": {
-            "desc": "Prepend 'Chat - ' to chat tabs' titles",
-            "enableOnSites": "chat",
-            "meta-url": "http://meta.stackexchange.com/questions/246289/change-the-browser-tab-title-on-chat-pages-to-chat-sitename-or-chat-room-name"
-        },
-        "exclaim": {
-            "desc": "Remove exclamation mark on message",
-            "meta-url": "http://meta.stackexchange.com/questions/244375/you-can-only-undo-a-comment-vote-within-the-first-60-seconds"
-        },
-        "markEmployees": {
-            "desc": "Add the SO logo after employee names to make them stand out",
-            "meta-url": "http://meta.stackexchange.com/questions/246678/should-se-staff-have-a-special-character-in-their-user-name"
-        },
-        "bulletReplace": {
-            "desc": "Replace triangular bullets with normal ones",
-            "meta-url": "http://meta.stackexchange.com/questions/195779/can-we-get-rid-of-the-disclosure-triangles-that-dont-disclose-anything-on-the-e"
-        },
-        "addEllipsis": {
+    "categories": {
+        "Appearance": [{
+            "name": "addAuthorNameToInboxNotifications",
+            "desc": "Add the author's name to notifications in the inbox",
+            "meta": "",
+            "match": "",
+            "exclude": ""
+        }, {
+            "name": "addEllipsis",
             "desc": "Add ellipsis to long names",
-            "meta-url": "http://meta.stackexchange.com/questions/244729/provide-an-ellipsis-after-a-long-name-instead-of-truncating-it"
-        },
-        "fixedTopbar": {
-            "desc": "Fix topbar position",
-            "meta-url": "http://meta.stackexchange.com/questions/101385/should-the-top-navigation-be-frozen-optional"
-        },
-        "displayName": {
-            "desc": "Add display name before gravatar in topbar",
-            "meta-url": "http://meta.stackexchange.com/questions/209992/my-username-instead-of-my-gravatar-in-the-top-bar"
-        },
-        "unspoil": {
-            "desc": "Add a link to the bottom of a post to reveal all spoilers in a post",
-            "meta-url": "http://meta.stackexchange.com/questions/249808/add-a-way-to-reveal-all-spoiler-blocks-in-a-post-at-once"
-        },
-        "spoilerTip": {
-            "desc": "Differentiate spoilers from empty blockquotes",
-            "meta-url": "http://meta.stackexchange.com/questions/104085/differentiate-spoilers-from-empty-block-quotes"
-        },
-        "stickyVoteButtons": {
-            "desc": "Make vote buttons next to posts sticky whilst scrolling on that post",
-            "meta-url": "http://meta.stackexchange.com/a/35047/260841"
-        },
-        "betterCSS": {
-            "desc": "Add extra CSS for voting signs and favourite button (currently only on Android SE)",
-            "meta-url": "http://meta.stackexchange.com/questions/252685/i-want-to-have-those-voting-animations-like-on-android-se-pretty-please"
-        },
-        "standOutDupeCloseMigrated": {
-            "desc": "Add highlighted tags to closed/on hold/duplicate/migrated questions on question lists",
-            "meta-url": "http://meta.stackexchange.com/questions/257021/proposal-to-make-duplicate-closed-and-migrated-in-the-title-more-obvious"
-        },
-        "colorAnswerer": {
-            "desc": "Color answerer's comments",
-            "meta-url": "http://meta.stackexchange.com/questions/19574/highlight-comments-from-answer-author-in-addition-to-question-author"
-        },
-        "highlightQuestions": {
-            "desc": "Highlight only the favourite tags for favourite questions",
-            "meta-url": "http://meta.stackexchange.com/questions/238591/should-favorite-tag-highlighting-in-question-lists-be-changed"
-        },
-        "metaNewQuestionAlert": {
-            "desc": "Add a mod diamond to the topbar to alert you of new questions on the site's child-meta",
-            "disableOnSites": "chat",
-            "meta-url": "http://meta.stackexchange.com/questions/256318/can-high-rep-users-be-allowed-to-see-meta-notifications"
-        },
-        "hideHotNetworkQuestions": {
-            "desc": "Hide the Hot Network Questions module"
-        },
-        "hideHireMe": {
-            "desc": "Hide the Looking for a Job module"
-        },
-        "hideCommunityBulletin": {
-            "desc": "Hide the Community Bulletin module"
-        },
-        "hideSearchBar": {
-            "desc": "Replace the search bar with a link to the search page"
-        },
-        "topAnswers": {
-            "desc": "Improve answer visibility by listing top answers"
-        },
-        "tabularReviewerStats": {
-            "desc": "Display reviewer stats on /review/suggested-edits in table form",
-            "meta-url": "http://meta.stackexchange.com/q/276946/260841"
-        },
-        "linkedToFrom": {
-            "desc": "Add an arrow to linked posts in the sidebar to show whether they are linked to or linked from",
-            "meta-url": "http://meta.stackexchange.com/q/276235/260841"
-        },
-        "isQuestionHot": {
-            "desc": "Add a label on questions which are hot-network questions",
-            "meta-url": "http://meta.stackexchange.com/questions/245390/let-mods-and-10k-know-when-questions-go-hot"
-        },
-        "answerTagsSearch": {
+            "meta": "http://meta.stackexchange.com/questions/244729/provide-an-ellipsis-after-a-long-name-instead-of-truncating-it",
+            "match": "",
+            "exclude": ""
+        }, {
+            "name": "alignBadgesByClass",
+            "desc": "Align badges by their class on user profile pages",
+            "meta": "http://meta.stackexchange.com/q/254607/260841",
+            "match": "*://*/users/*",
+            "exclude": ""
+        }, {
+            "name": "answerTagsSearch",
             "desc": "Show tags for the question an answer belongs to on search pages (for better context)",
-            "meta-url": "http://meta.stackexchange.com/questions/197874/include-tags-in-answers-entries-on-search-results"
-        },
-        "metaChatBlogStackExchangeButton": {
+            "meta": "http://meta.stackexchange.com/questions/197874/include-tags-in-answers-entries-on-search-results",
+            "match": "*://*.com/search*",
+            "exclude": ""
+        }, {
+            "name": "betterCSS",
+            "desc": "Add extra CSS for voting signs and favourite button (currently only on Android SE)",
+            "meta": "http://meta.stackexchange.com/questions/252685/i-want-to-have-those-voting-animations-like-on-android-se-pretty-please",
+            "match": "*://*/questions*",
+            "exclude": ""
+        }, {
+            "name": "bulletReplace",
+            "desc": "Replace triangular bullets with normal ones",
+            "meta": "http://meta.stackexchange.com/questions/195779/can-we-get-rid-of-the-disclosure-triangles-that-dont-disclose-anything-on-the-e",
+            "match": "",
+            "exclude": ""
+        }, {
+            "name": "colorAnswerer",
+            "desc": "Color answerer's comments",
+            "meta": "http://meta.stackexchange.com/questions/19574/highlight-comments-from-answer-author-in-addition-to-question-author",
+            "match": "*://*/questions*",
+            "exclude": ""
+        }, {
+            "name": "displayName",
+            "desc": "Add display name before gravatar in topbar",
+            "meta": "http://meta.stackexchange.com/questions/209992/my-username-instead-of-my-gravatar-in-the-top-bar",
+            "match": "",
+            "exclude": ""
+        }, {
+            "name": "dragBounty",
+            "desc": "Make bounty box draggable",
+            "meta": "http://meta.stackexchange.com/questions/170125/make-bounty-custom-message-dialog-box-draggable",
+            "match": "*://*/questions*",
+            "exclude": ""
+        }, {
+            "name": "fixedTopbar",
+            "desc": "Fix topbar position",
+            "meta": "http://meta.stackexchange.com/questions/101385/should-the-top-navigation-be-frozen-optional",
+            "match": "",
+            "exclude": ""
+        }, {
+            "name": "grayOutVotes",
+            "desc": "Gray out deleted vote buttons",
+            "meta": "http://meta.stackexchange.com/a/174806/260841",
+            "match": "*://*/questions*",
+            "exclude": ""
+        }, {
+            "name": "hiddenCommentsIndicator",
+            "desc": "Add a darker border underneath comments if there are some hidden after it",
+            "meta": "http://meta.stackoverflow.com/q/296582/3541881",
+            "match": "*://*/questions*",
+            "exclude": ""
+        }, {
+            "name": "hideCommunityBulletin",
+            "desc": "Hide the Community Bulletin module",
+            "meta": "",
+            "match": "",
+            "exclude": ""
+        }, {
+            "name": "hideHireMe",
+            "desc": "Hide the Looking for a Job module",
+            "meta": "",
+            "match": "",
+            "exclude": ""
+        }, {
+            "name": "hideHotNetworkQuestions",
+            "desc": "Hide the Hot Network Questions module",
+            "meta": "",
+            "match": "",
+            "exclude": ""
+        }, {
+            "name": "highlightQuestions",
+            "desc": "Change highlighting for questions with favorite tags",
+            "meta": "http://meta.stackexchange.com/questions/238591/should-favorite-tag-highlighting-in-question-lists-be-changed",
+            "match": "",
+            "exclude": ""
+        }, {
+            "name": "isQuestionHot",
+            "desc": "Add a label on questions which are hot-network questions",
+            "meta": "http://meta.stackexchange.com/questions/245390/let-mods-and-10k-know-when-questions-go-hot",
+            "match": "*://*/questions*",
+            "exclude": ""
+        }, {
+            "name": "linkedToFrom",
+            "desc": "Add an arrow to linked posts in the sidebar to show whether they are linked to or linked from",
+            "meta": "http://meta.stackexchange.com/q/276235/260841",
+            "match": "*://*/questions*",
+            "exclude": ""
+        }, {
+            "name": "markEmployees",
+            "desc": "Add the SO logo after employee names to make them stand out",
+            "meta": "http://meta.stackexchange.com/questions/246678/should-se-staff-have-a-special-character-in-their-user-name",
+            "match": "",
+            "exclude": ""
+        }, {
+            "name": "metaChatBlogStackExchangeButton",
             "desc": "Show meta, chat and blog buttons on hover of a site under the StackExchange button",
-            "meta-url": "http://meta.stackexchange.com/questions/256183/show-the-meta-chat-and-blog-in-the-top-bar-for-other-sites-on-hover"
-        },
-        "addAuthorNameToInboxNotifications": {
-            "desc": "Add the author's name to notifications in the inbox"
-        },
-        "scrollToTop": {
-            "desc": "Add Scroll To Top button"
-        }
-    },
-    "Comments": {
-        "copyCommentsLink": {
-            "desc": "Copy 'show x more comments' link to the top",
-            "meta-url": "http://meta.stackexchange.com/questions/55020/add-a-show-more-comments-button-to-the-top-of-a-list-of-comments"
-        },
-        "commentShortcuts": {
-            "desc": "Use Ctrl+I,B,K (to italicise, bolden and add code backticks) in comments",
-            "meta-url": "http://meta.stackexchange.com/questions/14756/formatting-keyboard-shortcuts-for-comments"
-        },
-        "quickCommentShortcutsMain": {
-            "desc": "Add shortcuts to add pre-defined comments to comment fields"
-        },
-        "commentReplies": {
+            "meta": "http://meta.stackexchange.com/questions/256183/show-the-meta-chat-and-blog-in-the-top-bar-for-other-sites-on-hover",
+            "match": "",
+            "exclude": ""
+        }, {
+            "name": "metaNewQuestionAlert",
+            "desc": "Add a mod diamond to the topbar to alert you of new questions on the site's child-meta",
+            "meta": "http://meta.stackexchange.com/questions/256318/can-high-rep-users-be-allowed-to-see-meta-notifications",
+            "match": "",
+            "exclude": ""
+        }, {
+            "name": "moveBounty",
+            "desc": "Move 'start bounty' to top",
+            "meta": "http://meta.stackexchange.com/questions/234095/can-we-move-start-a-bounty-to-a-more-intuitive-location",
+            "match": "*://*/questions*",
+            "exclude": ""
+        }, {
+            "name": "renameChat",
+            "desc": "Prepend 'Chat - ' to chat tabs' titles",
+            "meta": "http://meta.stackexchange.com/questions/246289/change-the-browser-tab-title-on-chat-pages-to-chat-sitename-or-chat-room-name",
+            "match": "*://chat.*.com/*",
+            "exclude": ""
+        }, {
+            "name": "scrollToTop",
+            "desc": "Add Scroll To Top button",
+            "meta": "",
+            "match": "",
+            "exclude": ""
+        }, {
+            "name": "spoilerTip",
+            "desc": "Differentiate spoilers from empty blockquotes",
+            "meta": "http://meta.stackexchange.com/questions/104085/differentiate-spoilers-from-empty-block-quotes",
+            "match": "*://*/questions*",
+            "exclude": ""
+        }, {
+            "name": "standOutDupeCloseMigrated",
+            "desc": "Add highlighted tags to closed/on hold/duplicate/migrated questions on question lists",
+            "meta": "http://meta.stackexchange.com/questions/257021/proposal-to-make-duplicate-closed-and-migrated-in-the-title-more-obvious",
+            "match": "",
+            "exclude": ""
+        }, {
+            "name": "stickyVoteButtons",
+            "desc": "Make vote buttons next to posts sticky whilst scrolling on that post",
+            "meta": "http://meta.stackexchange.com/a/35047/260841",
+            "match": "*://*/questions*",
+            "exclude": ""
+        }, {
+            "name": "tabularReviewerStats",
+            "desc": "Display reviewer stats on /review/suggested-edits in table form",
+            "meta": "http://meta.stackexchange.com/q/276946/260841",
+            "match": "*://*.com/review/suggested-edits/*",
+            "exclude": ""
+        }, {
+            "name": "topAnswers",
+            "desc": "Improve answer visibility by listing top answers",
+            "meta": "",
+            "match": "*://*/questions*",
+            "exclude": ""
+        }, {
+            "name": "unspoil",
+            "desc": "Add a link to the bottom of a post to reveal all spoilers in a post",
+            "meta": "http://meta.stackexchange.com/questions/249808/add-a-way-to-reveal-all-spoiler-blocks-in-a-post-at-once",
+            "match": "*://*/questions*",
+            "exclude": ""
+        }],
+        "Comments": [{
+            "name": "autoShowCommentImages",
+            "desc": "View linked images (to imgur) in comments inline",
+            "meta": "",
+            "match": "*://*/questions*",
+            "exclude": ""
+        }, {
+            "name": "commentReplies",
             "desc": "Add reply links to comments for quick replying (without having to type someone's username)",
-            "meta-url": "http://meta.stackexchange.com/questions/74778/add-reply-link-to-comment-that-pre-populates-comment-box-with-username"
-        },
-        "autoShowCommentImages": {
-            "desc": "View linked images (to imgur) in comments inline"
-        },
-        "showCommentScores": {
-            "desc": "Show your comment and comment replies scores in your profile tabs",
-            "meta-url": "http://meta.stackexchange.com/questions/38285/display-the-number-of-comment-upvotes-in-recent-activity-pages"
-        },
-        "confirmNavigateAway": {
+            "meta": "http://meta.stackexchange.com/questions/74778/add-reply-link-to-comment-that-pre-populates-comment-box-with-username",
+            "match": "*://*/questions*",
+            "exclude": ""
+        }, {
+            "name": "commentShortcuts",
+            "desc": "Use Ctrl+I,B,K (to italicise, bolden and add code backticks) in comments",
+            "meta": "http://meta.stackexchange.com/questions/14756/formatting-keyboard-shortcuts-for-comments",
+            "match": "*://*/questions*",
+            "exclude": ""
+        }, {
+            "name": "confirmNavigateAway",
             "desc": "Add a confirmation dialog when navigating away on pages whilst still typing a comment",
-            "meta-url": "http://meta.stackexchange.com/questions/252205/add-are-you-sure-you-want-to-navigate-away-from-this-page-when-writing-a-comm"
-        }
-    },
-    "Editing": {
-        "kbdAndBullets": {
-            "desc": "Add KBD and list buttons to editor toolbar",
-            "meta-url": "http://meta.stackexchange.com/questions/102841/key-equivalent-for-kbd-kbd"
-        },
-        "editComment": {
-            "desc": "Pre-defined edit comment options (checkboxes)",
-            "meta-url": "http://meta.stackexchange.com/questions/190461/improve-the-editing-flow-with-predefined-options-for-edit-summary"
-        },
-        "editReasonTooltip": {
-            "desc": "Add a tooltip to posts showing the latest revision's comment on 'edited [date] at [time]'",
-            "meta-url": "http://meta.stackexchange.com/questions/2315/show-reason-for-edit-without-clicking-through-to-diff"
-        },
-        "addSBSBtn": {
+            "meta": "http://meta.stackexchange.com/questions/252205/add-are-you-sure-you-want-to-navigate-away-from-this-page-when-writing-a-comm",
+            "match": "*://*/questions*",
+            "exclude": ""
+        }, {
+            "name": "copyCommentsLink",
+            "desc": "Copy 'show x more comments' link to the top",
+            "meta": "http://meta.stackexchange.com/questions/55020/add-a-show-more-comments-button-to-the-top-of-a-list-of-comments",
+            "match": "*://*/questions*",
+            "exclude": ""
+        }, {
+            "name": "showCommentScores",
+            "desc": "Show your comment and comment replies scores in your profile tabs",
+            "meta": "http://meta.stackexchange.com/questions/38285/display-the-number-of-comment-upvotes-in-recent-activity-pages",
+            "match": "*://*/users/*",
+            "exclude": ""
+        }],
+        "Editing": [{
+            "name": "addSBSBtn",
             "desc": "Add a button to the editor toolbar to start side-by-side editing",
-            "meta-url": "http://meta.stackexchange.com/questions/253112/the-discourse-layout-for-side-by-side-markdown-preview"
-        },
-        "titleEditDiff": {
+            "meta": "http://meta.stackexchange.com/questions/253112/the-discourse-layout-for-side-by-side-markdown-preview",
+            "match": "",
+            "exclude": ""
+        }, {
+            "name": "editComment",
+            "desc": "Pre-defined edit comment options (checkboxes)",
+            "meta": "http://meta.stackexchange.com/questions/190461/improve-the-editing-flow-with-predefined-options-for-edit-summary",
+            "match": "",
+            "exclude": ""
+        }, {
+            "name": "editReasonTooltip",
+            "desc": "Add a tooltip to posts showing the latest revision's comment on 'edited [date] at [time]'",
+            "meta": "http://meta.stackexchange.com/questions/2315/show-reason-for-edit-without-clicking-through-to-diff",
+            "match": "*://*/questions*",
+            "exclude": ""
+        }, {
+            "name": "enhancedEditor",
+            "desc": "Add more features to the markdown editor",
+            "meta": "",
+            "match": "*://*/questions*",
+            "exclude": ""
+        }, {
+            "name": "kbdAndBullets",
+            "desc": "Add KBD and list buttons to editor toolbar",
+            "meta": "http://meta.stackexchange.com/questions/102841/key-equivalent-for-kbd-kbd",
+            "match": "",
+            "exclude": ""
+        }, {
+            "name": "titleEditDiff",
             "desc": "Make title edits show seperately rather than merged in edit suggestions",
-            "meta-url": "http://meta.stackexchange.com/questions/135710/please-show-changed-titles-separately-in-edit-diffs"
-        },
-        "enhancedEditor": {
-            "desc": "Add more features to the markdown editor (autocorrect, find+replace, Ace editor, and more!)"
-        }
-    },
-    "Flags": {
-        "flagOutcomeTime": {
-            "desc": "Show the flag outcome time when viewing your Flag History"
-        },
-        "flagPercentages": {
+            "meta": "http://meta.stackexchange.com/questions/135710/please-show-changed-titles-separately-in-edit-diffs",
+            "match": "*://*.com/review/suggested-edits/*",
+            "exclude": ""
+        }],
+        "Flags": [{
+            "name": "flagOutcomeTime",
+            "desc": "Show the flag outcome time when viewing your Flag History",
+            "meta": "",
+            "match": "",
+            "exclude": ""
+        }, {
+            "name": "flagPercentages",
             "desc": "Show flagging percentages for each type in the Flag Summary",
-            "meta-url": "https://meta.stackoverflow.com/questions/310881/overall-percentage-of-helpful-flags"
-        }
-    },
-    "Unsorted": {
-        "shareLinksMarkdown": {
-            "desc": "Change 'share' link to format of [post-name](url)",
-            "meta-url": "http://meta.stackexchange.com/questions/126544/add-a-second-share-button-to-posts-with-comment-ready-links"
-        },
-        "parseCrossSiteLinks": {
-            "desc": "Parse titles to links cross-SE-sites",
-            "meta-url": "http://meta.stackexchange.com/questions/251183/parse-question-links-from-other-se-sites"
-        },
-        "sortByBountyAmount": {
-            "desc": "Add an option to filter bounties by their amount",
-            "meta-url": "http://meta.stackexchange.com/questions/7753/please-give-us-the-ability-to-sort-featured-tab-by-bounty-amount"
-        },
-        "alwaysShowImageUploadLinkBox": {
+            "meta": "https://meta.stackoverflow.com/questions/310881/overall-percentage-of-helpful-flags",
+            "match": "",
+            "exclude": ""
+        }],
+        "Unsorted": [{
+            "name": "alwaysShowImageUploadLinkBox",
             "desc": "Always show the 'Link from the web' box when uploading an image",
-            "meta-url": "http://meta.stackoverflow.com/q/306888/3541881"
-        },
-        "linkedPostsInline": {
-            "desc": "Display linked posts inline (with an arrow)"
-        },
-        "downvotedPostsEditAlert": {
-            "desc": "Add a notification to your inbox when a question you downvote is edited",
-            "accessToken": {
-                "clientId": "4999",
-                "key": ")2kXF9IR5OHnfGRPDahCVg(("
-            },
-            "meta-url": "http://meta.stackexchange.com/q/165962/260841"
-        },
-        "chatEasyAccess": {
+            "meta": "http://meta.stackoverflow.com/q/306888/3541881",
+            "match": "*://*/questions*",
+            "exclude": ""
+        }, {
+            "name": "chatEasyAccess",
             "desc": "Add buttons to user profiles to change user write access directly from a chat room",
-            "enableOnSites": "chat",
-            "meta-url": "http://meta.stackexchange.com/q/203480/260841"
-        }
+            "meta": "http://meta.stackexchange.com/q/203480/260841",
+            "match": "*://chat.*.com/*",
+            "exclude": ""
+        }, {
+            "name": "downvotedPostsEditAlert",
+            "desc": "Add a notification to your inbox when a question you downvote is edited",
+            "meta": "http://meta.stackexchange.com/q/165962/260841",
+            "match": "",
+            "exclude": ""
+        }, {
+            "name": "hotNetworkQuestionsFiltering",
+            "desc": "Filter the hot network questions by their attributes",
+            "meta": "",
+            "match": "",
+            "exclude": "",
+            "settings": [{
+                "id": "wordsToBlock",
+                "type": "textarea",
+                "desc": "Words to block from titles (comma-separated)"
+            }, {
+                "id": "sitesToBlock",
+                "type": "textarea",
+                "desc": "Sites to block (comma-separated match patterns)"
+            }, {
+                "id": "titlesToHideRegex",
+                "type": "textarea",
+                "desc": "Titles to hide (comma-separated regexes)"
+            }]
+        }, {
+            "name": "linkedPostsInline",
+            "desc": "Display linked posts inline (with an arrow)",
+            "meta": "",
+            "match": "*://*/questions*",
+            "exclude": ""
+        }, {
+            "name": "parseCrossSiteLinks",
+            "desc": "Parse titles to links cross-SE-sites",
+            "meta": "http://meta.stackexchange.com/questions/251183/parse-question-links-from-other-se-sites",
+            "match": "*://*/questions*",
+            "exclude": ""
+        }, {
+            "name": "quickAuthorInfo",
+            "desc": "Show when the post's author was last seen and whether they are registered in the comments section",
+            "meta": "",
+            "match": "*://*/questions*",
+            "exclude": ""
+
+        }, {
+            "name": "shareLinksMarkdown",
+            "desc": "Change 'share' link to format of [post-name](url)",
+            "meta": "http://meta.stackexchange.com/questions/126544/add-a-second-share-button-to-posts-with-comment-ready-links",
+            "match": "*://*/questions*",
+            "exclude": ""
+        }, {
+            "name": "sortByBountyAmount",
+            "desc": "Add an option to filter bounties by their amount",
+            "meta": "http://meta.stackexchange.com/questions/7753/please-give-us-the-ability-to-sort-featured-tab-by-bounty-amount",
+            "match": "",
+            "exclude": "*://*/users/*"
+        }, {
+            "name": "warnNotLoggedIn",
+            "desc": "Warn you when you are not logged in",
+            "meta": "",
+            "match": "",
+            "exclude": ""
+        }]
     }
 }

@@ -24,11 +24,10 @@
 }
 #sox-settings-dialog #search-container .fa-search {
     position: relative;
-    left: -350px;
+    left: -475px;
 }
 #sox-settings-dialog #search-container #search {
-    width: 350px;
-    border-radius: 6px;
+    width: 470px;
     text-indent: 20px;
 }
 #sox-settings-dialog-features {
@@ -44,9 +43,6 @@
     margin-right: 5px;
 }
 
-#sox-settings-dialog-access-tokens-links {
-    display: none;
-}
 #sox-settings-dialog-actions {
     height: 40px;
     padding: 0 10px;
@@ -134,24 +130,24 @@
     background: #808080;
 }
 
-/*metaNewQuestionAlert for the mod diamond */
+/*metaNewQuestionAlert for the mod diamond and dialog */
 
-#new-meta-questions-button {
+#metaNewQuestionAlertButton {
     cursor: pointer;
     width: 32px;
 }
-.new-meta-questions-diamondOn {
+.metaNewQuestionAlert-diamondOn {
     background-position: -218px -86px;
 }
-.new-meta-questions-diamondOff {
+.metaNewQuestionAlert-diamondOff {
     background-position: -138px -86px;
 }
-#new-meta-questions-dialog {
+#metaNewQuestionAlertDialog {
     top: 34px;
     left: 264px;
     width: 377px;
 }
-#new-meta-questions-dialog-list:empty::after {
+#metaNewQuestionAlertDialogList:empty::after {
     content: "No new meta questions at this time.";
 }
 
@@ -181,8 +177,6 @@
 }
 
 /*fixedTopbar */
-
-
 /*Ubuntu CSS by @UnicornsAreVeryVeryYummy - http://stackapps.com/users/33746/unicorns-are-very-very-yummy */
 
 .fixedTopbar-links {
@@ -377,31 +371,23 @@ hr.or:after {
     display: block;
 }
 
-/*downvotedPostsEditAlert - for the watch icon*/
-
-.downvotedPostsEditAlert-watchPostForEdits {
-    font-size: 20px;
-    margin-top: 5px;
-}
-
 /*chatEasyAccess - for the links (b elements)*/
 
 .chatEasyAccess b {
     cursor: pointer;
 }
-.post-tag.favorite-tag-so {
-    border-color: rgba(0, 0, 0, .3);
-    background-color: #ffefc6;
+
+/*highlightQuestions -- for the tags*/
+.sox-tagged-interesting {
+    position: relative;
 }
-.post-tag.favorite-tag-su {
-    border-color: rgba(0, 0, 0, .3);
-    background-color: #a1eaff;
-}
-.post-tag.favorite-tag-all {
-    border-color: rgba(0, 0, 0, .3);
-    background-color: #c3dafa;
-}
-.post-tag.favorite-tag-all:before, .post-tag.favorite-tag-su:before, .post-tag.favorite-tag-so:before {
-    border-color: inherit;
-    background-color: inherit;
+.sox-tagged-interesting:before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 2px;
+    height: 100%;
+    background: black;
 }
