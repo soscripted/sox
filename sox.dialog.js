@@ -9,6 +9,7 @@
                 features = options.features,
                 settings = options.settings;
 
+            console.log(version);
             var html = GM_getResourceText('dialog');
 
             var $soxSettingsDialog = $(html),
@@ -108,13 +109,21 @@
                 }
             }
 
+            console.log('here 1');
             // display sox version number in the dialog
-            $soxSettingsDialogVersion.text(version != 'unknown' ? ' v' + version.toLowerCase() : '');
+            if(version != 'unknown' && version !== null) {
+                console.log('not null');
+                $soxSettingsDialogVersion.text(' v' + version.toLowerCase());
+            } else {
+                console.log('null');
+                $soxSettingsDialogVersion.text('');
+            }
 
             // wire up event handlers
             $soxSettingsClose.on('click', function() {
                 $soxSettingsDialog.hide();
             });
+
             $soxSettingsReset.on('click', function() {
                 sox.settings.reset();
                 location.reload(); // reload page to reflect changed settings
@@ -149,6 +158,7 @@
                 location.reload(); // reload page to reflect changed settings
             });
 
+            console.log('here 2');
             $searchBox.on('keyup keydown', function() { //search box
                 if ($(this).val() != '') {
                     var t = $(this).val();
@@ -192,6 +202,7 @@
                     class: 'fa fa-cogs'
                 });
 
+            console.log('here 3');
             //open dialog on hover if another dialog is already open
             $soxSettingsButton.hover(function() { //https://github.com/soscripted/sox/issues/44, open on hover, just like the normal dropdowns
                 if ($('.topbar-icon').not('#soxSettingsButton').hasClass('topbar-icon-on')) {
@@ -232,6 +243,7 @@
                 });
             });
 
+            console.log('here 4');
             //close dialog if clicked outside it
             $(document).click(function(e) { //close agenda dialog if clicked outside it
                 var $target = $(e.target),

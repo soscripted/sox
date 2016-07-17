@@ -3,8 +3,10 @@
     var SOX_SETTINGS = 'SOXSETTINGS';
     var commonInfo = JSON.parse(GM_getResourceText('common'));
 
-    var Stack = (typeof StackExchange === "undefined" ? undefined : StackExchange);
+    var Stack = (typeof StackExchange === "undefined" ? window.eval('StackExchange') : StackExchange);
     var Chat = (typeof CHAT === "undefined" ? undefined : CHAT);
+
+    console.log(GM_info);
 
     sox.info = {
         version: (typeof GM_info !== 'undefined' ? GM_info.script.version : 'unknown'),
@@ -14,7 +16,19 @@
 
     sox.ready = function(func) {
         $(function() {
-            return Stack ? Stack.ready(func) : func();
+            console.log(3);
+            console.log(Stack);
+            if(Stack) {
+                console.log('yes');
+                console.log(Stack.ready);
+                console.log(func);
+                Stack.ready(console.log('a'));
+                Stack.ready(func);
+            } else {
+                console.log('no');
+                console.log(sox.settings);
+                func();
+            }
         });
     };
 

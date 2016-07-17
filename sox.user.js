@@ -40,11 +40,12 @@
 // @grant        GM_addStyle
 // @grant        GM_info
 // ==/UserScript==
-jQuery.noConflict();
+//jQuery.noConflict();
 (function(sox, $, undefined) {
     'use strict';
 
     function init() {
+        console.log(sox);
         if (sox.location.on('github.com/soscripted')) {
             try {
                 sox.github.init(sox.info.version, sox.info.handler);
