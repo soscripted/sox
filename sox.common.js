@@ -16,14 +16,13 @@
 
     sox.ready = function(func) {
         $(function() {
-            console.log(3);
-            console.log(Stack);
             if(Stack) {
-                console.log('yes');
-                console.log(Stack.ready);
-                console.log(func);
-                Stack.ready(console.log('a'));
-                Stack.ready(func);
+                if(Stack.ready) {
+                    Stack.ready(console.log('e'));
+                    Stack.ready(func());
+                } else {
+                    func();
+                }
             } else {
                 console.log('no');
                 console.log(sox.settings);
