@@ -6,8 +6,6 @@
     var Stack = (typeof StackExchange === "undefined" ? window.eval('StackExchange') : StackExchange);
     var Chat = (typeof CHAT === "undefined" ? undefined : CHAT);
 
-    console.log(GM_info);
-
     sox.info = {
         version: (typeof GM_info !== 'undefined' ? GM_info.script.version : 'unknown'),
         handler: (typeof GM_info !== 'undefined' ? GM_info.scriptHandler : 'unknown'),
@@ -18,14 +16,11 @@
         $(function() {
             if(Stack) {
                 if(Stack.ready) {
-                    Stack.ready(console.log('e'));
                     Stack.ready(func());
                 } else {
                     func();
                 }
             } else {
-                console.log('no');
-                console.log(sox.settings);
                 func();
             }
         });
@@ -35,7 +30,7 @@
         available: GM_getValue(SOX_SETTINGS, -1) != -1,
         load: function() {
           var settings = GM_getValue(SOX_SETTINGS);
-          return settings == undefined ? undefined : JSON.parse(settings);
+          return settings === undefined ? undefined : JSON.parse(settings);
         },
         save: function(settings) {
             GM_setValue(SOX_SETTINGS, JSON.stringify(settings));
@@ -153,14 +148,12 @@
             }
         },
         metaApiParameter: function(siteName) {
-            if (Chat || Stack && this.apiParameter(siteName)) {
+            if (Chat || this.apiParameter(siteName)) {
                 return 'meta.' + this.apiParameter(siteName);
             }
         },
         get currentApiParameter() {
-            if (Chat || Stack) {
-                return this.apiParameter(this.name);
-            }
+            return this.apiParameter(this.name);
         },
         get icon() {
             return "favicon-" + $(".current-site a:not([href*='meta']) .site-icon").attr('class').split('favicon-')[1];

@@ -414,7 +414,6 @@
                     return false;
                 }
                 if (e.which == 66 && e.ctrlKey) { //ctrl+b (bold)
-                    console.log('b');
                     $(this).surroundSelectedText('**', '**');
                     e.stopPropagation();
                     e.preventDefault();
@@ -716,12 +715,11 @@
             //DO NOT RUN ON META OR CHAT OR SITES WITHOUT A META
             if (sox.site.type != 'main' || !$('.related-site').length) return;
 
-
             var NEWQUESTIONS = 'metaNewQuestionAlert-lastQuestions',
                 DIAMONDON = 'metaNewQuestionAlert-diamondOn',
                 DIAMONDOFF = 'metaNewQuestionAlert-diamondOff',
                 favicon = sox.site.icon,
-                metaName = sox.site.metaApiSiteName,
+                metaName = 'meta.' + sox.site.currentApiParameter,
                 lastQuestions = {},
                 apiLink = 'https://api.stackexchange.com/2.2/questions?pagesize=5&order=desc&sort=activity&site=' + metaName,
                 $dialog = $('<div/>', {
