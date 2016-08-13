@@ -1594,7 +1594,7 @@ Toggle SBS?</div></li>';
                 var username = $userDetails.find('a').text();
                 answerers[userid] = username;
             });
-            var apiUrl = "https://api.stackexchange.com/users/" + Object.keys(answerers).join(';') + "?site=" + sox.site.apiSiteName;
+            var apiUrl = "https://api.stackexchange.com/users/" + Object.keys(answerers).join(';') + "?site=" + sox.site.currentApiParameter;
             $.get(apiUrl, function(data) {
                 var userDetailsFromAPI = {};
                 $.each(data.items, function() {
