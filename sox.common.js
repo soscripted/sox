@@ -66,12 +66,14 @@
             $.getJSON('https://api.stackexchange.com/2.2/' + type + '/' + id + '?order=desc&sort=' + (sortby || 'creation') + '&site=' + sitename, callback);
         },
         observe: function(elements, callback, toObserve) {
+            console.log('observe: ' + elements);
             new MutationObserver(function(mutations, observer) {
                 for (var i = 0; i < mutations.length; i++) {
                     for (var j = 0; j < mutations[i].addedNodes.length; j++) {
                         var $o = $(mutations[i].addedNodes[j]);
                         if ($o && $o.is((Array.isArray(elements) ? elements.join(',') : elements))) {
                             callback(mutations[i].addedNodes[j]);
+                            console.log('fire: ' + elements);
                         }
                     }
                 }

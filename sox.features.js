@@ -1,5 +1,5 @@
 /*jshint multistr: true */
-/*global GM_getValue, GM_setValue, waitForKeyElements, fkey*/
+/*global GM_getValue, GM_setValue, fkey*/
 (function(sox, $, undefined) {
     'use strict';
 
@@ -212,35 +212,35 @@
         kbdAndBullets: function() {
             // Description: For adding buttons to the markdown toolbar to surround selected test with KBD or convert selection into a markdown list
 
-            function addBullets() {
-                var list = '- ' + $('[id^="wmd-input"]').getSelection().text.split('\n').join('\n- ');
-                $('[id^="wmd-input"]').replaceSelectedText(list);
+            function addBullets($node) {
+                var list = '- ' + $node.getSelection().text.split('\n').join('\n- ');
+                $node.replaceSelectedText(list);
             }
 
-            function addKbd() {
-                $('[id^="wmd-input"]').surroundSelectedText("<kbd>", "</kbd>");
+            function addKbd($node) {
+                $node.surroundSelectedText("<kbd>", "</kbd>");
             }
 
             var kbdBtn = '<li class="wmd-button" title="surround selected text with <kbd> tags" style="left: 400px;"><span id="wmd-kbd-button" style="background-image: none;">kbd</span></li>';
             var listBtn = '<li class="wmd-button" title="add dashes (\"-\") before every line to make a bulvar point list" style="left: 425px;"><span id="wmd-bullet-button" style="background-image:none;">&#x25cf;</span></li>';
 
-            setTimeout(function() {
+            sox.helpers.observe('[id^="wmd-redo-button"]', function() {
                 $('[id^="wmd-redo-button"]').after(kbdBtn);
                 $('[id^="wmd-redo-button"]').after(listBtn);
                 $('#wmd-kbd-button').on('click', function() {
-                    addKbd();
+                    addKbd($(this).parents('div[id*="wmd-button-bar"]').parent().find('textarea'));
                 });
                 $('#wmd-bullet-button').on('click', function() {
-                    addBullets();
+                    addBullets($(this).parents('div[id*="wmd-button-bar"]').parent().find('textarea'));
                 });
-            }, 500);
+            });
 
             $('[id^="wmd-input"]').bind('keydown', 'alt+l', function() {
-                addBullets();
+                addBullets($(this).parents('div[id*="wmd-button-bar"]').parent().find('textarea'));
             });
 
             $('[id^="wmd-input"]').bind('keydown', 'alt+k', function() {
-                addKbd();
+                addKbd($(this).parents('div[id*="wmd-button-bar"]').parent().find('textarea'));
             });
         },
 
@@ -575,7 +575,7 @@
         showCommentScores: function() {
             // Description: For adding a button on your profile comment history pages to show your comment's scores
 
-            var sitename = sox.site.apiSitename;
+            var sitename = sox.site.currentApiParameter;
             $('.history-table td b a[href*="#comment"]').each(function() {
                 var id = $(this).attr('href').split('#')[1].split('_')[0].replace('comment', '');
                 $(this).after('<span class="showCommentScore" id="' + id + '">&nbsp;&nbsp;&nbsp;show comment score</span>');
@@ -591,20 +591,21 @@
         answerTagsSearch: function() {
             // Description: For adding tags to answers in search
 
-            var sitename = sox.site.apiSiteName,
+            var sitename = sox.site.currentApiParameter,
                 ids = [],
                 idsAndTags = {};
 
-            $.each($('div[id*="answer"]'), function() { //loop through all *answers*
+            $('div[id*="answer"]').each(function() { //loop through all *answers*
                 ids.push($(this).find('.result-link a').attr('href').split('/')[2]); //Get the IDs for the questions for all the *answers*
             });
-            $.getJSON('https://api.stackexchange.com/2.2/questions/' + ids.join(';') + '?site=' + sitename, function(json) {
+
+            $.getJSON('https://api.stackexchange.com/2.2/questions/' + ids.join(';') + '?pagesize=60&site=' + sitename, function(json) {
                 var itemsLength = json.items.length;
                 for (var i = 0; i < itemsLength; i++) {
                     idsAndTags[json.items[i].question_id] = json.items[i].tags;
                 }
 
-                $.each($('div[id*="answer"]'), function() { //loop through all *answers*
+                $('div[id*="answer"]').each(function() { //loop through all *answers*
                     var id = $(this).find('.result-link a').attr('href').split('/')[2]; //get their ID
                     var $that = $(this);
                     for (var x = 0; x < idsAndTags[id].length; x++) { //Add the appropiate tags for the appropiate answer
@@ -968,6 +969,7 @@
             }
 
             function SBS(jNode) {
+                jNode = $(jNode);
                 var itemid = jNode[0].id.replace(/^\D+/g, '');
                 var toAppend = (itemid.length > 0 ? '-' + itemid : ''); //helps select tags specific to the question/answer being
                 // edited (or new question/answer being written)
@@ -992,32 +994,28 @@ Toggle SBS?</div></li>';
                 }, 1000);
             }
 
-            //Adding script dynamically because @requiring causes the page load to hang -- don't know how to fix! :(
-            var script = document.createElement('script');
-            script.src = 'https://cdn.rawgit.com/BrockA/2625891/raw/9c97aa67ff9c5d56be34a55ad6c18a314e5eb548/waitForKeyElements.js';
-            document.getElementsByTagName('head')[0].appendChild(script);
             //This is a heavily modified version by szego <https://github.com/szego/SE-Answers_scripts/blob/master/side-by-side-editing.user.js>:
-            setTimeout(function() {
-                if (window.location.pathname.indexOf('questions/ask') < 0) { //not posting a new question
-                    //get question and answer IDs for keeping track of the event listeners
-                    var anchorList = $('#answers > a'), //answers have anchor tags before them of the form <a name="#">, where # is the answer ID
-                        numAnchors = anchorList.length,
-                        itemIDs = [];
+            if (window.location.pathname.indexOf('questions/ask') < 0) { //not posting a new question
+                //get question and answer IDs for keeping track of the event listeners
+                var anchorList = $('#answers > a'), //answers have anchor tags before them of the form <a name="#">, where # is the answer ID
+                    numAnchors = anchorList.length,
+                    itemIDs = [];
 
-                    for (var i = 1; i <= numAnchors - 2; i++) { //the first and last anchors aren't answers
-                        itemIDs.push(anchorList[i].name);
-                    }
-                    itemIDs.push($('.question').data('questionid'));
-
-                    //event listeners for adding the sbs toggle buttons for editing existing questions or answers
-                    for (i = 0; i <= numAnchors - 2; i++) {
-                        waitForKeyElements('#wmd-redo-button-' + itemIDs[i], SBS);
-                    }
+                for (var i = 1; i <= numAnchors - 2; i++) { //the first and last anchors aren't answers
+                    itemIDs.push(anchorList[i].name);
                 }
+                itemIDs.push($('.question').data('questionid'));
 
-                //event listener for adding the sbs toggle button for posting new questions or answers
-                waitForKeyElements('#wmd-redo-button', SBS);
-            }, 2000);
+                //event listeners for adding the sbs toggle buttons for editing existing questions or answers
+                for (i = 0; i <= numAnchors - 2; i++) {
+                    //waitForKeyElements('#wmd-redo-button-' + itemIDs[i], SBS);
+                    sox.helpers.observe('#wmd-redo-button-' + itemIDs[i], SBS);
+                }
+            }
+
+            //event listener for adding the sbs toggle button for posting new questions or answers
+            //waitForKeyElements('#wmd-redo-button', SBS);
+            sox.helpers.observe('#wmd-redo-button', SBS);
         },
 
         alwaysShowImageUploadLinkBox: function() {
@@ -1294,7 +1292,7 @@ Toggle SBS?</div></li>';
                 unread = JSON.parse(GM_getValue("downvotedPostsEditAlert-unreadItems", "{}")),
                 lastCheckedDate = GM_getValue("downvotedPostsEditAlert-lastCheckedDate", 0),
                 key = ")2kXF9IR5OHnfGRPDahCVg((",
-                access_token = sox.helpers.accessToken;
+                access_token = sox.settings.accessToken;
 
             if (access_token) {
                 $('.post-menu').each(function() {
@@ -1309,7 +1307,7 @@ Toggle SBS?</div></li>';
                     } else if ($parent.attr('data-answerid')) {
                         id = $parent.attr('data-answerid');
                     }
-                    var stringToAdd = sox.site.apiSiteName + '-' + id;
+                    var stringToAdd = sox.site.currentApiParameter + '-' + id;
                     var index = posts.indexOf(stringToAdd);
                     if (index == -1) {
                         $that.css('color', 'green');
