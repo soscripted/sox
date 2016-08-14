@@ -1,20 +1,17 @@
-**Installed Version: 1.X.X  |  Environment: Chrome/Tampermonkey**
+### Installed Version: 1.X.X  Environment: Chrome/Tampermonkey 
 
-**Expected Behavior**
->How do you expect the feature to work?
+...
 
+###  Expected Behavior
 
+...
 
-**Actual Behavior**
->How is the feature currently behaving?
+### Actual Behavior
 
+...
 
+### SOX Errors logged to the browser console (if available)
 
-**Error Logs**
->SOX errors are logged to the browser console, if possible, please post those here.
+...
 
-
-
-**Steps to reproduce**
->What steps did you take to reproduce the issue?
-
+### Steps to reproduce
