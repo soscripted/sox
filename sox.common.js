@@ -43,6 +43,7 @@
             }
         },
         get accessToken() {
+            console.log('SOX Access Token: ' + GM_getValue('SOX-accessToken', false));
             return GM_getValue('SOX-accessToken', false);
         },
         writeToConsole: function() {

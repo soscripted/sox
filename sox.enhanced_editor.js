@@ -131,9 +131,9 @@
                 $(s).prev().after("<div class='enhancedEditor-toolbar findReplace'><input id='find' type='text' placeholder='Find'><input id='modifier' type='text' placeholder='Modifier'><input id='replace' type='text' placeholder='Replace with'><input id='replaceGo' type='button' value='Go'></div>");
             }
             $(document).on('click', '.findReplace #replaceGo', function() {
-                regex = new RegExp($('.findReplace #find').val(), $('.findReplace #modifier').val());
-                oldval = $(s).val();
-                newval = oldval.replace(regex, $('.findReplace #replace').val());
+                var regex = new RegExp($('.findReplace #find').val(), $('.findReplace #modifier').val());
+                var oldval = $(s).val();
+                var newval = oldval.replace(regex, $('.findReplace #replace').val());
                 $(s).val(newval);
                 sox.enhancedEditor.refreshPreview();
             });
@@ -241,7 +241,10 @@
         },
 
         refreshPreview: function() {
-            SOHelper.StackExchange().MarkdownEditor.refreshAllPreviews();
+            var Stack = (typeof StackExchange === "undefined" ? window.eval('StackExchange') : StackExchange);
+            if(Stack.MarkdownEditor) {
+                Stack.MarkdownEditor.refreshAllPreviews();
+            }
         }
     };
 })(window.sox = window.sox || {}, jQuery);

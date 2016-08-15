@@ -880,6 +880,9 @@
 
             function getComment(url, $that) {
                 $.get(url, function(responseText, textStatus, XMLHttpRequest) {
+                    console.log('SOX editReasonTooltip URL: ' + url);
+                    console.log($that);
+                    console.log('SOX editReasonTooltip text: ' + $(XMLHttpRequest.responseText).find('.revision-comment:eq(0)')[0].innerHTML);
                     $that.find('.sox-revision-comment').attr('title', $(XMLHttpRequest.responseText).find('.revision-comment:eq(0)')[0].innerHTML);
                 });
             }
@@ -1050,7 +1053,7 @@ Toggle SBS?</div></li>';
                         apiurl = 'https://api.stackexchange.com/2.2/suggested-edits/' + id + '?order=desc&sort=creation&site=' + sitename;
                         break;
                     default:
-                        console.log('sox does not currently support get author information for type' + type);
+                        console.log('sox does not currently support get author information for type: ' + type);
                         return;
                 }
 
@@ -1300,7 +1303,7 @@ Toggle SBS?</div></li>';
                 });
                 $('.downvotedPostsEditAlert-watchPostForEdits').click(function() {
                     var $that = $(this);
-                    var $parent = $(this).closest('table').parent();
+                    var $parent = $(this).closest('table').parents('.question, .answer');
                     var id;
                     if ($parent.attr('data-questionid')) {
                         id = $parent.attr('data-questionid');
@@ -1320,7 +1323,12 @@ Toggle SBS?</div></li>';
                     }
                 });
 
+                console.log(posts);
+
                 for (var i = 0; i < posts.length; i++) {
+                    if($('div[data-questionid="'+posts[i].split('-')[1]+'"]').length || $('div[data-answerid="'+posts[i].split('-')[1]+'"]').length) {
+                        $('div[data-questionid="'+posts[i].split('-')[1]+'"], div[data-answerid="'+posts[i].split('-')[1]+'"]').find('.downvotedPostsEditAlert-watchPostForEdits').css('color', 'green');
+                    }
                     var sitename = posts[i].split('-')[0];
                     var id = posts[i].split('-')[1];
                     var url = "https://api.stackexchange.com/2.2/posts/" + id + "?order=desc&sort=activity&site=" + sitename + "&filter=!9YdnSEBb8&key=" + key + "&access_token=" + access_token;
