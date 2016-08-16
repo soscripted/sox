@@ -10,7 +10,7 @@
                 });
 
                 $('.edit-post').click(function() {
-                    $that = $(this);
+                    var $that = $(this);
                     setTimeout(function() {
                         sox.enhancedEditor.init($that.parents('table').find('.inline-editor textarea.processed').attr('id'));
                     }, 5000);
@@ -83,7 +83,7 @@
                     $('#DDG-credit a').attr('href', 'http://google.com');
                     $('#enhancedEditor-insertLinkDialog').show(500);
                     setTimeout(function () {
-                        query = $(s).getSelection();
+                        var query = $(s).getSelection();
 
                         $.getJSON("http://api.duckduckgo.com/?q=" + query.text + "&format=json&t=stackExchangeEditorPro&callback=?", function (json) {
                             $('#DDG-header').append("<a href='" + json.AbstractURL + "'>" + json.Heading + "</a>");

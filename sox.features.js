@@ -1294,7 +1294,7 @@ Toggle SBS?</div></li>';
             var posts = JSON.parse(GM_getValue("downvotedPostsEditAlert", "[]")),
                 unread = JSON.parse(GM_getValue("downvotedPostsEditAlert-unreadItems", "{}")),
                 lastCheckedDate = GM_getValue("downvotedPostsEditAlert-lastCheckedDate", 0),
-                key = ")2kXF9IR5OHnfGRPDahCVg((",
+                key = sox.info.apikey,
                 access_token = sox.settings.accessToken;
 
             if (access_token) {
@@ -1602,6 +1602,7 @@ Toggle SBS?</div></li>';
             });
             var apiUrl = "https://api.stackexchange.com/users/" + Object.keys(answerers).join(';') + "?site=" + sox.site.currentApiParameter;
             $.get(apiUrl, function(data) {
+                console.log(data);
                 var userDetailsFromAPI = {};
                 $.each(data.items, function() {
                     var cur = $(this)[0];
@@ -1610,13 +1611,17 @@ Toggle SBS?</div></li>';
                         'creation': new Date(cur.creation_date * 1000).toUTCString(),
                         'type': cur.user_type
                     };
+                    console.log(userDetailsFromAPI);
                 });
-                $('.question, .answer').each(function() {
-                    var id = $(this).find('.post-signature .user-details a').attr('href').split('/')[2];
-                    if (userDetailsFromAPI[id]) {
-                        $(this).find('.comments tbody:eq(0)').prepend("<tr class='comment'><td class='comment-actions'></td><td class='comment-text'><div style='display: block;' class='comment-body'>last seen: " + userDetailsFromAPI[id].last_seen + " | type: " + userDetailsFromAPI[id].type + "</div></td></tr>");
-                    }
-                });
+                setTimeout(function() {
+                    $('.question, .answer').each(function() {
+                        var id = $(this).find('.post-signature .user-details a').attr('href').split('/')[2];
+                        if (userDetailsFromAPI[id]) {
+                            console.log(userDetailsFromAPI[id]);
+                            $(this).find('.comments tbody:eq(0)').prepend("<tr class='comment'><td class='comment-actions'></td><td class='comment-text'><div style='display: block;' class='comment-body'>last seen: " + userDetailsFromAPI[id].last_seen + " | type: " + userDetailsFromAPI[id].type + "</div></td></tr>");
+                        }
+                    });
+                }, 500);
             });
         },
 
