@@ -1033,46 +1033,48 @@ Toggle SBS?</div></li>';
             // Description: To add the author's name to inbox notifications
 
             function getAuthorName($node) {
-                var type = $node.find('.item-header .item-type').text(),
-                    sitename = $node.find('a').eq(0).attr('href').split('com/')[0].replace('http://', '') + 'com',
-                    link = $node.find('a').eq(0).attr('href'),
-                    apiurl,
-                    id;
+                if($node) {
+                    var type = $node.find('.item-header .item-type').text(),
+                        sitename = $node.find('a').eq(0).attr('href').split('com/')[0].replace('http://', '') + 'com',
+                        link = $node.find('a').eq(0).attr('href'),
+                        apiurl,
+                        id;
 
-                switch (type) {
-                    case 'comment':
-                        id = link.split('/')[5].split('?')[0];
-                        apiurl = 'https://api.stackexchange.com/2.2/comments/' + id + '?order=desc&sort=creation&site=' + sitename;
-                        break;
-                    case 'answer':
-                        id = link.split('/')[4].split('?')[0];
-                        apiurl = 'https://api.stackexchange.com/2.2/answers/' + id + '?order=desc&sort=creation&site=' + sitename;
-                        break;
-                    case 'edit suggested':
-                        id = link.split('/')[4];
-                        apiurl = 'https://api.stackexchange.com/2.2/suggested-edits/' + id + '?order=desc&sort=creation&site=' + sitename;
-                        break;
-                    default:
-                        console.log('sox does not currently support get author information for type: ' + type);
-                        return;
+                    switch (type) {
+                        case 'comment':
+                            id = link.split('/')[5].split('?')[0];
+                            apiurl = 'https://api.stackexchange.com/2.2/comments/' + id + '?order=desc&sort=creation&site=' + sitename;
+                            break;
+                        case 'answer':
+                            id = link.split('/')[4].split('?')[0];
+                            apiurl = 'https://api.stackexchange.com/2.2/answers/' + id + '?order=desc&sort=creation&site=' + sitename;
+                            break;
+                        case 'edit suggested':
+                            id = link.split('/')[4];
+                            apiurl = 'https://api.stackexchange.com/2.2/suggested-edits/' + id + '?order=desc&sort=creation&site=' + sitename;
+                            break;
+                        default:
+                            console.log('SOX does not currently support get author information for type: ' + type);
+                            return;
+                    }
+
+                    $.getJSON(apiurl, function(json) {
+                        var author = json.items[0].owner.display_name,
+                            $author = $('<span/>', {
+                                class: 'author',
+                                style: 'padding-left: 5px;',
+                                text: author
+                            });
+                        console.log(author);
+
+                        var $header = $node.find('.item-header'),
+                            $type = $header.find('.item-type').clone(),
+                            $creation = $header.find('.item-creation').clone();
+
+                        //fix conflict with soup fix mse207526 - https://github.com/vyznev/soup/blob/master/SOUP.user.js#L489
+                        $header.empty().append($type).append($author).append($creation);
+                    });
                 }
-
-                $.getJSON(apiurl, function(json) {
-                    var author = json.items[0].owner.display_name,
-                        $author = $('<span/>', {
-                            class: 'author',
-                            style: 'padding-left: 5px;',
-                            text: author
-                        });
-                    console.log(author);
-
-                    var $header = $node.find('.item-header'),
-                        $type = $header.find('.item-type').clone(),
-                        $creation = $header.find('.item-creation').clone();
-
-                    //fix conflict with soup fix mse207526 - https://github.com/vyznev/soup/blob/master/SOUP.user.js#L489
-                    $header.empty().append($type).append($author).append($creation);
-                });
             }
 
             sox.helpers.observe('.inbox-dialog', function(node) {
