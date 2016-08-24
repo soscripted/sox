@@ -1598,8 +1598,8 @@ Toggle SBS?</div></li>';
             var answerers = {};
             $('.question, .answer').each(function() {
                 var $userDetails = $(this).find('.post-signature .user-details');
-                var userid = $userDetails.find('a').attr('href').split('/')[2];
-                var username = $userDetails.find('a').text();
+                var userid = $userDetails.find('a').last().attr('href').split('/')[2];
+                var username = $userDetails.find('a').last().text();
                 answerers[userid] = username;
             });
             var apiUrl = "https://api.stackexchange.com/users/" + Object.keys(answerers).join(';') + "?site=" + sox.site.currentApiParameter;
@@ -1613,13 +1613,12 @@ Toggle SBS?</div></li>';
                         'creation': new Date(cur.creation_date * 1000).toUTCString(),
                         'type': cur.user_type
                     };
-                    console.log(userDetailsFromAPI);
                 });
                 setTimeout(function() {
                     $('.question, .answer').each(function() {
-                        var id = $(this).find('.post-signature .user-details a').attr('href').split('/')[2];
+                        var id = $(this).find('.post-signature .user-details a').last().attr('href').split('/')[2];
                         if (userDetailsFromAPI[id]) {
-                            console.log(userDetailsFromAPI[id]);
+                            $(this).find('.comments').removeClass('dno');
                             $(this).find('.comments tbody:eq(0)').prepend("<tr class='comment'><td class='comment-actions'></td><td class='comment-text'><div style='display: block;' class='comment-body'>last seen: " + userDetailsFromAPI[id].last_seen + " | type: " + userDetailsFromAPI[id].type + "</div></td></tr>");
                         }
                     });
