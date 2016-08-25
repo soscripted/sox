@@ -43,7 +43,7 @@
             }
         },
         get accessToken() {
-            console.log('SOX Access Token: ' + GM_getValue('SOX-accessToken', false));
+            console.log('SOX Access Token: ' + (GM_getValue('SOX-accessToken', false) === false ? 'NOT SET' : 'SET'));
             return GM_getValue('SOX-accessToken', false);
         },
         writeToConsole: function() {
@@ -64,7 +64,15 @@
             }
         },
         getFromAPI: function(type, id, sitename, callback, sortby) {
-            $.getJSON('https://api.stackexchange.com/2.2/' + type + '/' + id + '?order=desc&sort=' + (sortby || 'creation') + '&site=' + sitename, callback);
+            $.ajax({
+                method: 'get',
+                url: 'https://api.stackexchange.com/2.2/' + type + '/' + id + '?order=desc&sort=' + (sortby || 'creation') + '&site=' + sitename,
+                success: callback,
+                error: function(a, b, c) {
+                    console.log('SOX Error: ' + b + ' ' + c);
+                }
+            });
+            //$.getJSON('https://api.stackexchange.com/2.2/' + type + '/' + id + '?order=desc&sort=' + (sortby || 'creation') + '&site=' + sitename, callback);
         },
         observe: function(elements, callback, toObserve) {
             console.log('observe: ' + elements);

@@ -599,7 +599,8 @@
                 ids.push($(this).find('.result-link a').attr('href').split('/')[2]); //Get the IDs for the questions for all the *answers*
             });
 
-            $.getJSON('https://api.stackexchange.com/2.2/questions/' + ids.join(';') + '?pagesize=60&site=' + sitename, function(json) {
+            sox.helpers.getFromAPI('questions', ids.join(';'), sitename, function(json) {
+            //$.getJSON('https://api.stackexchange.com/2.2/questions/' + ids.join(';') + '?pagesize=60&site=' + sitename, function(json) {
                 var itemsLength = json.items.length;
                 for (var i = 0; i < itemsLength; i++) {
                     idsAndTags[json.items[i].question_id] = json.items[i].tags;
@@ -619,7 +620,7 @@
                         }
                     });
                 });
-            });
+            }, 'creation&pagesize=60');
         },
 
         stickyVoteButtons: function() {
