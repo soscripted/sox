@@ -718,7 +718,7 @@
             // Description: For adding a fake mod diamond that notifies you if there has been a new post posted on the current site's meta
 
             //DO NOT RUN ON META OR CHAT OR SITES WITHOUT A META
-            if (sox.site.type != 'main' || !$('.related-site').length) return;
+            if (sox.site.type != 'main' || sox.site.type != 'beta' || !$('.related-site').length) return;
 
             var NEWQUESTIONS = 'metaNewQuestionAlert-lastQuestions',
                 DIAMONDON = 'metaNewQuestionAlert-diamondOn',
@@ -1609,13 +1609,13 @@ Toggle SBS?</div></li>';
 
             var answerers = {};
             $('.question, .answer').each(function() {
-                var $userDetails = $(this).find('.post-signature .user-details');
-                if($userDetails.length) {
-                    var userid = $userDetails.find('a').last().attr('href').split('/')[2];
-                    var username = $userDetails.find('a').last().text();
-                    answerers[userid] = username;
+                var $userDetailsAnchor = $(this).find('.post-signature .user-details a').last();
+                if($userDetailsAnchor.length) {
+                    var userid = ($userDetailsAnchor.attr('href') ? $userDetailsAnchor.attr('href').split('/')[2] : 0);
+                    var username = $userDetailsAnchor.text();
+                    if(userid !== 0) answerers[userid] = username;
                 } else {
-                    sox.helpers.notify('Could not find user details div for:');
+                    sox.helpers.notify('Could not find user user link for:');
                     console.log($(this));
                 }
             });
