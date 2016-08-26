@@ -65,7 +65,7 @@
         },
         getFromAPI: function(type, id, sitename, callback, sortby) {
             $.ajax({
-                method: 'get',
+                type: 'get',
                 url: 'https://api.stackexchange.com/2.2/' + type + '/' + id + '?order=desc&sort=' + (sortby || 'creation') + '&site=' + sitename,
                 success: callback,
                 error: function(a, b, c) {

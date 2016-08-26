@@ -539,21 +539,36 @@
         },
 
         isQuestionHot: function() {
-            // Description: For adding some text to questions that are in the 30 most recent hot network questions
+            // Description: For adding some text to questions that are in the hot network questions list
 
             function addHotText() {
-                $('#feed').html('<p>In the top 30 most recent hot network questions!</p>');
-                $('#question-header').prepend('<div title="this question is in the top 30 most recent hot network questions!" class="sox-hot">HOT<div>');
+                if(!$('.sox-hot').length) {
+                    $('#feed').html('<p>One of the 100 hot network questions!</p>');
+                    $('#question-header').prepend('<div title="this question is a hot network question!" class="sox-hot">HOT<div>');
+                }
             }
             $('#qinfo').after('<div id="feed"></div>');
 
-            $.ajax({
+            /*$.ajax({
                 type: 'get',
                 url: 'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20feed%20where%20url%3D"http%3A%2F%2Fstackexchange.com%2Ffeeds%2Fquestions"&format=json',
                 success: function(d) {
                     var results = d.query.results.entry;
                     $.each(results, function(i, result) {
                         if (document.URL == result.link.href) {
+                            addHotText();
+                        }
+                    });
+                }
+            });*/
+            $.ajax({
+                type: 'get',
+                url: 'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20json%20where%20url%3D"http%3A%2F%2Fstackexchange.com%2Fhot-questions-for-mobile"&format=json',
+                success: function(d) {
+                    var results = d.query.results.json.json;
+                    $.each(results, function(i, o) {
+                        console.log(o.site + '/questions/' + o.question_id);
+                        if(document.URL.indexOf(o.site + '/questions/' + o.question_id) > -1) {
                             addHotText();
                         }
                     });
