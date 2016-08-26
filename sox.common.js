@@ -14,8 +14,8 @@
 
     sox.ready = function(func) {
         $(function() {
-            if(Stack) {
-                if(Stack.ready) {
+            if (Stack) {
+                if (Stack.ready) {
                     Stack.ready(func());
                 } else {
                     func();
@@ -29,8 +29,8 @@
     sox.settings = {
         available: GM_getValue(SOX_SETTINGS, -1) != -1,
         load: function() {
-          var settings = GM_getValue(SOX_SETTINGS);
-          return settings === undefined ? undefined : JSON.parse(settings);
+            var settings = GM_getValue(SOX_SETTINGS);
+            return settings === undefined ? undefined : JSON.parse(settings);
         },
         save: function(settings) {
             GM_setValue(SOX_SETTINGS, JSON.stringify(settings));
@@ -92,31 +92,31 @@
             });
         },
         newElement: function(type, elementDetails) {
-          var extras = {},
-              allowed = ['text', 'checkbox', 'radio', 'textarea', 'span'];
-          if(allowed.indexOf(type) != -1) {
-              if(type == 'text') {
-                  type = 'input';
-                  extras['type'] = 'input';
-              } else if (type == 'checkbox') {
-                  type = 'input';
-                  extras['type'] = 'checkbox';
-              } else if (type == 'radio') {
-                  type = 'input';
-                  extras['type'] = 'radio';
-              } else if (type == 'textarea') {
-                  if(!elementDetails.text) {
-                      elementDetails.text = elementDetails.value;
-                  }
-              }
+            var extras = {},
+                allowed = ['text', 'checkbox', 'radio', 'textarea', 'span'];
+            if (allowed.indexOf(type) != -1) {
+                if (type == 'text') {
+                    type = 'input';
+                    extras['type'] = 'input';
+                } else if (type == 'checkbox') {
+                    type = 'input';
+                    extras['type'] = 'checkbox';
+                } else if (type == 'radio') {
+                    type = 'input';
+                    extras['type'] = 'radio';
+                } else if (type == 'textarea') {
+                    if (!elementDetails.text) {
+                        elementDetails.text = elementDetails.value;
+                    }
+                }
 
-              $.each(elementDetails, function(k, v) {
-                extras[k] = v;
-              });
-              return $('<' + type + '/>', extras);
-          } else {
-              return false;
-          }
+                $.each(elementDetails, function(k, v) {
+                    extras[k] = v;
+                });
+                return $('<' + type + '/>', extras);
+            } else {
+                return false;
+            }
         }
     };
 
