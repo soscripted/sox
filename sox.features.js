@@ -1,5 +1,6 @@
-/*jshint multistr: true */
+/*jshint multistr: true, loopfunc: true*/
 /*global GM_getValue, GM_setValue, fkey*/
+
 (function(sox, $, undefined) {
     'use strict';
 
@@ -478,16 +479,16 @@
                 var anchor = $(this),
                     href = $(this).attr('href');
                 if (sites.indexOf(href.split('/')[2].split('.')[0]) > -1) { //if the link is to an SE site (not, for example, to google), do the necessary stuff
-                  if(href.indexOf('/questions/') > -1) { //if the link is to a question
-                    if ($(this).text() == href) { //if there isn't text on it (ie. bare url)
-                        var sitename = href.split('/')[2].split('.')[0],
-                            id = href.split('/')[4];
+                    if (href.indexOf('/questions/') > -1) { //if the link is to a question
+                        if ($(this).text() == href) { //if there isn't text on it (ie. bare url)
+                            var sitename = href.split('/')[2].split('.')[0],
+                                id = href.split('/')[4];
 
-                        sox.helpers.getFromAPI('questions', id, sitename, function(json) {
-                            anchor.html(json.items[0].title); //Get the title and add it in
-                        }, 'activity');
+                            sox.helpers.getFromAPI('questions', id, sitename, function(json) {
+                                anchor.html(json.items[0].title); //Get the title and add it in
+                            }, 'activity');
+                        }
                     }
-                  }
                 }
             });
         },
@@ -542,33 +543,20 @@
             // Description: For adding some text to questions that are in the hot network questions list
 
             function addHotText() {
-                if(!$('.sox-hot').length) {
+                if (!$('.sox-hot').length) {
                     $('#feed').html('<p>One of the 100 hot network questions!</p>');
                     $('#question-header').prepend('<div title="this question is a hot network question!" class="sox-hot">HOT<div>');
                 }
             }
             $('#qinfo').after('<div id="feed"></div>');
 
-            /*$.ajax({
-                type: 'get',
-                url: 'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20feed%20where%20url%3D"http%3A%2F%2Fstackexchange.com%2Ffeeds%2Fquestions"&format=json',
-                success: function(d) {
-                    var results = d.query.results.entry;
-                    $.each(results, function(i, result) {
-                        if (document.URL == result.link.href) {
-                            addHotText();
-                        }
-                    });
-                }
-            });*/
             $.ajax({
                 type: 'get',
                 url: 'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20json%20where%20url%3D"http%3A%2F%2Fstackexchange.com%2Fhot-questions-for-mobile"&format=json',
                 success: function(d) {
                     var results = d.query.results.json.json;
                     $.each(results, function(i, o) {
-                        console.log(o.site + '/questions/' + o.question_id);
-                        if(document.URL.indexOf(o.site + '/questions/' + o.question_id) > -1) {
+                        if (document.URL.indexOf(o.site + '/questions/' + o.question_id) > -1) {
                             addHotText();
                         }
                     });
@@ -615,7 +603,7 @@
             });
 
             sox.helpers.getFromAPI('questions', ids.join(';'), sitename, function(json) {
-            //$.getJSON('https://api.stackexchange.com/2.2/questions/' + ids.join(';') + '?pagesize=60&site=' + sitename, function(json) {
+                //$.getJSON('https://api.stackexchange.com/2.2/questions/' + ids.join(';') + '?pagesize=60&site=' + sitename, function(json) {
                 var itemsLength = json.items.length;
                 for (var i = 0; i < itemsLength; i++) {
                     idsAndTags[json.items[i].question_id] = json.items[i].tags;
@@ -1049,7 +1037,7 @@ Toggle SBS?</div></li>';
             // Description: To add the author's name to inbox notifications
 
             function getAuthorName($node) {
-                if($node) {
+                if ($node) {
                     var type = $node.find('.item-header .item-type').text(),
                         sitename = $node.find('a').eq(0).attr('href').split('com/')[0].replace('http://', '') + 'com',
                         link = $node.find('a').eq(0).attr('href'),
@@ -1341,18 +1329,25 @@ Toggle SBS?</div></li>';
                     }
                 });
 
+                console.log('DOWNVOTE NOTIFICATION DEBUGGING');
                 console.log(posts);
+                console.log('Last checked date: ' + lastCheckedDate);
+                console.log('Current date: ' + new Date());
 
                 for (var i = 0; i < posts.length; i++) {
-                    if($('div[data-questionid="'+posts[i].split('-')[1]+'"]').length || $('div[data-answerid="'+posts[i].split('-')[1]+'"]').length) {
-                        $('div[data-questionid="'+posts[i].split('-')[1]+'"], div[data-answerid="'+posts[i].split('-')[1]+'"]').find('.downvotedPostsEditAlert-watchPostForEdits').css('color', 'green');
-                    }
                     var sitename = posts[i].split('-')[0];
                     var id = posts[i].split('-')[1];
+
+                    if ($('div[data-questionid="' + id + '"]').length || $('div[data-answerid="' + id + '"]').length) {
+                        $('div[data-questionid="' + id + '"], div[data-answerid="' + id + '"]').find('.downvotedPostsEditAlert-watchPostForEdits').css('color', 'green');
+                    }
+
                     var url = "https://api.stackexchange.com/2.2/posts/" + id + "?order=desc&sort=activity&site=" + sitename + "&filter=!9YdnSEBb8&key=" + key + "&access_token=" + access_token;
-                    if (new Date().getDate() != new Date(lastCheckedDate).getDate()) {
+
+                    if (new Date().getDate() > new Date(lastCheckedDate).getDate()) {
                         $.getJSON(url, function(json) {
                             if (json.items[0].last_edit_date > ((lastCheckedDate / 1000) - 86400)) {
+                                console.log('CHECKING FOR UPDATES');
                                 unread[sitename + '-' + json.items[0].post_id] = [json.items[0].link, json.items[0].title];
                                 GM_setValue('downvotedPostsEditAlert-unreadItems', JSON.stringify(unread));
                             }
@@ -1360,6 +1355,7 @@ Toggle SBS?</div></li>';
                             GM_setValue('downvotedPostsEditAlert-lastCheckedDate', lastCheckedDate);
                         });
                     }
+
                     $.each(unread, function(siteAndId, details) {
                         addNotification(details[0], details[1]);
                     });
@@ -1680,10 +1676,11 @@ Toggle SBS?</div></li>';
             // Description: Filter hot network questions in the sidebar based on their attributes such as title, site, etc..
 
             $('#hot-network-questions li a').each(function() {
+                var i;
                 if (settings.wordsToBlock && settings.wordsToBlock !== '') {
                     var words = $(this).text().split(' '),
                         wordsToBlock = settings.wordsToBlock.split(',');
-                    for (var i = 0; i < wordsToBlock.length; i++) {
+                    for (i = 0; i < wordsToBlock.length; i++) {
                         if (words.indexOf(wordsToBlock[i]) != -1) {
                             $(this).parent().hide();
                         }
@@ -1692,7 +1689,7 @@ Toggle SBS?</div></li>';
                 if (settings.sitesToBlock && settings.sitesToBlock !== '') {
                     var site = $(this).attr('href'),
                         sitesToBlock = settings.sitesToBlock.split(',');
-                    for (var i = 0; i < sitesToBlock.length; i++) {
+                    for (i = 0; i < sitesToBlock.length; i++) {
                         if (sox.location.match(sitesToBlock[i], site)) {
                             $(this).parent().hide();
                         }
@@ -1701,7 +1698,7 @@ Toggle SBS?</div></li>';
                 if (settings.titlesToHideRegex && settings.titlesToHideRegex !== '') {
                     var title = $(this).text(),
                         titlesToHide = settings.titlesToHideRegex.split(',');
-                    for (var i = 0; i < titlesToHide.length; i++) {
+                    for (i = 0; i < titlesToHide.length; i++) {
                         if (title.match(new RegExp(titlesToHide))) {
                             $(this).parent().hide();
                         }
@@ -1734,9 +1731,10 @@ Toggle SBS?</div></li>';
                 style: 'position: fixed; right: 0; bottom: 50px; background-color: rgba(200, 200, 200, 1); width: 200px; height: 35px; text-align: center; padding: 3px; color: red;',
                 html: 'You are not logged in. You should <a href="/users/login">log in</a> to continue enjoying SE.'
             });
+
             function checkAndAddReminder() {
-                if(!sox.user.loggedIn) {
-                    if(!$('#loggedInReminder').length) $('body').append(div);
+                if (!sox.user.loggedIn) {
+                    if (!$('#loggedInReminder').length) $('body').append(div);
                 } else {
                     $('#loggedInReminder').remove();
                 }
