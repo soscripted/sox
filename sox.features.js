@@ -1610,9 +1610,14 @@ Toggle SBS?</div></li>';
             var answerers = {};
             $('.question, .answer').each(function() {
                 var $userDetails = $(this).find('.post-signature .user-details');
-                var userid = $userDetails.find('a').last().attr('href').split('/')[2];
-                var username = $userDetails.find('a').last().text();
-                answerers[userid] = username;
+                if($userDetails.length) {
+                    var userid = $userDetails.find('a').last().attr('href').split('/')[2];
+                    var username = $userDetails.find('a').last().text();
+                    answerers[userid] = username;
+                } else {
+                    sox.helpers.notify('Could not find user details div for:');
+                    console.log($(this));
+                }
             });
             var apiUrl = "https://api.stackexchange.com/users/" + Object.keys(answerers).join(';') + "?site=" + sox.site.currentApiParameter;
             $.get(apiUrl, function(data) {
