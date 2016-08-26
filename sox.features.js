@@ -718,7 +718,7 @@
             // Description: For adding a fake mod diamond that notifies you if there has been a new post posted on the current site's meta
 
             //DO NOT RUN ON META OR CHAT OR SITES WITHOUT A META
-            if (sox.site.type != 'main' || sox.site.type != 'beta' || !$('.related-site').length) return;
+            if ((sox.site.type != 'main' && sox.site.type != 'beta') || !$('.related-site').length) return;
 
             var NEWQUESTIONS = 'metaNewQuestionAlert-lastQuestions',
                 DIAMONDON = 'metaNewQuestionAlert-diamondOn',
