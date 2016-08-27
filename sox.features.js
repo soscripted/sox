@@ -1264,17 +1264,181 @@ Toggle SBS?</div></li>';
         downvotedPostsEditAlert: function() {
             // Description: Adds a notification to the inbox if a question you downvoted and watched is edited
 
-            function addNotification(link, title) { //add the notification
-                var favicon = sox.site.icon;
+            //GM_deleteValue('downvotedPostsEditAlert');
+            var websocketSiteCodes = {
+                "3dprinting": "640",
+                "academia": "415",
+                "ham": "520",
+                "android": "139",
+                "anime": "477",
+                "arduino": "540",
+                "area51": "11",
+                "gaming": "41",
+                "ai": "658",
+                "crafts": "650",
+                "apple": "118",
+                "patents": "463",
+                "askubuntu": "89",
+                "astronomy": "514",
+                "aviation": "528",
+                "alcohol": "532",
+                "hermeneutics": "320",
+                "bicycles": "126",
+                "biology": "375",
+                "bitcoin": "308",
+                "blender": "502",
+                "boardgames": "147",
+                "buddhism": "565",
+                "chemistry": "431",
+                "chess": "435",
+                "chinese": "371",
+                "christianity": "304",
+                "civicrm": "605",
+                "codereview": "196",
+                "coffee": "597",
+                "cogsci": "391",
+                "communitybuilding": "571",
+                "scicomp": "363",
+                "computergraphics": "633",
+                "cs": "419",
+                "craftcms": "563",
+                "stats": "65",
+                "crypto": "281",
+                "datascience": "557",
+                "dba": "182",
+                "drupal": "220",
+                "earthscience": "553",
+                "ebooks": "530",
+                "economics": "591",
+                "electronics": "135",
+                "elementaryos": "621",
+                "emacs": "583",
+                "engineering": "595",
+                "english": "97",
+                "ell": "481",
+                "ethereum": "642",
+                "expatriates": "546",
+                "expressionengine": "471",
+                "freelancing": "500",
+                "french": "299",
+                "gamedev": "53",
+                "gardening": "269",
+                "genealogy": "467",
+                "gis": "79",
+                "german": "253",
+                "graphicdesign": "174",
+                "hardwarerecs": "635",
+                "health": "607",
+                "hinduism": "567",
+                "hsm": "587",
+                "history": "324",
+                "diy": "73",
+                "homebrew": "156",
+                "security": "162",
+                "islam": "455",
+                "italian": "524",
+                "japanese": "257",
+                "joomla": "555",
+                "korean": "654",
+                "languagelearning": "646",
+                "latin": "644",
+                "law": "617",
+                "bricks": "336",
+                "lifehacks": "593",
+                "linguistics": "312",
+                "magento": "479",
+                "martialarts": "403",
+                "mathematica": "387",
+                "matheducators": "548",
+                "math": "69",
+                "mathoverflow": "504",
+                "meta": "4",
+                "judaism": "248",
+                "monero": "656",
+                "mechanics": "224",
+                "movies": "367",
+                "musicfans": "601",
+                "music": "240",
+                "mythology": "615",
+                "networkengineering": "496",
+                "opendata": "498",
+                "opensource": "619",
+                "parenting": "228",
+                "money": "93",
+                "productivity": "277",
+                "pets": "518",
+                "philosophy": "265",
+                "photo": "61",
+                "fitness": "216",
+                "physics": "151",
+                "poker": "379",
+                "politics": "475",
+                "portuguese": "625",
+                "programmers": "131",
+                "codegolf": "200",
+                "pm": "208",
+                "puzzling": "559",
+                "quant": "204",
+                "raspberrypi": "447",
+                "retrocomputing": "648",
+                "reverseengineering": "489",
+                "robotics": "469",
+                "rpg": "122",
+                "russian": "451",
+                "salesforce": "459",
+                "scifi": "186",
+                "cooking": "49",
+                "serverfault": "2",
+                "sharepoint": "232",
+                "dsp": "295",
+                "skeptics": "212",
+                "sqa": "244",
+                "softwarerecs": "536",
+                "sound": "512",
+                "space": "508",
+                "spanish": "353",
+                "sports": "411",
+                "stackapps": "101",
+                "stackoverflow": "1",
+                "pt": "526",
+                "es": "637",
+                "ru": "609",
+                "startups": "573",
+                "superuser": "3",
+                "sustainability": "483",
+                "tex": "85",
+                "outdoors": "395",
+                "workplace": "423",
+                "cstheory": "114",
+                "tor": "516",
+                "travel": "273",
+                "tridion": "485",
+                "unix": "106",
+                "ux": "102",
+                "vi": "599",
+                "video": "170",
+                "webapps": "34",
+                "webmasters": "45",
+                "windowsphone": "427",
+                "woodworking": "603",
+                "wordpress": "110",
+                "worldbuilding": "579",
+                "writers": "166",
+                "rus": "613",
+                "ja": "581"
+            };
+
+            function addNotification(link, title, sitename, notificationPostId) { //add the notification
+                //var favicon = sox.site.icon;
                 $('div.topbar .icon-inbox').click(function() { //add the actual notification
                     setTimeout(function() {
                         $('div.topbar div.topbar-dialog.inbox-dialog.dno ul').prepend("<li class='inbox-item unread-item question-close-notification'> \
             <a href='" + link + "'> \
-            <div class='site-icon favicon " + favicon + "' title=''></div> \
+            <div class='site-icon favicon favicon-stackexchange' title=''></div> \
             <div class='item-content'> \
             <div class='item-header'> \
             <span class='item-type'>post edit</span> \
-            <span class='item-creation'><span style='color:blue;border: 1px solid gray;' onclick='javascript:void(0)' id='markAsRead_" + sitename + '-' + id + "'>mark as read</span></span> \
+            <span class='item-creation'><span class='downvotedPostsEditAlert-markAsRead' style='color:blue;border: 1px solid gray;' onclick='javascript:void(0)' id='markAsRead_" + sitename + '-' + notificationPostId + "'>mark as read</span></span> \
             </div> \
             <div class='item-location'>" + title + "</div> \
             <div class='item-summary'>A post you downvoted has been edited since. Go check it out, and see if you should retract your downvote!</div> \
@@ -1285,10 +1449,10 @@ Toggle SBS?</div></li>';
                 });
             }
 
-            function addNumber() { //count the number of elements in the 'unread' object, and display that number on the inbox icon
+            function addNumber() {
                 var count = 0;
-                for (var i in unread) {
-                    if (unread.hasOwnProperty(i)) {
+                for (var i in notifications) {
+                    if (notifications.hasOwnProperty(i)) {
                         count++;
                     }
                 }
@@ -1297,84 +1461,107 @@ Toggle SBS?</div></li>';
                 }
             }
 
-            var posts = JSON.parse(GM_getValue("downvotedPostsEditAlert", "[]")),
-                unread = JSON.parse(GM_getValue("downvotedPostsEditAlert-unreadItems", "{}")),
-                lastCheckedDate = GM_getValue("downvotedPostsEditAlert-lastCheckedDate", 0),
-                key = sox.info.apikey,
-                access_token = sox.settings.accessToken;
+            var postsToCheck = JSON.parse(GM_getValue('downvotedPostsEditAlert', '{}'));
+            var notifications = JSON.parse(GM_getValue('downvotedPostsEditAlert-notifications', '{}'));
+            var lastCheckedTime = GM_getValue('downvotedPostsEditAlert-lastCheckedTime', 0);
 
-            if (access_token) {
-                $('.post-menu').each(function() {
-                    $(this).append("<span class='lsep'></span><a class='downvotedPostsEditAlert-watchPostForEdits'>notify on edit</a>");
-                });
-                $('.downvotedPostsEditAlert-watchPostForEdits').click(function() {
-                    var $that = $(this);
-                    var $parent = $(this).closest('table').parents('.question, .answer');
-                    var id;
-                    if ($parent.attr('data-questionid')) {
-                        id = $parent.attr('data-questionid');
-                    } else if ($parent.attr('data-answerid')) {
-                        id = $parent.attr('data-answerid');
-                    }
-                    var stringToAdd = sox.site.currentApiParameter + '-' + id;
-                    var index = posts.indexOf(stringToAdd);
-                    if (index == -1) {
-                        $that.css('color', 'green');
-                        posts.push(stringToAdd);
-                        GM_setValue('downvotedPostsEditAlert', JSON.stringify(posts));
-                    } else {
-                        $that.removeAttr('style');
-                        posts.splice(index, 1);
-                        GM_setValue('downvotedPostsEditAlert', JSON.stringify(posts));
-                    }
-                });
+            console.log(postsToCheck);
+            console.log(notifications);
+            console.log(lastCheckedTime);
 
-                console.log('DOWNVOTE NOTIFICATION DEBUGGING');
-                console.log(posts);
-                console.log('Last checked date: ' + lastCheckedDate);
-                console.log('Current date: ' + new Date());
+            $('.post-menu').each(function() {
+                $(this).append("<span class='lsep'></span><a class='downvotedPostsEditAlert-watchPostForEdits'>notify on edit</a>");
+            });
 
-                for (var i = 0; i < posts.length; i++) {
-                    var sitename = posts[i].split('-')[0];
-                    var id = posts[i].split('-')[1];
+            $(document).on('click', '.downvotedPostsEditAlert-markAsRead', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var base = $(this).attr('id').split('markAsRead_')[1];
+                var sitename = base.split('-')[0];
+                var postId = base.split('-')[1];
+                delete notifications[+postId];
+                $(this).parent().parent().parent().parent().parent().hide(); //hide the notification in the inbox dropdown
+            });
 
-                    if ($('div[data-questionid="' + id + '"]').length || $('div[data-answerid="' + id + '"]').length) {
-                        $('div[data-questionid="' + id + '"], div[data-answerid="' + id + '"]').find('.downvotedPostsEditAlert-watchPostForEdits').css('color', 'green');
-                    }
-
-                    var url = "https://api.stackexchange.com/2.2/posts/" + id + "?order=desc&sort=activity&site=" + sitename + "&filter=!9YdnSEBb8&key=" + key + "&access_token=" + access_token;
-
-                    if (new Date().getDate() > new Date(lastCheckedDate).getDate()) {
-                        $.getJSON(url, function(json) {
-                            if (json.items[0].last_edit_date > ((lastCheckedDate / 1000) - 86400)) {
-                                console.log('CHECKING FOR UPDATES');
-                                unread[sitename + '-' + json.items[0].post_id] = [json.items[0].link, json.items[0].title];
-                                GM_setValue('downvotedPostsEditAlert-unreadItems', JSON.stringify(unread));
-                            }
-                            lastCheckedDate = new Date().getTime();
-                            GM_setValue('downvotedPostsEditAlert-lastCheckedDate', lastCheckedDate);
-                        });
-                    }
-
-                    $.each(unread, function(siteAndId, details) {
-                        addNotification(details[0], details[1]);
-                    });
-                    addNumber();
+            $(document).mouseup(function(e) { //hide on click off
+                var container = $('div.topbar-dialog.inbox-dialog.dno > div.modal-content');
+                if (!container.is(e.target) && container.has(e.target).length === 0) {
+                    container.find('.question-close-notification').remove();
                 }
+            });
 
-                $(document).on('click', 'span[id^=markAsRead]', function(e) { //click handler for the 'mark as read' button
-                    e.preventDefault(); //don't go to questionn
-                    var siteAndId = $(this).attr('id').split('_')[1];
-                    delete unread[siteAndId]; //delete the question from the object
-                    GM_setValue('downvotedPostsEditAlert-unreadItems', JSON.stringify(unread)); //save the object again
-                    $(this).parent().parent().parent().parent().parent().hide(); //hide the notification in the inbox dropdown
-                });
+            $('.downvotedPostsEditAlert-watchPostForEdits').click(function() {
+                var questionId = document.URL.split('/')[4];
+                var postId = $(this).parents('.question, .answer').attr('data-answerid') || questionId;
+                var sitename = sox.site.currentApiParameter;
+                var posts = Object.keys(postsToCheck);
+                var index = posts.indexOf(postId);
 
-                $(document).mouseup(function(e) { //hide on click off
-                    var container = $('div.topbar-dialog.inbox-dialog.dno > div.modal-content');
-                    if (!container.is(e.target) && container.has(e.target).length === 0) {
-                        container.find('.question-close-notification').remove();
+                if (index > -1) { //already exists, so remove it
+                    $(this).removeAttr('style');
+                    delete postsToCheck[posts[index]];
+                } else { //new watch item
+                    $(this).css('color', 'green');
+                    postsToCheck[postId] = {
+                        'questionId': questionId,
+                        'addedDate': new Date().getTime(),
+                        'sitename': sitename
+                    };
+                }
+                GM_setValue('downvotedPostsEditAlert', JSON.stringify(postsToCheck));
+            });
+
+            //set up websockets
+            var w = new WebSocket("ws://qa.sockets.stackexchange.com/");
+            var posts = Object.keys(postsToCheck);
+            w.onmessage = function(e) {
+                var data = JSON.parse(e.data);
+                var sitename;
+                var title;
+                data.data = JSON.parse(data.data);
+                if (data.data.a == 'post-edit' && posts.indexOf((data.data.id).toString()) > -1) {
+                    for (var c in websocketSiteCodes) {
+                        if (websocketSiteCodes[c] == data.action.split('-')[0]) {
+                            sitename = c;
+                            sox.helpers.getFromAPI('posts', data.data.id, sitename, function(d) {
+                                title = d.items[0].title;
+                                notifications[data.data.id] = {
+                                    'sitename': sitename,
+                                    'url': 'http://' + sitename + '.stackexchange.com/posts/' + data.data.id,
+                                    'title': title
+                                };
+                                GM_setValue('downvotedPostsEditAlert-notifications', JSON.stringify(notifications));
+                                addNotification('http://' + sitename + '.stackexchange.com/posts/' + data.data.id, title + ' [LIVE]', sitename, data.data.id);
+                                addNumber();
+                            }, 'activity&filter=!9YdnSEBb8');
+                        }
                     }
+                }
+            };
+
+            if (!$.isEmptyObject(postsToCheck)) {
+                $.each(postsToCheck, function(i, o) {
+                    if (new Date().getTime() >= (lastCheckedTime + 3600000)) { //an hour: 3600000
+                        var url = "https://api.stackexchange.com/2.2/posts/" + i + "?order=desc&sort=activity&site=" + o.sitename + "&filter=!9YdnSEBb8";
+                        $.getJSON(url, function(json) {
+                            if (json.items[0].last_edit_date > o.addedDate / 1000) {
+                                addNotification(json.items[0].link, json.items[0].title + ' [API]', json.items[0].link.split('/')[2].split('.')[0], i);
+                                notifications[i] = {
+                                    'sitename': json.items[0].link.split('/')[2].split('.')[0],
+                                    'url': json.items[0].link,
+                                    'title': json.items[0].title
+                                };
+                                GM_setValue('downvotedPostsEditAlert-notifications', JSON.stringify(notifications));
+                                addNumber();
+                            }
+                            lastCheckedTime = new Date().getTime();
+                            GM_setValue('downvotedPostsEditAlert-lastCheckedTime', lastCheckedTime);
+                        });
+
+                    }
+                    w.onopen = function() {
+                        w.send(websocketSiteCodes[o.sitename] + "-question-" + o.questionId);
+                    };
                 });
             }
         },
@@ -1610,10 +1797,10 @@ Toggle SBS?</div></li>';
             var answerers = {};
             $('.question, .answer').each(function() {
                 var $userDetailsAnchor = $(this).find('.post-signature .user-details a').last();
-                if($userDetailsAnchor.length) {
+                if ($userDetailsAnchor.length) {
                     var userid = ($userDetailsAnchor.attr('href') ? $userDetailsAnchor.attr('href').split('/')[2] : 0);
                     var username = $userDetailsAnchor.text();
-                    if(userid !== 0) answerers[userid] = username;
+                    if (userid !== 0) answerers[userid] = username;
                 } else {
                     sox.helpers.notify('Could not find user user link for:');
                     console.log($(this));
