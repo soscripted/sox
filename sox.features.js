@@ -1481,6 +1481,8 @@ Toggle SBS?</div></li>';
                         id = +$parent.attr('data-answerid');
                     }
                 }
+                console.log(id);
+                console.log(postsToCheck);
                 $(this).append("<span class='lsep'></span><a " + (id in postsToCheck ? "style='color:green' " : "") + "class='downvotedPostsEditAlert-watchPostForEdits'>notify on edit</a>");
             });
 
@@ -1557,10 +1559,10 @@ Toggle SBS?</div></li>';
 
             if (!$.isEmptyObject(postsToCheck)) {
                 $.each(postsToCheck, function(i, o) {
-                    if (new Date().getTime() >= (lastCheckedTime + 3600000)) { //an hour: 3600000
+                    if (new Date().getTime() >= ((o.lastCheckedTime || 0) + 3600000)) { //an hour: 3600000
                         var url = "https://api.stackexchange.com/2.2/posts/" + i + "?order=desc&sort=activity&site=" + o.sitename + "&filter=!9YdnSEBb8";
                         $.getJSON(url, function(json) {
-                            if (json.items[0].last_edit_date > o.addedDate / 1000) {
+                            if (json.items[0].last_edit_date > (o.lastCheckedTime || o.addedDate) / 1000) {
                                 addNotification(json.items[0].link, json.items[0].title + ' [API]', json.items[0].link.split('/')[2].split('.')[0], i);
                                 console.log('adding notification from api');
                                 notifications[i] = {
@@ -1570,17 +1572,16 @@ Toggle SBS?</div></li>';
                                 };
                                 GM_setValue('downvotedPostsEditAlert-notifications', JSON.stringify(notifications));
                                 addNumber();
+                                o.lastCheckedTime = new Date().getTime();
+                                GM_setValue('downvotedPostsEditAlert', JSON.parse(postsToCheck));
                             }
                         });
-
                     }
                     w.onopen = function() {
                         console.log('sending websocket message: ' + websocketSiteCodes[o.sitename] + "-question-" + o.questionId);
                         w.send(websocketSiteCodes[o.sitename] + "-question-" + o.questionId);
                     };
                 });
-                lastCheckedTime = new Date().getTime();
-                GM_setValue('downvotedPostsEditAlert-lastCheckedTime', lastCheckedTime);
             }
         },
 
