@@ -1265,6 +1265,7 @@ Toggle SBS?</div></li>';
             // Description: Adds a notification to the inbox if a question you downvoted and watched is edited
 
             //GM_deleteValue('downvotedPostsEditAlert');
+            //GM_deleteValue('downvotedPostsEditAlert-notifications');
             var websocketSiteCodes = {
                 "3dprinting": "640",
                 "academia": "415",
@@ -1429,23 +1430,24 @@ Toggle SBS?</div></li>';
             };
 
             function addNotification(link, title, sitename, notificationPostId) { //add the notification
-                //var favicon = sox.site.icon;
                 $('div.topbar .icon-inbox').click(function() { //add the actual notification
-                    setTimeout(function() {
-                        $('div.topbar div.topbar-dialog.inbox-dialog.dno ul').prepend("<li class='inbox-item unread-item question-close-notification'> \
-            <a href='" + link + "'> \
-            <div class='site-icon favicon favicon-stackexchange' title=''></div> \
-            <div class='item-content'> \
-            <div class='item-header'> \
-            <span class='item-type'>post edit</span> \
-            <span class='item-creation'><span class='downvotedPostsEditAlert-markAsRead' style='color:blue;border: 1px solid gray;' onclick='javascript:void(0)' id='markAsRead_" + sitename + '-' + notificationPostId + "'>mark as read</span></span> \
-            </div> \
-            <div class='item-location'>" + title + "</div> \
-            <div class='item-summary'>A post you downvoted has been edited since. Go check it out, and see if you should retract your downvote!</div> \
-            </div> \
-            </a> \
-            </li>");
-                    }, 500);
+                    if(notifications[notificationPostId]) {
+                        setTimeout(function() {
+                            $('div.topbar div.topbar-dialog.inbox-dialog.dno ul').prepend("<li class='inbox-item unread-item question-close-notification'> \
+                <a href='" + link + "'> \
+                <div class='site-icon favicon favicon-stackexchange' title=''></div> \
+                <div class='item-content'> \
+                <div class='item-header'> \
+                <span class='item-type'>post edit</span> \
+                <span class='item-creation'><span class='downvotedPostsEditAlert-markAsRead' style='color:blue;border: 1px solid gray;' onclick='javascript:void(0)' id='markAsRead_" + sitename + '-' + notificationPostId + "'>mark as read</span></span> \
+                </div> \
+                <div class='item-location'>" + title + "</div> \
+                <div class='item-summary'>A post you downvoted has been edited since. Go check it out, and see if you should retract your downvote!</div> \
+                </div> \
+                </a> \
+                </li>");
+                        }, 500);
+                    }
                 });
             }
 
@@ -1470,16 +1472,28 @@ Toggle SBS?</div></li>';
             console.log(lastCheckedTime);
 
             $('.post-menu').each(function() {
-                $(this).append("<span class='lsep'></span><a class='downvotedPostsEditAlert-watchPostForEdits'>notify on edit</a>");
+                var id;
+                var $parent = $(this).parents('.question, .answer');
+                if($parent.length) {
+                    if($parent.hasClass('question')) {
+                        id = +$parent.attr('data-questionid');
+                    } else {
+                        id = +$parent.attr('data-answerid');
+                    }
+                }
+                $(this).append("<span class='lsep'></span><a " + (id in postsToCheck ? "style='color:green' " : "") + "class='downvotedPostsEditAlert-watchPostForEdits'>notify on edit</a>");
             });
 
             $(document).on('click', '.downvotedPostsEditAlert-markAsRead', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
+                console.log('marking as read');
                 var base = $(this).attr('id').split('markAsRead_')[1];
                 var sitename = base.split('-')[0];
                 var postId = base.split('-')[1];
                 delete notifications[+postId];
+                console.log('new notifications object', notifications);
+                GM_setValue('downvotedPostsEditAlert-notifications', JSON.stringify(notifications));
                 $(this).parent().parent().parent().parent().parent().hide(); //hide the notification in the inbox dropdown
             });
 
@@ -1519,6 +1533,7 @@ Toggle SBS?</div></li>';
                 var sitename;
                 var title;
                 data.data = JSON.parse(data.data);
+                console.log('Received Data:', data.data);
                 if (data.data.a == 'post-edit' && posts.indexOf((data.data.id).toString()) > -1) {
                     for (var c in websocketSiteCodes) {
                         if (websocketSiteCodes[c] == data.action.split('-')[0]) {
@@ -1532,6 +1547,7 @@ Toggle SBS?</div></li>';
                                 };
                                 GM_setValue('downvotedPostsEditAlert-notifications', JSON.stringify(notifications));
                                 addNotification('http://' + sitename + '.stackexchange.com/posts/' + data.data.id, title + ' [LIVE]', sitename, data.data.id);
+                                console.log('adding notification');
                                 addNumber();
                             }, 'activity&filter=!9YdnSEBb8');
                         }
@@ -1546,6 +1562,7 @@ Toggle SBS?</div></li>';
                         $.getJSON(url, function(json) {
                             if (json.items[0].last_edit_date > o.addedDate / 1000) {
                                 addNotification(json.items[0].link, json.items[0].title + ' [API]', json.items[0].link.split('/')[2].split('.')[0], i);
+                                console.log('adding notification from api');
                                 notifications[i] = {
                                     'sitename': json.items[0].link.split('/')[2].split('.')[0],
                                     'url': json.items[0].link,
@@ -1554,15 +1571,16 @@ Toggle SBS?</div></li>';
                                 GM_setValue('downvotedPostsEditAlert-notifications', JSON.stringify(notifications));
                                 addNumber();
                             }
-                            lastCheckedTime = new Date().getTime();
-                            GM_setValue('downvotedPostsEditAlert-lastCheckedTime', lastCheckedTime);
                         });
 
                     }
                     w.onopen = function() {
+                        console.log('sending websocket message: ' + websocketSiteCodes[o.sitename] + "-question-" + o.questionId);
                         w.send(websocketSiteCodes[o.sitename] + "-question-" + o.questionId);
                     };
                 });
+                lastCheckedTime = new Date().getTime();
+                GM_setValue('downvotedPostsEditAlert-lastCheckedTime', lastCheckedTime);
             }
         },
 
