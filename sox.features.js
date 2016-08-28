@@ -1562,6 +1562,8 @@ Toggle SBS?</div></li>';
                     if (new Date().getTime() >= ((o.lastCheckedTime || 0) + 3600000)) { //an hour: 3600000
                         var url = "https://api.stackexchange.com/2.2/posts/" + i + "?order=desc&sort=activity&site=" + o.sitename + "&filter=!9YdnSEBb8";
                         $.getJSON(url, function(json) {
+                            //TODO: use access token
+                            //TODO: change postsToCheck object to have sitename in key for edge-case bug fix
                             if (json.items[0].last_edit_date > (o.lastCheckedTime || o.addedDate) / 1000) {
                                 addNotification(json.items[0].link, json.items[0].title + ' [API]', json.items[0].link.split('/')[2].split('.')[0], i);
                                 console.log('adding notification from api');
@@ -1632,7 +1634,7 @@ Toggle SBS?</div></li>';
             $table.append($row).appendTo($topAnswers);
 
             function score(e) {
-                return new Number($(e).parent().find('.vote-count-post').text());
+                return +$(e).parent().find('.vote-count-post').text();
             }
 
             function compareByScore(a, b) {

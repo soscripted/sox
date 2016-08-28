@@ -64,6 +64,7 @@
             }
         },
         getFromAPI: function(type, id, sitename, callback, sortby) {
+            console.log('Getting From API with URL: https://api.stackexchange.com/2.2/' + type + '/' + id + '?order=desc&sort=' + (sortby || 'creation') + '&site=' + sitename);
             $.ajax({
                 type: 'get',
                 url: 'https://api.stackexchange.com/2.2/' + type + '/' + id + '?order=desc&sort=' + (sortby || 'creation') + '&site=' + sitename,
@@ -97,13 +98,13 @@
             if (allowed.indexOf(type) != -1) {
                 if (type == 'text') {
                     type = 'input';
-                    extras['type'] = 'input';
+                    extras.type = 'input';
                 } else if (type == 'checkbox') {
                     type = 'input';
-                    extras['type'] = 'checkbox';
+                    extras.type = 'checkbox';
                 } else if (type == 'radio') {
                     type = 'input';
-                    extras['type'] = 'radio';
+                    extras.type = 'radio';
                 } else if (type == 'textarea') {
                     if (!elementDetails.text) {
                         elementDetails.text = elementDetails.value;
@@ -203,7 +204,7 @@
                 matchPath = matchSplit.slice(-(matchSplit.length - 3)).join('/');
 
             matchScheme = matchScheme.replace(/\*/g, ".*");
-            matchHost = matchHost.replace(/\./g, "\\.").replace(/\*\\\./g, ".*.?").replace(/\\\.\*/g, ".*").replace(/\*$/g, ".*");;
+            matchHost = matchHost.replace(/\./g, "\\.").replace(/\*\\\./g, ".*.?").replace(/\\\.\*/g, ".*").replace(/\*$/g, ".*");
             matchPath = '^\/' + matchPath.replace(/\//g, "\\/").replace(/\*/g, ".*");
 
             if (currentSiteScheme.match(new RegExp(matchScheme)) && currentSiteHost.match(new RegExp(matchHost)) && currentSitePath.match(new RegExp(matchPath))) {
@@ -239,7 +240,6 @@
             return Stack ? Stack.options.user.isRegistered : undefined;
         },
         hasPrivilege: function(privilege) {
-            var privilege = {};
             if (this.loggedIn) {
                 var rep = (sox.site.type == 'beta' ? commonInfo.privileges.beta[privilege] : commonInfo.privileges.graduated[privilege]);
                 return this.rep > rep;
