@@ -64,19 +64,24 @@
             }
         },
         getFromAPI: function(type, id, sitename, callback, sortby) {
-            console.log('Getting From API with URL: https://api.stackexchange.com/2.2/' + type + '/' + id + '?order=desc&sort=' + (sortby || 'creation') + '&site=' + sitename);
+            console.log('Getting From API with URL: https://api.stackexchange.com/2.2/' + type + '/' + id + '?order=desc&sort=' + (sortby || 'creation') + '&site=' + sitename + '&key=' + sox.info.apikey + '&access_token=' + sox.settings.accessToken);
             $.ajax({
                 type: 'get',
-                url: 'https://api.stackexchange.com/2.2/' + type + '/' + id + '?order=desc&sort=' + (sortby || 'creation') + '&site=' + sitename,
-                success: callback,
+                url: 'https://api.stackexchange.com/2.2/' + type + '/' + id + '?order=desc&sort=' + (sortby || 'creation') + '&site=' + sitename + '&key=' + sox.info.apikey + '&access_token=' + sox.settings.accessToken,
+                success: function(d) {
+                    if(d.backoff) {
+                        console.log('SOX Error: BACKOFF: ' + d.backoff);
+                    } else {
+                        callback(d);
+                    }
+                },
                 error: function(a, b, c) {
                     console.log('SOX Error: ' + b + ' ' + c);
                 }
             });
-            //$.getJSON('https://api.stackexchange.com/2.2/' + type + '/' + id + '?order=desc&sort=' + (sortby || 'creation') + '&site=' + sitename, callback);
         },
         observe: function(elements, callback, toObserve) {
-            //console.log('observe: ' + elements);
+            console.log('observe: ' + elements);
             new MutationObserver(function(mutations, observer) {
                 for (var i = 0; i < mutations.length; i++) {
                     for (var j = 0; j < mutations[i].addedNodes.length; j++) {
@@ -89,7 +94,9 @@
                 }
             }).observe(toObserve || document.body, {
                 childList: true,
-                subtree: true
+                subtree: true,
+                attributes: true,
+                characterData: true
             });
         },
         newElement: function(type, elementDetails) {

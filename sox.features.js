@@ -1429,24 +1429,22 @@ Toggle SBS?</div></li>';
                 "ja": "581"
             };
 
-            function addNotification(link, title, sitename, notificationPostId) { //add the notification
-                $('div.topbar .icon-inbox').click(function() { //add the actual notification
+            function addNotification(link, title, sitename, notificationPostId, unread) { //add the notification
+                sox.helpers.observe('.inbox-dialog', function() {
                     if(notifications[notificationPostId]) {
-                        setTimeout(function() {
-                            $('div.topbar div.topbar-dialog.inbox-dialog.dno ul').prepend("<li class='inbox-item unread-item question-close-notification'> \
+                        $('div.topbar div.topbar-dialog.inbox-dialog.dno ul').prepend("<li class='inbox-item " + (unread ? "unread-item " : "") + "question-close-notification'> \
                 <a href='" + link + "'> \
                 <div class='site-icon favicon favicon-stackexchange' title=''></div> \
                 <div class='item-content'> \
                 <div class='item-header'> \
                 <span class='item-type'>post edit</span> \
-                <span class='item-creation'><span class='downvotedPostsEditAlert-markAsRead' style='color:blue;border: 1px solid gray;' onclick='javascript:void(0)' id='markAsRead_" + sitename + '-' + notificationPostId + "'>mark as read</span></span> \
+                <span class='item-creation'><span class='downvotedPostsEditAlert-delete' style='color:blue;border: 1px solid gray;' onclick='javascript:void(0)' id='delete_" + sitename + '-' + notificationPostId + "'>delete</span></span> \
                 </div> \
                 <div class='item-location'>" + title + "</div> \
                 <div class='item-summary'>A post you downvoted has been edited since. Go check it out, and see if you should retract your downvote!</div> \
                 </div> \
                 </a> \
                 </li>");
-                        }, 500);
                     }
                 });
             }
@@ -1471,6 +1469,19 @@ Toggle SBS?</div></li>';
             console.log(notifications);
             console.log(lastCheckedTime);
 
+            $(document).on('click', '.downvotedPostsEditAlert-delete', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('deleting');
+                var base = $(this).attr('id').split('delete_')[1];
+                var sitename = base.split('-')[0];
+                var postId = base.split('-')[1];
+                delete notifications[+postId];
+                console.log('new notifications object', notifications);
+                GM_setValue('downvotedPostsEditAlert-notifications', JSON.stringify(notifications));
+                $(this).parents('.question-close-notification').remove(); //hide the notification in the inbox dropdown
+            });
+
             $('.post-menu').each(function() {
                 var id;
                 var $parent = $(this).parents('.question, .answer');
@@ -1481,29 +1492,7 @@ Toggle SBS?</div></li>';
                         id = +$parent.attr('data-answerid');
                     }
                 }
-                console.log(id);
-                console.log(postsToCheck);
                 $(this).append("<span class='lsep'></span><a " + (id in postsToCheck ? "style='color:green' " : "") + "class='downvotedPostsEditAlert-watchPostForEdits'>notify on edit</a>");
-            });
-
-            $(document).on('click', '.downvotedPostsEditAlert-markAsRead', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                console.log('marking as read');
-                var base = $(this).attr('id').split('markAsRead_')[1];
-                var sitename = base.split('-')[0];
-                var postId = base.split('-')[1];
-                delete notifications[+postId];
-                console.log('new notifications object', notifications);
-                GM_setValue('downvotedPostsEditAlert-notifications', JSON.stringify(notifications));
-                $(this).parent().parent().parent().parent().parent().hide(); //hide the notification in the inbox dropdown
-            });
-
-            $(document).mouseup(function(e) { //hide on click off
-                var container = $('div.topbar-dialog.inbox-dialog.dno > div.modal-content');
-                if (!container.is(e.target) && container.has(e.target).length === 0) {
-                    container.find('.question-close-notification').remove();
-                }
             });
 
             $('.downvotedPostsEditAlert-watchPostForEdits').click(function() {
@@ -1548,7 +1537,7 @@ Toggle SBS?</div></li>';
                                     'title': title
                                 };
                                 GM_setValue('downvotedPostsEditAlert-notifications', JSON.stringify(notifications));
-                                addNotification('http://' + sitename + '.stackexchange.com/posts/' + data.data.id, title + ' [LIVE]', sitename, data.data.id);
+                                addNotification('http://' + sitename + '.stackexchange.com/posts/' + data.data.id, title + ' [LIVE]', sitename, data.data.id, true);
                                 console.log('adding notification');
                                 addNumber();
                             }, 'activity&filter=!9YdnSEBb8');
@@ -1557,15 +1546,17 @@ Toggle SBS?</div></li>';
                 }
             };
 
+            $.each(notifications, function(i, o) {
+                addNotification(o.url, o.title, o.sitename, i, false);
+            });
+
             if (!$.isEmptyObject(postsToCheck)) {
                 $.each(postsToCheck, function(i, o) {
-                    if (new Date().getTime() >= ((o.lastCheckedTime || 0) + 3600000)) { //an hour: 3600000
-                        var url = "https://api.stackexchange.com/2.2/posts/" + i + "?order=desc&sort=activity&site=" + o.sitename + "&filter=!9YdnSEBb8";
-                        $.getJSON(url, function(json) {
-                            //TODO: use access token
-                            //TODO: change postsToCheck object to have sitename in key for edge-case bug fix
+                    console.log('Last Checked Time: ' + o.lastCheckedTime);
+                    if (new Date().getTime() >= ((o.lastCheckedTime || 0) + 900000)) { //an hour: 3600000ms, 15 minutes: 900000ms
+                        sox.helpers.getFromAPI('posts', i, o.sitename, function(json) {
                             if (json.items[0].last_edit_date > (o.lastCheckedTime || o.addedDate) / 1000) {
-                                addNotification(json.items[0].link, json.items[0].title + ' [API]', json.items[0].link.split('/')[2].split('.')[0], i);
+                                addNotification(json.items[0].link, json.items[0].title + ' [API]', json.items[0].link.split('/')[2].split('.')[0], i, true);
                                 console.log('adding notification from api');
                                 notifications[i] = {
                                     'sitename': json.items[0].link.split('/')[2].split('.')[0],
@@ -1574,11 +1565,11 @@ Toggle SBS?</div></li>';
                                 };
                                 GM_setValue('downvotedPostsEditAlert-notifications', JSON.stringify(notifications));
                                 addNumber();
-                                o.lastCheckedTime = new Date().getTime();
-                                GM_setValue('downvotedPostsEditAlert', JSON.parse(postsToCheck));
                             }
-                        });
+                        }, "activity&filter=!9YdnSEBb8");
                     }
+                    o.lastCheckedTime = new Date().getTime();
+                    GM_setValue('downvotedPostsEditAlert', JSON.parse(postsToCheck));
                     w.onopen = function() {
                         console.log('sending websocket message: ' + websocketSiteCodes[o.sitename] + "-question-" + o.questionId);
                         w.send(websocketSiteCodes[o.sitename] + "-question-" + o.questionId);
