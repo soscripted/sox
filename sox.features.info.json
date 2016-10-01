@@ -116,7 +116,7 @@
             "exclude": ""
         }, {
             "name": "metaChatBlogStackExchangeButton",
-            "desc": "Show meta, chat and blog buttons on hover of a site under the StackExchange button",
+            "desc": "Show meta and chat buttons on hover of a site under the StackExchange button",
             "meta": "http://meta.stackexchange.com/questions/256183/show-the-meta-chat-and-blog-in-the-top-bar-for-other-sites-on-hover",
             "match": "",
             "exclude": ""

@@ -126,7 +126,7 @@
             $('.topbar').css({
                 'position': 'fixed',
                 'top': '0',
-                'z-index': '1001',
+                'z-index': '900',
                 'width': '100%'
             });
 
@@ -688,26 +688,18 @@
         },
 
         metaChatBlogStackExchangeButton: function() {
-            // Description: For adding buttons next to sites under the StackExchange button that lead to that site's meta, chat and blog
+            // Description: For adding buttons next to sites under the StackExchange button that lead to that site's meta and chat
+            // NOTE: this feature used to have a 'blog' button as well, but it wasn't very useful so was removed
 
-            var blogSites = ['math', 'serverfault', 'english', 'stats', 'diy', 'bicycles', 'webapps', 'mathematica', 'christianity', 'cooking', 'fitness', 'cstheory', 'scifi', 'tex', 'security', 'islam', 'superuser', 'gaming', 'programmers', 'gis', 'apple', 'photo', 'dba'],
-                link,
-                blogLink = '//' + 'blog.stackexchange.com';
-
+            var link;
             $('#your-communities-section > ul > li > a').hover(function() {
                 if ($(this).attr('href').substr(0, 6).indexOf('meta') == -1) {
                     link = 'http://meta.' + $(this).attr('href').substr(2, $(this).attr('href').length - 1);
-                    if (blogSites.indexOf($(this).attr('href').split('/')[2].split('.')[0]) != -1) {
-                        blogLink = '//' + $(this).attr('href').split('/')[2].split('.')[0] + '.blogoverflow.com';
-                    } else {
-                        blogLink = '#';
-                    }
 
                     $(this).find('.rep-score').hide();
                     $(this).append('<div class="related-links" style="float: right;"> \
                                  <a href="' + link + '">meta</a> \
                                  <a href="http://chat.stackexchange.com?tab=site&host=' + $(this).attr('href').substr(2) + '">chat</a> \
-                                 <a href="' + blogLink + '">blog</a> \
                                 </div>');
                 }
             }, function() {
