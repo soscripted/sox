@@ -109,12 +109,17 @@
             }
 
             // display sox version number in the dialog
-            $soxSettingsDialogVersion.text(version != 'unknown' ? ' v' + version.toLowerCase() : '');
+            if(version != 'unknown' && version !== null) {
+                $soxSettingsDialogVersion.text(' v' + version.toLowerCase());
+            } else {
+                $soxSettingsDialogVersion.text('');
+            }
 
             // wire up event handlers
             $soxSettingsClose.on('click', function() {
                 $soxSettingsDialog.hide();
             });
+
             $soxSettingsReset.on('click', function() {
                 sox.settings.reset();
                 location.reload(); // reload page to reflect changed settings

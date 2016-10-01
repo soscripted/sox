@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Stack Overflow Extras (SOX)
 // @namespace    https://github.com/soscripted/sox
-// @version      2.0.0
+// @version      2.0.1
 // @description  Extra optional features for Stack Overflow and Stack Exchange sites
 // @contributor  ᴉʞuǝ (stackoverflow.com/users/1454538/)
 // @contributor  ᔕᖺᘎᕊ (stackexchange.com/users/4337810/)
@@ -31,6 +31,7 @@
 // @resource     dialog sox.dialog.html
 // @resource     featuresJSON sox.features.info.json?v=1
 // @resource     common sox.common.info.json
+// @resource     SEAPI https://api.stackexchange.com/js/2.0/all.js
 
 // @grant        GM_setValue
 // @grant        GM_getValue
@@ -40,7 +41,7 @@
 // @grant        GM_addStyle
 // @grant        GM_info
 // ==/UserScript==
-jQuery.noConflict();
+//jQuery.noConflict();
 (function(sox, $, undefined) {
     'use strict';
 
@@ -113,7 +114,7 @@ jQuery.noConflict();
                     if (runFeature) {
                         if (feature.settings) {
                             var settingsToPass = GM_getValue("SOX-" + featureId + "-settings") ? JSON.parse(GM_getValue("SOX-" + featureId + "-settings")) : {};
-                            sox.features[featureId](settingsToPass);  //run the feature if match and exclude conditions are met, pass on settings object
+                            sox.features[featureId](settingsToPass); //run the feature if match and exclude conditions are met, pass on settings object
                         } else {
                             sox.features[featureId](); //run the feature if match and exclude conditions are met
                         }
@@ -125,7 +126,7 @@ jQuery.noConflict();
                         $('#sox-settings-dialog-features').find('#' + settings[i].split('-')[1]).parent().parent().remove();
                     } else {
                         $('#sox-settings-dialog-features').find('#' + settings[i].split('-')[1]).parent().css('color', 'red').attr('title', 'There was an error loading this feature. Please raise an issue on GitHub.');
-                        console.log('SOX error: There was an error loading the feature "' + settings[i] + '". Please raise an issue on GitHub, and copy the following error log:\n' + err);
+                        console.error('SOX error: There was an error loading the feature "' + settings[i] + '". Please raise an issue on GitHub, and copy the following error log:\n' + err);
                     }
                     i++;
                 }
@@ -135,30 +136,53 @@ jQuery.noConflict();
         if (GM_getValue('SOX-accessToken', -1) == -1) {
             if (!sox.location.on('stackoverflow.com') && !sox.location.on('oauth/login_success')) {
                 // TODO: find a more user friendly way of handling this
-                window.alert("Please go to stackoverflow.com to get your access token for certain SOX features");
+                window.open('http://stackoverflow.com');
+                alert('Stack Overflow has been opened for you. To complete the SOX installation please click on the cogs icon that has been added to the topbar to recieve your access token (on the Stack Overflow site!).');
                 sox.helpers.notify("Please go to stackoverflow.com to get your access token for certain SOX features");
             } else {
-                SE.init({
-                    clientId: 7138, //SOX client ID
-                    key: 'lL1S1jr2m*DRwOvXMPp26g((', //SOX key
-                    channelUrl: location.protocol + '//stackoverflow.com/blank',
-                    complete: function(d) {
-                        console.log('SE init');
-                    }
-                });
-                $('#soxSettingsButton').click(function() {
-                    //TODO: this only works when something is clicked -- what should we make the user click?
-                    //make the cogs button red?
-                    SE.authenticate({
-                        success: function(data) {
-                            GM_setValue('SOX-accessToken', data.accessToken);
-                        },
-                        error: function(data) {
-                            console.log(data);
-                        },
-                        scope: ['read_inbox', 'write_access', 'no_expiry']
-                    });
-                });
+                //everything in this `else` is only weird to make it work on Firefox
+                //the solution has come from http://stackoverflow.com/a/38924760/3541881
+                //in effect, it makes and appends an IIFE to the head that `init`s SE
+                //and then when done appends another IIFE to `authenticate` SE
+                //the access token is sent with postMessage to the webpage
+                //and the script receives the message and saves the access token.
+                //a hacky fix, but it works for now.
+                window.addEventListener("message", function(event) {
+                    var accesstoken;
+                    try {
+                        accesstoken = JSON.parse(event.data);
+                    } catch (error) {}
+                    if (!('SOX-accessToken' in accesstoken)) return;
+                    console.log(accesstoken['SOX-accessToken']);
+                    GM_setValue('SOX-accessToken', accesstoken['SOX-accessToken']);
+                }, false);
+                document.head.appendChild(document.createElement('script')).text =
+                    GM_getResourceText('SEAPI') + ';(' + function() {
+                        SE.init({
+                            clientId: 7138, //SOX client ID
+                            key: 'lL1S1jr2m*DRwOvXMPp26g((', //SOX key
+                            channelUrl: location.protocol + '//stackoverflow.com/blank',
+                            complete: function(d) {
+                                $(document).on('click', '#soxSettingsButton', function() {
+                                    //make the cogs button red?
+                                    document.head.appendChild(document.createElement('script')).text =
+                                        '(' + function() {
+                                            SE.authenticate({
+                                                success: function(data) {
+                                                    window.postMessage(JSON.stringify({
+                                                        'SOX-accessToken': data.accessToken
+                                                    }), '*');
+                                                },
+                                                error: function(data) {
+                                                    console.log(data);
+                                                },
+                                                scope: ['read_inbox', 'write_access', 'no_expiry']
+                                            });
+                                        } + ')();';
+                                });
+                            }
+                        });
+                    } + ')();';
             }
         }
     }

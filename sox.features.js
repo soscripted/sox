@@ -1,5 +1,6 @@
-/*jshint multistr: true */
-/*global GM_getValue, GM_setValue, waitForKeyElements, fkey*/
+/*jshint multistr: true, loopfunc: true*/
+/*global GM_getValue, GM_setValue, fkey*/
+
 (function(sox, $, undefined) {
     'use strict';
 
@@ -125,7 +126,7 @@
             $('.topbar').css({
                 'position': 'fixed',
                 'top': '0',
-                'z-index': '1001',
+                'z-index': '900',
                 'width': '100%'
             });
 
@@ -212,35 +213,35 @@
         kbdAndBullets: function() {
             // Description: For adding buttons to the markdown toolbar to surround selected test with KBD or convert selection into a markdown list
 
-            function addBullets() {
-                var list = '- ' + $('[id^="wmd-input"]').getSelection().text.split('\n').join('\n- ');
-                $('[id^="wmd-input"]').replaceSelectedText(list);
+            function addBullets($node) {
+                var list = '- ' + $node.getSelection().text.split('\n').join('\n- ');
+                $node.replaceSelectedText(list);
             }
 
-            function addKbd() {
-                $('[id^="wmd-input"]').surroundSelectedText("<kbd>", "</kbd>");
+            function addKbd($node) {
+                $node.surroundSelectedText("<kbd>", "</kbd>");
             }
 
             var kbdBtn = '<li class="wmd-button" title="surround selected text with <kbd> tags" style="left: 400px;"><span id="wmd-kbd-button" style="background-image: none;">kbd</span></li>';
             var listBtn = '<li class="wmd-button" title="add dashes (\"-\") before every line to make a bulvar point list" style="left: 425px;"><span id="wmd-bullet-button" style="background-image:none;">&#x25cf;</span></li>';
 
-            setTimeout(function() {
+            sox.helpers.observe('[id^="wmd-redo-button"]', function() {
                 $('[id^="wmd-redo-button"]').after(kbdBtn);
                 $('[id^="wmd-redo-button"]').after(listBtn);
                 $('#wmd-kbd-button').on('click', function() {
-                    addKbd();
+                    addKbd($(this).parents('div[id*="wmd-button-bar"]').parent().find('textarea'));
                 });
                 $('#wmd-bullet-button').on('click', function() {
-                    addBullets();
+                    addBullets($(this).parents('div[id*="wmd-button-bar"]').parent().find('textarea'));
                 });
-            }, 500);
+            });
 
             $('[id^="wmd-input"]').bind('keydown', 'alt+l', function() {
-                addBullets();
+                addBullets($(this).parents('div[id*="wmd-button-bar"]').parent().find('textarea'));
             });
 
             $('[id^="wmd-input"]').bind('keydown', 'alt+k', function() {
-                addKbd();
+                addKbd($(this).parents('div[id*="wmd-button-bar"]').parent().find('textarea'));
             });
         },
 
@@ -414,7 +415,6 @@
                     return false;
                 }
                 if (e.which == 66 && e.ctrlKey) { //ctrl+b (bold)
-                    console.log('b');
                     $(this).surroundSelectedText('**', '**');
                     e.stopPropagation();
                     e.preventDefault();
@@ -479,16 +479,16 @@
                 var anchor = $(this),
                     href = $(this).attr('href');
                 if (sites.indexOf(href.split('/')[2].split('.')[0]) > -1) { //if the link is to an SE site (not, for example, to google), do the necessary stuff
-                  if(href.indexOf('/questions/') > -1) { //if the link is to a question
-                    if ($(this).text() == href) { //if there isn't text on it (ie. bare url)
-                        var sitename = href.split('/')[2].split('.')[0],
-                            id = href.split('/')[4];
+                    if (href.indexOf('/questions/') > -1) { //if the link is to a question
+                        if ($(this).text() == href) { //if there isn't text on it (ie. bare url)
+                            var sitename = href.split('/')[2].split('.')[0],
+                                id = href.split('/')[4];
 
-                        sox.helpers.getFromAPI('questions', id, sitename, function(json) {
-                            anchor.html(json.items[0].title); //Get the title and add it in
-                        }, 'activity');
+                            sox.helpers.getFromAPI('questions', id, sitename, function(json) {
+                                anchor.html(json.items[0].title); //Get the title and add it in
+                            }, 'activity');
+                        }
                     }
-                  }
                 }
             });
         },
@@ -540,21 +540,23 @@
         },
 
         isQuestionHot: function() {
-            // Description: For adding some text to questions that are in the 30 most recent hot network questions
+            // Description: For adding some text to questions that are in the hot network questions list
 
             function addHotText() {
-                $('#feed').html('<p>In the top 30 most recent hot network questions!</p>');
-                $('#question-header').prepend('<div title="this question is in the top 30 most recent hot network questions!" class="sox-hot">HOT<div>');
+                if (!$('.sox-hot').length) {
+                    $('#feed').html('<p>One of the 100 hot network questions!</p>');
+                    $('#question-header').prepend('<div title="this question is a hot network question!" class="sox-hot">HOT<div>');
+                }
             }
             $('#qinfo').after('<div id="feed"></div>');
 
             $.ajax({
                 type: 'get',
-                url: 'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20feed%20where%20url%3D"http%3A%2F%2Fstackexchange.com%2Ffeeds%2Fquestions"&format=json',
+                url: 'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20json%20where%20url%3D"http%3A%2F%2Fstackexchange.com%2Fhot-questions-for-mobile"&format=json',
                 success: function(d) {
-                    var results = d.query.results.entry;
-                    $.each(results, function(i, result) {
-                        if (document.URL == result.link.href) {
+                    var results = d.query.results.json.json;
+                    $.each(results, function(i, o) {
+                        if (document.URL.indexOf(o.site + '/questions/' + o.question_id) > -1) {
                             addHotText();
                         }
                     });
@@ -576,7 +578,7 @@
         showCommentScores: function() {
             // Description: For adding a button on your profile comment history pages to show your comment's scores
 
-            var sitename = sox.site.apiSitename;
+            var sitename = sox.site.currentApiParameter;
             $('.history-table td b a[href*="#comment"]').each(function() {
                 var id = $(this).attr('href').split('#')[1].split('_')[0].replace('comment', '');
                 $(this).after('<span class="showCommentScore" id="' + id + '">&nbsp;&nbsp;&nbsp;show comment score</span>');
@@ -592,20 +594,22 @@
         answerTagsSearch: function() {
             // Description: For adding tags to answers in search
 
-            var sitename = sox.site.apiSiteName,
+            var sitename = sox.site.currentApiParameter,
                 ids = [],
                 idsAndTags = {};
 
-            $.each($('div[id*="answer"]'), function() { //loop through all *answers*
+            $('div[id*="answer"]').each(function() { //loop through all *answers*
                 ids.push($(this).find('.result-link a').attr('href').split('/')[2]); //Get the IDs for the questions for all the *answers*
             });
-            $.getJSON('https://api.stackexchange.com/2.2/questions/' + ids.join(';') + '?site=' + sitename, function(json) {
+
+            sox.helpers.getFromAPI('questions', ids.join(';'), sitename, function(json) {
+                //$.getJSON('https://api.stackexchange.com/2.2/questions/' + ids.join(';') + '?pagesize=60&site=' + sitename, function(json) {
                 var itemsLength = json.items.length;
                 for (var i = 0; i < itemsLength; i++) {
                     idsAndTags[json.items[i].question_id] = json.items[i].tags;
                 }
 
-                $.each($('div[id*="answer"]'), function() { //loop through all *answers*
+                $('div[id*="answer"]').each(function() { //loop through all *answers*
                     var id = $(this).find('.result-link a').attr('href').split('/')[2]; //get their ID
                     var $that = $(this);
                     for (var x = 0; x < idsAndTags[id].length; x++) { //Add the appropiate tags for the appropiate answer
@@ -619,7 +623,7 @@
                         }
                     });
                 });
-            });
+            }, 'creation&pagesize=60');
         },
 
         stickyVoteButtons: function() {
@@ -684,24 +688,18 @@
         },
 
         metaChatBlogStackExchangeButton: function() {
-            // Description: For adding buttons next to sites under the StackExchange button that lead to that site's meta, chat and blog
+            // Description: For adding buttons next to sites under the StackExchange button that lead to that site's meta and chat
+            // NOTE: this feature used to have a 'blog' button as well, but it wasn't very useful so was removed
 
-            var blogSites = ['math', 'serverfault', 'english', 'stats', 'diy', 'bicycles', 'webapps', 'mathematica', 'christianity', 'cooking', 'fitness', 'cstheory', 'scifi', 'tex', 'security', 'islam', 'superuser', 'gaming', 'programmers', 'gis', 'apple', 'photo', 'dba'],
-                link,
-                blogLink = '//' + 'blog.stackexchange.com';
-
+            var link;
             $('#your-communities-section > ul > li > a').hover(function() {
                 if ($(this).attr('href').substr(0, 6).indexOf('meta') == -1) {
                     link = 'http://meta.' + $(this).attr('href').substr(2, $(this).attr('href').length - 1);
-                    if (blogSites.indexOf($(this).attr('href').split('/')[2].split('.')[0]) != -1) {
-                        blogLink = '//' + $(this).attr('href').split('/')[2].split('.')[0] + '.blogoverflow.com';
-                    }
 
                     $(this).find('.rep-score').hide();
                     $(this).append('<div class="related-links" style="float: right;"> \
                                  <a href="' + link + '">meta</a> \
-                                 <a href="http://chat.stackexchange.com">chat</a> \
-                                 <a href="' + blogLink + '">blog</a> \
+                                 <a href="http://chat.stackexchange.com?tab=site&host=' + $(this).attr('href').substr(2) + '">chat</a> \
                                 </div>');
                 }
             }, function() {
@@ -714,14 +712,13 @@
             // Description: For adding a fake mod diamond that notifies you if there has been a new post posted on the current site's meta
 
             //DO NOT RUN ON META OR CHAT OR SITES WITHOUT A META
-            if (sox.site.type != 'main' || !$('.related-site').length) return;
-
+            if ((sox.site.type != 'main' && sox.site.type != 'beta') || !$('.related-site').length) return;
 
             var NEWQUESTIONS = 'metaNewQuestionAlert-lastQuestions',
                 DIAMONDON = 'metaNewQuestionAlert-diamondOn',
                 DIAMONDOFF = 'metaNewQuestionAlert-diamondOff',
                 favicon = sox.site.icon,
-                metaName = sox.site.metaApiSiteName,
+                metaName = 'meta.' + sox.site.currentApiParameter,
                 lastQuestions = {},
                 apiLink = 'https://api.stackexchange.com/2.2/questions?pagesize=5&order=desc&sort=activity&site=' + metaName,
                 $dialog = $('<div/>', {
@@ -881,6 +878,9 @@
 
             function getComment(url, $that) {
                 $.get(url, function(responseText, textStatus, XMLHttpRequest) {
+                    console.log('SOX editReasonTooltip URL: ' + url);
+                    console.log($that);
+                    console.log('SOX editReasonTooltip text: ' + $(XMLHttpRequest.responseText).find('.revision-comment:eq(0)')[0].innerHTML);
                     $that.find('.sox-revision-comment').attr('title', $(XMLHttpRequest.responseText).find('.revision-comment:eq(0)')[0].innerHTML);
                 });
             }
@@ -970,6 +970,7 @@
             }
 
             function SBS(jNode) {
+                jNode = $(jNode);
                 var itemid = jNode[0].id.replace(/^\D+/g, '');
                 var toAppend = (itemid.length > 0 ? '-' + itemid : ''); //helps select tags specific to the question/answer being
                 // edited (or new question/answer being written)
@@ -994,32 +995,28 @@ Toggle SBS?</div></li>';
                 }, 1000);
             }
 
-            //Adding script dynamically because @requiring causes the page load to hang -- don't know how to fix! :(
-            var script = document.createElement('script');
-            script.src = 'https://cdn.rawgit.com/BrockA/2625891/raw/9c97aa67ff9c5d56be34a55ad6c18a314e5eb548/waitForKeyElements.js';
-            document.getElementsByTagName('head')[0].appendChild(script);
             //This is a heavily modified version by szego <https://github.com/szego/SE-Answers_scripts/blob/master/side-by-side-editing.user.js>:
-            setTimeout(function() {
-                if (window.location.pathname.indexOf('questions/ask') < 0) { //not posting a new question
-                    //get question and answer IDs for keeping track of the event listeners
-                    var anchorList = $('#answers > a'), //answers have anchor tags before them of the form <a name="#">, where # is the answer ID
-                        numAnchors = anchorList.length,
-                        itemIDs = [];
+            if (window.location.pathname.indexOf('questions/ask') < 0) { //not posting a new question
+                //get question and answer IDs for keeping track of the event listeners
+                var anchorList = $('#answers > a'), //answers have anchor tags before them of the form <a name="#">, where # is the answer ID
+                    numAnchors = anchorList.length,
+                    itemIDs = [];
 
-                    for (var i = 1; i <= numAnchors - 2; i++) { //the first and last anchors aren't answers
-                        itemIDs.push(anchorList[i].name);
-                    }
-                    itemIDs.push($('.question').data('questionid'));
-
-                    //event listeners for adding the sbs toggle buttons for editing existing questions or answers
-                    for (i = 0; i <= numAnchors - 2; i++) {
-                        waitForKeyElements('#wmd-redo-button-' + itemIDs[i], SBS);
-                    }
+                for (var i = 1; i <= numAnchors - 2; i++) { //the first and last anchors aren't answers
+                    itemIDs.push(anchorList[i].name);
                 }
+                itemIDs.push($('.question').data('questionid'));
 
-                //event listener for adding the sbs toggle button for posting new questions or answers
-                waitForKeyElements('#wmd-redo-button', SBS);
-            }, 2000);
+                //event listeners for adding the sbs toggle buttons for editing existing questions or answers
+                for (i = 0; i <= numAnchors - 2; i++) {
+                    //waitForKeyElements('#wmd-redo-button-' + itemIDs[i], SBS);
+                    sox.helpers.observe('#wmd-redo-button-' + itemIDs[i], SBS);
+                }
+            }
+
+            //event listener for adding the sbs toggle button for posting new questions or answers
+            //waitForKeyElements('#wmd-redo-button', SBS);
+            sox.helpers.observe('#wmd-redo-button', SBS);
         },
 
         alwaysShowImageUploadLinkBox: function() {
@@ -1034,46 +1031,48 @@ Toggle SBS?</div></li>';
             // Description: To add the author's name to inbox notifications
 
             function getAuthorName($node) {
-                var type = $node.find('.item-header .item-type').text(),
-                    sitename = $node.find('a').eq(0).attr('href').split('com/')[0].replace('http://', '') + 'com',
-                    link = $node.find('a').eq(0).attr('href'),
-                    apiurl,
-                    id;
+                if ($node) {
+                    var type = $node.find('.item-header .item-type').text(),
+                        sitename = $node.find('a').eq(0).attr('href').split('com/')[0].replace('http://', '') + 'com',
+                        link = $node.find('a').eq(0).attr('href'),
+                        apiurl,
+                        id;
 
-                switch (type) {
-                    case 'comment':
-                        id = link.split('/')[5].split('?')[0];
-                        apiurl = 'https://api.stackexchange.com/2.2/comments/' + id + '?order=desc&sort=creation&site=' + sitename;
-                        break;
-                    case 'answer':
-                        id = link.split('/')[4].split('?')[0];
-                        apiurl = 'https://api.stackexchange.com/2.2/answers/' + id + '?order=desc&sort=creation&site=' + sitename;
-                        break;
-                    case 'edit suggested':
-                        id = link.split('/')[4];
-                        apiurl = 'https://api.stackexchange.com/2.2/suggested-edits/' + id + '?order=desc&sort=creation&site=' + sitename;
-                        break;
-                    default:
-                        console.log('sox does not currently support get author information for type' + type);
-                        return;
+                    switch (type) {
+                        case 'comment':
+                            id = link.split('/')[5].split('?')[0];
+                            apiurl = 'https://api.stackexchange.com/2.2/comments/' + id + '?order=desc&sort=creation&site=' + sitename;
+                            break;
+                        case 'answer':
+                            id = link.split('/')[4].split('?')[0];
+                            apiurl = 'https://api.stackexchange.com/2.2/answers/' + id + '?order=desc&sort=creation&site=' + sitename;
+                            break;
+                        case 'edit suggested':
+                            id = link.split('/')[4];
+                            apiurl = 'https://api.stackexchange.com/2.2/suggested-edits/' + id + '?order=desc&sort=creation&site=' + sitename;
+                            break;
+                        default:
+                            console.log('SOX does not currently support get author information for type: ' + type);
+                            return;
+                    }
+
+                    $.getJSON(apiurl, function(json) {
+                        var author = json.items[0].owner.display_name,
+                            $author = $('<span/>', {
+                                class: 'author',
+                                style: 'padding-left: 5px;',
+                                text: author
+                            });
+                        console.log(author);
+
+                        var $header = $node.find('.item-header'),
+                            $type = $header.find('.item-type').clone(),
+                            $creation = $header.find('.item-creation').clone();
+
+                        //fix conflict with soup fix mse207526 - https://github.com/vyznev/soup/blob/master/SOUP.user.js#L489
+                        $header.empty().append($type).append($author).append($creation);
+                    });
                 }
-
-                $.getJSON(apiurl, function(json) {
-                    var author = json.items[0].owner.display_name,
-                        $author = $('<span/>', {
-                            class: 'author',
-                            style: 'padding-left: 5px;',
-                            text: author
-                        });
-                    console.log(author);
-
-                    var $header = $node.find('.item-header'),
-                        $type = $header.find('.item-type').clone(),
-                        $creation = $header.find('.item-creation').clone();
-
-                    //fix conflict with soup fix mse207526 - https://github.com/vyznev/soup/blob/master/SOUP.user.js#L489
-                    $header.empty().append($type).append($author).append($creation);
-                });
             }
 
             sox.helpers.observe('.inbox-dialog', function(node) {
@@ -1259,31 +1258,195 @@ Toggle SBS?</div></li>';
         downvotedPostsEditAlert: function() {
             // Description: Adds a notification to the inbox if a question you downvoted and watched is edited
 
-            function addNotification(link, title) { //add the notification
-                var favicon = sox.site.icon;
-                $('div.topbar .icon-inbox').click(function() { //add the actual notification
-                    setTimeout(function() {
-                        $('div.topbar div.topbar-dialog.inbox-dialog.dno ul').prepend("<li class='inbox-item unread-item question-close-notification'> \
-            <a href='" + link + "'> \
-            <div class='site-icon favicon " + favicon + "' title=''></div> \
-            <div class='item-content'> \
-            <div class='item-header'> \
-            <span class='item-type'>post edit</span> \
-            <span class='item-creation'><span style='color:blue;border: 1px solid gray;' onclick='javascript:void(0)' id='markAsRead_" + sitename + '-' + id + "'>mark as read</span></span> \
-            </div> \
-            <div class='item-location'>" + title + "</div> \
-            <div class='item-summary'>A post you downvoted has been edited since. Go check it out, and see if you should retract your downvote!</div> \
-            </div> \
-            </a> \
-            </li>");
-                    }, 500);
+            //GM_deleteValue('downvotedPostsEditAlert');
+            //GM_deleteValue('downvotedPostsEditAlert-notifications');
+            var websocketSiteCodes = {
+                "3dprinting": "640",
+                "academia": "415",
+                "ham": "520",
+                "android": "139",
+                "anime": "477",
+                "arduino": "540",
+                "area51": "11",
+                "gaming": "41",
+                "ai": "658",
+                "crafts": "650",
+                "apple": "118",
+                "patents": "463",
+                "askubuntu": "89",
+                "astronomy": "514",
+                "aviation": "528",
+                "alcohol": "532",
+                "hermeneutics": "320",
+                "bicycles": "126",
+                "biology": "375",
+                "bitcoin": "308",
+                "blender": "502",
+                "boardgames": "147",
+                "buddhism": "565",
+                "chemistry": "431",
+                "chess": "435",
+                "chinese": "371",
+                "christianity": "304",
+                "civicrm": "605",
+                "codereview": "196",
+                "coffee": "597",
+                "cogsci": "391",
+                "communitybuilding": "571",
+                "scicomp": "363",
+                "computergraphics": "633",
+                "cs": "419",
+                "craftcms": "563",
+                "stats": "65",
+                "crypto": "281",
+                "datascience": "557",
+                "dba": "182",
+                "drupal": "220",
+                "earthscience": "553",
+                "ebooks": "530",
+                "economics": "591",
+                "electronics": "135",
+                "elementaryos": "621",
+                "emacs": "583",
+                "engineering": "595",
+                "english": "97",
+                "ell": "481",
+                "ethereum": "642",
+                "expatriates": "546",
+                "expressionengine": "471",
+                "freelancing": "500",
+                "french": "299",
+                "gamedev": "53",
+                "gardening": "269",
+                "genealogy": "467",
+                "gis": "79",
+                "german": "253",
+                "graphicdesign": "174",
+                "hardwarerecs": "635",
+                "health": "607",
+                "hinduism": "567",
+                "hsm": "587",
+                "history": "324",
+                "diy": "73",
+                "homebrew": "156",
+                "security": "162",
+                "islam": "455",
+                "italian": "524",
+                "japanese": "257",
+                "joomla": "555",
+                "korean": "654",
+                "languagelearning": "646",
+                "latin": "644",
+                "law": "617",
+                "bricks": "336",
+                "lifehacks": "593",
+                "linguistics": "312",
+                "magento": "479",
+                "martialarts": "403",
+                "mathematica": "387",
+                "matheducators": "548",
+                "math": "69",
+                "mathoverflow": "504",
+                "meta": "4",
+                "judaism": "248",
+                "monero": "656",
+                "mechanics": "224",
+                "movies": "367",
+                "musicfans": "601",
+                "music": "240",
+                "mythology": "615",
+                "networkengineering": "496",
+                "opendata": "498",
+                "opensource": "619",
+                "parenting": "228",
+                "money": "93",
+                "productivity": "277",
+                "pets": "518",
+                "philosophy": "265",
+                "photo": "61",
+                "fitness": "216",
+                "physics": "151",
+                "poker": "379",
+                "politics": "475",
+                "portuguese": "625",
+                "programmers": "131",
+                "codegolf": "200",
+                "pm": "208",
+                "puzzling": "559",
+                "quant": "204",
+                "raspberrypi": "447",
+                "retrocomputing": "648",
+                "reverseengineering": "489",
+                "robotics": "469",
+                "rpg": "122",
+                "russian": "451",
+                "salesforce": "459",
+                "scifi": "186",
+                "cooking": "49",
+                "serverfault": "2",
+                "sharepoint": "232",
+                "dsp": "295",
+                "skeptics": "212",
+                "sqa": "244",
+                "softwarerecs": "536",
+                "sound": "512",
+                "space": "508",
+                "spanish": "353",
+                "sports": "411",
+                "stackapps": "101",
+                "stackoverflow": "1",
+                "pt": "526",
+                "es": "637",
+                "ru": "609",
+                "startups": "573",
+                "superuser": "3",
+                "sustainability": "483",
+                "tex": "85",
+                "outdoors": "395",
+                "workplace": "423",
+                "cstheory": "114",
+                "tor": "516",
+                "travel": "273",
+                "tridion": "485",
+                "unix": "106",
+                "ux": "102",
+                "vi": "599",
+                "video": "170",
+                "webapps": "34",
+                "webmasters": "45",
+                "windowsphone": "427",
+                "woodworking": "603",
+                "wordpress": "110",
+                "worldbuilding": "579",
+                "writers": "166",
+                "rus": "613",
+                "ja": "581"
+            };
+
+            function addNotification(link, title, sitename, notificationPostId, unread) { //add the notification
+                sox.helpers.observe('.inbox-dialog', function() {
+                    if(notifications[notificationPostId]) {
+                        $('div.topbar div.topbar-dialog.inbox-dialog.dno ul').prepend("<li class='inbox-item " + (unread ? "unread-item " : "") + "question-close-notification'> \
+                <a href='" + link + "'> \
+                <div class='site-icon favicon favicon-stackexchange' title=''></div> \
+                <div class='item-content'> \
+                <div class='item-header'> \
+                <span class='item-type'>post edit</span> \
+                <span class='item-creation'><span class='downvotedPostsEditAlert-delete' style='color:blue;border: 1px solid gray;' onclick='javascript:void(0)' id='delete_" + sitename + '-' + notificationPostId + "'>delete</span></span> \
+                </div> \
+                <div class='item-location'>" + title + "</div> \
+                <div class='item-summary'>A post you downvoted has been edited since. Go check it out, and see if you should retract your downvote!</div> \
+                </div> \
+                </a> \
+                </li>");
+                    }
                 });
             }
 
-            function addNumber() { //count the number of elements in the 'unread' object, and display that number on the inbox icon
+            function addNumber() {
                 var count = 0;
-                for (var i in unread) {
-                    if (unread.hasOwnProperty(i)) {
+                for (var i in notifications) {
+                    if (notifications.hasOwnProperty(i)) {
                         count++;
                     }
                 }
@@ -1292,71 +1455,119 @@ Toggle SBS?</div></li>';
                 }
             }
 
-            var posts = JSON.parse(GM_getValue("downvotedPostsEditAlert", "[]")),
-                unread = JSON.parse(GM_getValue("downvotedPostsEditAlert-unreadItems", "{}")),
-                lastCheckedDate = GM_getValue("downvotedPostsEditAlert-lastCheckedDate", 0),
-                key = ")2kXF9IR5OHnfGRPDahCVg((",
-                access_token = sox.helpers.accessToken;
+            var postsToCheck = JSON.parse(GM_getValue('downvotedPostsEditAlert', '{}'));
+            var notifications = JSON.parse(GM_getValue('downvotedPostsEditAlert-notifications', '{}'));
+            var lastCheckedTime = GM_getValue('downvotedPostsEditAlert-lastCheckedTime', 0);
 
-            if (access_token) {
-                $('.post-menu').each(function() {
-                    $(this).append("<span class='lsep'></span><a class='downvotedPostsEditAlert-watchPostForEdits'>notify on edit</a>");
-                });
-                $('.downvotedPostsEditAlert-watchPostForEdits').click(function() {
-                    var $that = $(this);
-                    var $parent = $(this).closest('table').parent();
-                    var id;
-                    if ($parent.attr('data-questionid')) {
-                        id = $parent.attr('data-questionid');
-                    } else if ($parent.attr('data-answerid')) {
-                        id = $parent.attr('data-answerid');
-                    }
-                    var stringToAdd = sox.site.apiSiteName + '-' + id;
-                    var index = posts.indexOf(stringToAdd);
-                    if (index == -1) {
-                        $that.css('color', 'green');
-                        posts.push(stringToAdd);
-                        GM_setValue('downvotedPostsEditAlert', JSON.stringify(posts));
+            console.log(postsToCheck);
+            console.log(notifications);
+            console.log(lastCheckedTime);
+
+            $(document).on('click', '.downvotedPostsEditAlert-delete', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('deleting');
+                var base = $(this).attr('id').split('delete_')[1];
+                var sitename = base.split('-')[0];
+                var postId = base.split('-')[1];
+                delete notifications[+postId];
+                console.log('new notifications object', notifications);
+                GM_setValue('downvotedPostsEditAlert-notifications', JSON.stringify(notifications));
+                $(this).parents('.question-close-notification').remove(); //hide the notification in the inbox dropdown
+            });
+
+            $('.post-menu').each(function() {
+                var id;
+                var $parent = $(this).parents('.question, .answer');
+                if($parent.length) {
+                    if($parent.hasClass('question')) {
+                        id = +$parent.attr('data-questionid');
                     } else {
-                        $that.removeAttr('style');
-                        posts.splice(index, 1);
-                        GM_setValue('downvotedPostsEditAlert', JSON.stringify(posts));
+                        id = +$parent.attr('data-answerid');
                     }
-                });
-
-                for (var i = 0; i < posts.length; i++) {
-                    var sitename = posts[i].split('-')[0];
-                    var id = posts[i].split('-')[1];
-                    var url = "https://api.stackexchange.com/2.2/posts/" + id + "?order=desc&sort=activity&site=" + sitename + "&filter=!9YdnSEBb8&key=" + key + "&access_token=" + access_token;
-                    if (new Date().getDate() != new Date(lastCheckedDate).getDate()) {
-                        $.getJSON(url, function(json) {
-                            if (json.items[0].last_edit_date > ((lastCheckedDate / 1000) - 86400)) {
-                                unread[sitename + '-' + json.items[0].post_id] = [json.items[0].link, json.items[0].title];
-                                GM_setValue('downvotedPostsEditAlert-unreadItems', JSON.stringify(unread));
-                            }
-                            lastCheckedDate = new Date().getTime();
-                            GM_setValue('downvotedPostsEditAlert-lastCheckedDate', lastCheckedDate);
-                        });
-                    }
-                    $.each(unread, function(siteAndId, details) {
-                        addNotification(details[0], details[1]);
-                    });
-                    addNumber();
                 }
+                $(this).append("<span class='lsep'></span><a " + (id in postsToCheck ? "style='color:green' " : "") + "class='downvotedPostsEditAlert-watchPostForEdits'>notify on edit</a>");
+            });
 
-                $(document).on('click', 'span[id^=markAsRead]', function(e) { //click handler for the 'mark as read' button
-                    e.preventDefault(); //don't go to questionn
-                    var siteAndId = $(this).attr('id').split('_')[1];
-                    delete unread[siteAndId]; //delete the question from the object
-                    GM_setValue('downvotedPostsEditAlert-unreadItems', JSON.stringify(unread)); //save the object again
-                    $(this).parent().parent().parent().parent().parent().hide(); //hide the notification in the inbox dropdown
-                });
+            $('.downvotedPostsEditAlert-watchPostForEdits').click(function() {
+                var questionId = document.URL.split('/')[4];
+                var postId = $(this).parents('.question, .answer').attr('data-answerid') || questionId;
+                var sitename = sox.site.currentApiParameter;
+                var posts = Object.keys(postsToCheck);
+                var index = posts.indexOf(postId);
 
-                $(document).mouseup(function(e) { //hide on click off
-                    var container = $('div.topbar-dialog.inbox-dialog.dno > div.modal-content');
-                    if (!container.is(e.target) && container.has(e.target).length === 0) {
-                        container.find('.question-close-notification').remove();
+                if (index > -1) { //already exists, so remove it
+                    $(this).removeAttr('style');
+                    delete postsToCheck[posts[index]];
+                } else { //new watch item
+                    $(this).css('color', 'green');
+                    postsToCheck[postId] = {
+                        'questionId': questionId,
+                        'addedDate': new Date().getTime(),
+                        'sitename': sitename
+                    };
+                }
+                GM_setValue('downvotedPostsEditAlert', JSON.stringify(postsToCheck));
+            });
+
+            //set up websockets
+            var w = new WebSocket("ws://qa.sockets.stackexchange.com/");
+            var posts = Object.keys(postsToCheck);
+            w.onmessage = function(e) {
+                var data = JSON.parse(e.data);
+                var sitename;
+                var title;
+                data.data = JSON.parse(data.data);
+                console.log('Received Data:', data.data);
+                if (data.data.a == 'post-edit' && posts.indexOf((data.data.id).toString()) > -1) {
+                    for (var c in websocketSiteCodes) {
+                        if (websocketSiteCodes[c] == data.action.split('-')[0]) {
+                            sitename = c;
+                            sox.helpers.getFromAPI('posts', data.data.id, sitename, function(d) {
+                                title = d.items[0].title;
+                                notifications[data.data.id] = {
+                                    'sitename': sitename,
+                                    'url': 'http://' + sitename + '.stackexchange.com/posts/' + data.data.id,
+                                    'title': title
+                                };
+                                GM_setValue('downvotedPostsEditAlert-notifications', JSON.stringify(notifications));
+                                addNotification('http://' + sitename + '.stackexchange.com/posts/' + data.data.id, title + ' [LIVE]', sitename, data.data.id, true);
+                                console.log('adding notification');
+                                addNumber();
+                            }, 'activity&filter=!9YdnSEBb8');
+                        }
                     }
+                }
+            };
+
+            $.each(notifications, function(i, o) {
+                addNotification(o.url, o.title, o.sitename, i, false);
+            });
+
+            if (!$.isEmptyObject(postsToCheck)) {
+                $.each(postsToCheck, function(i, o) {
+                    console.log('Last Checked Time: ' + o.lastCheckedTime);
+                    if (new Date().getTime() >= ((o.lastCheckedTime || 0) + 900000)) { //an hour: 3600000ms, 15 minutes: 900000ms
+                        sox.helpers.getFromAPI('posts', i, o.sitename, function(json) {
+                            if (json.items[0].last_edit_date > (o.lastCheckedTime || o.addedDate) / 1000) {
+                                addNotification(json.items[0].link, json.items[0].title + ' [API]', json.items[0].link.split('/')[2].split('.')[0], i, true);
+                                console.log('adding notification from api');
+                                notifications[i] = {
+                                    'sitename': json.items[0].link.split('/')[2].split('.')[0],
+                                    'url': json.items[0].link,
+                                    'title': json.items[0].title
+                                };
+                                GM_setValue('downvotedPostsEditAlert-notifications', JSON.stringify(notifications));
+                                addNumber();
+                            }
+                        }, "activity&filter=!9YdnSEBb8");
+                    }
+                    o.lastCheckedTime = new Date().getTime();
+                    GM_setValue('downvotedPostsEditAlert', JSON.parse(postsToCheck));
+                    w.onopen = function() {
+                        console.log('sending websocket message: ' + websocketSiteCodes[o.sitename] + "-question-" + o.questionId);
+                        w.send(websocketSiteCodes[o.sitename] + "-question-" + o.questionId);
+                    };
                 });
             }
         },
@@ -1408,7 +1619,7 @@ Toggle SBS?</div></li>';
             $table.append($row).appendTo($topAnswers);
 
             function score(e) {
-                return new Number($(e).parent().find('.vote-count-post').text());
+                return +$(e).parent().find('.vote-count-post').text();
             }
 
             function compareByScore(a, b) {
@@ -1591,13 +1802,19 @@ Toggle SBS?</div></li>';
 
             var answerers = {};
             $('.question, .answer').each(function() {
-                var $userDetails = $(this).find('.post-signature .user-details');
-                var userid = $userDetails.find('a').attr('href').split('/')[2];
-                var username = $userDetails.find('a').text();
-                answerers[userid] = username;
+                var $userDetailsAnchor = $(this).find('.post-signature .user-details a').last();
+                if ($userDetailsAnchor.length) {
+                    var userid = ($userDetailsAnchor.attr('href') ? $userDetailsAnchor.attr('href').split('/')[2] : 0);
+                    var username = $userDetailsAnchor.text();
+                    if (userid !== 0) answerers[userid] = username;
+                } else {
+                    sox.helpers.notify('Could not find user user link for:');
+                    console.log($(this));
+                }
             });
-            var apiUrl = "https://api.stackexchange.com/users/" + Object.keys(answerers).join(';') + "?site=" + sox.site.apiSiteName;
+            var apiUrl = "https://api.stackexchange.com/users/" + Object.keys(answerers).join(';') + "?site=" + sox.site.currentApiParameter;
             $.get(apiUrl, function(data) {
+                console.log(data);
                 var userDetailsFromAPI = {};
                 $.each(data.items, function() {
                     var cur = $(this)[0];
@@ -1607,12 +1824,15 @@ Toggle SBS?</div></li>';
                         'type': cur.user_type
                     };
                 });
-                $('.question, .answer').each(function() {
-                    var id = $(this).find('.post-signature .user-details a').attr('href').split('/')[2];
-                    if (userDetailsFromAPI[id]) {
-                        $(this).find('.comments tbody:eq(0)').prepend("<tr class='comment'><td class='comment-actions'></td><td class='comment-text'><div style='display: block;' class='comment-body'>last seen: " + userDetailsFromAPI[id].last_seen + " | type: " + userDetailsFromAPI[id].type + "</div></td></tr>");
-                    }
-                });
+                setTimeout(function() {
+                    $('.question, .answer').each(function() {
+                        var id = $(this).find('.post-signature .user-details a').last().attr('href').split('/')[2];
+                        if (userDetailsFromAPI[id]) {
+                            $(this).find('.comments').removeClass('dno');
+                            $(this).find('.comments tbody:eq(0)').prepend("<tr class='comment'><td class='comment-actions'></td><td class='comment-text'><div style='display: block;' class='comment-body'>last seen: " + userDetailsFromAPI[id].last_seen + " | type: " + userDetailsFromAPI[id].type + "</div></td></tr>");
+                        }
+                    });
+                }, 500);
             });
         },
 
@@ -1654,10 +1874,11 @@ Toggle SBS?</div></li>';
             // Description: Filter hot network questions in the sidebar based on their attributes such as title, site, etc..
 
             $('#hot-network-questions li a').each(function() {
+                var i;
                 if (settings.wordsToBlock && settings.wordsToBlock !== '') {
                     var words = $(this).text().split(' '),
                         wordsToBlock = settings.wordsToBlock.split(',');
-                    for (var i = 0; i < wordsToBlock.length; i++) {
+                    for (i = 0; i < wordsToBlock.length; i++) {
                         if (words.indexOf(wordsToBlock[i]) != -1) {
                             $(this).parent().hide();
                         }
@@ -1666,7 +1887,7 @@ Toggle SBS?</div></li>';
                 if (settings.sitesToBlock && settings.sitesToBlock !== '') {
                     var site = $(this).attr('href'),
                         sitesToBlock = settings.sitesToBlock.split(',');
-                    for (var i = 0; i < sitesToBlock.length; i++) {
+                    for (i = 0; i < sitesToBlock.length; i++) {
                         if (sox.location.match(sitesToBlock[i], site)) {
                             $(this).parent().hide();
                         }
@@ -1675,7 +1896,7 @@ Toggle SBS?</div></li>';
                 if (settings.titlesToHideRegex && settings.titlesToHideRegex !== '') {
                     var title = $(this).text(),
                         titlesToHide = settings.titlesToHideRegex.split(',');
-                    for (var i = 0; i < titlesToHide.length; i++) {
+                    for (i = 0; i < titlesToHide.length; i++) {
                         if (title.match(new RegExp(titlesToHide))) {
                             $(this).parent().hide();
                         }
@@ -1708,9 +1929,10 @@ Toggle SBS?</div></li>';
                 style: 'position: fixed; right: 0; bottom: 50px; background-color: rgba(200, 200, 200, 1); width: 200px; height: 35px; text-align: center; padding: 3px; color: red;',
                 html: 'You are not logged in. You should <a href="/users/login">log in</a> to continue enjoying SE.'
             });
+
             function checkAndAddReminder() {
-                if(!sox.user.loggedIn) {
-                    if(!$('#loggedInReminder').length) $('body').append(div);
+                if (!sox.user.loggedIn) {
+                    if (!$('#loggedInReminder').length) $('body').append(div);
                 } else {
                     $('#loggedInReminder').remove();
                 }

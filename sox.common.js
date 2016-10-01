@@ -3,7 +3,7 @@
     var SOX_SETTINGS = 'SOXSETTINGS';
     var commonInfo = JSON.parse(GM_getResourceText('common'));
 
-    var Stack = (typeof StackExchange === "undefined" ? undefined : StackExchange);
+    var Stack = (typeof StackExchange === "undefined" ? window.eval('StackExchange') : StackExchange);
     var Chat = (typeof CHAT === "undefined" ? undefined : CHAT);
 
     sox.info = {
@@ -14,15 +14,23 @@
 
     sox.ready = function(func) {
         $(function() {
-            return Stack ? Stack.ready(func) : func();
+            if (Stack) {
+                if (Stack.ready) {
+                    Stack.ready(func());
+                } else {
+                    func();
+                }
+            } else {
+                func();
+            }
         });
     };
 
     sox.settings = {
         available: GM_getValue(SOX_SETTINGS, -1) != -1,
         load: function() {
-          var settings = GM_getValue(SOX_SETTINGS);
-          return settings == undefined ? undefined : JSON.parse(settings);
+            var settings = GM_getValue(SOX_SETTINGS);
+            return settings === undefined ? undefined : JSON.parse(settings);
         },
         save: function(settings) {
             GM_setValue(SOX_SETTINGS, JSON.stringify(settings));
@@ -35,6 +43,7 @@
             }
         },
         get accessToken() {
+            console.log('SOX Access Token: ' + (GM_getValue('SOX-accessToken', false) === false ? 'NOT SET' : 'SET'));
             return GM_getValue('SOX-accessToken', false);
         },
         writeToConsole: function() {
@@ -55,49 +64,67 @@
             }
         },
         getFromAPI: function(type, id, sitename, callback, sortby) {
-            $.getJSON('https://api.stackexchange.com/2.2/' + type + '/' + id + '?order=desc&sort=' + (sortby || 'creation') + '&site=' + sitename, callback);
+            console.log('Getting From API with URL: https://api.stackexchange.com/2.2/' + type + '/' + id + '?order=desc&sort=' + (sortby || 'creation') + '&site=' + sitename + '&key=' + sox.info.apikey + '&access_token=' + sox.settings.accessToken);
+            $.ajax({
+                type: 'get',
+                url: 'https://api.stackexchange.com/2.2/' + type + '/' + id + '?order=desc&sort=' + (sortby || 'creation') + '&site=' + sitename + '&key=' + sox.info.apikey + '&access_token=' + sox.settings.accessToken,
+                success: function(d) {
+                    if(d.backoff) {
+                        console.log('SOX Error: BACKOFF: ' + d.backoff);
+                    } else {
+                        callback(d);
+                    }
+                },
+                error: function(a, b, c) {
+                    console.log('SOX Error: ' + b + ' ' + c);
+                }
+            });
         },
         observe: function(elements, callback, toObserve) {
+            console.log('observe: ' + elements);
             new MutationObserver(function(mutations, observer) {
                 for (var i = 0; i < mutations.length; i++) {
                     for (var j = 0; j < mutations[i].addedNodes.length; j++) {
                         var $o = $(mutations[i].addedNodes[j]);
                         if ($o && $o.is((Array.isArray(elements) ? elements.join(',') : elements))) {
                             callback(mutations[i].addedNodes[j]);
+                            console.log('fire: ' + elements);
                         }
                     }
                 }
             }).observe(toObserve || document.body, {
                 childList: true,
-                subtree: true
+                subtree: true,
+                attributes: true,
+                characterData: true
             });
         },
         newElement: function(type, elementDetails) {
-          var extras = {},
-              allowed = ['text', 'checkbox', 'radio', 'textarea', 'span'];
-          if(allowed.indexOf(type) != -1) {
-              if(type == 'text') {
-                  type = 'input';
-                  extras['type'] = 'input';
-              } else if (type == 'checkbox') {
-                  type = 'input';
-                  extras['type'] = 'checkbox';
-              } else if (type == 'radio') {
-                  type = 'input';
-                  extras['type'] = 'radio';
-              } else if (type == 'textarea') {
-                  if(!elementDetails.text) {
-                      elementDetails.text = elementDetails.value;
-                  }
-              }
+            var extras = {},
+                allowed = ['text', 'checkbox', 'radio', 'textarea', 'span'];
+            if (allowed.indexOf(type) != -1) {
+                if (type == 'text') {
+                    type = 'input';
+                    extras.type = 'input';
+                } else if (type == 'checkbox') {
+                    type = 'input';
+                    extras.type = 'checkbox';
+                } else if (type == 'radio') {
+                    type = 'input';
+                    extras.type = 'radio';
+                } else if (type == 'textarea') {
+                    if (!elementDetails.text) {
+                        elementDetails.text = elementDetails.value;
+                    }
+                }
 
-              $.each(elementDetails, function(k, v) {
-                extras[k] = v;
-              });
-              return $('<' + type + '/>', extras);
-          } else {
-              return false;
-          }
+                $.each(elementDetails, function(k, v) {
+                    extras[k] = v;
+                });
+                return $('<' + type + '/>', extras);
+            } else {
+                return false;
+            }
         }
     };
 
@@ -140,14 +167,12 @@
             }
         },
         metaApiParameter: function(siteName) {
-            if (Chat || Stack && this.apiParameter(siteName)) {
+            if (Chat || this.apiParameter(siteName)) {
                 return 'meta.' + this.apiParameter(siteName);
             }
         },
         get currentApiParameter() {
-            if (Chat || Stack) {
-                return this.apiParameter(this.name);
-            }
+            return this.apiParameter(this.name);
         },
         get icon() {
             return "favicon-" + $(".current-site a:not([href*='meta']) .site-icon").attr('class').split('favicon-')[1];
@@ -186,7 +211,7 @@
                 matchPath = matchSplit.slice(-(matchSplit.length - 3)).join('/');
 
             matchScheme = matchScheme.replace(/\*/g, ".*");
-            matchHost = matchHost.replace(/\./g, "\\.").replace(/\*\\\./g, ".*.?").replace(/\\\.\*/g, ".*").replace(/\*$/g, ".*");;
+            matchHost = matchHost.replace(/\./g, "\\.").replace(/\*\\\./g, ".*.?").replace(/\\\.\*/g, ".*").replace(/\*$/g, ".*");
             matchPath = '^\/' + matchPath.replace(/\//g, "\\/").replace(/\*/g, ".*");
 
             if (currentSiteScheme.match(new RegExp(matchScheme)) && currentSiteHost.match(new RegExp(matchHost)) && currentSitePath.match(new RegExp(matchPath))) {
@@ -222,7 +247,6 @@
             return Stack ? Stack.options.user.isRegistered : undefined;
         },
         hasPrivilege: function(privilege) {
-            var privilege = {};
             if (this.loggedIn) {
                 var rep = (sox.site.type == 'beta' ? commonInfo.privileges.beta[privilege] : commonInfo.privileges.graduated[privilege]);
                 return this.rep > rep;
