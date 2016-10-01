@@ -699,12 +699,14 @@
                     link = 'http://meta.' + $(this).attr('href').substr(2, $(this).attr('href').length - 1);
                     if (blogSites.indexOf($(this).attr('href').split('/')[2].split('.')[0]) != -1) {
                         blogLink = '//' + $(this).attr('href').split('/')[2].split('.')[0] + '.blogoverflow.com';
+                    } else {
+                        blogLink = '#';
                     }
 
                     $(this).find('.rep-score').hide();
                     $(this).append('<div class="related-links" style="float: right;"> \
                                  <a href="' + link + '">meta</a> \
-                                 <a href="http://chat.stackexchange.com">chat</a> \
+                                 <a href="http://chat.stackexchange.com?tab=site&host=' + $(this).attr('href').substr(2) + '">chat</a> \
                                  <a href="' + blogLink + '">blog</a> \
                                 </div>');
                 }
