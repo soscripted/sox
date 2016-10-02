@@ -1760,41 +1760,22 @@ Toggle SBS?</div></li>';
                 if (acs[k].gold) {
                     $badgesTd.append('<span title="' + acs[k].gold + ' gold badges"><span class="badge1"></span><span class="badgecount">' + acs[k].gold + '</span></span>');
                 } else {
-                    $badgesTd.append('<span><span class="badge1" style="background-image:none"></span><span class="badgecount">&nbsp;&nbsp;</span></span>');
+                    $badgesTd.append('<span><span class="badge1" style="background-image:none"></span><span class="badgecount"></span></span>');
                 }
                 if (acs[k].silver) {
                     $badgesTd.append('<span title="' + acs[k].silver + ' silver badges"><span class="badge2"></span><span class="badgecount">' + acs[k].silver + '</span></span>');
                 } else {
-                    $badgesTd.append('<span><span class="badge1" style="background-image:none"></span><span class="badgecount">&nbsp;&nbsp;</span></span>');
+                    $badgesTd.append('<span><span class="badge1" style="background-image:none"></span><span class="badgecount"></span></span>');
                 }
                 if (acs[k].bronze) {
                     $badgesTd.append('<span title="' + acs[k].bronze + ' bronze badges"><span class="badge3"></span><span class="badgecount">' + acs[k].bronze + '</span></span>');
                 } else {
-                    $badgesTd.append('<span><span class="badge1" style="background-image:none"></span><span class="badgecount">&nbsp;&nbsp;</span></span>');
+                    $badgesTd.append('<span><span class="badge1" style="background-image:none"></span><span class="badgecount"></span></span>');
                 }
             });
 
-            for (var c = 0; c < 3; c++) {
-                var className = classes[c];
-                var $thisClassSpan = $('.user-accounts .badges span[title*="' + className + '"]');
-                if ($thisClassSpan.length) {
-                    $thisClassSpan.each(function() {
-                        var text = $(this).text();
-                        if (text.length > numbers[className]) {
-                            numbers[className] = text.length;
-                        }
-                    });
-                }
-                $thisClassSpan.each(function() {
-                    var len = $(this).text().length;
-                    if (len < numbers[className]) {
-                        for (var i = 0; i < numbers[className] - len; i++) {
-                            $(this).append('&nbsp;&nbsp;');
-                        }
-                    }
-                });
-            }
-            $('.user-accounts .badges span').css('margin-right', '3px');
+            $('.user-accounts .badges span').css({'min-width' : '20px', 'display': 'inline-block'});
+
         },
 
         quickAuthorInfo: function() {
