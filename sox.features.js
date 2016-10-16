@@ -1088,7 +1088,6 @@ Toggle SBS?</div></li>';
                                 style: 'padding-left: 5px;',
                                 text: author
                             });
-                        console.log(author);
 
                         var $header = $node.find('.item-header'),
                             $type = $header.find('.item-type').clone(),
@@ -1482,11 +1481,9 @@ Toggle SBS?</div></li>';
 
             var postsToCheck = JSON.parse(GM_getValue('downvotedPostsEditAlert', '{}'));
             var notifications = JSON.parse(GM_getValue('downvotedPostsEditAlert-notifications', '{}'));
-            var lastCheckedTime = GM_getValue('downvotedPostsEditAlert-lastCheckedTime', 0);
 
             console.log(postsToCheck);
             console.log(notifications);
-            console.log(lastCheckedTime);
 
             $(document).on('click', '.downvotedPostsEditAlert-delete', function(e) {
                 e.preventDefault();
@@ -1568,13 +1565,19 @@ Toggle SBS?</div></li>';
             $.each(notifications, function(i, o) {
                 addNotification(o.url, o.title, o.sitename, i, false);
             });
-
+            console.log(sox.settings.accessToken);
             if (!$.isEmptyObject(postsToCheck)) {
                 $.each(postsToCheck, function(i, o) {
                     console.log('Last Checked Time: ' + o.lastCheckedTime);
-                    if (new Date().getTime() >= ((o.lastCheckedTime || 0) + 900000)) { //an hour: 3600000ms, 15 minutes: 900000ms
+                    if (new Date().getTime() >= ((o.lastCheckedTime || 0) + 60000)) { //an hour: 3600000ms, 15 minutes: 900000ms, 1 minutes: 60000ms
                         sox.helpers.getFromAPI('posts', i, o.sitename, function(json) {
+                            console.log(json);
+                            //BUG: the o.lastCheckedTime is not as expected. The very first console.log(postToCheck) shows a **LATER**
+                            //lastCheckedTime than the console.log("Last checked time:...") that comes **AFTER** the first one
+                            //WHY!??
+                            console.log(json.items[0].last_edit_date + '>' + (o.lastCheckedTime || o.addedDate) / 1000);
                             if (json.items[0].last_edit_date > (o.lastCheckedTime || o.addedDate) / 1000) {
+                                console.log('adding notification from api');
                                 addNotification(json.items[0].link, json.items[0].title + ' [API]', json.items[0].link.split('/')[2].split('.')[0], i, true);
                                 console.log('adding notification from api');
                                 notifications[i] = {
@@ -1588,7 +1591,7 @@ Toggle SBS?</div></li>';
                         }, "activity&filter=!9YdnSEBb8");
                     }
                     o.lastCheckedTime = new Date().getTime();
-                    GM_setValue('downvotedPostsEditAlert', JSON.parse(postsToCheck));
+                    GM_setValue('downvotedPostsEditAlert', JSON.stringify(postsToCheck));
                     w.onopen = function() {
                         console.log('sending websocket message: ' + websocketSiteCodes[o.sitename] + "-question-" + o.questionId);
                         w.send(websocketSiteCodes[o.sitename] + "-question-" + o.questionId);
