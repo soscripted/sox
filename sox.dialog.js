@@ -182,6 +182,7 @@
                     id: 'soxSettingsButton',
                     class: 'topbar-icon yes-hover sox-settings-button',
                     title: 'Change SOX settings',
+                    'style': 'color: #858c93',
                     click: function(e) {
                         e.preventDefault();
                         $('#sox-settings-dialog').toggle();
