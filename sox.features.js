@@ -1827,8 +1827,7 @@ Toggle SBS?</div></li>';
                 $.each(data.items, function() {
                     var cur = $(this)[0];
                     userDetailsFromAPI[cur.user_id] = {
-                        'last_seen': new Date(cur.last_access_date * 1000).toUTCString(),
-                        'creation': new Date(cur.creation_date * 1000).toUTCString(),
+                        'last_seen': new Date(cur.last_access_date * 1000).toLocaleString(),
                         'type': cur.user_type
                     };
                 });
