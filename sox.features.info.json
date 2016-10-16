@@ -307,7 +307,7 @@
             }]
         }, {
             "name": "linkedPostsInline",
-            "desc": "Display linked posts inline (with an arrow)",
+            "desc": "Display linked posts inline by clicking on an arrow",
             "meta": "",
             "match": "*://*/questions*",
             "exclude": ""

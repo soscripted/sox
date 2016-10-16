@@ -181,8 +181,7 @@
             var $soxSettingsButton = $('<a/>', {
                     id: 'soxSettingsButton',
                     class: 'topbar-icon yes-hover sox-settings-button',
-                    title: 'Change SOX Settings',
-                    style: 'color: #A1A1A1',
+                    title: 'Change SOX settings',
                     click: function(e) {
                         e.preventDefault();
                         $('#sox-settings-dialog').toggle();

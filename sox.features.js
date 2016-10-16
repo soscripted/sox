@@ -579,15 +579,22 @@
             // Description: For adding a button on your profile comment history pages to show your comment's scores
 
             var sitename = sox.site.currentApiParameter;
-            $('.history-table td b a[href*="#comment"]').each(function() {
-                var id = $(this).attr('href').split('#')[1].split('_')[0].replace('comment', '');
-                $(this).after('<span class="showCommentScore" id="' + id + '">&nbsp;&nbsp;&nbsp;show comment score</span>');
-            });
-            $('.showCommentScore').css('cursor', 'pointer').on('click', function() {
-                var $that = $(this);
-                sox.helpers.getFromAPI('comments', $that.attr('id'), sitename, function(json) {
-                    $that.html('&nbsp;&nbsp;&nbsp;' + json.items[0].score);
+            function addLabelsAndHandlers() {
+                $('.history-table td b a[href*="#comment"]').each(function() {
+                    var id = $(this).attr('href').split('#')[1].split('_')[0].replace('comment', '');
+                    $(this).after('<span class="showCommentScore" id="' + id + '">&nbsp;&nbsp;&nbsp;show comment score</span>');
                 });
+                $('.showCommentScore').css('cursor', 'pointer').on('click', function() {
+                    var $that = $(this);
+                    sox.helpers.getFromAPI('comments', $that.attr('id'), sitename, function(json) {
+                        $that.html('&nbsp;&nbsp;&nbsp;' + json.items[0].score);
+                    });
+                });
+            }
+
+            addLabelsAndHandlers();
+            sox.helpers.observe('#user-tab-responses', function() {
+                addLabelsAndHandlers();
             });
         },
 
@@ -691,17 +698,30 @@
             // Description: For adding buttons next to sites under the StackExchange button that lead to that site's meta and chat
             // NOTE: this feature used to have a 'blog' button as well, but it wasn't very useful so was removed
 
-            var link;
+            var link, chatLink;
             $('#your-communities-section > ul > li > a').hover(function() {
-                if ($(this).attr('href').substr(0, 6).indexOf('meta') == -1) {
-                    link = 'http://meta.' + $(this).attr('href').substr(2, $(this).attr('href').length - 1);
+                var href = $(this).attr('href');
+                chatLink = 'http://chat.stackexchange.com?tab=site&host=' + href.substr(2);
 
-                    $(this).find('.rep-score').hide();
-                    $(this).append('<div class="related-links" style="float: right;"> \
-                                 <a href="' + link + '">meta</a> \
-                                 <a href="http://chat.stackexchange.com?tab=site&host=' + $(this).attr('href').substr(2) + '">chat</a> \
-                                </div>');
+                if (href.indexOf('stackapps') > -1) {
+                    link = 'http://stackapps.com/#';
+                } else if (href.indexOf('area51') > -1) {
+                    link = 'http://discuss.area51.stackexchange.com/';
+                } else if (href.indexOf('meta.stackexchange.com') > -1) {
+                    link = 'http://meta.stackexchange.com/#';
+                    chatLink = 'http://chat.meta.stackexchange.com';
+                } else if (href.indexOf('meta') > -1) {
+                    link = href + '/#';
+                    chatLink = 'http://chat.stackexchange.com?tab=site&host=' + href.replace(/(http\:\/\/)?/gi, '');
+                } else {
+                    link = 'http://meta.' + href.substr(2, href.length - 1);
                 }
+
+                $(this).find('.rep-score').hide();
+                $(this).append('<div class="related-links" style="float: right;"> \
+                             <a href="' + link + '">meta</a> \
+                             <a href="' + chatLink + '">chat</a> \
+                            </div>');
             }, function() {
                 $(this).find('.rep-score').show();
                 $(this).find('.related-links').remove();
@@ -740,6 +760,7 @@
                 $diamond = $('<a/>', {
                     id: 'metaNewQuestionAlertButton',
                     'class': 'topbar-icon yes-hover metaNewQuestionAlert-diamondOff',
+                    title: 'Moderator inbox (recent meta questions)',
                     click: function() {
                         $diamond.toggleClass('topbar-icon-on');
                         $dialog.toggle();
@@ -1781,6 +1802,8 @@ Toggle SBS?</div></li>';
         quickAuthorInfo: function() {
             // Description: Shows when the post's author was last active and their registration state in the comments section
 
+            $('.comments').addClass('quickAuthorInfoEnabled');
+            
             var answerers = {};
             $('.question, .answer').each(function() {
                 var $userDetailsAnchor = $(this).find('.post-signature .user-details a').last();

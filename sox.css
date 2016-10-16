@@ -59,7 +59,7 @@
     background-image: none !important;
     padding-top: 10px;
     font-size: 14px;
-    color: #999;
+    color: #858c93;
     height: 24px !important;
     min-width: 34px;
 }
@@ -378,4 +378,13 @@ hr.or:after {
     width: 2px;
     height: 100%;
     background: black;
+}
+
+/*quickAuthorInfo -- for changing the style of the comments table*/
+.comments.quickAuthorInfoEnabled {
+    border-top: none !important;
+}
+
+.comments.quickAuthorInfoEnabled > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > div:nth-child(1) {
+    opacity: 0.8 !important;
 }
