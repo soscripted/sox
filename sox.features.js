@@ -717,6 +717,10 @@
                     link = 'http://meta.' + href.substr(2, href.length - 1);
                 }
 
+                if (href.indexOf('stackoverflow.com') > -1) {
+                    chatLink = 'http://chat.stackoverflow.com?tab=site';
+                }
+
                 $(this).find('.rep-score').hide();
                 $(this).append('<div class="related-links" style="float: right;"> \
                              <a href="' + link + '">meta</a> \
@@ -1803,7 +1807,7 @@ Toggle SBS?</div></li>';
             // Description: Shows when the post's author was last active and their registration state in the comments section
 
             $('.comments').addClass('quickAuthorInfoEnabled');
-            
+
             var answerers = {};
             $('.question, .answer').each(function() {
                 var $userDetailsAnchor = $(this).find('.post-signature .user-details a').last();
