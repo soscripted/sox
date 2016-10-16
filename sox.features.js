@@ -704,14 +704,14 @@
                 chatLink = 'http://chat.stackexchange.com?tab=site&host=' + href.substr(2);
 
                 if (href.indexOf('stackapps') > -1) {
-                    link = 'http://stackapps.com/#';
+                    link = undefined;//'http://stackapps.com/#';
                 } else if (href.indexOf('area51') > -1) {
                     link = 'http://discuss.area51.stackexchange.com/';
                 } else if (href.indexOf('meta.stackexchange.com') > -1) {
-                    link = 'http://meta.stackexchange.com/#';
+                    link = undefined;//'http://meta.stackexchange.com/#';
                     chatLink = 'http://chat.meta.stackexchange.com';
                 } else if (href.indexOf('meta') > -1) {
-                    link = href + '/#';
+                    link = undefined;//href + '/#';
                     chatLink = 'http://chat.stackexchange.com?tab=site&host=' + href.replace(/(http\:\/\/)?/gi, '');
                 } else {
                     link = 'http://meta.' + href.substr(2, href.length - 1);
@@ -722,10 +722,10 @@
                 }
 
                 $(this).find('.rep-score').hide();
-                $(this).append('<div class="related-links" style="float: right;"> \
-                             <a href="' + link + '">meta</a> \
-                             <a href="' + chatLink + '">chat</a> \
-                            </div>');
+                $(this).append('<div class="related-links" style="float: right;">' +
+                             (link ? '<a href="' + link + '">meta</a>' : '') +
+                             (chatLink ? '<a href="' + chatLink + '">chat</a>' : '') +
+                            '</div>');
             }, function() {
                 $(this).find('.rep-score').show();
                 $(this).find('.related-links').remove();
