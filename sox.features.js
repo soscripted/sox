@@ -704,15 +704,15 @@
                 chatLink = 'http://chat.stackexchange.com?tab=site&host=' + href.substr(2);
 
                 if (href.indexOf('stackapps') > -1) {
-                    link = undefined;//'http://stackapps.com/#';
+                    link = undefined;
                 } else if (href.indexOf('area51') > -1) {
                     link = 'http://discuss.area51.stackexchange.com/';
                 } else if (href.indexOf('meta.stackexchange.com') > -1) {
-                    link = undefined;//'http://meta.stackexchange.com/#';
+                    link = undefined;
                     chatLink = 'http://chat.meta.stackexchange.com';
                 } else if (href.indexOf('meta') > -1) {
-                    link = undefined;//href + '/#';
-                    chatLink = 'http://chat.stackexchange.com?tab=site&host=' + href.replace(/(http\:\/\/)?/gi, '');
+                    link = undefined;
+                    chatLink = undefined;
                 } else {
                     link = 'http://meta.' + href.substr(2, href.length - 1);
                 }
