@@ -226,8 +226,13 @@
             var listBtn = '<li class="wmd-button" title="add dashes (\"-\") before every line to make a bulvar point list" style="left: 425px;"><span id="wmd-bullet-button" style="background-image:none;">&#x25cf;</span></li>';
 
             sox.helpers.observe('[id^="wmd-redo-button"]', function() {
-                $('[id^="wmd-redo-button"]').after(kbdBtn);
-                $('[id^="wmd-redo-button"]').after(listBtn);
+                $('[id^="wmd-redo-button"]').each(function() {
+                    if(!$(this).parent().find('#wmd-kbd-button').length) $(this).after(kbdBtn);
+                });
+                $('[id^="wmd-redo-button"]').each(function() {
+                    if(!$(this).parent().find('#wmd-bullet-button').length) $(this).after(listBtn);
+                });
+
                 $('#wmd-kbd-button').on('click', function() {
                     addKbd($(this).parents('div[id*="wmd-button-bar"]').parent().find('textarea'));
                 });
@@ -1277,6 +1282,7 @@ Toggle SBS?</div></li>';
             // Description: Add a bunch of features to the standard markdown editor (autocorrect, find+replace, Ace editor, and more!)
 
             sox.enhancedEditor.startFeature();
+
         },
 
         downvotedPostsEditAlert: function() {
