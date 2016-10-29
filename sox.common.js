@@ -37,7 +37,8 @@
         },
         reset: function() {
             var keys = GM_listValues();
-            for (i = 0; i < keys.length; i++) {
+            console.log(keys);
+            for (var i = 0; i < keys.length; i++) {
                 var key = keys[i];
                 GM_deleteValue(key);
             }

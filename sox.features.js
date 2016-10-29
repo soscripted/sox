@@ -593,7 +593,7 @@
             }
 
             addLabelsAndHandlers();
-            sox.helpers.observe('#user-tab-responses', function() {
+            sox.helpers.observe('#user-tab-responses, #user-tab-activity', function() {
                 addLabelsAndHandlers();
             });
         },
@@ -705,12 +705,12 @@
 
                 if (href.indexOf('stackapps') > -1) {
                     link = undefined;
-                } else if (href.indexOf('area51') > -1) {
+                } else if (href.indexOf('area51') > -1 && href.indexOf('discuss.area51') === -1) {
                     link = 'http://discuss.area51.stackexchange.com/';
                 } else if (href.indexOf('meta.stackexchange.com') > -1) {
                     link = undefined;
                     chatLink = 'http://chat.meta.stackexchange.com';
-                } else if (href.indexOf('meta') > -1) {
+                } else if (href.indexOf('meta') > -1 || href.indexOf('discuss.area51') > -1) {
                     link = undefined;
                     chatLink = undefined;
                 } else {
@@ -1830,19 +1830,30 @@ Toggle SBS?</div></li>';
                 $.each(data.items, function() {
                     var cur = $(this)[0];
                     userDetailsFromAPI[cur.user_id] = {
-                        'last_seen': new Date(cur.last_access_date * 1000).toLocaleString(),
+                        'last_seen': cur.last_access_date*1000,
                         'type': cur.user_type
                     };
                 });
-                setTimeout(function() {
+
+                function addLastSeen() {
+                    console.log('called');
                     $('.question, .answer').each(function() {
                         var id = $(this).find('.post-signature .user-details a').last().attr('href').split('/')[2];
-                        if (userDetailsFromAPI[id]) {
+                        if (userDetailsFromAPI[id] && !$(this).find('.sox-last-seen').length) {
+                            console.log('here');
+                            var lastSeenDate = new Date(userDetailsFromAPI[id].last_seen);
                             $(this).find('.comments').removeClass('dno');
-                            $(this).find('.comments tbody:eq(0)').prepend("<tr class='comment'><td class='comment-actions'></td><td class='comment-text'><div style='display: block;' class='comment-body'>last seen: " + userDetailsFromAPI[id].last_seen + " | type: " + userDetailsFromAPI[id].type + "</div></td></tr>");
+                            $(this).find('.comments tbody:eq(0)').prepend("<tr class='comment'><td class='comment-actions sox-last-seen'></td><td class='comment-text'><div style='display: block;' class='comment-body'>last seen: <time class='timeago' datetime='" + lastSeenDate.toISOString() + "' title='" + lastSeenDate.toLocaleString() + "'>" + lastSeenDate.toLocaleString() + "</time> | type: " + userDetailsFromAPI[id].type + "</div></td></tr>");
                         }
                     });
-                }, 500);
+                    $("time.timeago").timeago();
+                }
+                addLastSeen();
+
+                sox.helpers.observe('.comment', function() { //make sure it doesn't disappear when adding a new comment!
+                    addLastSeen();
+                });
+
             });
         },
 
@@ -1934,6 +1945,8 @@ Toggle SBS?</div></li>';
         },
 
         warnNotLoggedIn: function() {
+            // Description: Add a small notice at the bottom left of the screen if you are not logged in when browsing an SE site
+
             var div = $('<div/>', {
                 id: 'loggedInReminder',
                 style: 'position: fixed; right: 0; bottom: 50px; background-color: rgba(200, 200, 200, 1); width: 200px; height: 35px; text-align: center; padding: 3px; color: red;',
