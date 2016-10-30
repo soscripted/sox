@@ -17,7 +17,6 @@
                 }
             }
 
-            console.log(version);
             $(document).on('pjax:complete', function() {
                 if (sox.location.on('github.com')) {
                     inject();

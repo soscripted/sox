@@ -723,15 +723,17 @@
                     link = 'http://meta.' + href.substr(2, href.length - 1);
                 }
 
-                if (href.indexOf('stackoverflow.com') > -1) {
+                if (href.indexOf('stackoverflow.com') > -1 && href.indexOf('meta') === -1) {
                     chatLink = 'http://chat.stackoverflow.com?tab=site';
                 }
 
-                $(this).find('.rep-score').hide();
-                $(this).append('<div class="related-links" style="float: right;">' +
-                    (link ? '<a href="' + link + '">meta</a>' : '') +
-                    (chatLink ? '<a href="' + chatLink + '">chat</a>' : '') +
-                    '</div>');
+                if(link || chatLink) { //only hide rep if we're actually going to add anything
+                    $(this).find('.rep-score').hide();
+                    $(this).append('<div class="related-links" style="float: right;">' +
+                        (link ? '<a href="' + link + '">meta</a>' : '') +
+                        (chatLink ? '<a href="' + chatLink + '">chat</a>' : '') +
+                        '</div>');
+                }
             }).on('mouseleave', '#your-communities-section > ul > li > a', function() {
                 $(this).find('.rep-score').show();
                 $(this).find('.related-links').remove();

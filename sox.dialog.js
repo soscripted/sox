@@ -155,7 +155,7 @@
             });
 
             $searchBox.on('keyup keydown', function() { //search box
-                if ($(this).val() != '') {
+                if ($(this).val() !== '') {
                     var t = $(this).val();
                     $('#sox-settings-dialog label').each(function() {
                         var $features = $(this).closest('.features');
@@ -165,7 +165,7 @@
                             $(this).show();
                         }
 
-                        if ($features.find('label:visible').length == 0 && $features.find('label[style*="display: inline"]').length == 0) {
+                        if ($features.find('label:visible').length === 0 && $features.find('label[style*="display: inline"]').length === 0) {
                             $features.hide().prev().hide();
                         } else {
                             $features.show().prev().show();
