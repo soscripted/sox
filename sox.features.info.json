@@ -348,6 +348,12 @@
             "meta": "",
             "match": "",
             "exclude": "*://chat.*.com/*"
+        }, {
+            "name": "replyToOwnChatMessages",
+            "desc": "Add reply signs to your own chat messages",
+            "meta": "",
+            "match": "*://chat.*.com/*",
+            "exclude": ""
         }]
     }
 }

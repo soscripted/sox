@@ -1986,6 +1986,35 @@ Toggle SBS?</div></li>';
                 'pointer-events': 'none' //disables the anchor tag (jQuery off() doesn't work)
             })
             .attr('title', 'You cannot vote on your own posts.');
+        },
+
+        replyToOwnChatMessages: function() {
+            function addHoverHandler($el) {
+                $el.find('.flags, .stars').hide();
+                $el.hover(function() {
+                    $el.find('.meta').show().append(replySpan);
+                }, function() {
+                    $el.find('.meta').hide().find('.newreply').remove();
+                });
+            }
+
+            $(document).on('click', '.newreply.added-by-sox', function (e) {
+                var $message = $(e.target).closest('.message'),
+                    id = $message.attr('id').split('-')[1],
+                    rest = $('#input').focus().val().replace(/^:([0-9]+)\s+/, '');
+                $('#input').val(':'+id+' '+rest).focus();
+            });
+
+            var replySpan = $('<span/>', {
+                class: 'newreply added-by-sox'
+            });
+
+            $('.mine .message').each(function() {
+                addHoverHandler($(this));
+            });
+            sox.helpers.observe('.mine .message', function(el) {
+                addHoverHandler($(el));
+            });
         }
     };
 })(window.sox = window.sox || {}, jQuery);
