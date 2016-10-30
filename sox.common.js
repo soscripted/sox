@@ -3,7 +3,8 @@
     var SOX_SETTINGS = 'SOXSETTINGS';
     var commonInfo = JSON.parse(GM_getResourceText('common'));
 
-    var Stack = (typeof StackExchange === "undefined" ? window.eval('StackExchange') : StackExchange);
+    var Stack = (typeof StackExchange === "undefined" ? window.eval('StackExchange') : StackExchange) || undefined;
+    console.log(Stack);
     var Chat = (typeof CHAT === "undefined" ? undefined : CHAT);
 
     sox.info = {
@@ -70,7 +71,7 @@
                 type: 'get',
                 url: 'https://api.stackexchange.com/2.2/' + type + '/' + id + '?order=desc&sort=' + (sortby || 'creation') + '&site=' + sitename + '&key=' + sox.info.apikey + '&access_token=' + sox.settings.accessToken,
                 success: function(d) {
-                    if(d.backoff) {
+                    if (d.backoff) {
                         console.log('SOX Error: BACKOFF: ' + d.backoff);
                     } else {
                         callback(d);

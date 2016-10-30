@@ -11,7 +11,7 @@
             "desc": "Add ellipsis to long names",
             "meta": "http://meta.stackexchange.com/questions/244729/provide-an-ellipsis-after-a-long-name-instead-of-truncating-it",
             "match": "",
-            "exclude": ""
+            "exclude": "*://chat.*.com/*"
         }, {
             "name": "alignBadgesByClass",
             "desc": "Align badges by their class on user profile pages",
@@ -47,7 +47,7 @@
             "desc": "Add display name before gravatar in topbar",
             "meta": "http://meta.stackexchange.com/questions/209992/my-username-instead-of-my-gravatar-in-the-top-bar",
             "match": "",
-            "exclude": ""
+            "exclude": "*://chat.*.com/*"
         }, {
             "name": "dragBounty",
             "desc": "Make bounty box draggable",
@@ -77,25 +77,25 @@
             "desc": "Hide the Community Bulletin module",
             "meta": "",
             "match": "",
-            "exclude": ""
+            "exclude": "*://chat.*.com/*"
         }, {
             "name": "hideHireMe",
             "desc": "Hide the Looking for a Job module",
             "meta": "",
             "match": "",
-            "exclude": ""
+            "exclude": "*://chat.*.com/*"
         }, {
             "name": "hideHotNetworkQuestions",
             "desc": "Hide the Hot Network Questions module",
             "meta": "",
             "match": "",
-            "exclude": ""
+            "exclude": "*://chat.*.com/*"
         }, {
             "name": "highlightQuestions",
             "desc": "Change highlighting for questions with favorite tags",
             "meta": "http://meta.stackexchange.com/questions/238591/should-favorite-tag-highlighting-in-question-lists-be-changed",
             "match": "",
-            "exclude": ""
+            "exclude": "*://chat.*.com/*"
         }, {
             "name": "isQuestionHot",
             "desc": "Add a label on questions which are hot-network questions",
@@ -113,7 +113,7 @@
             "desc": "Add the SO logo after employee names to make them stand out",
             "meta": "http://meta.stackexchange.com/questions/246678/should-se-staff-have-a-special-character-in-their-user-name",
             "match": "",
-            "exclude": ""
+            "exclude": "*://chat.*.com/*"
         }, {
             "name": "metaChatBlogStackExchangeButton",
             "desc": "Show meta and chat buttons on hover of a site under the StackExchange button",
@@ -125,7 +125,7 @@
             "desc": "Add a mod diamond to the topbar to alert you of new questions on the site's child-meta",
             "meta": "http://meta.stackexchange.com/questions/256318/can-high-rep-users-be-allowed-to-see-meta-notifications",
             "match": "",
-            "exclude": ""
+            "exclude": "*://chat.*.com/*"
         }, {
             "name": "moveBounty",
             "desc": "Move 'start bounty' to top",
@@ -143,7 +143,7 @@
             "desc": "Add Scroll To Top button",
             "meta": "",
             "match": "",
-            "exclude": ""
+            "exclude": "*://chat.*.com/*"
         }, {
             "name": "spoilerTip",
             "desc": "Differentiate spoilers from empty blockquotes",
@@ -155,7 +155,7 @@
             "desc": "Add highlighted tags to closed/on hold/duplicate/migrated questions on question lists",
             "meta": "http://meta.stackexchange.com/questions/257021/proposal-to-make-duplicate-closed-and-migrated-in-the-title-more-obvious",
             "match": "",
-            "exclude": ""
+            "exclude": "*://chat.*.com/*"
         }, {
             "name": "stickyVoteButtons",
             "desc": "Make vote buttons next to posts sticky whilst scrolling on that post",
@@ -223,13 +223,13 @@
             "desc": "Add a button to the editor toolbar to start side-by-side editing",
             "meta": "http://meta.stackexchange.com/questions/253112/the-discourse-layout-for-side-by-side-markdown-preview",
             "match": "",
-            "exclude": ""
+            "exclude": "*://chat.*.com/*"
         }, {
             "name": "editComment",
             "desc": "Pre-defined edit comment options (checkboxes)",
             "meta": "http://meta.stackexchange.com/questions/190461/improve-the-editing-flow-with-predefined-options-for-edit-summary",
             "match": "",
-            "exclude": ""
+            "exclude": "*://chat.*.com/*"
         }, {
             "name": "editReasonTooltip",
             "desc": "Add a tooltip to posts showing the latest revision's comment on 'edited [date] at [time]'",
@@ -247,7 +247,7 @@
             "desc": "Add KBD and list buttons to editor toolbar",
             "meta": "http://meta.stackexchange.com/questions/102841/key-equivalent-for-kbd-kbd",
             "match": "",
-            "exclude": ""
+            "exclude": "*://chat.*.com/*"
         }, {
             "name": "titleEditDiff",
             "desc": "Make title edits show seperately rather than merged in edit suggestions",
@@ -260,13 +260,13 @@
             "desc": "Show the flag outcome time when viewing your Flag History",
             "meta": "",
             "match": "",
-            "exclude": ""
+            "exclude": "*://chat.*.com/*"
         }, {
             "name": "flagPercentages",
             "desc": "Show flagging percentages for each type in the Flag Summary",
             "meta": "https://meta.stackoverflow.com/questions/310881/overall-percentage-of-helpful-flags",
             "match": "",
-            "exclude": ""
+            "exclude": "*://chat.*.com/*"
         }],
         "Unsorted": [{
             "name": "alwaysShowImageUploadLinkBox",
@@ -291,7 +291,7 @@
             "desc": "Filter the hot network questions by their attributes",
             "meta": "",
             "match": "",
-            "exclude": "",
+            "exclude": "*://chat.*.com/*",
             "settings": [{
                 "id": "wordsToBlock",
                 "type": "textarea",
@@ -335,13 +335,13 @@
             "desc": "Add an option to filter bounties by their amount",
             "meta": "http://meta.stackexchange.com/questions/7753/please-give-us-the-ability-to-sort-featured-tab-by-bounty-amount",
             "match": "",
-            "exclude": "*://*/users/*"
+            "exclude": "*://*/users/*, *://chat.*.com/*"
         }, {
             "name": "warnNotLoggedIn",
             "desc": "Warn you when you are not logged in",
             "meta": "",
             "match": "",
-            "exclude": ""
+            "exclude": "*://chat.*.com/*"
         }]
     }
 }

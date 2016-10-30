@@ -227,10 +227,10 @@
 
             sox.helpers.observe('[id^="wmd-redo-button"]', function() {
                 $('[id^="wmd-redo-button"]').each(function() {
-                    if(!$(this).parent().find('#wmd-kbd-button').length) $(this).after(kbdBtn);
+                    if (!$(this).parent().find('#wmd-kbd-button').length) $(this).after(kbdBtn);
                 });
                 $('[id^="wmd-redo-button"]').each(function() {
-                    if(!$(this).parent().find('#wmd-bullet-button').length) $(this).after(listBtn);
+                    if (!$(this).parent().find('#wmd-bullet-button').length) $(this).after(listBtn);
                 });
 
                 $('#wmd-kbd-button').on('click', function() {
@@ -584,6 +584,7 @@
             // Description: For adding a button on your profile comment history pages to show your comment's scores
 
             var sitename = sox.site.currentApiParameter;
+
             function addLabelsAndHandlers() {
                 $('.history-table td b a[href*="#comment"]').each(function() {
                     var id = $(this).attr('href').split('#')[1].split('_')[0].replace('comment', '');
@@ -704,7 +705,7 @@
             // NOTE: this feature used to have a 'blog' button as well, but it wasn't very useful so was removed
 
             var link, chatLink;
-            $('#your-communities-section > ul > li > a').hover(function() {
+            $(document).on('mouseenter', '#your-communities-section > ul > li > a', function() {
                 var href = $(this).attr('href');
                 chatLink = 'http://chat.stackexchange.com?tab=site&host=' + href.substr(2);
 
@@ -728,10 +729,10 @@
 
                 $(this).find('.rep-score').hide();
                 $(this).append('<div class="related-links" style="float: right;">' +
-                             (link ? '<a href="' + link + '">meta</a>' : '') +
-                             (chatLink ? '<a href="' + chatLink + '">chat</a>' : '') +
-                            '</div>');
-            }, function() {
+                    (link ? '<a href="' + link + '">meta</a>' : '') +
+                    (chatLink ? '<a href="' + chatLink + '">chat</a>' : '') +
+                    '</div>');
+            }).on('mouseleave', '#your-communities-section > ul > li > a', function() {
                 $(this).find('.rep-score').show();
                 $(this).find('.related-links').remove();
             });
@@ -1455,7 +1456,7 @@ Toggle SBS?</div></li>';
 
             function addNotification(link, title, sitename, notificationPostId, unread) { //add the notification
                 sox.helpers.observe('.inbox-dialog', function() {
-                    if(notifications[notificationPostId]) {
+                    if (notifications[notificationPostId]) {
                         $('div.topbar div.topbar-dialog.inbox-dialog.dno ul').prepend("<li class='inbox-item " + (unread ? "unread-item " : "") + "question-close-notification'> \
                 <a href='" + link + "'> \
                 <div class='site-icon favicon favicon-stackexchange' title=''></div> \
@@ -1507,8 +1508,8 @@ Toggle SBS?</div></li>';
             $('.post-menu').each(function() {
                 var id;
                 var $parent = $(this).parents('.question, .answer');
-                if($parent.length) {
-                    if($parent.hasClass('question')) {
+                if ($parent.length) {
+                    if ($parent.hasClass('question')) {
                         id = +$parent.attr('data-questionid');
                     } else {
                         id = +$parent.attr('data-answerid');
@@ -1808,7 +1809,10 @@ Toggle SBS?</div></li>';
                 }
             });
 
-            $('.user-accounts .badges span').css({'min-width' : '20px', 'display': 'inline-block'});
+            $('.user-accounts .badges span').css({
+                'min-width': '20px',
+                'display': 'inline-block'
+            });
 
         },
 
@@ -1836,7 +1840,7 @@ Toggle SBS?</div></li>';
                 $.each(data.items, function() {
                     var cur = $(this)[0];
                     userDetailsFromAPI[cur.user_id] = {
-                        'last_seen': cur.last_access_date*1000,
+                        'last_seen': cur.last_access_date * 1000,
                         'type': cur.user_type
                     };
                 });
