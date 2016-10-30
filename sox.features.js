@@ -914,7 +914,11 @@
                 $.get(url, function(responseText, textStatus, XMLHttpRequest) {
                     sox.debug('SOX editReasonTooltip URL: ' + url);
                     sox.debug('SOX editReasonTooltip text: ' + $(XMLHttpRequest.responseText).find('.revision-comment:eq(0)')[0].innerHTML);
+                    sox.debug('SOX editReasonTooltip: adding to tooltip');
                     $that.find('.sox-revision-comment').attr('title', $(XMLHttpRequest.responseText).find('.revision-comment:eq(0)')[0].innerHTML);
+                    sox.debug('SOX editReasonTooltip: finished adding to tooltip');
+                    sox.debug('SOX editReasonTooltip: tooltip is now: ' + $that.find('.sox-revision-comment').attr('title'));
+
                 });
             }
             $('.question, .answer').each(function() {
