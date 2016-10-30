@@ -180,6 +180,12 @@
             "meta": "http://meta.stackexchange.com/questions/249808/add-a-way-to-reveal-all-spoiler-blocks-in-a-post-at-once",
             "match": "*://*/questions*",
             "exclude": ""
+        }, {
+            "name": "disableOwnPostVoteButtons",
+            "desc": "Disable vote buttons on your own posts",
+            "meta": "",
+            "match": "*://*/questions*",
+            "exclude": ""
         }],
         "Comments": [{
             "name": "autoShowCommentImages",

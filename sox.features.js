@@ -864,7 +864,8 @@
         betterCSS: function() {
             // Description: For adding the better CSS for the voting buttons and favourite button
 
-            $('head').append('<link rel="stylesheet" href="https://cdn.rawgit.com/shu8/SE-Answers_scripts/master/coolMaterialDesignCss.css" type="text/css" />');
+            $('vote-down-off, vote-down-on, star-off, star-on').addClass('sox-better-css');
+            $('head').append('<link rel="stylesheet" href="https://rawgit.com/shu8/SE-Answers_scripts/master/coolMaterialDesignCss.css" type="text/css" />');
         },
 
         standOutDupeCloseMigrated: function() {
@@ -1968,6 +1969,21 @@ Toggle SBS?</div></li>';
             }
             checkAndAddReminder();
             setInterval(checkAndAddReminder, 300000); //5 mins
+        },
+
+        disableOwnPostVoteButtons: function() {
+            $('.answer, .question')
+            .find('.user-details:last a')
+            .filter('a[href*=' + sox.user.id + ']')
+            .closest('.answer, .question')
+            .find('.votecell .vote a[class*="vote"]')
+            .removeClass('sox-better-css')
+            .css({
+                'cursor': 'default',
+                'opacity' : '0.5',
+                'pointer-events': 'none' //disables the anchor tag (jQuery off() doesn't work)
+            })
+            .attr('title', 'You cannot vote on your own posts.');
         }
     };
 })(window.sox = window.sox || {}, jQuery);
