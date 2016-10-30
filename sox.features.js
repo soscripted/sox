@@ -864,7 +864,7 @@
         betterCSS: function() {
             // Description: For adding the better CSS for the voting buttons and favourite button
 
-            $('vote-down-off, vote-down-on, star-off, star-on').addClass('sox-better-css');
+            $('.vote-down-off, .vote-down-on, .vote-up-off, .vote-up-on, .star-off, .star-on').addClass('sox-better-css');
             $('head').append('<link rel="stylesheet" href="https://rawgit.com/shu8/SE-Answers_scripts/master/coolMaterialDesignCss.css" type="text/css" />');
         },
 
