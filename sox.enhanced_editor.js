@@ -25,7 +25,6 @@
             sox.enhancedEditor.betterTabKey(s);
             sox.enhancedEditor.keyboardShortcuts(s);
 
-            console.log(s);
             $(s).before("<span class='enhancedEditor-toolbar' id='enhancedEditor|" + s + "'>&nbsp;<span id='findReplace'>Find & Replace</span> | <span id='autoCorrect'>Auto correct</span></span>");
 
             $('#findReplace').click(function(e) {

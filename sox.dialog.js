@@ -3,7 +3,7 @@
 
     sox.dialog = {
         init: function(options) {
-            sox.helpers.notify('initializing SOX dialog');
+            sox.loginfo('initializing SOX dialog');
 
             var version = options.version,
                 features = options.features,
@@ -110,7 +110,7 @@
 
             // display sox version number in the dialog
             if(version != 'unknown' && version !== null) {
-                $soxSettingsDialogVersion.text(' v' + version.toLowerCase());
+                $soxSettingsDialogVersion.text(' v' + (version ? version.toLowerCase() : ''));
             } else {
                 $soxSettingsDialogVersion.text('');
             }
@@ -256,7 +256,7 @@
             });
 
             // load features into dialog
-            sox.helpers.notify('injecting features into dialog');
+            sox.loginfo('injecting features into dialog');
             for (var category in features.categories) {
                 addCategory(category);
                 for (var feature in features.categories[category]) {

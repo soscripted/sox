@@ -139,7 +139,7 @@
                 // TODO: find a more user friendly way of handling this
                 window.open('http://stackoverflow.com');
                 alert('Stack Overflow has been opened for you. To complete the SOX installation please click on the cogs icon that has been added to the topbar to recieve your access token (on the Stack Overflow site!).');
-                sox.helpers.notify("Please go to stackoverflow.com to get your access token for certain SOX features");
+                sox.warn("Please go to stackoverflow.com to get your access token for certain SOX features");
             } else {
                 //everything in this `else` is only weird to make it work on Firefox
                 //the solution has come from http://stackoverflow.com/a/38924760/3541881
@@ -154,7 +154,7 @@
                         accesstoken = JSON.parse(event.data);
                     } catch (error) {}
                     if (!('SOX-accessToken' in accesstoken)) return;
-                    console.log(accesstoken['SOX-accessToken']);
+                    console.info('SOX ACCESS TOKEN: ', accesstoken['SOX-accessToken']);
                     GM_setValue('SOX-accessToken', accesstoken['SOX-accessToken']);
                 }, false);
                 document.head.appendChild(document.createElement('script')).text =
@@ -175,7 +175,7 @@
                                                     }), '*');
                                                 },
                                                 error: function(data) {
-                                                    console.log(data);
+                                                    console.error(data);
                                                 },
                                                 scope: ['read_inbox', 'write_access', 'no_expiry']
                                             });

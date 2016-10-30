@@ -909,9 +909,8 @@
 
             function getComment(url, $that) {
                 $.get(url, function(responseText, textStatus, XMLHttpRequest) {
-                    console.log('SOX editReasonTooltip URL: ' + url);
-                    console.log($that);
-                    console.log('SOX editReasonTooltip text: ' + $(XMLHttpRequest.responseText).find('.revision-comment:eq(0)')[0].innerHTML);
+                    sox.debug('SOX editReasonTooltip URL: ' + url);
+                    sox.debug('SOX editReasonTooltip text: ' + $(XMLHttpRequest.responseText).find('.revision-comment:eq(0)')[0].innerHTML);
                     $that.find('.sox-revision-comment').attr('title', $(XMLHttpRequest.responseText).find('.revision-comment:eq(0)')[0].innerHTML);
                 });
             }
@@ -1083,7 +1082,7 @@ Toggle SBS?</div></li>';
                             apiurl = 'https://api.stackexchange.com/2.2/suggested-edits/' + id + '?order=desc&sort=creation&site=' + sitename;
                             break;
                         default:
-                            console.log('SOX does not currently support get author information for type: ' + type);
+                            console.info('SOX does not currently support get author information for type: ' + type);
                             return;
                     }
 
@@ -1829,13 +1828,12 @@ Toggle SBS?</div></li>';
                     var username = $userDetailsAnchor.text();
                     if (userid !== 0) answerers[userid] = username;
                 } else {
-                    sox.helpers.notify('Could not find user user link for:');
-                    console.log($(this));
+                    sox.info('Could not find user user link for: ', $(this));
                 }
             });
             var apiUrl = "https://api.stackexchange.com/users/" + Object.keys(answerers).join(';') + "?site=" + sox.site.currentApiParameter;
             $.get(apiUrl, function(data) {
-                console.log(data);
+                sox.debug(data);
                 var userDetailsFromAPI = {};
                 $.each(data.items, function() {
                     var cur = $(this)[0];
@@ -1846,11 +1844,9 @@ Toggle SBS?</div></li>';
                 });
 
                 function addLastSeen() {
-                    console.log('called');
                     $('.question, .answer').each(function() {
                         var id = $(this).find('.post-signature .user-details a').last().attr('href').split('/')[2];
                         if (userDetailsFromAPI[id] && !$(this).find('.sox-last-seen').length) {
-                            console.log('here');
                             var lastSeenDate = new Date(userDetailsFromAPI[id].last_seen);
                             $(this).find('.comments').removeClass('dno');
                             $(this).find('.comments tbody:eq(0)').prepend("<tr class='comment'><td class='comment-actions sox-last-seen'></td><td class='comment-text'><div style='display: block;' class='comment-body'>last seen: <time class='timeago' datetime='" + lastSeenDate.toISOString() + "' title='" + lastSeenDate.toLocaleString() + "'>" + lastSeenDate.toLocaleString() + "</time> | type: " + userDetailsFromAPI[id].type + "</div></td></tr>");

@@ -3,8 +3,38 @@
     var SOX_SETTINGS = 'SOXSETTINGS';
     var commonInfo = JSON.parse(GM_getResourceText('common'));
 
-    var Stack = (typeof StackExchange === "undefined" ? window.eval('StackExchange') : StackExchange) || undefined;
-    console.log(Stack);
+    sox.debug = function() {
+        for (var arg = 0; arg < arguments.length; ++arg) {
+            console.debug('SOX: ', arguments[arg]);
+        }
+    };
+
+    sox.log = function() {
+        for (var arg = 0; arg < arguments.length; ++arg) {
+            console.log('SOX: ', arguments[arg]);
+        }
+    };
+
+    sox.warn = function() {
+        for (var arg = 0; arg < arguments.length; ++arg) {
+            console.warn('SOX: ', arguments[arg]);
+        }
+    };
+
+    sox.error = function() {
+        for (var arg = 0; arg < arguments.length; ++arg) {
+            console.error('SOX: ', arguments[arg]);
+        }
+    };
+
+    sox.loginfo = function() {
+        for (var arg = 0; arg < arguments.length; ++arg) {
+            console.info('SOX: ', arguments[arg]);
+        }
+    };
+
+    var Stack = (typeof StackExchange === "undefined" ? window.eval('if (typeof StackExchange != "undefined") StackExchange') : StackExchange) || undefined;
+    sox.debug(Stack);
     var Chat = (typeof CHAT === "undefined" ? undefined : CHAT);
 
     sox.info = {
@@ -38,59 +68,53 @@
         },
         reset: function() {
             var keys = GM_listValues();
-            console.log(keys);
+            sox.debug(keys);
             for (var i = 0; i < keys.length; i++) {
                 var key = keys[i];
                 GM_deleteValue(key);
             }
         },
         get accessToken() {
-            console.log('SOX Access Token: ' + (GM_getValue('SOX-accessToken', false) === false ? 'NOT SET' : 'SET'));
+            sox.debug('SOX Access Token: ' + (GM_getValue('SOX-accessToken', false) === false ? 'NOT SET' : 'SET'));
             return GM_getValue('SOX-accessToken', false);
         },
         writeToConsole: function() {
-            console.log('logging sox stored values --- ');
+            sox.loginfo('logging sox stored values --- ');
             var keys = GM_listValues();
             for (i = 0; i < keys.length; i++) {
                 var key = keys[i];
-                console.log(key, GM_getValue(key));
+                sox.loginfo(key, GM_getValue(key));
             }
         }
     };
 
     sox.helpers = {
-        notify: function(message) {
-            // eg: sox.helpers.notify('message one', 'message two');
-            for (var arg = 0; arg < arguments.length; ++arg) {
-                console.log('SOX: ', arguments[arg]);
-            }
-        },
         getFromAPI: function(type, id, sitename, callback, sortby) {
-            console.log('Getting From API with URL: https://api.stackexchange.com/2.2/' + type + '/' + id + '?order=desc&sort=' + (sortby || 'creation') + '&site=' + sitename + '&key=' + sox.info.apikey + '&access_token=' + sox.settings.accessToken);
+            sox.loginfo('Getting From API with URL: https://api.stackexchange.com/2.2/' + type + '/' + id + '?order=desc&sort=' + (sortby || 'creation') + '&site=' + sitename + '&key=' + sox.info.apikey + '&access_token=' + sox.settings.accessToken);
             $.ajax({
                 type: 'get',
                 url: 'https://api.stackexchange.com/2.2/' + type + '/' + id + '?order=desc&sort=' + (sortby || 'creation') + '&site=' + sitename + '&key=' + sox.info.apikey + '&access_token=' + sox.settings.accessToken,
                 success: function(d) {
                     if (d.backoff) {
-                        console.log('SOX Error: BACKOFF: ' + d.backoff);
+                        sox.error('SOX Error: BACKOFF: ' + d.backoff);
                     } else {
                         callback(d);
                     }
                 },
                 error: function(a, b, c) {
-                    console.log('SOX Error: ' + b + ' ' + c);
+                    sox.error('SOX Error: ' + b + ' ' + c);
                 }
             });
         },
         observe: function(elements, callback, toObserve) {
-            console.log('observe: ' + elements);
+            sox.debug('observe: ' + elements);
             new MutationObserver(function(mutations, observer) {
                 for (var i = 0; i < mutations.length; i++) {
                     for (var j = 0; j < mutations[i].addedNodes.length; j++) {
                         var $o = $(mutations[i].addedNodes[j]);
                         if ($o && $o.is((Array.isArray(elements) ? elements.join(',') : elements))) {
                             callback(mutations[i].addedNodes[j]);
-                            console.log('fire: ' + elements);
+                            sox.debug('fire: ' + elements);
                         }
                     }
                 }
