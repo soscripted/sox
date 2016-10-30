@@ -1176,7 +1176,8 @@ Toggle SBS?</div></li>';
                 HELPFUL: 'helpful',
                 DECLINED: 'declined',
                 DISPUTED: 'disputed',
-                AGEDAWAY: 'aged away'
+                AGEDAWAY: 'aged away',
+                RETRACTED: 'retracted'
             };
 
             var count,
