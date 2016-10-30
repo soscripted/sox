@@ -33,9 +33,11 @@
         }
     };
 
-    var Stack = (typeof StackExchange === "undefined" ? window.eval('if (typeof StackExchange != "undefined") StackExchange') : StackExchange) || undefined;
+    //var Stack = (typeof StackExchange === "undefined" ? window.eval('if (typeof StackExchange != "undefined") StackExchange') : StackExchange) | undefined;
+    var Chat = (typeof CHAT === "undefined" ? window.eval("typeof CHAT != 'undefined' ? CHAT : undefined") : CHAT);
+    sox.debug(Chat);
+    var Stack = (typeof Chat === "undefined" ? (typeof StackExchange === "undefined" ? window.eval('if (typeof StackExchange != "undefined") StackExchange') : StackExchange) : undefined);
     sox.debug(Stack);
-    var Chat = (typeof CHAT === "undefined" ? undefined : CHAT);
 
     sox.info = {
         version: (typeof GM_info !== 'undefined' ? GM_info.script.version : 'unknown'),
