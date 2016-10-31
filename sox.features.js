@@ -1602,8 +1602,8 @@ Toggle SBS?</div></li>';
                                 addNumber();
                             }
                         }, "activity&filter=!9YdnSEBb8", false); //false means async=false
+                        o.lastCheckedTime = new Date().getTime();
                     }
-                    o.lastCheckedTime = new Date().getTime();
                     GM_setValue('downvotedPostsEditAlert', JSON.stringify(postsToCheck));
                     w.onopen = function() {
                         sox.debug('sending websocket message: ' + websocketSiteCodes[o.sitename] + "-question-" + o.questionId);
