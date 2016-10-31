@@ -238,7 +238,7 @@
             "exclude": "*://chat.*.com/*"
         }, {
             "name": "editReasonTooltip",
-            "desc": "Add a tooltip to posts showing the latest revision's comment on 'edited [date] at [time]'",
+            "desc": "Add a tooltip to posts showing the last revision's comment on the word 'edited' in 'edited [date] at [time]'",
             "meta": "http://meta.stackexchange.com/questions/2315/show-reason-for-edit-without-clicking-through-to-diff",
             "match": "*://*/questions*",
             "exclude": ""

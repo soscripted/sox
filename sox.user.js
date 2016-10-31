@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Stack Overflow Extras (SOX)
 // @namespace    https://github.com/soscripted/sox
-// @version      2.0.2 DEV a
+// @version      2.0.2 DEV b
 // @description  Extra optional features for Stack Overflow and Stack Exchange sites
 // @contributor  ᴉʞuǝ (stackoverflow.com/users/1454538/)
 // @contributor  ᔕᖺᘎᕊ (stackexchange.com/users/4337810/)
@@ -79,15 +79,15 @@
         if (sox.settings.available) {
             // execute features
             for (var i = 0; i < settings.length; ++i) {
+                var category = settings[i].split('-')[0],
+                    featureId = settings[i].split('-')[1],
+                    feature = featureInfo.categories[category].filter(function(obj) {
+                        return obj.name == featureId;
+                    })[0],
+                    runFeature = true,
+                    sites,
+                    pattern;
                 try {
-                    var category = settings[i].split('-')[0],
-                        featureId = settings[i].split('-')[1],
-                        feature = featureInfo.categories[category].filter(function(obj) {
-                            return obj.name == featureId;
-                        })[0],
-                        runFeature = true,
-                        sites,
-                        pattern;
                     //NOTE: there is no else if() because it is possible to have both match and exclude patterns..
                     //which could have minor exceptions making it neccessary to check both
                     if (feature.match !== '') {
@@ -127,7 +127,7 @@
                         $('#sox-settings-dialog-features').find('#' + settings[i].split('-')[1]).parent().parent().remove();
                     } else {
                         $('#sox-settings-dialog-features').find('#' + settings[i].split('-')[1]).parent().css('color', 'red').attr('title', 'There was an error loading this feature. Please raise an issue on GitHub.');
-                        console.error('SOX error: There was an error loading the feature "' + settings[i] + '". Please raise an issue on GitHub, and copy the following error log:\n' + err);
+                        sox.error('SOX error: There was an error loading the feature "' + settings[i] + '". Please raise an issue on GitHub, and copy the following error log:\n' + err);
                     }
                     i++;
                 }
@@ -149,14 +149,17 @@
                 //and the script receives the message and saves the access token.
                 //a hacky fix, but it works for now.
                 window.addEventListener("message", function(event) {
+                    sox.debug('recieved message for access token');
                     var accesstoken;
                     try {
                         accesstoken = JSON.parse(event.data);
+                        sox.debug(accesstoken);
                     } catch (error) {}
                     if (!('SOX-accessToken' in accesstoken)) return;
-                    console.info('SOX ACCESS TOKEN: ', accesstoken['SOX-accessToken']);
+                    sox.loginfo('SOX ACCESS TOKEN: ', accesstoken['SOX-accessToken']);
                     GM_setValue('SOX-accessToken', accesstoken['SOX-accessToken']);
                 }, false);
+
                 document.head.appendChild(document.createElement('script')).text =
                     GM_getResourceText('SEAPI') + ';(' + function() {
                         SE.init({
@@ -164,18 +167,23 @@
                             key: 'lL1S1jr2m*DRwOvXMPp26g((', //SOX key
                             channelUrl: location.protocol + '//stackoverflow.com/blank',
                             complete: function(d) {
+                                sox.debug('Successfully inited using SE SDK');
                                 $(document).on('click', '#soxSettingsButton', function() {
-                                    //make the cogs button red?
+                                    //TODO: make the cogs button red?
+                                    sox.debug('clicked button to open get token window');
                                     document.head.appendChild(document.createElement('script')).text =
                                         '(' + function() {
+                                            sox.debug('beginning of 2nd IIFE for access token, before authenticating');
                                             SE.authenticate({
                                                 success: function(data) {
+                                                    sox.debug('Successfully authenticated using SE SDK');
+                                                    sox.debug(data);
                                                     window.postMessage(JSON.stringify({
                                                         'SOX-accessToken': data.accessToken
                                                     }), '*');
                                                 },
                                                 error: function(data) {
-                                                    console.error(data);
+                                                    sox.error(data);
                                                 },
                                                 scope: ['read_inbox', 'write_access', 'no_expiry']
                                             });
