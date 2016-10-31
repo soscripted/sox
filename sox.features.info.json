@@ -246,7 +246,7 @@
             "name": "enhancedEditor",
             "desc": "Add more features to the markdown editor",
             "meta": "",
-            "match": "*://*/questions*",
+            "match": "*://*/questions*,*://*/review*",
             "exclude": ""
         }, {
             "name": "kbdAndBullets",
@@ -341,7 +341,7 @@
             "desc": "Add an option to filter bounties by their amount",
             "meta": "http://meta.stackexchange.com/questions/7753/please-give-us-the-ability-to-sort-featured-tab-by-bounty-amount",
             "match": "",
-            "exclude": "*://*/users/*, *://chat.*.com/*"
+            "exclude": "*://*/users/*,*://chat.*.com/*"
         }, {
             "name": "warnNotLoggedIn",
             "desc": "Warn you when you are not logged in",

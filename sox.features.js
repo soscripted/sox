@@ -36,7 +36,8 @@
             // Description: Renames Chat tabs to prepend 'Chat' before the room name
 
             if (sox.site.type == 'chat') {
-                document.title = 'Chat - ' + document.title;
+                var match = document.title.match(/^(\(\d*\*?\) )?(.* \| [^|]*)$/);
+                document.title = (match[1] || '') + 'Chat - ' + match[2];
             }
         },
 
@@ -1053,7 +1054,7 @@ Toggle SBS?</div></li>';
 
             //event listener for adding the sbs toggle button for posting new questions or answers
             //waitForKeyElements('#wmd-redo-button', SBS);
-            sox.helpers.observe('#wmd-redo-button', SBS);
+            sox.helpers.observe('li[id^="wmd-redo-button"]', SBS);
         },
 
         alwaysShowImageUploadLinkBox: function() {

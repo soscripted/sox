@@ -69,6 +69,9 @@
 #sox-settings-dialog-check-toggle > i {
     padding: 14px 0;
 }
+.network-items .fa:before { /*https://github.com/soscripted/sox/pull/127*/
+    color: #858c93;
+}
 
 /* -------- sox specific features' CSS ------- */
 

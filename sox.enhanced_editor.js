@@ -4,7 +4,7 @@
 
     sox.enhancedEditor = {
         startFeature: function() {
-            sox.helpers.observe('#wmd-redo-button, #wmd-input', function() {
+            sox.helpers.observe('li[id^="wmd-redo-button"], textarea[id^="wmd-input"]', function() {
                 $('textarea[id^="wmd-input"].processed').each(function() {
                     sox.enhancedEditor.init($(this).attr('id'));
                 });
