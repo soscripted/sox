@@ -44,16 +44,25 @@
                 }
             }
 
-            function addFeature(category, name, description, featureSettings) {
+            function addFeature(category, name, description, featureSettings, extendedDescription, metaLink) {
                 var $div = $('<div/>', {
                         'class': 'feature'
+                    }).hover(function() {
+                        if (extendedDescription) {
+                            $(this).append($('<div/>', {
+                                'class': 'sox-feature-info',
+                                'html': extendedDescription + (metaLink ? ' <a href="' + metaLink + '">[meta]</a>' : '')
+                            }));
+                        }
+                    }, function() {
+                        $(this).parent().find('.sox-feature-info').remove();
                     }),
                     $label = $('<label/>'),
                     $input = $('<input/>', {
                         id: name,
                         type: 'checkbox'
                     });
-                $div.append($label);
+                $div.append($label).append(extendedDescription ? '<i class="fa fa-info" aria-hidden="true"></i>' : '');
                 $label.append($input);
                 $input.after(description);
                 $soxSettingsDialogFeatures.find('#' + category).append($div);
@@ -109,7 +118,7 @@
             }
 
             // display sox version number in the dialog
-            if(version != 'unknown' && version !== null) {
+            if (version != 'unknown' && version !== null) {
                 $soxSettingsDialogVersion.text(' v' + (version ? version.toLowerCase() : ''));
             } else {
                 $soxSettingsDialogVersion.text('');
@@ -265,7 +274,9 @@
                         category,
                         currentFeature.name,
                         currentFeature.desc,
-                        (currentFeature.settings ? currentFeature.settings : false) //add the settings panel for this feautre if indicated in the JSON
+                        (currentFeature.settings ? currentFeature.settings : false), //add the settings panel for this feautre if indicated in the JSON
+                        (currentFeature.extended_description ? currentFeature.extended_description : false), //add the extra description on hover if the feature has the extended description
+                        (currentFeature.meta ? currentFeature.meta : false) //add the meta link to the extra description on hover
                     );
                 }
             }

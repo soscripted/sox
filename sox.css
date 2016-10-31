@@ -7,39 +7,47 @@
     width: 550px;
     display: none;
 }
+
 #sox-settings-dialog .modal-content {
     /* max-height: calc(100vh - 175px); */
     max-height: none;
     min-height: inherit;
 }
+
 #sox-settings-dialog .header h3 {
     width: 100%;
 }
+
 #sox-settings-dialog-version {
     float: right;
     font-size: 14px;
 }
+
 #sox-settings-dialog #search-container {
     min-height: 0;
 }
+
 #sox-settings-dialog #search-container .fa-search {
     position: relative;
     left: -475px;
 }
+
 #sox-settings-dialog #search-container #search {
     width: 470px;
     text-indent: 20px;
 }
+
 #sox-settings-dialog-features {
     /* padding: 0 10px 10px 10px; */
     overflow-y: scroll;
     height: calc(100vh - 250px);
 }
+
 #sox-settings-dialog-features .modal-content div {
     margin-bottom: 3px;
 }
 
-#sox-settings-dialog-features .modal-content label > input {
+#sox-settings-dialog-features .modal-content label>input {
     margin-right: 5px;
 }
 
@@ -47,14 +55,17 @@
     height: 40px;
     padding: 0 10px;
 }
+
 #sox-settings-dialog-save {
     margin-left: 5px;
     float: right;
 }
+
 #sox-settings-dialog-reset, #sox-settings-dialog-report {
     float: right;
     padding: 14px;
 }
+
 .sox-settings-button {
     background-image: none !important;
     padding-top: 10px;
@@ -63,15 +74,33 @@
     height: 24px !important;
     min-width: 34px;
 }
+
 .sox-settings-button:hover {
     color: #999;
 }
-#sox-settings-dialog-check-toggle > i {
+
+#sox-settings-dialog-check-toggle>i {
     padding: 14px 0;
 }
-.network-items .fa:before { /*https://github.com/soscripted/sox/pull/127*/
+
+.network-items .fa:before {
+    /*https://github.com/soscripted/sox/pull/127*/
     color: #858c93;
 }
+
+.sox-feature-info {
+    background-color: whitesmoke;
+    border-radius: 9px;
+    margin-left: 20px;
+    padding: 8px;
+    width: 90%;
+    line-height: 1.5;
+}
+
+.feature .fa-info {
+    margin-left: 10px;
+}
+
 
 /* -------- sox specific features' CSS ------- */
 
@@ -85,6 +114,7 @@
     text-align: center;
     cursor: pointer;
 }
+
 
 /*Main centered divs, SE-style:*/
 
@@ -100,6 +130,7 @@
     height: 90%;
 }
 
+
 /*Specifically for quickCommentShortcuts -- the div's too wide! https://github.com/shu8/Stack-Overflow-Optional-Features/issues/36*/
 
 #quickCommentShortcuts.sox-centered {
@@ -112,6 +143,7 @@
     overflow: auto;
 }
 
+
 /*standOutDupeCloseMigrated signs */
 
 .standOutDupeCloseMigrated-duplicate, .standOutDupeCloseMigrated-closed, .standOutDupeCloseMigrated-migrated, .standOutDupeCloseMigrated-onhold {
@@ -120,18 +152,23 @@
     border-radius: 4px;
     font-size: 12px;
 }
+
 .standOutDupeCloseMigrated-duplicate {
     background: #FA0;
 }
+
 .standOutDupeCloseMigrated-closed {
     background: #F00;
 }
+
 .standOutDupeCloseMigrated-migrated {
     background: #19F;
 }
+
 .standOutDupeCloseMigrated-onhold {
     background: #808080;
 }
+
 
 /*metaNewQuestionAlert for the mod diamond and dialog */
 
@@ -139,20 +176,25 @@
     cursor: pointer;
     width: 32px;
 }
+
 .metaNewQuestionAlert-diamondOn {
     background-position: -218px -86px;
 }
+
 .metaNewQuestionAlert-diamondOff {
     background-position: -138px -86px;
 }
+
 #metaNewQuestionAlertDialog {
     top: 34px;
     left: 264px;
     width: 377px;
 }
+
 #metaNewQuestionAlertDialogList:empty::after {
     content: "No new meta questions at this time.";
 }
+
 
 /*addHotText for the 'this question is hot' banner */
 
@@ -165,6 +207,7 @@
     color: red;
     margin-top: 20px;
 }
+
 
 /*quickCommentShortcutsMain: */
 
@@ -180,7 +223,10 @@
     overflow: auto;
 }
 
+
 /*fixedTopbar */
+
+
 /*Ubuntu CSS by @UnicornsAreVeryVeryYummy - http://stackapps.com/users/33746/unicorns-are-very-very-yummy */
 
 .fixedTopbar-links {
@@ -192,21 +238,26 @@
     font-family: Ubuntu, Arial, "libra sans", sans-serif;
     font-weight: 300;
 }
+
 .fixedTopbar-linksList {
     -moz-box-sizing: border-box;
     background: none repeat scroll 0 0 #fff;
 }
+
 li.fixedTopbar-activeSite {
     border-right: 3px solid #dd4814;
 }
+
 ul.fixedTopbar-siteLink {
     list-style: none;
     list-style-type: none;
 }
+
 li.fixedTopbar-siteLink {
     display: inline-block;
     margin-left: 10px;
 }
+
 .fixedTopbar-stickyToolbar {
     position: fixed;
     top: 0px;
@@ -215,65 +266,83 @@ li.fixedTopbar-siteLink {
     z-index: 1000;
 }
 
+
 /*Side by Side Editing (SBS, addSBSBtn, startSBS): https://github.com/szego/SE-Answers_scripts/blob/side-by-side/editing-and-toggling/side-by-side-editing.user.js:*/
 
 #sidebar.sbs-on {
     display: none !important;
 }
+
 #content.sbs-on {
     width: 1360px !important;
 }
+
 .draft-saved.sbs-on {
     margin-left: 35px !important;
 }
+
 .draft-discarded.sbs-on {
     margin-left: 35px !important;
 }
+
 .draft-saved.sbs-on.sbs-newq {
     margin-left: 40px !important;
     height: 15px !important;
     float: left !important;
 }
+
 .draft-discarded.sbs-on.sbs-newq {
     margin-left: 40px !important;
     height: 15px !important;
     float: left !important;
 }
+
 .votecell.sbs-on {
     display: none !important;
 }
+
 .hide-preview.sbs-on {
     margin-left: 35px !important;
 }
+
 .edit-comment-p1.sbs-on {
     float: left !important;
 }
+
 .edit-comment-p2.sbs-on {
     float: left !important;
     margin-left: 10px !important;
 }
+
 .post-editor.sbs-on {
     width: 1360px !important;
 }
+
 .wmd-button-bar.sbs-on {
     float: none !important;
 }
+
 .wmd-container.sbs-on {
     float: left !important;
 }
+
 .wmd-preview.sbs-on {
     clear: none !important;
     float: right !important;
 }
+
 .wmd-preview.sbs-on.sbs-newq {
     margin-top: 10px !important;
 }
+
 .tag-editor-p.sbs-on.sbs-newq {
     float: left !important;
 }
+
 .form-item.sbs-on.sbs-newq {
     float: left !important;
 }
+
 
 /*linkedPostsInline for the displayed post text; https://github.com/shu8/Stack-Overflow-Optional-Features/issues/48 */
 
@@ -282,6 +351,7 @@ li.fixedTopbar-siteLink {
     width: 630px;
     padding: 10px;
 }
+
 
 /*enhancedEditor (enhanced_editor folder)*/
 
@@ -296,25 +366,30 @@ li.fixedTopbar-siteLink {
     overflow: auto;
     height: 70%;
 }
+
 .ownURL, .ownImage {
     border-radius: 5px;
     width: 70%;
     padding: 5px;
 }
+
 .go {
     padding: 5px;
     border-radius: 5px;
     color: black;
     background-color: lightgreen;
 }
+
 .DDG-go {
     float: right;
 }
+
 hr.or {
     border: 0;
     border-top: 1px solid whitesmoke;
     text-align: center;
 }
+
 hr.or:after {
     content: "or...";
     display: inline-block;
@@ -324,43 +399,53 @@ hr.or:after {
     padding: 0.2em;
     background: whitesmoke;
 }
+
 .DDG-container {
     background-color: whitesmoke;
     border-radius: 10px;
     padding: 2%;
 }
+
 .DDG-credit {
     font-size: 0.8em;
 }
+
 .enhancedEditor-toolbar {
     border-left: 1px solid #ccc;
     border-right: 1px solid #ccc;
     padding-right: 147px;
     display: block;
 }
-.enhancedEditor-toolbar > span {
+
+.enhancedEditor-toolbar>span {
     cursor: pointer;
 }
-.enhancedEditor-toolbar >span+span {
+
+.enhancedEditor-toolbar>span+span {
     margin-left: 2px;
 }
+
 .enhancedEditor-closeDialog {
     float: left;
     margin-right: 10px;
     font-size: 1.2em;
     cursor: pointer;
 }
-.enhancedEditor-toolbar.findReplace > input[type='text'] {
+
+.enhancedEditor-toolbar.findReplace>input[type='text'] {
     height: 10px;
     width: 25%;
 }
-.enhancedEditor-toolbar.findReplace > input[type='button'] {
+
+.enhancedEditor-toolbar.findReplace>input[type='button'] {
     width: 10%;
     height: 100%;
 }
+
 .enhancedEditor-asLinkContainer {
     display: block;
 }
+
 
 /*chatEasyAccess - for the links (b elements)*/
 
@@ -368,10 +453,13 @@ hr.or:after {
     cursor: pointer;
 }
 
+
 /*highlightQuestions -- for the tags*/
+
 .sox-tagged-interesting {
     position: relative;
 }
+
 .sox-tagged-interesting:before {
     content: '';
     display: block;
@@ -383,11 +471,13 @@ hr.or:after {
     background: black;
 }
 
+
 /*quickAuthorInfo -- for changing the style of the comments table*/
+
 .comments.quickAuthorInfoEnabled {
     border-top: none !important;
 }
 
-.comments.quickAuthorInfoEnabled > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > div:nth-child(1) {
+.comments.quickAuthorInfoEnabled>table:nth-child(1)>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(2)>div:nth-child(1) {
     opacity: 0.8 !important;
 }

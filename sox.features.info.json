@@ -3,12 +3,14 @@
         "Appearance": [{
             "name": "addAuthorNameToInboxNotifications",
             "desc": "Add the author's name to notifications in the inbox",
+            "extended_description": "If you receive a comment/answer/suggested edit notification, this feature will add the name of the author of the comment/answer/edit to the notification",
             "meta": "",
             "match": "",
             "exclude": ""
         }, {
             "name": "addEllipsis",
             "desc": "Add ellipsis to long names",
+            "extended_description": "Instead of truncating long names, this feature will add an ellipsis near the end of the username",
             "meta": "http://meta.stackexchange.com/questions/244729/provide-an-ellipsis-after-a-long-name-instead-of-truncating-it",
             "match": "",
             "exclude": "*://chat.*.com/*"
