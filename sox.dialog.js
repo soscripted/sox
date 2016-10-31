@@ -47,22 +47,27 @@
             function addFeature(category, name, description, featureSettings, extendedDescription, metaLink) {
                 var $div = $('<div/>', {
                         'class': 'feature'
+                    }),
+                    $info = $('<i/>', {
+                        'class': 'fa fa-info',
+                        'aria-hidden': true
                     }).hover(function() {
-                        if (extendedDescription) {
-                            $(this).append($('<div/>', {
+                        if (extendedDescription && !$(this).parent().find('.sox-feature-info').length) {
+                            $(this).parent().append($('<div/>', {
                                 'class': 'sox-feature-info',
                                 'html': extendedDescription + (metaLink ? ' <a href="' + metaLink + '">[meta]</a>' : '')
                             }));
                         }
-                    }, function() {
-                        $(this).parent().find('.sox-feature-info').remove();
                     }),
                     $label = $('<label/>'),
                     $input = $('<input/>', {
                         id: name,
                         type: 'checkbox'
                     });
-                $div.append($label).append(extendedDescription ? '<i class="fa fa-info" aria-hidden="true"></i>' : '');
+
+                $div.on('mouseleave', function() {
+                    $(this).find('.sox-feature-info').remove();
+                }).append($label).append(extendedDescription ? $info : '');
                 $label.append($input);
                 $input.after(description);
                 $soxSettingsDialogFeatures.find('#' + category).append($div);
