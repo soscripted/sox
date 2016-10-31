@@ -283,6 +283,7 @@
             // add dialog to corral and sox button to topbar
             $soxSettingsButton.append($icon).appendTo('div.network-items');
             $('.js-topbar-dialog-corral').append($soxSettingsDialog);
+            $('<style/>').html('.network-items .fa:before { color: #858c93; }').appendTo('head');
         }
     };
 
