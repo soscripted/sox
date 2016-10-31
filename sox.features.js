@@ -687,7 +687,7 @@
             // Description: For showing the new version of a title in a diff separately rather than loads of crossing outs in red and additions in green
 
 
-            sox.helpers.observe('.review-status', function() {
+            sox.helpers.observe('.review-status, .body-diffs', function() {
                 var $questionHyperlink = $('.summary h2 .question-hyperlink').clone(),
                     $questionHyperlinkTwo = $('.summary h2 .question-hyperlink').clone(),
                     link = $('.summary h2 .question-hyperlink').attr('href'),
