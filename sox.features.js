@@ -36,7 +36,8 @@
             // Description: Renames Chat tabs to prepend 'Chat' before the room name
 
             if (sox.site.type == 'chat') {
-                document.title = 'Chat - ' + document.title;
+                var match = document.title.match(/^(\(\d*\*?\) )?(.* \| [^|]*)$/);
+                document.title = (match[1] || '') + 'Chat - ' + match[2];
             }
         },
 
