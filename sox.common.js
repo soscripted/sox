@@ -91,10 +91,11 @@
     };
 
     sox.helpers = {
-        getFromAPI: function(type, id, sitename, callback, sortby) {
+        getFromAPI: function(type, id, sitename, callback, sortby, async) {
             sox.loginfo('Getting From API with URL: https://api.stackexchange.com/2.2/' + type + '/' + id + '?order=desc&sort=' + (sortby || 'creation') + '&site=' + sitename + '&key=' + sox.info.apikey + '&access_token=' + sox.settings.accessToken);
             $.ajax({
                 type: 'get',
+                async: (typeof async === 'undefined' ? true : false),
                 url: 'https://api.stackexchange.com/2.2/' + type + '/' + id + '?order=desc&sort=' + (sortby || 'creation') + '&site=' + sitename + '&key=' + sox.info.apikey + '&access_token=' + sox.settings.accessToken,
                 success: function(d) {
                     if (d.backoff) {

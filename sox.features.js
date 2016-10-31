@@ -1497,18 +1497,18 @@ Toggle SBS?</div></li>';
             var postsToCheck = JSON.parse(GM_getValue('downvotedPostsEditAlert', '{}'));
             var notifications = JSON.parse(GM_getValue('downvotedPostsEditAlert-notifications', '{}'));
 
-            console.log(postsToCheck);
-            console.log(notifications);
+            sox.debug(postsToCheck);
+            sox.debug(notifications);
 
             $(document).on('click', '.downvotedPostsEditAlert-delete', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                console.log('deleting');
+                sox.debug('deleting');
                 var base = $(this).attr('id').split('delete_')[1];
                 var sitename = base.split('-')[0];
                 var postId = base.split('-')[1];
                 delete notifications[+postId];
-                console.log('new notifications object', notifications);
+                sox.debug('new notifications object', notifications);
                 GM_setValue('downvotedPostsEditAlert-notifications', JSON.stringify(notifications));
                 $(this).parents('.question-close-notification').remove(); //hide the notification in the inbox dropdown
             });
@@ -1555,7 +1555,7 @@ Toggle SBS?</div></li>';
                 var sitename;
                 var title;
                 data.data = JSON.parse(data.data);
-                console.log('Received Data:', data.data);
+                sox.debug('Received Data:', data.data);
                 if (data.data.a == 'post-edit' && posts.indexOf((data.data.id).toString()) > -1) {
                     for (var c in websocketSiteCodes) {
                         if (websocketSiteCodes[c] == data.action.split('-')[0]) {
@@ -1569,7 +1569,7 @@ Toggle SBS?</div></li>';
                                 };
                                 GM_setValue('downvotedPostsEditAlert-notifications', JSON.stringify(notifications));
                                 addNotification('http://' + sitename + '.stackexchange.com/posts/' + data.data.id, title + ' [LIVE]', sitename, data.data.id, true);
-                                console.log('adding notification');
+                                sox.debug('adding notification from live');
                                 addNumber();
                             }, 'activity&filter=!9YdnSEBb8');
                         }
@@ -1580,21 +1580,19 @@ Toggle SBS?</div></li>';
             $.each(notifications, function(i, o) {
                 addNotification(o.url, o.title, o.sitename, i, false);
             });
-            console.log(sox.settings.accessToken);
+
             if (!$.isEmptyObject(postsToCheck)) {
+                sox.debug(postsToCheck);
                 $.each(postsToCheck, function(i, o) {
-                    console.log('Last Checked Time: ' + o.lastCheckedTime);
-                    if (new Date().getTime() >= ((o.lastCheckedTime || 0) + 60000)) { //an hour: 3600000ms, 15 minutes: 900000ms, 1 minutes: 60000ms
+                    sox.debug('Last Checked Time: ' + o.lastCheckedTime);
+                    if (new Date().getTime() >= ((o.lastCheckedTime || 0) + 900000)) { //an hour: 3600000ms, 15 minutes: 900000ms, 1 minutes: 60000ms
                         sox.helpers.getFromAPI('posts', i, o.sitename, function(json) {
-                            console.log(json);
-                            //BUG: the o.lastCheckedTime is not as expected. The very first console.log(postToCheck) shows a **LATER**
-                            //lastCheckedTime than the console.log("Last checked time:...") that comes **AFTER** the first one
-                            //WHY!??
-                            console.log(json.items[0].last_edit_date + '>' + (o.lastCheckedTime || o.addedDate) / 1000);
+                            sox.debug(json);
+                            sox.debug(json.items[0].last_edit_date + '>' + (o.lastCheckedTime || o.addedDate) / 1000);
+                            sox.debug(json.items[0].last_edit_date > (o.lastCheckedTime || o.addedDate) / 1000);
                             if (json.items[0].last_edit_date > (o.lastCheckedTime || o.addedDate) / 1000) {
-                                console.log('adding notification from api');
+                                sox.debug('adding notification from api');
                                 addNotification(json.items[0].link, json.items[0].title + ' [API]', json.items[0].link.split('/')[2].split('.')[0], i, true);
-                                console.log('adding notification from api');
                                 notifications[i] = {
                                     'sitename': json.items[0].link.split('/')[2].split('.')[0],
                                     'url': json.items[0].link,
@@ -1603,12 +1601,12 @@ Toggle SBS?</div></li>';
                                 GM_setValue('downvotedPostsEditAlert-notifications', JSON.stringify(notifications));
                                 addNumber();
                             }
-                        }, "activity&filter=!9YdnSEBb8");
+                        }, "activity&filter=!9YdnSEBb8", false); //false means async=false
                     }
                     o.lastCheckedTime = new Date().getTime();
                     GM_setValue('downvotedPostsEditAlert', JSON.stringify(postsToCheck));
                     w.onopen = function() {
-                        console.log('sending websocket message: ' + websocketSiteCodes[o.sitename] + "-question-" + o.questionId);
+                        sox.debug('sending websocket message: ' + websocketSiteCodes[o.sitename] + "-question-" + o.questionId);
                         w.send(websocketSiteCodes[o.sitename] + "-question-" + o.questionId);
                     };
                 });

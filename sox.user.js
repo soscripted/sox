@@ -160,6 +160,7 @@
                     GM_setValue('SOX-accessToken', accesstoken['SOX-accessToken']);
                 }, false);
 
+                //NOTE: `sox` object doesn't exist here because it will be put in the HEAD
                 document.head.appendChild(document.createElement('script')).text =
                     GM_getResourceText('SEAPI') + ';(' + function() {
                         SE.init({
@@ -167,23 +168,23 @@
                             key: 'lL1S1jr2m*DRwOvXMPp26g((', //SOX key
                             channelUrl: location.protocol + '//stackoverflow.com/blank',
                             complete: function(d) {
-                                sox.debug('Successfully inited using SE SDK');
+                                console.debug('Successfully inited using SE SDK');
                                 $(document).on('click', '#soxSettingsButton', function() {
                                     //TODO: make the cogs button red?
-                                    sox.debug('clicked button to open get token window');
+                                    console.debug('clicked button to open get token window');
                                     document.head.appendChild(document.createElement('script')).text =
                                         '(' + function() {
-                                            sox.debug('beginning of 2nd IIFE for access token, before authenticating');
+                                            console.debug('beginning of 2nd IIFE for access token, before authenticating');
                                             SE.authenticate({
                                                 success: function(data) {
-                                                    sox.debug('Successfully authenticated using SE SDK');
-                                                    sox.debug(data);
+                                                    console.debug('Successfully authenticated using SE SDK');
+                                                    console.debug(data);
                                                     window.postMessage(JSON.stringify({
                                                         'SOX-accessToken': data.accessToken
                                                     }), '*');
                                                 },
                                                 error: function(data) {
-                                                    sox.error(data);
+                                                    console.error(data);
                                                 },
                                                 scope: ['read_inbox', 'write_access', 'no_expiry']
                                             });
