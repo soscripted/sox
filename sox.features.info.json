@@ -29,6 +29,7 @@
         }, {
             "name": "betterCSS",
             "desc": "Add extra CSS for voting signs and favourite button (currently only on Android SE)",
+            "extended_description": "Pulse effect when hovering over the upvote/downvote/star signs.",
             "meta": "http://meta.stackexchange.com/questions/252685/i-want-to-have-those-voting-animations-like-on-android-se-pretty-please",
             "match": "*://*/questions*",
             "exclude": ""
@@ -143,6 +144,7 @@
         }, {
             "name": "scrollToTop",
             "desc": "Add Scroll To Top button",
+            "extended_description": "This feature adds a 'scroll to top' button at the bottom left of your screen that will jump to the top of the page when clicked",
             "meta": "",
             "match": "",
             "exclude": "*://chat.*.com/*"
@@ -155,6 +157,7 @@
         }, {
             "name": "standOutDupeCloseMigrated",
             "desc": "Add highlighted tags to closed/on hold/duplicate/migrated questions on question lists",
+            "extended_description": "Adds a coloured box at the end of a title (that replaces the standard [duplicate], etc...) in question lists to more easily tell what the state of a question is",
             "meta": "http://meta.stackexchange.com/questions/257021/proposal-to-make-duplicate-closed-and-migrated-in-the-title-more-obvious",
             "match": "",
             "exclude": "*://chat.*.com/*"
@@ -229,6 +232,7 @@
         "Editing": [{
             "name": "addSBSBtn",
             "desc": "Add a button to the editor toolbar to start side-by-side editing",
+            "extended_description": "An 'SBS' button is added to the right of the markdown editor toolbar. Clicking it will make the markdown and the preview appear side-by-side",
             "meta": "http://meta.stackexchange.com/questions/253112/the-discourse-layout-for-side-by-side-markdown-preview",
             "match": "",
             "exclude": "*://chat.*.com/*"
@@ -241,6 +245,7 @@
         }, {
             "name": "editReasonTooltip",
             "desc": "Add a tooltip to posts showing the last revision's comment on the word 'edited' in 'edited [date] at [time]'",
+            "extended_description": "When a post is edited, the editor is displayed underneath the post. This feature will show what the last revision's comment was as a tooltip when you hover over 'edited' underneath a post in 'edited [date] at [time]'",
             "meta": "http://meta.stackexchange.com/questions/2315/show-reason-for-edit-without-clicking-through-to-diff",
             "match": "*://*/questions*",
             "exclude": ""
@@ -279,6 +284,7 @@
         "Unsorted": [{
             "name": "alwaysShowImageUploadLinkBox",
             "desc": "Always show the 'Link from the web' box when uploading an image",
+            "extended_description": "Removes the 'you can also provide a link from the web' button when uploading images, and shows the URL input field by default",
             "meta": "http://meta.stackoverflow.com/q/306888/3541881",
             "match": "*://*/questions*",
             "exclude": ""
