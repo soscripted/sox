@@ -482,3 +482,29 @@ hr.or:after {
 .comments.quickAuthorInfoEnabled>table:nth-child(1)>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(2)>div:nth-child(1) {
     opacity: 0.8 !important;
 }
+
+/*downvotedPostsEditAlert -- for the button and dropdown*/
+
+#downvotedPostsEditAlertButton {
+    background-image: none;
+    padding-top: 10px;
+    font-size: 14px;
+    color: #858c93;
+    height: 24px !important;
+    min-width: 34px;
+}
+
+#downvotedPostsEditAlertButton:hover {
+    color: #999;
+}
+
+#downvotedPostsEditAlertDialog {
+    top: 34px;
+    left: 264px;
+    width: 377px;
+}
+
+#downvotedPostsEditAlertButton.glow {
+    -webkit-text-stroke-color: red;
+    -webkit-text-stroke-width: 1px;
+}

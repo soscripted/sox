@@ -111,7 +111,7 @@
         },
         observe: function(elements, callback, toObserve) {
             sox.debug('observe: ' + elements);
-            new MutationObserver(function(mutations, observer) {
+            var observer = new MutationObserver(function(mutations, observer) {
                 for (var i = 0; i < mutations.length; i++) {
                     for (var j = 0; j < mutations[i].addedNodes.length; j++) {
                         var $o = $(mutations[i].addedNodes[j]);
@@ -121,12 +121,24 @@
                         }
                     }
                 }
-            }).observe(toObserve || document.body, {
-                childList: true,
-                subtree: true,
-                attributes: true,
-                characterData: true
             });
+            if (toObserve) {
+                for (var i = 0; i < toObserve.length; i++) { //could be multiple elements with querySelectorAll
+                    observer.observe(toObserve[i], {
+                        attributes: true,
+                        childList: true,
+                        characterData: true,
+                        subtree: true
+                    });
+                }
+            } else {
+                observer.observe(document.body, {
+                    attributes: true,
+                    childList: true,
+                    characterData: true,
+                    subtree: true
+                });
+            }
         },
         newElement: function(type, elementDetails) {
             var extras = {},

@@ -226,7 +226,7 @@
                         $('#soxSettingsButton').removeClass('topbar-icon-on');
                         var which = $(this).attr('class').match(/js[\w-]*\b/)[0].split('-')[1];
                         if (which != 'site') { //site-switcher dropdown is slightly different
-                            $('.' + which + '-dialog').not('#sox-settings-dialog, #metaNewQuestionAlertDialog').show();
+                            $('.' + which + '-dialog').not('#sox-settings-dialog, #metaNewQuestionAlertDialog, #downvotedPostsEditAlertDialog').show();
                             $(this).addClass('topbar-icon-on');
                         } else {
                             if ($(this).css('top') != '34px') {
