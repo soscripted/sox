@@ -220,6 +220,16 @@
             }
 
             function addKbd($node) {
+                /*var start = $node.get(0).selectionStart,
+                    end = $node.get(0).selectionEnd,
+                    origVal = $node.val(),
+                    selected = origVal.slice(start, end),
+                    newVal = '';
+
+                console.log(start, end, selected);
+
+                newVal = origVal.slice(0, start) + "<kbd>" + selected + "</kbd>" + origVal.substr(end);
+                console.log(newVal);*/
                 $node.surroundSelectedText("<kbd>", "</kbd>");
             }
 
@@ -687,7 +697,7 @@
             // Description: For showing the new version of a title in a diff separately rather than loads of crossing outs in red and additions in green
 
 
-            sox.helpers.observe('.review-status, .body-diffs', function() {
+            sox.helpers.observe('.review-status, .body-diffs, .review-content', function() {
                 var $questionHyperlink = $('.summary h2 .question-hyperlink').clone(),
                     $questionHyperlinkTwo = $('.summary h2 .question-hyperlink').clone(),
                     link = $('.summary h2 .question-hyperlink').attr('href'),
@@ -1095,19 +1105,21 @@ Toggle SBS?</div></li>';
                     }
 
                     $.getJSON(apiurl, function(json) {
-                        var author = json.items[0].owner.display_name,
-                            $author = $('<span/>', {
-                                class: 'author',
-                                style: 'padding-left: 5px;',
-                                text: author
-                            });
+                        if(json.items.length) {
+                            var author = (type === 'edit suggested' ? json.items[0].proposing_user.display_name : json.items[0].owner.display_name),
+                                $author = $('<span/>', {
+                                    class: 'author',
+                                    style: 'padding-left: 5px;',
+                                    text: author
+                                });
 
-                        var $header = $node.find('.item-header'),
-                            $type = $header.find('.item-type').clone(),
-                            $creation = $header.find('.item-creation').clone();
+                            var $header = $node.find('.item-header'),
+                                $type = $header.find('.item-type').clone(),
+                                $creation = $header.find('.item-creation').clone();
 
-                        //fix conflict with soup fix mse207526 - https://github.com/vyznev/soup/blob/master/SOUP.user.js#L489
-                        $header.empty().append($type).append($author).append($creation);
+                            //fix conflict with soup fix mse207526 - https://github.com/vyznev/soup/blob/master/SOUP.user.js#L489
+                            $header.empty().append($type).append($author).append($creation);
+                        }
                     });
                 }
             }
@@ -1216,7 +1228,7 @@ Toggle SBS?</div></li>';
                     if (typeKey !== 'TOTAL') {
                         count = getFlagCount(item, typeItem);
                         percentage = calculatePercentage(count, total);
-                        //console.log(groupKey + ": " + typeKey + " Flags -- " + count);
+                        //sox.debug(groupKey + ": " + typeKey + " Flags -- " + count);
                         addPercentage(item, typeItem, percentage);
                     }
                 }

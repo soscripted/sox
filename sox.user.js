@@ -184,10 +184,12 @@
                                                     }), '*');
                                                 },
                                                 error: function(data) {
+                                                    console.error('SOX Authentication Error:');
                                                     console.error(data);
                                                 },
                                                 scope: ['read_inbox', 'write_access', 'no_expiry']
                                             });
+                                            console.debug('end of 2nd IIFE for access token, after authenticating');
                                         } + ')();';
                                 });
                             }
