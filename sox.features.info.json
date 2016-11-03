@@ -355,7 +355,7 @@
             "desc": "Warn you when you are not logged in",
             "meta": "",
             "match": "",
-            "exclude": "*://chat.*.com/*,*://stackexchange.com"
+            "exclude": "*://chat.*.com/*,*://stackexchange.com,*://area51.stackexchange.com/*"
         }, {
             "name": "replyToOwnChatMessages",
             "desc": "Add reply signs to your own chat messages",
