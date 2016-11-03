@@ -46,7 +46,7 @@
 
             function addFeature(category, name, description, featureSettings, extendedDescription, metaLink) {
                 var $div = $('<div/>', {
-                        'class': 'feature'
+                        'class': 'sox-feature'
                     }),
                     $info = $('<i/>', {
                         'class': 'fa fa-info',
@@ -171,7 +171,7 @@
             $searchBox.on('keyup keydown', function() { //search box
                 if ($(this).val() !== '') {
                     var t = $(this).val();
-                    $('#sox-settings-dialog .feature').each(function() {
+                    $('#sox-settings-dialog .sox-feature').each(function() {
                         var $features = $(this).closest('.features');
                         if ($(this).find('label').text().toLowerCase().indexOf(t) == -1) {
                             $(this).hide();
@@ -186,7 +186,7 @@
                         }
                     });
                 } else {
-                    $('.category, .features, #sox-settings-dialog .feature').fadeIn();
+                    $('.category, .features, #sox-settings-dialog .sox-feature').fadeIn();
                 }
             });
 

@@ -39,6 +39,20 @@
     var Stack = (typeof Chat === "undefined" ? (typeof StackExchange === "undefined" ? window.eval('if (typeof StackExchange != "undefined") StackExchange') : StackExchange) : undefined);
     sox.debug(Stack);
 
+    sox.exists = function(path) {
+        if(!Stack) return false;
+        var toCheck = path.split('.'),
+            cont = true,
+            o = Stack,
+            i;
+        for (i = 0; i < toCheck.length; i++) {
+            if (!cont) return false;
+            if (!(toCheck[i] in o)) cont = false;
+            o = o[toCheck[i]];
+        }
+        return cont;
+    };
+
     sox.info = {
         version: (typeof GM_info !== 'undefined' ? GM_info.script.version : 'unknown'),
         handler: (typeof GM_info !== 'undefined' ? GM_info.scriptHandler : 'unknown'),
@@ -184,7 +198,7 @@
             chat: 'chat',
             beta: 'beta'
         },
-        id: (Stack && "site" in Stack.options ?  Stack.options.site.id : undefined),
+        id: (sox.exists('options.site.id') ? Stack.options.site.id : undefined),
         get name() {
             if (Chat) {
                 return $('#footer-logo a').attr('title');
@@ -198,7 +212,7 @@
             if (Chat) {
                 return this.types.chat;
             } else if (Stack) {
-                if (Stack.options.site.isMetaSite) {
+                if (sox.exists('options.site') && Stack.options.site.isMetaSite) {
                     return this.types.meta;
                 } else {
                     // check if site is in beta or graduated
@@ -275,14 +289,14 @@
             if (sox.site.type == sox.site.types.chat) {
                 return Chat ? Chat.RoomUsers.current().id : undefined;
             } else {
-                return Stack ? Stack.options.user.userId : undefined;
+                return sox.exists('options.user.userId') ? Stack.options.user.userId : undefined;
             }
         },
         get rep() {
             if (sox.site.type == sox.site.types.chat) {
                 return Chat.RoomUsers.current().reputation;
             } else {
-                return Stack ? Stack.options.user.rep : undefined;
+                return sox.exists('options.user.rep') ? Stack.options.user.rep : undefined;
             }
         },
         get name() {
@@ -293,7 +307,7 @@
             }
         },
         get loggedIn() {
-            return Stack ? Stack.options.user.isRegistered : undefined;
+            return sox.exists('options.user.isRegistered') ? Stack.options.user.isRegistered : undefined;
         },
         hasPrivilege: function(privilege) {
             if (this.loggedIn) {
