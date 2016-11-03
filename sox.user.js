@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Stack Overflow Extras (SOX)
 // @namespace    https://github.com/soscripted/sox
-// @version      2.0.2 DEV k
+// @version      2.0.2 DEV l
 // @description  Extra optional features for Stack Overflow and Stack Exchange sites
 // @contributor  ᴉʞuǝ (stackoverflow.com/users/1454538/)
 // @contributor  ᔕᖺᘎᕊ (stackexchange.com/users/4337810/)
@@ -113,11 +113,11 @@
                         }
                     }
                     if (runFeature) {
+                        sox.debug('running ' + featureId);
                         if (feature.settings) {
                             var settingsToPass = GM_getValue("SOX-" + featureId + "-settings") ? JSON.parse(GM_getValue("SOX-" + featureId + "-settings")) : {};
                             sox.features[featureId](settingsToPass); //run the feature if match and exclude conditions are met, pass on settings object
                         } else {
-                            console.log(featureId);
                             sox.features[featureId](); //run the feature if match and exclude conditions are met
                         }
                     }

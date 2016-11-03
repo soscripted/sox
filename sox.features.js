@@ -728,7 +728,7 @@
 
             $(document).on('mouseenter', '#your-communities-section > ul > li > a', function() {
                 var href = $(this).attr('href');
-                chatLink = 'http://chat.stackexchange.com?tab=site&host=' + href.substr(2);
+                chatLink = 'http://chat.stackexchange.com?tab=site&host=' + (sox.location.matchWithPattern("*://stackexchange.com") ? href.substr(7) : href.substr(2));
 
                 if (href.indexOf('stackapps') > -1) {
                     link = undefined;
