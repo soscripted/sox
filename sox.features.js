@@ -703,8 +703,8 @@
         titleEditDiff: function() {
             // Description: For showing the new version of a title in a diff separately rather than loads of crossing outs in red and additions in green
 
-
-            sox.helpers.observe('.review-status, .body-diffs, .review-content', function() {
+            function betterTitle() {
+                sox.debug('ran');
                 var $questionHyperlink = $('.summary h2 .question-hyperlink').clone(),
                     $questionHyperlinkTwo = $('.summary h2 .question-hyperlink').clone(),
                     link = $('.summary h2 .question-hyperlink').attr('href'),
@@ -715,7 +715,9 @@
                     $('.summary h2 .question-hyperlink').hide();
                     $('.summary h2 .question-hyperlink').after('<a href="' + link + '" class="question-hyperlink"><span class="diff-delete">' + removed + '</span><span class="diff-add">' + added + '</span></a>');
                 }
-            });
+            }
+            betterTitle();
+            sox.helpers.observe('.review-status, .review-content, .suggested-edit, .post-id', betterTitle);
         },
 
         metaChatBlogStackExchangeButton: function() {
@@ -723,6 +725,7 @@
             // NOTE: this feature used to have a 'blog' button as well, but it wasn't very useful so was removed
 
             var link, chatLink;
+
             $(document).on('mouseenter', '#your-communities-section > ul > li > a', function() {
                 var href = $(this).attr('href');
                 chatLink = 'http://chat.stackexchange.com?tab=site&host=' + href.substr(2);
@@ -741,19 +744,22 @@
                     link = 'http://meta.' + href.substr(2, href.length - 1);
                 }
 
-                if (href.indexOf('stackoverflow.com') > -1 && href.indexOf('meta') === -1) {
+
+                if (href.indexOf('stackoverflow.com') > -1 && href.indexOf('meta') === -1 && !href.match(/(pt|ru|es)\.stackoverflow/i)) {
                     chatLink = 'http://chat.stackoverflow.com?tab=site';
                 }
 
                 if (link || chatLink) { //only hide rep if we're actually going to add anything
-                    $(this).find('.rep-score').hide();
-                    $(this).append('<div class="related-links" style="float: right;">' +
+                    $(this).find('.rep-score').stop(true).delay(135).fadeOut(20);
+                    $(this).prepend('<div class="related-links" style="float: right; display: none;">' +
                         (link ? '<a href="' + link + '">meta</a>' : '') +
                         (chatLink ? '<a href="' + chatLink + '">chat</a>' : '') +
                         '</div>');
+                    $(this).find('.related-links').delay(135).css('opacity', 0).animate({opacity: 1, width: 'toggle'}, 200);
+                    //$(this).find('.related-links').delay(135).animate({width: 'toggle'}, 200);
                 }
             }).on('mouseleave', '#your-communities-section > ul > li > a', function() {
-                $(this).find('.rep-score').show();
+                $(this).find('.rep-score').stop(true).fadeIn(110);
                 $(this).find('.related-links').remove();
             });
         },

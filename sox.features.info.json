@@ -265,7 +265,7 @@
             "name": "titleEditDiff",
             "desc": "Make title edits show seperately rather than merged in edit suggestions",
             "meta": "http://meta.stackexchange.com/questions/135710/please-show-changed-titles-separately-in-edit-diffs",
-            "match": "*://*.com/review/suggested-edits/*",
+            "match": "*://*.com/review/suggested-edits*",
             "exclude": ""
         }],
         "Flags": [{

@@ -171,9 +171,9 @@
             $searchBox.on('keyup keydown', function() { //search box
                 if ($(this).val() !== '') {
                     var t = $(this).val();
-                    $('#sox-settings-dialog label').each(function() {
+                    $('#sox-settings-dialog .feature').each(function() {
                         var $features = $(this).closest('.features');
-                        if ($(this).text().toLowerCase().indexOf(t) == -1) {
+                        if ($(this).find('label').text().toLowerCase().indexOf(t) == -1) {
                             $(this).hide();
                         } else {
                             $(this).show();
@@ -186,7 +186,7 @@
                         }
                     });
                 } else {
-                    $('.category, .features, #sox-settings-dialog label').fadeIn();
+                    $('.category, .features, #sox-settings-dialog .feature').fadeIn();
                 }
             });
 
