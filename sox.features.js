@@ -1158,32 +1158,30 @@ Toggle SBS?</div></li>';
             // Description: For adding a button at the bottom right part of the screen to scroll back to the top
             //https://github.com/shu8/Stack-Overflow-Optional-Features/pull/34
 
-            if (sox.site.type != sox.site.types.chat) { // don't show scrollToTop button while in chat.
-                $('<div/>', {
-                    id: 'sox-scrollToTop',
-                    click: function(e) {
-                        e.preventDefault();
-                        $('html, body').animate({
-                            scrollTop: 0
-                        }, 50);
-                        return false;
-                    }
-                }).append($('<i/>', {
-                    'class': 'fa fa-angle-double-up fa-3x'
-                })).appendTo('div.container');
-
-                if ($(window).scrollTop() < 200) {
-                    $('#sox-scrollToTop').hide();
+            $('<div/>', {
+                id: 'sox-scrollToTop',
+                click: function(e) {
+                    e.preventDefault();
+                    $('html, body').animate({
+                        scrollTop: 0
+                    }, 50);
+                    return false;
                 }
+            }).append($('<i/>', {
+                'class': 'fa fa-angle-double-up fa-3x'
+            })).appendTo('div.container');
 
-                $(window).scroll(function() {
-                    if ($(this).scrollTop() > 200) {
-                        $('#sox-scrollToTop').fadeIn();
-                    } else {
-                        $('#sox-scrollToTop').fadeOut();
-                    }
-                });
+            if ($(window).scrollTop() < 200) {
+                $('#sox-scrollToTop').hide();
             }
+
+            $(window).scroll(function() {
+                if ($(this).scrollTop() > 200) {
+                    $('#sox-scrollToTop').fadeIn();
+                } else {
+                    $('#sox-scrollToTop').fadeOut();
+                }
+            });
         },
 
         flagPercentages: function() {

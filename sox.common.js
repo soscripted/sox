@@ -184,7 +184,7 @@
             chat: 'chat',
             beta: 'beta'
         },
-        id: Stack ? Stack.options.site.id : undefined,
+        id: (Stack && "site" in Stack.options ?  Stack.options.site.id : undefined),
         get name() {
             if (Chat) {
                 return $('#footer-logo a').attr('title');
