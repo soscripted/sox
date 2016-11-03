@@ -2008,7 +2008,7 @@ Toggle SBS?</div></li>';
                     var site = $(this).attr('href'),
                         sitesToBlock = settings.sitesToBlock.split(',');
                     for (i = 0; i < sitesToBlock.length; i++) {
-                        if (sox.location.match(sitesToBlock[i], site)) {
+                        if (sox.location.matchWithPattern(sitesToBlock[i], site)) {
                             $(this).parent().hide();
                         }
                     }

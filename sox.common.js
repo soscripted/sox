@@ -202,7 +202,7 @@
         get name() {
             if (Chat) {
                 return $('#footer-logo a').attr('title');
-            } else if (Stack) {
+            } else if (sox.exists('options.site.name')) {
                 return Stack.options.site.name;
             }
             return undefined;
@@ -213,6 +213,7 @@
                 return this.types.chat;
             } else if (Stack) {
                 if (sox.exists('options.site') && Stack.options.site.isMetaSite) {
+                    console.log('he');
                     return this.types.meta;
                 } else {
                     // check if site is in beta or graduated
@@ -255,7 +256,15 @@
         get onQuestion() {
             return this.on('/questions/');
         },
-        match: function(pattern, urlToMatchWith) { //commented version @ https://jsfiddle.net/shub01/t90kx2dv/
+        matchWithPattern: function(pattern, urlToMatchWith) { //commented version @ https://jsfiddle.net/shub01/t90kx2dv/
+            if(pattern == '*://stackexchange.com') { //SE.com special checking
+                if(urlToMatchWith) {
+                    if(urlToMatchWith.match(/https?:\/\/stackexchange\.com\/?/)) return true;
+                } else {
+                    if(location.href.match(/https?:\/\/stackexchange\.com\/?/)) return true;
+                }
+                return false;
+            }
             var currentSiteScheme, currentSiteHost, currentSitePath;
             if (urlToMatchWith) {
                 var split = urlToMatchWith.split('/');
