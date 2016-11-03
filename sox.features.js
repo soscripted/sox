@@ -752,7 +752,8 @@
                 if (link || chatLink) { //only hide rep if we're actually going to add anything
                     $(this).find('.rep-score').stop(true).delay(135).fadeOut(20);
                     $(this).prepend('<div class="related-links" style="float: right; display: none;">' +
-                        (link ? '<a href="' + link + '">meta</a>' : '') +
+                        (link.indexOf('discuss.area51') > -1 ? '<a href="' + link + '">discuss</a>' :
+                        (link ? '<a href="' + link + '">meta</a>' : '')) +
                         (chatLink ? '<a href="' + chatLink + '">chat</a>' : '') +
                         '</div>');
                     $(this).find('.related-links').delay(135).css('opacity', 0).animate({opacity: 1, width: 'toggle'}, 200);
