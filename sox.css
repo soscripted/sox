@@ -73,6 +73,7 @@
     color: #858c93;
     height: 24px !important;
     min-width: 34px;
+    cursor: pointer;
 }
 
 .sox-settings-button:hover {
@@ -492,6 +493,7 @@ hr.or:after {
     color: #858c93;
     height: 24px !important;
     min-width: 34px;
+    cursor: pointer;
 }
 
 #downvotedPostsEditAlertButton:hover {
@@ -502,6 +504,7 @@ hr.or:after {
     top: 34px;
     left: 264px;
     width: 377px;
+    display: none;
 }
 
 #downvotedPostsEditAlertButton.glow {

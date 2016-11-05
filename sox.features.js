@@ -744,7 +744,6 @@
                     link = 'http://meta.' + href.substr(2, href.length - 1);
                 }
 
-
                 if (href.indexOf('stackoverflow.com') > -1 && href.indexOf('meta') === -1 && !href.match(/(pt|ru|es)\.stackoverflow/i)) {
                     chatLink = 'http://chat.stackoverflow.com?tab=site';
                 }
@@ -758,7 +757,6 @@
                         (chatLink ? '<a href="' + chatLink + '">chat</a>' : '') +
                         '</div>');
                     $(this).find('.related-links').delay(135).css('opacity', 0).animate({opacity: 1, width: 'toggle'}, 200);
-                    //$(this).find('.related-links').delay(135).animate({width: 'toggle'}, 200);
                 }
             }).on('mouseleave', '#your-communities-section > ul > li > a', function() {
                 $(this).find('.rep-score').stop(true).fadeIn(110);
@@ -1387,6 +1385,7 @@ Toggle SBS?</div></li>';
                     class: 'fa fa-edit'
                 });
 
+            if($('#metaNewQuestionAlertDialog').length) $dialog.css('left', '297px');
             $button.append($icon).appendTo('div.network-items');
             $dialog.append($header).append($content.append($posts)).prependTo('.js-topbar-dialog-corral');
 
@@ -2084,7 +2083,7 @@ Toggle SBS?</div></li>';
             function addHoverHandler($el) {
                 $el.find('.flags, .stars').hide();
                 $el.hover(function() {
-                    $el.find('.meta').show().append(replySpan);
+                    $el.find('.meta').css('background-color', 'transparent').show().append(replySpan);
                 }, function() {
                     $el.find('.meta').hide().find('.newreply').remove();
                 });
