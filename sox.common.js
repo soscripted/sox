@@ -213,7 +213,6 @@
                 return this.types.chat;
             } else if (Stack) {
                 if (sox.exists('options.site') && Stack.options.site.isMetaSite) {
-                    console.log('he');
                     return this.types.meta;
                 } else {
                     // check if site is in beta or graduated

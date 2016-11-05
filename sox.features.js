@@ -752,11 +752,14 @@
                     $(this).find('.rep-score').stop(true).delay(135).fadeOut(20);
                     $(this).prepend('<div class="related-links" style="float: right; display: none;">' +
                         (link ?
-                            (link.indexOf('discuss.area51') > -1 ? '<a href="' + link + '">discuss</a>' : '<a href="' + link + '">meta</a>')
-                            : '') +
+                            (link.indexOf('discuss.area51') > -1 ? '<a href="' + link + '">discuss</a>' : '<a href="' + link + '">meta</a>') :
+                            '') +
                         (chatLink ? '<a href="' + chatLink + '">chat</a>' : '') +
                         '</div>');
-                    $(this).find('.related-links').delay(135).css('opacity', 0).animate({opacity: 1, width: 'toggle'}, 200);
+                    $(this).find('.related-links').delay(135).css('opacity', 0).animate({
+                        opacity: 1,
+                        width: 'toggle'
+                    }, 200);
                 }
             }).on('mouseleave', '#your-communities-section > ul > li > a', function() {
                 $(this).find('.rep-score').stop(true).fadeIn(110);
@@ -900,35 +903,42 @@
             $('head').append('<link rel="stylesheet" href="https://rawgit.com/shu8/SE-Answers_scripts/master/dupeClosedMigratedCSS.css" type="text/css" />'); //add the CSS
 
             $('.question-summary').each(function() { //Find the questions and add their id's and statuses to an object
+                var $question = $(this);
                 var $anchor = $(this).find('.summary a:eq(0)');
                 var text = $anchor.text().trim();
                 var id = $anchor.attr('href').split('/')[2];
 
                 if (text.substr(text.length - 11) == '[duplicate]') {
                     $anchor.text(text.substr(0, text.length - 11)); //remove [duplicate]
+                    $question.attr('data-sox-question-state', 'duplicate'); //used for hideCertainQuestions feature compatability
                     $.get('//' + location.hostname + '/questions/' + id, function(d) {
                         $anchor.after("&nbsp;<a href='" + $(d).find('.question-status.question-originals-of-duplicate a:eq(0)').attr('href') + "'><span class='duplicate' title='click to visit duplicate'>&nbsp;duplicate&nbsp;</span></a>"); //add appropiate message
+                        console.log('added');
                     });
 
                 } else if (text.substr(text.length - 8) == '[closed]') {
                     $anchor.text(text.substr(0, text.length - 8)); //remove [closed]
+                    $question.attr('data-sox-question-state', 'closed'); //used for hideCertainQuestions feature compatability
                     $.get('//' + location.hostname + '/questions/' + id, function(d) {
                         $anchor.after("&nbsp;<span class='closed' title='" + $(d).find('.question-status h2').text() + "'>&nbsp;closed&nbsp;</span>"); //add appropiate message
                     });
 
                 } else if (text.substr(text.length - 10) == '[migrated]') {
                     $anchor.text(text.substr(0, text.length - 10)); //remove [migrated]
+                    $question.attr('data-sox-question-state', 'migrated'); //used for hideCertainQuestions feature compatability
                     $.get("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20html%20where%20url%3D%22" + encodeURIComponent('http://' + location.hostname + '/questions/' + id) + "%22&diagnostics=true", function(d) {
                         $anchor.after("&nbsp;<span class='migrated' title='migrated to " + $(d).find('.current-site .site-icon').attr('title') + "'>&nbsp;migrated&nbsp;</span>"); //add appropiate message
                     });
 
                 } else if (text.substr(text.length - 9) == '[on hold]') {
                     $anchor.text(text.substr(0, text.length - 9)); //remove [on hold]
+                    $question.attr('data-sox-question-state', 'on hold'); //used for hideCertainQuestions feature compatability
                     $.get('//' + location.hostname + '/questions/' + id, function(d) {
                         $anchor.after("&nbsp;<span class='onhold' title='" + $(d).find('.question-status h2').text() + "'>&nbsp;onhold&nbsp;</span>"); //add appropiate message
                     });
                 }
             });
+            $(document).trigger('sox-added-labels');
         },
 
         editReasonTooltip: function() {
@@ -1385,7 +1395,7 @@ Toggle SBS?</div></li>';
                     class: 'fa fa-edit'
                 });
 
-            if($('#metaNewQuestionAlertDialog').length) $dialog.css('left', '297px');
+            if ($('#metaNewQuestionAlertDialog').length) $dialog.css('left', '297px');
             $button.append($icon).appendTo('div.network-items');
             $dialog.append($header).append($content.append($posts)).prependTo('.js-topbar-dialog-corral');
 
@@ -2106,6 +2116,34 @@ Toggle SBS?</div></li>';
             sox.helpers.observe('.mine .message', function(el) {
                 addHoverHandler($(el));
             });
+        },
+
+        hideCertainQuestions: function(settings) {
+            sox.debug('hideCertainQuestions settings', settings);
+            if (settings.duplicate || settings.closed || settings.migrated || settings.onHold) {
+                $('.question-summary').each(function() { //Find the questions and add their id's and statuses to an object
+                    var $question = $(this);
+                    var $anchor = $(this).find('.summary a:eq(0)');
+                    var text = $anchor.text().trim();
+
+                    if (text.substr(text.length - 11) == '[duplicate]' || $question.attr('data-sox-question-state') == 'duplicate') {
+                        if (settings.duplicate) $question.hide();
+
+                    } else if (text.substr(text.length - 8) == '[closed]' || $question.attr('data-sox-question-state') == 'closed') {
+                        if (settings.closed) $question.hide();
+
+                    } else if (text.substr(text.length - 10) == '[migrated]' || $question.attr('data-sox-question-state') == 'migrated') {
+                        if (settings.migrated) $question.hide();
+
+                    } else if (text.substr(text.length - 9) == '[on hold]' || $question.attr('data-sox-question-state') == 'on hold') {
+                        if (settings.onHold) $question.hide();
+                    }
+                });
+            }
+            if (settings.deletedAnswers) {
+                var length = $('.answer.deleted-answer').hide().length;
+                $('.answers-subheader h2').append(' (' + length + ' deleted & hidden)');
+            }
         }
     };
 })(window.sox = window.sox || {}, jQuery);

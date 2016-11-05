@@ -362,6 +362,33 @@
             "meta": "",
             "match": "*://chat.*.com/*",
             "exclude": ""
+        }, {
+            "name": "hideCertainQuestions",
+            "desc": "Hide on hold, closed, or duplicate questions or deleted answers",
+            "meta": "",
+            "match": "",
+            "exclude": "*://chat.*.com/*",
+            "settings": [{
+                "id": "duplicate",
+                "type": "checkbox",
+                "desc": "Hide duplicate questions?"
+            }, {
+                "id": "closed",
+                "type": "checkbox",
+                "desc": "Hide closed questions?"
+            },  {
+                "id": "migrated",
+                "type": "checkbox",
+                "desc": "Hide migrated questions?"
+            }, {
+                "id": "onHold",
+                "type": "checkbox",
+                "desc": "Hide on hold questions?"
+            }, {
+                "id": "deletedAnswers",
+                "type": "checkbox",
+                "desc": "Hide deleted answers?"
+            }]
         }]
     }
 }
