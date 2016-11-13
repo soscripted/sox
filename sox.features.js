@@ -1955,8 +1955,10 @@ Toggle SBS?</div></li>';
                 }
             });
             var apiUrl = "https://api.stackexchange.com/users/" + Object.keys(answerers).join(';') + "?site=" + sox.site.currentApiParameter;
+            sox.debug('quickAuthorInfo answerer IDs', answerers);
+            sox.debug('quickAuthorInfo API URL', apiUrl);
             $.get(apiUrl, function(data) {
-                sox.debug(data);
+                sox.debug('quickAuthorInfo api dump', data);
                 var userDetailsFromAPI = {};
                 $.each(data.items, function(k, v) {
                     userDetailsFromAPI[v.user_id] = {
