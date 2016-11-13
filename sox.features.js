@@ -1951,7 +1951,7 @@ Toggle SBS?</div></li>';
                     var username = $userDetailsAnchor.text();
                     if (userid !== 0) answerers[userid] = username;
                 } else {
-                    sox.info('Could not find user user link for: ', $(this));
+                    sox.loginfo('Could not find user user link for: ', $(this));
                 }
             });
             var apiUrl = "https://api.stackexchange.com/users/" + Object.keys(answerers).join(';') + "?site=" + sox.site.currentApiParameter;
