@@ -585,7 +585,7 @@
 
             function showImages() {
                 $('.comment .comment-text .comment-copy a').each(function() {
-                    if ($(this).attr('href').indexOf('imgur.com') != -1) {
+                    if ($(this).attr('href') && $(this).attr('href').indexOf('imgur.com') != -1) {
                         var src = $(this).attr('href');
                         if (!$(this).parent().find('img[src="' + src + '"]').length) {
                             $(this).parent().append('<img src="' + src + '" width="100%">'); //add image to end of comments, but keep link in same position
@@ -594,7 +594,7 @@
                 });
             }
 
-            showImages();
+            setTimeout(showImages, 2000); //setTimeout needed because FF refuses to load the feature on page load and does it before so the comment isn't detected.
             sox.helpers.observe('.new_comment', showImages, document.querySelectorAll('.comments table'));
         },
 
@@ -1090,6 +1090,10 @@ Toggle SBS?</div></li>';
             //event listener for adding the sbs toggle button for posting new questions or answers
             //waitForKeyElements('#wmd-redo-button', SBS);
             sox.helpers.observe('li[id^="wmd-redo-button"]', SBS);
+
+            sox.helpers.observe('.wmd-preview.sbs-on', function() {
+                $('#tag-suggestions').parent().css('position', 'static'); //https://github.com/soscripted/sox/issues/140
+            });
         },
 
         alwaysShowImageUploadLinkBox: function() {
