@@ -196,7 +196,7 @@
                     id: 'soxSettingsButton',
                     class: 'topbar-icon yes-hover sox-settings-button',
                     title: 'Change SOX settings',
-                    'style': 'color: #858c93',
+                    'style': 'color: #858c93; background-image: none; height: 24px;', //https://github.com/soscripted/sox/issues/142
                     click: function(e) {
                         e.preventDefault();
                         $('#sox-settings-dialog').toggle();

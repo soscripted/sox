@@ -267,7 +267,7 @@
             function addCheckboxes() {
                 $('#reasons').remove(); //remove the div containing everything, we're going to add/remove stuff now:
                 if (/\/edit/.test(window.location.href) || $('[class^="inline-editor"]').length) {
-                    $('.form-submit').before('<div id="reasons"></div>');
+                    $('.form-submit').before('<div id="reasons" style="float:left;"></div>');
 
                     $.each(JSON.parse(GM_getValue('editReasons')), function(i, obj) {
                         $('#reasons').append('<label><input type="checkbox" value="' + this[1] + '"</input>' + this[0] + '</label>&nbsp;');
@@ -605,8 +605,10 @@
 
             function addLabelsAndHandlers() {
                 $('.history-table td b a[href*="#comment"]').each(function() {
-                    var id = $(this).attr('href').split('#')[1].split('_')[0].replace('comment', '');
-                    $(this).after('<span class="showCommentScore" id="' + id + '">&nbsp;&nbsp;&nbsp;show comment score</span>');
+                    if(!$(this).parent().find('.showCommentScore').length) {
+                        var id = $(this).attr('href').split('#')[1].split('_')[0].replace('comment', '');
+                        $(this).after('<span class="showCommentScore" id="' + id + '">&nbsp;&nbsp;&nbsp;show comment score</span>');
+                    }
                 });
                 $('.showCommentScore').css('cursor', 'pointer').on('click', function() {
                     var $that = $(this);
@@ -1380,7 +1382,7 @@ Toggle SBS?</div></li>';
                     id: 'downvotedPostsEditAlertButton',
                     class: 'topbar-icon yes-hover downvotedPostsEditAlert-buttonOff',
                     title: 'Watched posts that have been edited',
-                    'style': 'color: #858c93',
+                    'style': 'color: #858c93; height: 24px;',
                     click: function(e) {
                         e.preventDefault();
                         $('#downvotedPostsEditAlertDialog').toggle();
@@ -2093,7 +2095,7 @@ Toggle SBS?</div></li>';
             function addHoverHandler($el) {
                 $el.find('.flags, .stars').hide();
                 $el.hover(function() {
-                    $el.find('.meta').css('background-color', 'transparent').show().append(replySpan);
+                    $el.find('.meta').css('background-color', 'white').show().append(replySpan);
                 }, function() {
                     $el.find('.meta').hide().find('.newreply').remove();
                 });

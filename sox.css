@@ -413,10 +413,12 @@ hr.or:after {
 }
 
 .enhancedEditor-toolbar {
-    border-left: 1px solid #ccc;
-    border-right: 1px solid #ccc;
-    padding-right: 147px;
     display: block;
+    background-color: transparent;
+    padding: 0 12px;
+    border: 1px solid #c8ccd0;
+    border-bottom: 0;
+    border-top: 0;
 }
 
 .enhancedEditor-toolbar>span {
