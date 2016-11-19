@@ -470,26 +470,33 @@
         commentReplies: function() {
             // Description: For adding reply links to comments
 
-            $('.comment').each(function() {
-                if ($('.topbar-links a span:eq(0)').text() != $(this).find('.comment-text a.comment-user').text()) { //make sure the link is not added to your own comments
-                    $(this).append('<span id="replyLink" title="reply to this user">&crarr;</span>');
-                }
-            });
+            if(!sox.user.loggedIn) return;
+            function addReplyLinks() {
+                $('.comment').each(function() {
+                    if (!$(this).find('.soxReplyLink').length) { //if the link doesn't already exist
+                        if ($('.topbar-links a span:eq(0)').text() != $(this).find('.comment-text a.comment-user').text()) { //make sure the link is not added to your own comments
+                            $(this).find('.comment-text').css('overflow-x', 'hidden');
+                            $(this).append('<span class="soxReplyLink" title="reply to this user">&crarr;</span>');
+                        }
+                    }
+                });
+            }
 
-            $('span#replyLink').css('cursor', 'pointer').on('click', function() {
+            $(document).on('click', 'span.soxReplyLink', function() {
                 var parentDiv = $(this).parent().parent().parent().parent();
-                var textToAdd = '@' + $(this).parent().find('.comment-text a.comment-user').text().replace(/\s/g, '').replace(/♦/, '') + ' '; //eg. @USERNAME [space]
-                console.log('click');
-                console.log(parentDiv);
+                var textToAdd = '@' + $(this).parent().find('.comment-text a.comment-user').text().replace(/\s/g, '').replace(/♦/, ''); //eg. @USERNAME
+                if (!parentDiv.find('textarea').length) parentDiv.next('div').find('a.js-add-link')[0].click(); //show the textarea, http://stackoverflow.com/a/10559680/
 
-                if (!parentDiv.find('textarea').length) {
-                    parentDiv.next('div').find('a.js-add-link')[0].click(); //show the textarea, http://stackoverflow.com/a/10559680/
-                }
                 var $textarea = parentDiv.find('textarea');
-                if (!$textarea.val().match(/@[^\s]+/)) {
-                    $textarea.val($textarea.val() + textToAdd); //add the name
+                if ($textarea.val().match(/@[^\s]+/)) { //if a ping has already been added
+                    $textarea.val($textarea.val().replace(/@[^\s]+/, textToAdd)); //replace the @name with the new @name
+                } else {
+                    $textarea.val($textarea.val() + textToAdd + ' '); //add the @name
                 }
             });
+
+            addReplyLinks();
+            sox.helpers.observe('.new_comment', addReplyLinks);
         },
 
         parseCrossSiteLinks: function() {

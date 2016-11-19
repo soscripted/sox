@@ -513,3 +513,9 @@ hr.or:after {
     -webkit-text-stroke-color: red;
     -webkit-text-stroke-width: 1px;
 }
+
+/*commentReplies -- for the reply buttons*/
+
+.soxReplyLink {
+    cursor: pointer;
+}
