@@ -1198,7 +1198,7 @@ Toggle SBS?</div></li>';
                 }
             }).append($('<i/>', {
                 'class': 'fa fa-angle-double-up fa-3x'
-            })).appendTo('div.container');
+            })).appendTo('body');
 
             if ($(window).scrollTop() < 200) {
                 $('#sox-scrollToTop').hide();
@@ -1945,18 +1945,24 @@ Toggle SBS?</div></li>';
 
             function addLastSeen(userDetailsFromAPI) {
                 $('.question, .answer').each(function() {
-                    var id = $(this).find('.post-signature .user-details a').last().attr('href').split('/')[2];
-                    if (userDetailsFromAPI[id] && !$(this).find('.sox-last-seen').length) {
-                        var lastSeenDate = new Date(userDetailsFromAPI[id].last_seen);
-                        $(this).find('.comments').removeClass('dno');
-                        $(this).find('.comments tbody:eq(0)').prepend("<tr class='comment'><td class='comment-actions sox-last-seen'></td><td class='comment-text'><div style='display: block;' class='comment-body'>last seen: <time class='timeago' datetime='" + lastSeenDate.toISOString() + "' title='" + lastSeenDate.toLocaleString() + "'>" + lastSeenDate.toLocaleString() + "</time> | type: " + userDetailsFromAPI[id].type + "</div></td></tr>");
+                    sox.debug('current post', $(this));
+                    if($(this).find('.post-signature a').length) {
+                        var id = $(this).find('.post-signature .user-details a').last().attr('href').split('/')[2];
+                        sox.debug('quickAuthorInfo addLastSeen(): current id', id);
+                        sox.debug('quickAuthorInfo addLastSeen(): userdetailscurrent id', userDetailsFromAPI[id]);
+                        if (userDetailsFromAPI[id] && !$(this).find('.sox-last-seen').length) {
+                            var lastSeenDate = new Date(userDetailsFromAPI[id].last_seen);
+                            $(this).find('.comments').removeClass('dno');
+                            $(this).find('.comments tbody:eq(0)').prepend("<tr class='comment'><td class='comment-actions sox-last-seen'></td><td class='comment-text'><div style='display: block;' class='comment-body'>last seen: <time class='timeago' datetime='" + lastSeenDate.toISOString() + "' title='" + lastSeenDate.toLocaleString() + "'>" + lastSeenDate.toLocaleString() + "</time> | type: " + userDetailsFromAPI[id].type + "</div></td></tr>");
+                        }
                     }
                 });
                 $("time.timeago").timeago();
             }
-            $('.comments').addClass('quickAuthorInfoEnabled');
 
+            $('.comments').addClass('quickAuthorInfoEnabled');
             var answerers = {};
+
             $('.question, .answer').each(function() {
                 var $userDetailsAnchor = $(this).find('.post-signature .user-details a').last();
                 if ($userDetailsAnchor.length) {
@@ -1967,11 +1973,13 @@ Toggle SBS?</div></li>';
                     sox.loginfo('Could not find user user link for: ', $(this));
                 }
             });
-            //var apiUrl = "https://api.stackexchange.com/2.2/users/" + Object.keys(answerers).join(';') + "?site=" + sox.site.currentApiParameter;
+
             sox.debug('quickAuthorInfo answerer IDs', answerers);
             sox.debug('quickAuthorInfo API call parameters', 'users', Object.keys(answerers).join(';'), sox.site.currentApiParameter);
+
             sox.helpers.getFromAPI('users', Object.keys(answerers).join(';'), sox.site.currentApiParameter, function(data) {
                 sox.debug('quickAuthorInfo api dump', data);
+
                 var userDetailsFromAPI = {};
                 $.each(data.items, function(k, v) {
                     userDetailsFromAPI[v.user_id] = {
@@ -1979,9 +1987,8 @@ Toggle SBS?</div></li>';
                         'type': v.user_type
                     };
                 });
-
+                sox.debug('quickAuthorInfor userdetailsfromapi', userDetailsFromAPI);
                 addLastSeen(userDetailsFromAPI);
-
                 sox.helpers.observe('.new_comment', function() { //make sure it doesn't disappear when adding a new comment!
                     addLastSeen(userDetailsFromAPI);
                 }, document.querySelectorAll('.comments table'));

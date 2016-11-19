@@ -299,6 +299,20 @@
             // add dialog to corral and sox button to topbar
             $soxSettingsButton.append($icon).appendTo('div.network-items');
             $('.js-topbar-dialog-corral').append($soxSettingsDialog);
+            if(sox.location.on('data.stackexchange.com')) { //https://github.com/soscripted/sox/issues/145
+                $soxSettingsButton.css({
+                    'text-indent': 'inherit',
+                    'width': '34px'
+                });
+                $('body').append($soxSettingsDialog); //.container doesn't exist on data.stackexhange.com
+                $soxSettingsDialog.css({
+                    'position': 'fixed',
+                    'background': 'white',
+                    'text-align': 'left',
+                    'padding': '10px',
+                    'min-height': 'calc(100vh - 200px)'
+                });
+            }
         }
     };
 
