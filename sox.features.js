@@ -134,7 +134,8 @@
             $('body > .page, body .container, div.wrapper > header').css('padding-top', '34px');
             $('body .custom-header, body #custom-header, div#scroller,div.review-bar').css('top', '34px');
             $('div#custom-header').css('margin-top', '34px');
-            $('.new-topbar .container').css('background-position', 'center 0');
+            //$('.new-topbar .container').css('background-position', 'center 0');
+            //$('.new-topbar .container').css('margin-top', '10px');
             $('#overlay-header').css('top', '34px');
 
         },
@@ -1954,10 +1955,10 @@ Toggle SBS?</div></li>';
                     sox.loginfo('Could not find user user link for: ', $(this));
                 }
             });
-            var apiUrl = "https://api.stackexchange.com/users/" + Object.keys(answerers).join(';') + "?site=" + sox.site.currentApiParameter;
+            var apiUrl = "https://api.stackexchange.com/2.2/users/" + Object.keys(answerers).join(';') + "?site=" + sox.site.currentApiParameter;
             sox.debug('quickAuthorInfo answerer IDs', answerers);
-            sox.debug('quickAuthorInfo API URL', apiUrl);
-            $.get(apiUrl, function(data) {
+            sox.debug('quickAuthorInfo API call parameters', 'users', Object.keys(answerers).join(';'), sox.site.currentApiParameter);
+            sox.helpers.getFromAPI('users', Object.keys(answerers).join(';'), sox.site.currentApiParameter, function(data) {
                 sox.debug('quickAuthorInfo api dump', data);
                 var userDetailsFromAPI = {};
                 $.each(data.items, function(k, v) {
