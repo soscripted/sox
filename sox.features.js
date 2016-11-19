@@ -477,12 +477,15 @@
             $('span#replyLink').css('cursor', 'pointer').on('click', function() {
                 var parentDiv = $(this).parent().parent().parent().parent();
                 var textToAdd = '@' + $(this).parent().find('.comment-text a.comment-user').text().replace(/\s/g, '').replace(/♦/, '') + ' '; //eg. @USERNAME [space]
+                console.log('click');
+                console.log(parentDiv);
 
-                if (parentDiv.find('textarea').length) {
-                    parentDiv.find('textarea').append(textToAdd); //add the name
-                } else {
+                if (!parentDiv.find('textarea').length) {
                     parentDiv.next('div').find('a.js-add-link')[0].click(); //show the textarea, http://stackoverflow.com/a/10559680/
-                    parentDiv.find('textarea').append(textToAdd); //add the name
+                }
+                var $textarea = parentDiv.find('textarea');
+                if (!$textarea.val().match(/@[^\s]+/)) {
+                    $textarea.val($textarea.val() + textToAdd); //add the name
                 }
             });
         },
@@ -1928,7 +1931,7 @@ Toggle SBS?</div></li>';
 
         },
 
-        quickAuthorInfo: function() {
+        quickAuthorInfo: function() { //TODO: make this feature work without needing to set async to false, which is a hacky way of fixing it atm
             // Description: Shows when the post's author was last active and their registration state in the comments section
 
             function addLastSeen(userDetailsFromAPI) {
@@ -1955,7 +1958,7 @@ Toggle SBS?</div></li>';
                     sox.loginfo('Could not find user user link for: ', $(this));
                 }
             });
-            var apiUrl = "https://api.stackexchange.com/2.2/users/" + Object.keys(answerers).join(';') + "?site=" + sox.site.currentApiParameter;
+            //var apiUrl = "https://api.stackexchange.com/2.2/users/" + Object.keys(answerers).join(';') + "?site=" + sox.site.currentApiParameter;
             sox.debug('quickAuthorInfo answerer IDs', answerers);
             sox.debug('quickAuthorInfo API call parameters', 'users', Object.keys(answerers).join(';'), sox.site.currentApiParameter);
             sox.helpers.getFromAPI('users', Object.keys(answerers).join(';'), sox.site.currentApiParameter, function(data) {
@@ -1973,7 +1976,7 @@ Toggle SBS?</div></li>';
                 sox.helpers.observe('.new_comment', function() { //make sure it doesn't disappear when adding a new comment!
                     addLastSeen(userDetailsFromAPI);
                 }, document.querySelectorAll('.comments table'));
-            });
+            }, 'creation', 'false'); //false means async=false;
         },
 
         hiddenCommentsIndicator: function() {
