@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Stack Overflow Extras (SOX)
 // @namespace    https://github.com/soscripted/sox
-// @version      2.0.2 DEV y
+// @version      2.0.2 DEV z
 // @description  Extra optional features for Stack Overflow and Stack Exchange sites
 // @contributor  ᴉʞuǝ (stackoverflow.com/users/1454538/)
 // @contributor  ᔕᖺᘎᕊ (stackexchange.com/users/4337810/)
@@ -15,6 +15,7 @@
 // @match        *://*.mathoverflow.net/*
 // @match        *://github.com/soscripted/*
 // @exclude      *://data.stackexchange.com/*
+// @exclude      *://api.stackexchange.com/*
 
 // @require      https://code.jquery.com/jquery-2.1.4.min.js
 // @require      https://code.jquery.com/ui/1.11.4/jquery-ui.min.js

@@ -928,7 +928,6 @@
                     $question.attr('data-sox-question-state', 'duplicate'); //used for hideCertainQuestions feature compatability
                     $.get('//' + location.hostname + '/questions/' + id, function(d) {
                         $anchor.after("&nbsp;<a href='" + $(d).find('.question-status.question-originals-of-duplicate a:eq(0)').attr('href') + "'><span class='duplicate' title='click to visit duplicate'>&nbsp;duplicate&nbsp;</span></a>"); //add appropiate message
-                        console.log('added');
                     });
 
                 } else if (text.substr(text.length - 8) == '[closed]') {
@@ -1352,7 +1351,7 @@ Toggle SBS?</div></li>';
             //GM_deleteValue('downvotedPostsEditAlert');
             //GM_deleteValue('downvotedPostsEditAlert-notifications');
 
-            function addEditNotification(link, title, sitename, notificationPostId, unread) {
+            function addEditNotification(link, title, sitename, notificationPostId, unread, editor, editorLink, editTime) {
                 var $li = $('<li/>', {
                     'class': 'question-close-notification' + (unread ? ' unread-item' : '')
                 });
@@ -1375,9 +1374,12 @@ Toggle SBS?</div></li>';
 
                 $('#downvotedPostsEditAlertButton').addClass(unread ? 'glow' : '');
                 $link.append($icon).append($message).appendTo($li);
-                $('#downvotedPostsEditAlertDialog #downvotedPostsEditAlertList').prepend($li);
+                if($('#downvotedPostsEditAlertDialog #downvotedPostsEditAlertList').find('a[href*="' + link + '"]').length) {
+                    $('#downvotedPostsEditAlertDialog #downvotedPostsEditAlertList a[href*="' + link + '"]').parent().replaceWith($li);
+                } else {
+                    $('#downvotedPostsEditAlertDialog #downvotedPostsEditAlertList').prepend($li);
+                }
             }
-
 
             var $dialog = $('<div/>', {
                     id: 'downvotedPostsEditAlertDialog',
@@ -1617,18 +1619,18 @@ Toggle SBS?</div></li>';
 
             var postsToCheck = JSON.parse(GM_getValue('downvotedPostsEditAlert', '{}'));
             var notifications = JSON.parse(GM_getValue('downvotedPostsEditAlert-notifications', '{}'));
-            sox.debug(postsToCheck);
-            sox.debug(notifications);
+            sox.debug('downvotedPostsEditAlert posts to check', postsToCheck);
+            sox.debug('downvotedPostsEditAlert notifications', notifications);
 
             $(document).on('click', '.downvotedPostsEditAlert-delete', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                sox.debug('deleting');
+                sox.debug('downvotedPostsEditAlert: deleting notification from notifications object');
                 var base = $(this).attr('id').split('delete_')[1];
                 var sitename = base.split('-')[0];
                 var postId = base.split('-')[1];
                 delete notifications[+postId];
-                sox.debug('new notifications object', notifications);
+                sox.debug('downvotedPostsEditAlert: new notifications object', notifications);
                 GM_setValue('downvotedPostsEditAlert-notifications', JSON.stringify(notifications));
                 $(this).parents('.question-close-notification').remove(); //hide the notification in the inbox dropdown
             });
@@ -1675,7 +1677,7 @@ Toggle SBS?</div></li>';
                 var sitename;
                 var title;
                 data.data = JSON.parse(data.data);
-                sox.debug('Received Data:', data.data);
+                sox.debug('downvotedPostsEditAlert Received Data:', data.data);
                 if (data.data.a == 'post-edit' && posts.indexOf((data.data.id).toString()) > -1) {
                     for (var c in websocketSiteCodes) {
                         if (websocketSiteCodes[c] == data.action.split('-')[0]) {
@@ -1685,46 +1687,52 @@ Toggle SBS?</div></li>';
                                 notifications[data.data.id] = {
                                     'sitename': sitename,
                                     'url': 'http://' + sitename + '.stackexchange.com/posts/' + data.data.id,
-                                    'title': title
+                                    'title': title,
+                                    'editor': d.items[0].last_editor.display_name,
+                                    'editor_link': d.items[0].last_editor.link,
+                                    'edit_date': d.items[0].last_edit_date
                                 };
                                 GM_setValue('downvotedPostsEditAlert-notifications', JSON.stringify(notifications));
-                                addEditNotification('http://' + sitename + '.stackexchange.com/posts/' + data.data.id, title + ' [LIVE]', sitename, data.data.id, true);
-                                sox.debug('adding notification from live');
-                            }, 'activity&filter=!9YdnSEBb8');
+                                addEditNotification('http://' + sitename + '.stackexchange.com/posts/' + data.data.id, title + ' [LIVE]', sitename, data.data.id, true, d.items[0].last_editor.display_name, d.items[0].last_editor.link, d.items[0].last_edit_date);
+                                sox.debug('downvotedPostsEditAlert: adding notification from live');
+                            }, 'activity&filter=!-*f(6qkz8Rkb');
                         }
                     }
                 }
             };
 
             $.each(notifications, function(i, o) {
-                addEditNotification(o.url, o.title, o.sitename, i, false);
+                addEditNotification(o.url, o.title, o.sitename, i, false, o.editor, o.editor_link, o.edit_date);
             });
 
             if (!$.isEmptyObject(postsToCheck)) {
                 sox.debug(postsToCheck);
                 $.each(postsToCheck, function(i, o) {
-                    sox.debug('Last Checked Time: ' + o.lastCheckedTime);
-                    if (new Date().getTime() >= ((o.lastCheckedTime || 0) + 60000)) { //an hour: 3600000ms, 15 minutes: 900000ms, 1 minutes: 60000ms
+                    sox.debug('downvotedPostsEditAlert: Last Checked Time: ' + o.lastCheckedTime);
+                    if (new Date().getTime() >= ((o.lastCheckedTime || 0) + 900000)) { //an hour: 3600000ms, 15 minutes: 900000ms, 1 minute: 60000ms
                         sox.helpers.getFromAPI('posts', i, o.sitename, function(json) {
-                            sox.debug(json);
-                            sox.debug(json.items[0].last_edit_date + '>' + (o.lastCheckedTime || o.addedDate) / 1000);
-                            sox.debug(json.items[0].last_edit_date > (o.lastCheckedTime || o.addedDate) / 1000);
+                            sox.debug('downvotedPostsEditAlert json:', json);
+                            sox.debug('downvotedPostsEditAlert check:', json.items[0].last_edit_date + '>' + (o.lastCheckedTime || o.addedDate) / 1000);
+                            sox.debug('downvotedPostsEditAlert evaluation', json.items[0].last_edit_date > (o.lastCheckedTime || o.addedDate) / 1000);
                             if (json.items[0].last_edit_date > (o.lastCheckedTime || o.addedDate) / 1000) {
-                                sox.debug('adding notification from api');
-                                addEditNotification(json.items[0].link, json.items[0].title + ' [API]', json.items[0].link.split('/')[2].split('.')[0], i, true);
+                                sox.debug('downvotedPostsEditAlert: adding notification from api');
+                                addEditNotification(json.items[0].link, json.items[0].title + ' [API]', json.items[0].link.split('/')[2].split('.')[0], i, true, json.items[0].last_editor.display_name, json.items[0].last_editor.link, json.items[0].last_edit_date);
                                 notifications[i] = {
                                     'sitename': json.items[0].link.split('/')[2].split('.')[0],
                                     'url': json.items[0].link,
-                                    'title': json.items[0].title
+                                    'title': json.items[0].title,
+                                    'editor': json.items[0].last_editor.display_name,
+                                    'editor_link': json.items[0].last_editor.link,
+                                    'edit_date': json.items[0].last_edit_date
                                 };
                                 GM_setValue('downvotedPostsEditAlert-notifications', JSON.stringify(notifications));
                             }
-                        }, "activity&filter=!9YdnSEBb8", false); //false means async=false
+                        }, "activity&filter=!-*f(6qkz8Rkb", false); //false means async=false
                         o.lastCheckedTime = new Date().getTime();
                     }
                     GM_setValue('downvotedPostsEditAlert', JSON.stringify(postsToCheck));
                     w.onopen = function() {
-                        sox.debug('sending websocket message: ' + websocketSiteCodes[o.sitename] + "-question-" + o.questionId);
+                        sox.debug('downvotedPostsEditAlert: sending websocket message: ' + websocketSiteCodes[o.sitename] + "-question-" + o.questionId);
                         w.send(websocketSiteCodes[o.sitename] + "-question-" + o.questionId);
                     };
                 });
