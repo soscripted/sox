@@ -2127,6 +2127,18 @@ Toggle SBS?</div></li>';
                 });
             }
 
+            $(document).on('mouseenter', '.mine .timestamp', function() {
+                var $m = $(this).next('.message');
+                $(this).hover(function() {
+                    $m.find('.meta').css('background-color', 'white').show().append(replySpan);
+                }, function() {
+                    $m.find('.meta').hide().find('.newreply').remove();
+                });
+            }).on('mouseleave', 'mine .timestamp', function() {
+                var $m = $(this).next('.message');
+                $m.find('.meta').hide().find('.newreply').remove();
+            });
+
             $(document).on('click', '.newreply.added-by-sox', function(e) {
                 var $message = $(e.target).closest('.message'),
                     id = $message.attr('id').split('-')[1],
@@ -2135,7 +2147,8 @@ Toggle SBS?</div></li>';
             });
 
             var replySpan = $('<span/>', {
-                class: 'newreply added-by-sox'
+                class: 'newreply added-by-sox',
+                'title': 'link my next chat message as a reply to this'
             });
 
             $('.mine .message').each(function() {

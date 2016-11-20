@@ -258,9 +258,9 @@
         matchWithPattern: function(pattern, urlToMatchWith) { //commented version @ https://jsfiddle.net/shub01/t90kx2dv/
             if(pattern == 'SE1.0') { //SE.com && Area51.SE.com special checking
                 if(urlToMatchWith) {
-                    if(urlToMatchWith.match(/https?:\/\/stackexchange\.com\/?/) || sox.location.matchWithPattern('*://area51.stackexchange.com/*') || sox.location.matchWithPattern('*://data.stackexchange.com/*')) return true;
+                    if(urlToMatchWith.match(/https?:\/\/stackexchange\.com\/?/) || sox.location.matchWithPattern('*://area51.stackexchange.com/*')) return true;
                 } else {
-                    if(location.href.match(/https?:\/\/stackexchange\.com\/?/) || sox.location.matchWithPattern('*://area51.stackexchange.com/*') || sox.location.matchWithPattern('*://data.stackexchange.com/*')) return true;
+                    if(location.href.match(/https?:\/\/stackexchange\.com\/?/) || sox.location.matchWithPattern('*://area51.stackexchange.com/*')) return true;
                 }
                 return false;
             }
