@@ -1352,6 +1352,7 @@ Toggle SBS?</div></li>';
             //GM_deleteValue('downvotedPostsEditAlert-notifications');
 
             function addEditNotification(link, title, sitename, notificationPostId, unread, editor, editorLink, editTime) {
+                console.log(editTime);
                 var $li = $('<li/>', {
                     'class': 'question-close-notification' + (unread ? ' unread-item' : '')
                 });
@@ -1364,7 +1365,7 @@ Toggle SBS?</div></li>';
                 var $message = $('<div/>', {
                     'class': 'message-text'
                 }).append($('<h4/>', {
-                    html: title
+                    html: title + ' (edited by ' + editor + ' at ' + new Date(editTime*1000).toLocaleString() + ')'
                 })).append($('<span/>', {
                     'class': 'downvotedPostsEditAlert-delete',
                     style: 'color:blue;border: 1px solid gray;',
