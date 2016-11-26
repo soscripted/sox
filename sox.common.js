@@ -227,6 +227,8 @@
         apiParameter: function(siteName) {
             if (commonInfo.apiParameters.hasOwnProperty(siteName)) {
                 return commonInfo.apiParameters[siteName];
+            } else if(sox.location.on('area51')) {
+                return 'area51';
             }
         },
         metaApiParameter: function(siteName) {

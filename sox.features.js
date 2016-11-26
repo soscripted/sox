@@ -139,7 +139,8 @@
 
             if(sox.site.type === 'beta') $('.container').css('box-shadow', '#EBF2F5 0 154px 0 inset');
             if(sox.site.currentApiParameter === 'meta') $('.container').css('background-position', 'center -4px');
-            if(['softwarerecs, raspberrypi'].indexOf(sox.site.currentApiParameter) != -1) $('.container').css('background-position', 'center 34px, center');
+            if(['softwarerecs', 'raspberrypi', 'area51'].indexOf(sox.site.currentApiParameter) != -1) $('.container').css('background-position', 'center 34px, center');
+            $('.module#vote-picks').css('margin-top', '35px'); //https://github.com/soscripted/sox/issues/150
         },
 
         highlightQuestions: function() {
@@ -1351,7 +1352,7 @@ Toggle SBS?</div></li>';
             //GM_deleteValue('downvotedPostsEditAlert');
             //GM_deleteValue('downvotedPostsEditAlert-notifications');
 
-            function addEditNotification(link, title, sitename, notificationPostId, unread, editor, editorLink, editTime) {
+            function addEditNotification(link, title, sitename, notificationPostId, unread, editor, editorLink, editTime, type) {
                 console.log(editTime);
                 var $li = $('<li/>', {
                     'class': 'question-close-notification' + (unread ? ' unread-item' : '')
@@ -1365,7 +1366,7 @@ Toggle SBS?</div></li>';
                 var $message = $('<div/>', {
                     'class': 'message-text'
                 }).append($('<h4/>', {
-                    html: title + ' (edited by ' + editor + ' at ' + new Date(editTime*1000).toLocaleString() + ')'
+                    html: (type === 'question' ? 'Q: ' : 'A: ') + title + ' (edited by ' + editor + ' at ' + new Date(editTime*1000).toLocaleString() + ')'
                 })).append($('<span/>', {
                     'class': 'downvotedPostsEditAlert-delete',
                     style: 'color:blue;border: 1px solid gray;',
@@ -1636,18 +1637,20 @@ Toggle SBS?</div></li>';
                 $(this).parents('.question-close-notification').remove(); //hide the notification in the inbox dropdown
             });
 
-            $('.post-menu').each(function() {
-                var id;
-                var $parent = $(this).parents('.question, .answer');
-                if ($parent.length) {
-                    if ($parent.hasClass('question')) {
-                        id = +$parent.attr('data-questionid');
-                    } else {
-                        id = +$parent.attr('data-answerid');
+            if(!sox.location.on('.com/tour')) { //https://github.com/soscripted/sox/issues/151
+                $('.post-menu').each(function() {
+                    var id;
+                    var $parent = $(this).parents('.question, .answer');
+                    if ($parent.length) {
+                        if ($parent.hasClass('question')) {
+                            id = +$parent.attr('data-questionid');
+                        } else {
+                            id = +$parent.attr('data-answerid');
+                        }
                     }
-                }
-                $(this).append("<span class='lsep'></span><a " + (id in postsToCheck ? "style='color:green' " : "") + "class='downvotedPostsEditAlert-watchPostForEdits'>notify on edit</a>");
-            });
+                    $(this).append("<span class='lsep'></span><a " + (id in postsToCheck ? "style='color:green' " : "") + "class='downvotedPostsEditAlert-watchPostForEdits'>notify on edit</a>");
+                });
+            }
 
             $('.downvotedPostsEditAlert-watchPostForEdits').click(function() {
                 var questionId = document.URL.split('/')[4];
@@ -1691,10 +1694,11 @@ Toggle SBS?</div></li>';
                                     'title': title,
                                     'editor': d.items[0].last_editor.display_name,
                                     'editor_link': d.items[0].last_editor.link,
-                                    'edit_date': d.items[0].last_edit_date
+                                    'edit_date': d.items[0].last_edit_date,
+                                    'type': d.items[0].post_type
                                 };
                                 GM_setValue('downvotedPostsEditAlert-notifications', JSON.stringify(notifications));
-                                addEditNotification('http://' + sitename + '.stackexchange.com/posts/' + data.data.id, title + ' [LIVE]', sitename, data.data.id, true, d.items[0].last_editor.display_name, d.items[0].last_editor.link, d.items[0].last_edit_date);
+                                addEditNotification('http://' + sitename + '.stackexchange.com/posts/' + data.data.id, title + ' [LIVE]', sitename, data.data.id, true, d.items[0].last_editor.display_name, d.items[0].last_editor.link, d.items[0].last_edit_date, d.items[0].post_type);
                                 sox.debug('downvotedPostsEditAlert: adding notification from live');
                             }, 'activity&filter=!-*f(6qkz8Rkb');
                         }
@@ -1703,7 +1707,7 @@ Toggle SBS?</div></li>';
             };
 
             $.each(notifications, function(i, o) {
-                addEditNotification(o.url, o.title, o.sitename, i, false, o.editor, o.editor_link, o.edit_date);
+                addEditNotification(o.url, o.title, o.sitename, i, false, o.editor, o.editor_link, o.edit_date, o.type);
             });
 
             if (!$.isEmptyObject(postsToCheck)) {
@@ -1717,14 +1721,15 @@ Toggle SBS?</div></li>';
                             sox.debug('downvotedPostsEditAlert evaluation', json.items[0].last_edit_date > (o.lastCheckedTime || o.addedDate) / 1000);
                             if (json.items[0].last_edit_date > (o.lastCheckedTime || o.addedDate) / 1000) {
                                 sox.debug('downvotedPostsEditAlert: adding notification from api');
-                                addEditNotification(json.items[0].link, json.items[0].title + ' [API]', json.items[0].link.split('/')[2].split('.')[0], i, true, json.items[0].last_editor.display_name, json.items[0].last_editor.link, json.items[0].last_edit_date);
+                                addEditNotification(json.items[0].link, json.items[0].title + ' [API]', json.items[0].link.split('/')[2].split('.')[0], i, true, json.items[0].last_editor.display_name, json.items[0].last_editor.link, json.items[0].last_edit_date, json.items[0].post_type);
                                 notifications[i] = {
                                     'sitename': json.items[0].link.split('/')[2].split('.')[0],
                                     'url': json.items[0].link,
                                     'title': json.items[0].title,
                                     'editor': json.items[0].last_editor.display_name,
                                     'editor_link': json.items[0].last_editor.link,
-                                    'edit_date': json.items[0].last_edit_date
+                                    'edit_date': json.items[0].last_edit_date,
+                                    'type': json.items[0].post_type
                                 };
                                 GM_setValue('downvotedPostsEditAlert-notifications', JSON.stringify(notifications));
                             }
@@ -1956,7 +1961,8 @@ Toggle SBS?</div></li>';
                 $('.question, .answer').each(function() {
                     sox.debug('current post', $(this));
                     if($(this).find('.post-signature a').length) {
-                        var id = $(this).find('.post-signature .user-details a').last().attr('href').split('/')[2];
+                        var $anchor = $(this).find('.post-signature .user-details:last a:last');
+                        var id = $anchor.length ? $anchor.attr('href').split('/')[2] : undefined;
                         sox.debug('quickAuthorInfo addLastSeen(): current id', id);
                         sox.debug('quickAuthorInfo addLastSeen(): userdetailscurrent id', userDetailsFromAPI[id]);
                         if (userDetailsFromAPI[id] && !$(this).find('.sox-last-seen').length) {
