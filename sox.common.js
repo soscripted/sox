@@ -3,7 +3,15 @@
     var SOX_SETTINGS = 'SOXSETTINGS';
     var commonInfo = JSON.parse(GM_getResourceText('common'));
 
+    sox.info = {
+        version: (typeof GM_info !== 'undefined' ? GM_info.script.version : 'unknown'),
+        handler: (typeof GM_info !== 'undefined' ? GM_info.scriptHandler : 'unknown'),
+        apikey: 'lL1S1jr2m*DRwOvXMPp26g((',
+        debugging: GM_getValue('SOX-debug', false)
+    };
+
     sox.debug = function() {
+        if(!sox.info.debugging) return;
         for (var arg = 0; arg < arguments.length; ++arg) {
             console.debug('SOX: ', arguments[arg]);
         }
@@ -53,12 +61,6 @@
         return cont;
     };
 
-    sox.info = {
-        version: (typeof GM_info !== 'undefined' ? GM_info.script.version : 'unknown'),
-        handler: (typeof GM_info !== 'undefined' ? GM_info.scriptHandler : 'unknown'),
-        apikey: 'lL1S1jr2m*DRwOvXMPp26g(('
-    };
-
     sox.ready = function(func) {
         $(function() {
             if (Stack) {
@@ -94,19 +96,23 @@
             sox.debug('SOX Access Token: ' + (GM_getValue('SOX-accessToken', false) === false ? 'NOT SET' : 'SET'));
             return GM_getValue('SOX-accessToken', false);
         },
-        writeToConsole: function() {
+        writeToConsole: function(hideAccessToken) {
             sox.loginfo('logging sox stored values --- ');
             var keys = GM_listValues();
             for (i = 0; i < keys.length; i++) {
                 var key = keys[i];
-                sox.loginfo(key, GM_getValue(key));
+                if(hideAccessToken && key == 'SOX-accessToken') {
+                    sox.loginfo('access token set');
+                } else {
+                    sox.loginfo(key, GM_getValue(key));
+                }
             }
         }
     };
 
     sox.helpers = {
         getFromAPI: function(type, id, sitename, callback, sortby, asyncYesNo) {
-            sox.loginfo('Getting From API with URL: https://api.stackexchange.com/2.2/' + type + '/' + id + '?order=desc&sort=' + (sortby || 'creation') + '&site=' + sitename + '&key=' + sox.info.apikey + '&access_token=' + sox.settings.accessToken);
+            sox.debug('Getting From API with URL: https://api.stackexchange.com/2.2/' + type + '/' + id + '?order=desc&sort=' + (sortby || 'creation') + '&site=' + sitename + '&key=' + sox.info.apikey + '&access_token=' + sox.settings.accessToken);
             $.ajax({
                 type: 'get',
                 async: (typeof asyncYesNo === 'undefined' ? true : false),

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Stack Overflow Extras (SOX)
 // @namespace    https://github.com/soscripted/sox
-// @version      2.0.2 DEV aa
+// @version      2.0.2 DEV ab
 // @description  Extra optional features for Stack Overflow and Stack Exchange sites
 // @contributor  ᴉʞuǝ (stackoverflow.com/users/1454538/)
 // @contributor  ᔕᖺᘎᕊ (stackexchange.com/users/4337810/)
@@ -57,6 +57,13 @@
             } finally {
                 return;
             }
+        }
+
+        if(sox.info.debugging) {
+            sox.debug('DEBUGGING SOX VERSION ' + sox.info.version);
+            sox.debug('----------------saved variables---------------------');
+            sox.settings.writeToConsole(true); //true => hide access token
+            sox.debug('----------------end saved variables---------------------');
         }
 
         GM_addStyle(GM_getResourceText('css'));

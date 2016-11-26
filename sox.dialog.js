@@ -3,7 +3,7 @@
 
     sox.dialog = {
         init: function(options) {
-            sox.loginfo('initializing SOX dialog');
+            sox.debug('initializing SOX dialog');
 
             var version = options.version,
                 features = options.features,
@@ -16,6 +16,7 @@
                 $soxSettingsDialogVersion = $soxSettingsDialog.find('#sox-settings-dialog-version'),
                 $soxSettingsSave = $soxSettingsDialog.find('#sox-settings-dialog-save'),
                 $soxSettingsReset = $soxSettingsDialog.find('#sox-settings-dialog-reset'),
+                $soxSettingsDebugging = $soxSettingsDialog.find('#sox-settings-dialog-debugging'),
                 $soxSettingsToggleAccessTokensDiv = $soxSettingsDialog.find('#sox-settings-dialog-access-tokens'),
                 $soxSettingsAccessTokensToggle = $soxSettingsToggleAccessTokensDiv.find('#toggle-access-token-links'),
                 $soxSettingsToggle = $soxSettingsDialog.find('#sox-settings-dialog-check-toggle'),
@@ -129,14 +130,28 @@
                 $soxSettingsDialogVersion.text('');
             }
 
+            if(sox.info.debugging) $soxSettingsDebugging.text('Disable debugging');
+
             // wire up event handlers
             $soxSettingsClose.on('click', function() {
                 $soxSettingsDialog.hide();
             });
 
             $soxSettingsReset.on('click', function() {
-                sox.settings.reset();
+                if(confirm('Are you sure you want to reset SOX?')) sox.settings.reset();
                 location.reload(); // reload page to reflect changed settings
+            });
+
+            $soxSettingsDebugging.on('click', function() {
+                var currentState = sox.info.debugging;
+                if(typeof currentState === 'undefined') {
+                    GM_setValue('SOX-debug', true);
+                    $soxSettingsDebugging.text('Disable debugging');
+                } else {
+                    GM_setValue('SOX-debug', !currentState);
+                    $soxSettingsDebugging.text(currentState ? 'Enable debugging' : 'Disable debugging');
+                }
+                location.reload();
             });
 
             $soxSettingsToggle.on('click', function() {
@@ -270,7 +285,7 @@
             });
 
             // load features into dialog
-            sox.loginfo('injecting features into dialog');
+            sox.debug('injecting features into dialog');
             for (var category in features.categories) {
                 addCategory(category);
                 for (var feature in features.categories[category]) {

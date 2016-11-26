@@ -61,7 +61,7 @@
     float: right;
 }
 
-#sox-settings-dialog-reset, #sox-settings-dialog-report {
+#sox-settings-dialog-reset, #sox-settings-dialog-report, #sox-settings-dialog-debugging {
     float: right;
     padding: 14px;
 }
