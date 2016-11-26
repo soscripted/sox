@@ -1353,7 +1353,7 @@ Toggle SBS?</div></li>';
             //GM_deleteValue('downvotedPostsEditAlert-notifications');
 
             function addEditNotification(link, title, sitename, notificationPostId, unread, editor, editorLink, editTime, type) {
-                console.log(editTime);
+                sox.debug('downvotedPostsEditAlert addEditNotification editTime', editTime);
                 var $li = $('<li/>', {
                     'class': 'question-close-notification' + (unread ? ' unread-item' : '')
                 });
