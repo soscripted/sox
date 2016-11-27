@@ -99,7 +99,7 @@
         writeToConsole: function(hideAccessToken) {
             sox.loginfo('logging sox stored values --- ');
             var keys = GM_listValues();
-            for (i = 0; i < keys.length; i++) {
+            for (var i = 0; i < keys.length; i++) {
                 var key = keys[i];
                 if(hideAccessToken && key == 'SOX-accessToken') {
                     sox.loginfo('access token set');

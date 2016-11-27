@@ -139,7 +139,8 @@
 
             if(sox.site.type === 'beta') $('.container').css('box-shadow', '#EBF2F5 0 154px 0 inset');
             if(sox.site.currentApiParameter === 'meta') $('.container').css('background-position', 'center -4px');
-            if(['softwarerecs', 'raspberrypi', 'area51'].indexOf(sox.site.currentApiParameter) != -1) $('.container').css('background-position', 'center 34px, center');
+            if(['softwarerecs', 'raspberrypi'].indexOf(sox.site.currentApiParameter) != -1) $('.container').css('background-position', 'center 34px, center');
+            if(['area51'].indexOf(sox.site.currentApiParameter) != -1) $('.container').css('background-position-y', '-9px');
             $('.module#vote-picks').css('margin-top', '35px'); //https://github.com/soscripted/sox/issues/150
         },
 
