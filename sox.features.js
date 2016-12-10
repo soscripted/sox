@@ -1857,8 +1857,8 @@ Toggle SBS?</div></li>';
                 var $editor = $('.review-more-instructions ul:eq(1) li'),
                     editorName = $editor.find('a').text(),
                     editorLink = $editor.find('a').attr('href'),
-                    editorApproved = $editor.text().match(/([0-9])/g)[0],
-                    editorRejected = $editor.text().match(/([0-9])/g)[1];
+                    editorApproved = $editor.text().match(/([0-9]+)/g)[0], //`+` matches 'one or more' to make sure it works on multi-digit numbers!
+                    editorRejected = $editor.text().match(/([0-9]+)/g)[1];
                 info[editorName] = {
                     'link': editorLink,
                     'approved': editorApproved,
@@ -2109,7 +2109,7 @@ Toggle SBS?</div></li>';
 
             function checkAndAddReminder() {
                 if (!sox.user.loggedIn) {
-                    if (!$('#loggedInReminder').length) $('body').append(div);
+                    if (!$('#loggedInReminder').length) $('.container').append(div);
                 } else {
                     $('#loggedInReminder').remove();
                 }
@@ -2134,28 +2134,25 @@ Toggle SBS?</div></li>';
         },
 
         replyToOwnChatMessages: function() {
-            function addHoverHandler($el) {
-                $el.find('.flags, .stars').hide();
-                $el.hover(function() {
-                    $el.find('.meta').css('background-color', 'white').show().append(replySpan);
-                }, function() {
-                    $el.find('.meta').hide().find('.newreply').remove();
-                });
-            }
+            //I use $(document).on instead of .each, since using .each wouldn't apply to messages loaded via "Load more messages" and "Load to my last message"
+            //https://github.com/soscripted/sox/issues/144#issuecomment-263459197 by @IStoleThePies
 
-            $(document).on('mouseenter', '.mine .timestamp', function() {
-                var $m = $(this).next('.message');
-                $(this).hover(function() {
-                    $m.find('.meta').css('background-color', 'white').show().append(replySpan);
-                }, function() {
-                    $m.find('.meta').hide().find('.newreply').remove();
-                });
-            }).on('mouseleave', 'mine .timestamp', function() {
-                var $m = $(this).next('.message');
-                $m.find('.meta').hide().find('.newreply').remove();
-            });
+            $(document).on('mouseenter', '.mine .message', function() {
+                //Remove excess spacing to the left of the button (by emptying .meta, which has "&nbsp" in it), and set the button color to the background color
+                $(this).find('.meta').empty().css({"background-color": $(this).parent().css("background-color"), "padding-right": "1px"}).show().append(replySpan);
+                //The "padding-right: 1px" is to avoid some weird bug I can't figure out how to fix
+            }).on('mouseleave', '.mine .message', function() {
+                $(this).find('.meta').hide().find('.newreply').remove();
+            })
 
-            $(document).on('click', '.newreply.added-by-sox', function(e) {
+            //Do the same thing if you hover over the timestamp
+            .on('mouseenter', '.mine .timestamp', function() {
+                $(this).next().find('.meta').empty().css({"background-color": $(this).parent().css("background-color"), "padding-right": "1px"}).show().append(replySpan);
+            }).on('mouseleave', '.mine .timestamp', function() {
+                $(this).next().find('.meta').hide().find('.newreply').remove();
+            })
+
+            .on('click', '.newreply.added-by-sox', function(e) {
                 var $message = $(e.target).closest('.message'),
                     id = $message.attr('id').split('-')[1],
                     rest = $('#input').focus().val().replace(/^:([0-9]+)\s+/, '');
@@ -2165,13 +2162,6 @@ Toggle SBS?</div></li>';
             var replySpan = $('<span/>', {
                 class: 'newreply added-by-sox',
                 'title': 'link my next chat message as a reply to this'
-            });
-
-            $('.mine .message').each(function() {
-                addHoverHandler($(this));
-            });
-            sox.helpers.observe('.mine .message', function(el) {
-                addHoverHandler($(el));
             });
         },
 

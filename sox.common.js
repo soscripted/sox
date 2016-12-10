@@ -208,8 +208,8 @@
         get name() {
             if (Chat) {
                 return $('#footer-logo a').attr('title');
-            } else if (sox.exists('options.site.name')) {
-                return Stack.options.site.name;
+            } else { //using StackExchange object doesn't give correct name (eg. `Biology` is called `Biology Stack Exchange` in the object)
+                return $('.js-topbar-dialog-corral .modal-content.current-site-container .current-site-link div').attr('title');
             }
             return undefined;
         },
