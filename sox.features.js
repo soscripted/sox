@@ -139,7 +139,7 @@
 
             if(sox.site.type === 'beta') $('.container').css('box-shadow', '#EBF2F5 0 154px 0 inset');
             if(sox.site.currentApiParameter === 'meta') $('.container').css('background-position', 'center -4px');
-            if(['softwarerecs', 'raspberrypi'].indexOf(sox.site.currentApiParameter) != -1) $('.container').css('background-position', 'center 34px, center');
+            if(['softwarerecs', 'raspberrypi', 'aviation', 'biology', 'chemistry', 'crypto', 'drupal', 'expressionengine', 'security', 'magento', 'judaism', 'movies', 'music', 'networkengineering', 'money', 'dsp', 'skeptics', 'travel'].indexOf(sox.site.currentApiParameter) != -1) $('.container').css('background-position', 'center 34px, center');
             if(['area51'].indexOf(sox.site.currentApiParameter) != -1) $('.container').css('background-position-y', '-9px');
             $('.module#vote-picks').css('margin-top', '35px'); //https://github.com/soscripted/sox/issues/150
         },
@@ -2135,7 +2135,7 @@ Toggle SBS?</div></li>';
 
         replyToOwnChatMessages: function() {
             //I use $(document).on instead of .each, since using .each wouldn't apply to messages loaded via "Load more messages" and "Load to my last message"
-            //https://github.com/soscripted/sox/issues/144#issuecomment-263459197 by @IStoleThePies
+            //https://github.com/soscripted/sox/issues/118#issuecomment-266225764 by @IStoleThePies
 
             $(document).on('mouseenter', '.mine .message', function() {
                 //Remove excess spacing to the left of the button (by emptying .meta, which has "&nbsp" in it), and set the button color to the background color
