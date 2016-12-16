@@ -133,21 +133,26 @@
             sox.debug('observe: ' + elements);
             sox.debug(toObserve);
             var observer = new MutationObserver(function(mutations, observer) {
-                for (var i = 0; i < mutations.length; i++) {
-                    for (var a = 0; a < mutations[i].addedNodes.length; a++) {
-                        var $a = $(mutations[i].addedNodes[a]);
-                        if ($a && $a.is((Array.isArray(elements) ? elements.join(',') : elements))) {
-                            callback(mutations[i].addedNodes[a]);
-                            sox.debug('fire (added): ' + elements);
+                if(elements !== undefined) {
+                    for (var i = 0; i < mutations.length; i++) {
+                        for (var a = 0; a < mutations[i].addedNodes.length; a++) {
+                            var $a = $(mutations[i].addedNodes[a]);
+                            if ($a && $a.is((Array.isArray(elements) ? elements.join(',') : elements))) {
+                                callback(mutations[i].addedNodes[a]);
+                                sox.debug('fire (added): ' + elements);
+                            }
+                        }
+                        for (var r = 0; r < mutations[i].removedNodes.length; r++) {
+                            var $r = $(mutations[i].removedNodes[r]);
+                            if ($r && $r.is((Array.isArray(elements) ? elements.join(',') : elements))) {
+                                callback(mutations[i].addedNodes[r]);
+                                sox.debug('fire (removed): ' + elements);
+                            }
                         }
                     }
-                    for (var r = 0; r < mutations[i].removedNodes.length; r++) {
-                        var $r = $(mutations[i].removedNodes[r]);
-                        if ($r && $r.is((Array.isArray(elements) ? elements.join(',') : elements))) {
-                            callback(mutations[i].addedNodes[r]);
-                            sox.debug('fire (removed): ' + elements);
-                        }
-                    }
+                } else {
+                    callback(mutations);
+                    sox.debug('fire: undefined (capture all)');
                 }
             });
             if (toObserve) {

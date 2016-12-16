@@ -27,9 +27,15 @@
             // Description: Makes the bounty window draggable
 
             sox.helpers.observe('#start-bounty-popup', function() {
-                $('#start-bounty-popup').draggable().css('cursor', 'move');
+                $('#start-bounty-popup').draggable({
+                    drag: function() {
+                        $(this).css({
+                            'width': 'auto',
+                            'height': 'auto'
+                        });
+                    }
+                }).css('cursor', 'move');
             });
-
         },
 
         renameChat: function() {
@@ -123,25 +129,48 @@
 
         fixedTopbar: function() {
             // Description: For making the topbar fixed (always stay at top of screen)
+            // Written by @IStoleThePies (https://github.com/soscripted/sox/issues/152#issuecomment-267463392) to fix lots of bugs and compatability issues
 
-            $('.topbar').css({
-                'position': 'fixed',
-                'top': '0',
-                'z-index': '900',
-                'width': '100%'
-            });
+            function checkShift() {
+                $('body').css({
+                    'padding-top': $('#notify-table').height() + $('.topbar').height() + 'px'
+                });
 
-            $('body > .page, body .container, div.wrapper > header').css('padding-top', '34px');
-            $('body .custom-header, body #custom-header, div#scroller,div.review-bar').css('top', '34px');
-            $('div#custom-header').css('margin-top', '34px');
-            $('.container').css('background-position', 'center bottom,center 34px,center top');
-            $('#overlay-header').css('top', '34px');
+                $('.topbar').css({
+                    'position': 'fixed',
+                    'z-index': '900',
+                    'margin-top': '-34px'
+                });
+            }
 
-            if(sox.site.type === 'beta') $('.container').css('box-shadow', '#EBF2F5 0 154px 0 inset');
-            if(sox.site.currentApiParameter === 'meta') $('.container').css('background-position', 'center -4px');
-            if(['softwarerecs', 'raspberrypi', 'aviation', 'biology', 'chemistry', 'crypto', 'drupal', 'expressionengine', 'security', 'magento', 'judaism', 'movies', 'music', 'networkengineering', 'money', 'dsp', 'skeptics', 'travel'].indexOf(sox.site.currentApiParameter) != -1) $('.container').css('background-position', 'center 34px, center');
-            if(['area51'].indexOf(sox.site.currentApiParameter) != -1) $('.container').css('background-position-y', '-9px');
-            $('.module#vote-picks').css('margin-top', '35px'); //https://github.com/soscripted/sox/issues/150
+            if (sox.site.type == 'chat') { //For some reason, chats don't need any modification to the body
+                $('.topbar').css({
+                    'position': 'fixed',
+                    'z-index': '900'
+                });
+            } else if (!sox.location.on('askubuntu.com')) { //Disable on Ask Ubuntu
+                $('body').css({
+                    'padding-top': $('#notify-table').height() + $('.topbar').height() + 'px' //If the Area 51 popup closes or doesn't exist, $('#notify-table').height() = 0
+                });
+
+                $('.topbar').css({
+                    'position': 'fixed',
+                    'z-index': '900',
+                    'margin-top': '-34px'
+                });
+
+                //Area 51 popup:
+                $('#notify-table').css({
+                    'position': 'fixed',
+                    'z-index': '900',
+                    'margin-top': '-65px'
+                });
+
+                //TODO: can this be narrowed down more? it currently listens to EVERYTHING on a page!
+                sox.helpers.observe(undefined, checkShift); //Re-add padding if you drag/close a popup box
+
+                sox.helpers.observe(document.getElementById('notify--1'), checkShift); //Move body and topbar up if you close the Area 51 popup
+            }
         },
 
         highlightQuestions: function() {
@@ -472,7 +501,8 @@
         commentReplies: function() {
             // Description: For adding reply links to comments
 
-            if(!sox.user.loggedIn) return;
+            if (!sox.user.loggedIn) return;
+
             function addReplyLinks() {
                 $('.comment').each(function() {
                     if (!$(this).find('.soxReplyLink').length) { //if the link doesn't already exist
@@ -620,7 +650,7 @@
 
             function addLabelsAndHandlers() {
                 $('.history-table td b a[href*="#comment"]').each(function() {
-                    if(!$(this).parent().find('.showCommentScore').length) {
+                    if (!$(this).parent().find('.showCommentScore').length) {
                         var id = $(this).attr('href').split('#')[1].split('_')[0].replace('comment', '');
                         $(this).after('<span class="showCommentScore" id="' + id + '">&nbsp;&nbsp;&nbsp;show comment score</span>');
                     }
@@ -1367,7 +1397,7 @@ Toggle SBS?</div></li>';
                 var $message = $('<div/>', {
                     'class': 'message-text'
                 }).append($('<h4/>', {
-                    html: (type === 'question' ? 'Q: ' : 'A: ') + title + ' (edited by ' + editor + ' at ' + new Date(editTime*1000).toLocaleString() + ')'
+                    html: (type === 'question' ? 'Q: ' : 'A: ') + title + ' (edited by ' + editor + ' at ' + new Date(editTime * 1000).toLocaleString() + ')'
                 })).append($('<span/>', {
                     'class': 'downvotedPostsEditAlert-delete',
                     style: 'color:blue;border: 1px solid gray;',
@@ -1377,7 +1407,7 @@ Toggle SBS?</div></li>';
 
                 $('#downvotedPostsEditAlertButton').addClass(unread ? 'glow' : '');
                 $link.append($icon).append($message).appendTo($li);
-                if($('#downvotedPostsEditAlertDialog #downvotedPostsEditAlertList').find('a[href*="' + link + '"]').length) {
+                if ($('#downvotedPostsEditAlertDialog #downvotedPostsEditAlertList').find('a[href*="' + link + '"]').length) {
                     $('#downvotedPostsEditAlertDialog #downvotedPostsEditAlertList a[href*="' + link + '"]').parent().replaceWith($li);
                 } else {
                     $('#downvotedPostsEditAlertDialog #downvotedPostsEditAlertList').prepend($li);
@@ -1638,7 +1668,7 @@ Toggle SBS?</div></li>';
                 $(this).parents('.question-close-notification').remove(); //hide the notification in the inbox dropdown
             });
 
-            if(!sox.location.on('.com/tour')) { //https://github.com/soscripted/sox/issues/151
+            if (!sox.location.on('.com/tour')) { //https://github.com/soscripted/sox/issues/151
                 $('.post-menu').each(function() {
                     var id;
                     var $parent = $(this).parents('.question, .answer');
@@ -1961,7 +1991,7 @@ Toggle SBS?</div></li>';
             function addLastSeen(userDetailsFromAPI) {
                 $('.question, .answer').each(function() {
                     sox.debug('current post', $(this));
-                    if($(this).find('.post-signature a').length) {
+                    if ($(this).find('.post-signature a').length) {
                         var $anchor = $(this).find('.post-signature .user-details:last a:last');
                         var id = $anchor.length ? $anchor.attr('href').split('/')[2] : undefined;
                         sox.debug('quickAuthorInfo addLastSeen(): current id', id);
@@ -1969,7 +1999,7 @@ Toggle SBS?</div></li>';
                         if (userDetailsFromAPI[id] && !$(this).find('.sox-last-seen').length) {
                             var lastSeenDate = new Date(userDetailsFromAPI[id].last_seen);
                             $(this).find('.comments').removeClass('dno');
-                            $(this).find('.comments tbody:eq(0)').prepend("<tr class='comment'><td class='comment-actions sox-last-seen'></td><td class='comment-text'><div style='display: block;' class='comment-body'>last seen: <time class='timeago' datetime='" + lastSeenDate.toISOString() + "' title='" + lastSeenDate.toLocaleString() + "'>" + lastSeenDate.toLocaleString() + "</time> | type: " + userDetailsFromAPI[id].type + "</div></td></tr>");
+                            $(this).find('.comments tbody:eq(0)').prepend("<tr class='comment'><td class='comment-actions sox-last-seen'></td><td class='comment-text'><div style='display: block; text-align: right;' class='comment-body'>last seen: <time class='timeago' datetime='" + lastSeenDate.toISOString() + "' title='" + lastSeenDate.toLocaleString() + "'>" + lastSeenDate.toLocaleString() + "</time> | type: " + userDetailsFromAPI[id].type + "</div></td></tr>");
                         }
                     }
                 });
@@ -2139,7 +2169,10 @@ Toggle SBS?</div></li>';
 
             $(document).on('mouseenter', '.mine .message', function() {
                 //Remove excess spacing to the left of the button (by emptying .meta, which has "&nbsp" in it), and set the button color to the background color
-                $(this).find('.meta').empty().css({"background-color": $(this).parent().css("background-color"), "padding-right": "1px"}).show().append(replySpan);
+                $(this).find('.meta').empty().css({
+                    "background-color": $(this).parent().css("background-color"),
+                    "padding-right": "1px"
+                }).show().append(replySpan);
                 //The "padding-right: 1px" is to avoid some weird bug I can't figure out how to fix
             }).on('mouseleave', '.mine .message', function() {
                 $(this).find('.meta').hide().find('.newreply').remove();
@@ -2147,7 +2180,10 @@ Toggle SBS?</div></li>';
 
             //Do the same thing if you hover over the timestamp
             .on('mouseenter', '.mine .timestamp', function() {
-                $(this).next().find('.meta').empty().css({"background-color": $(this).parent().css("background-color"), "padding-right": "1px"}).show().append(replySpan);
+                $(this).next().find('.meta').empty().css({
+                    "background-color": $(this).parent().css("background-color"),
+                    "padding-right": "1px"
+                }).show().append(replySpan);
             }).on('mouseleave', '.mine .timestamp', function() {
                 $(this).next().find('.meta').hide().find('.newreply').remove();
             })
