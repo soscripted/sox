@@ -1668,7 +1668,8 @@ Toggle SBS?</div></li>';
                 $(this).parents('.question-close-notification').remove(); //hide the notification in the inbox dropdown
             });
 
-            if (!sox.location.on('.com/tour')) { //https://github.com/soscripted/sox/issues/151
+            console.log(sox.location.on('area51.stackexchange.com'));
+            if (!sox.location.on('.com/tour') && !sox.location.on('area51.stackexchange.com')) { //https://github.com/soscripted/sox/issues/151
                 $('.post-menu').each(function() {
                     var id;
                     var $parent = $(this).parents('.question, .answer');

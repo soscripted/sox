@@ -133,7 +133,7 @@
             sox.debug('observe: ' + elements);
             sox.debug(toObserve);
             var observer = new MutationObserver(function(mutations, observer) {
-                if(elements !== undefined) {
+                if(typeof elements !== "undefined") {
                     for (var i = 0; i < mutations.length; i++) {
                         for (var a = 0; a < mutations[i].addedNodes.length; a++) {
                             var $a = $(mutations[i].addedNodes[a]);

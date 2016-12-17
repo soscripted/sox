@@ -60,6 +60,7 @@
         }, {
             "name": "fixedTopbar",
             "desc": "Fix topbar position",
+            "extended_description": "Locks the topbar to the top of the window so you can see it at all times, even when scrolling down. Disabled on Ask Ubuntu due to the different styling of the topbar.",
             "meta": "http://meta.stackexchange.com/questions/101385/should-the-top-navigation-be-frozen-optional",
             "match": "",
             "exclude": ""
