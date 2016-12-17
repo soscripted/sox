@@ -169,12 +169,12 @@
                 //TODO: can this be narrowed down more? it currently listens to EVERYTHING on a page!
                 //TODO: use helper function. Tried before and it BROKE ON FIREFOX CAUSING IT TO HANG
                 //new MutationObserver(checkShift).observe(document.body, {attributes: true}); //Re-add padding if you drag/close a popup box
-                new MutationObserver(function(mutations) {
+                /*new MutationObserver(function(mutations) {
                     console.log('topbar');
                     mutations.forEach(checkShift);
                 }).observe(document.body, {
                     attributes: true
-                });
+                });*/
             }
         },
 
