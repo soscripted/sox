@@ -267,7 +267,7 @@
             });
 
             //close dialog if clicked outside it
-            $(document).click(function(e) { //close agenda dialog if clicked outside it
+            $(document).click(function(e) { //close dialog if clicked outside it
                 var $target = $(e.target),
                     isToggle = $target.is('#soxSettingsButton, #sox-settings-dialog'),
                     isChild = $target.parents('#soxSettingsButton, #sox-settings-dialog').is("#soxSettingsButton, #sox-settings-dialog");

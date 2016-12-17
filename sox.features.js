@@ -1434,7 +1434,7 @@ Toggle SBS?</div></li>';
                     id: 'downvotedPostsEditAlertButton',
                     class: 'topbar-icon yes-hover downvotedPostsEditAlert-buttonOff',
                     title: 'Watched posts that have been edited',
-                    'style': 'color: #858c93; height: 24px;',
+                    'style': 'color: #858c93; background-image: none; height: 24px;',
                     click: function(e) {
                         e.preventDefault();
                         $('#downvotedPostsEditAlertDialog').toggle();
@@ -1477,15 +1477,17 @@ Toggle SBS?</div></li>';
                 });
             });
 
-            $(document).mouseup(function(e) {
-                if (!$('#downvotedPostsEditAlertDialog').is(e.target) &&
-                    $('#downvotedPostsEditAlertDialog').has(e.target).length === 0 &&
-                    !$(e.target).is('#downvotedPostsEditAlertButton')) {
-                    $('#downvotedPostsEditAlertDialog').hide();
-                    $('#downvotedPostsEditAlertButton').removeClass('glow');
-                    $button.removeClass("topbar-icon-on");
+            $(document).click(function(e) { //close dialog if clicked outside it
+                var $target = $(e.target),
+                    isToggle = $target.is('#downvotedPostsEditAlertButton, #downvotedPostsEditAlertDialog'),
+                    isChild = $target.parents('#downvotedPostsEditAlertButton, #downvotedPostsEditAlertDialog').is("#downvotedPostsEditAlertButton, #downvotedPostsEditAlertDialog");
+
+                if (!isToggle && !isChild) {
+                    $dialog.hide();
+                    $button.removeClass('topbar-icon-on');
                 }
             });
+
 
             var websocketSiteCodes = {
                 "3dprinting": "640",
