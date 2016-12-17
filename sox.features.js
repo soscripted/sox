@@ -167,7 +167,8 @@
                 });
 
                 //TODO: can this be narrowed down more? it currently listens to EVERYTHING on a page!
-                sox.helpers.observe(undefined, checkShift); //Re-add padding if you drag/close a popup box
+                //TODO: use helper function. Tried before and it BROKE ON FIREFOX CAUSING IT TO HANG
+                new MutationObserver(checkShift).observe(document.body, {attributes: true}); //Re-add padding if you drag/close a popup box
 
                 sox.helpers.observe(document.getElementById('notify--1'), checkShift); //Move body and topbar up if you close the Area 51 popup
             }
@@ -1670,7 +1671,6 @@ Toggle SBS?</div></li>';
                 $(this).parents('.question-close-notification').remove(); //hide the notification in the inbox dropdown
             });
 
-            console.log(sox.location.on('area51.stackexchange.com'));
             if (!sox.location.on('.com/tour') && !sox.location.on('area51.stackexchange.com')) { //https://github.com/soscripted/sox/issues/151
                 $('.post-menu').each(function() {
                     var id;
