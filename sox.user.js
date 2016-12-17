@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Stack Overflow Extras (SOX)
 // @namespace    https://github.com/soscripted/sox
-// @version      2.0.2 DEV ai
+// @version      2.0.2 DEV aj
 // @description  Extra optional features for Stack Overflow and Stack Exchange sites
 // @contributor  ᴉʞuǝ (stackoverflow.com/users/1454538/)
 // @contributor  ᔕᖺᘎᕊ (stackexchange.com/users/4337810/)
@@ -145,66 +145,76 @@
         }
 
         if (GM_getValue('SOX-accessToken', -1) == -1) {
-            if (!sox.location.on('stackoverflow.com') && !sox.location.on('oauth/login_success')) {
-                // TODO: find a more user friendly way of handling this
-                window.open('http://stackoverflow.com');
-                alert('Stack Overflow has been opened for you. To complete the SOX installation please click on the cogs icon that has been added to the topbar to recieve your access token (on the Stack Overflow site!).');
-                sox.warn("Please go to stackoverflow.com to get your access token for certain SOX features");
+            if (sox.location.on('oauth/login_success')) {
+                var script = document.createElement('script');
+                script.src = location.protocol + '//code.jquery.com/jquery-migrate-1.0.0.js';
+                script.type = 'text/javascript';
+                document.head.appendChild(script);
+                console.log('added $.browser');
             } else {
-                //everything in this `else` is only weird to make it work on Firefox
-                //the solution has come from http://stackoverflow.com/a/38924760/3541881
-                //in effect, it makes and appends an IIFE to the head that `init`s SE
-                //and then when done appends another IIFE to `authenticate` SE
-                //the access token is sent with postMessage to the webpage
-                //and the script receives the message and saves the access token.
-                //a hacky fix, but it works for now.
-                window.addEventListener("message", function(event) {
-                    sox.debug('recieved message for access token');
-                    var accesstoken;
-                    try {
-                        accesstoken = JSON.parse(event.data);
-                        sox.debug(accesstoken);
-                    } catch (error) {}
-                    if (!('SOX-accessToken' in accesstoken)) return;
-                    sox.loginfo('SOX ACCESS TOKEN: ', accesstoken['SOX-accessToken']);
-                    GM_setValue('SOX-accessToken', accesstoken['SOX-accessToken']);
-                }, false);
+                if (!sox.location.on('stackoverflow.com')) {
+                    // TODO: find a more user friendly way of handling this
+                    window.open('http://stackoverflow.com');
+                    alert('Stack Overflow has been opened for you. To complete the SOX installation please click on the cogs icon that has been added to the topbar to recieve your access token (on the Stack Overflow site!).');
+                    sox.warn("Please go to stackoverflow.com to get your access token for certain SOX features");
+                } else {
+                    //everything in this `else` is only weird to make it work on Firefox
+                    //the solution has come from http://stackoverflow.com/a/38924760/3541881
+                    //in effect, it makes and appends an IIFE to the head that `init`s SE
+                    //and then when done appends another IIFE to `authenticate` SE
+                    //the access token is sent with postMessage to the webpage
+                    //and the script receives the message and saves the access token.
+                    //a hacky fix, but it works for now.
+                    window.addEventListener("message", function(event) {
+                        sox.debug('recieved message for access token');
+                        var accesstoken;
+                        try {
+                            accesstoken = JSON.parse(event.data);
+                            sox.debug(accesstoken);
+                        } catch (error) {}
+                        if (!('SOX-accessToken' in accesstoken)) return;
+                        sox.loginfo('SOX ACCESS TOKEN: ', accesstoken['SOX-accessToken']);
+                        GM_setValue('SOX-accessToken', accesstoken['SOX-accessToken']);
+                    }, false);
 
-                //NOTE: `sox` object doesn't exist here because it will be put in the HEAD
-                document.head.appendChild(document.createElement('script')).text =
-                    GM_getResourceText('SEAPI') + ';(' + function() {
-                        SE.init({
-                            clientId: 7138, //SOX client ID
-                            key: 'lL1S1jr2m*DRwOvXMPp26g((', //SOX key
-                            channelUrl: location.protocol + '//stackoverflow.com/blank',
-                            complete: function(d) {
-                                console.debug('Successfully inited using SE SDK');
-                                $(document).on('click', '#soxSettingsButton', function() {
-                                    //TODO: make the cogs button red?
-                                    console.debug('clicked button to open get token window');
-                                    document.head.appendChild(document.createElement('script')).text =
-                                        '(' + function() {
-                                            console.debug('beginning of 2nd IIFE for access token, before authenticating');
-                                            SE.authenticate({
-                                                success: function(data) {
-                                                    console.debug('Successfully authenticated using SE SDK');
-                                                    console.debug(data);
-                                                    window.postMessage(JSON.stringify({
-                                                        'SOX-accessToken': data.accessToken
-                                                    }), '*');
-                                                },
-                                                error: function(data) {
-                                                    console.error('SOX Authentication Error:');
-                                                    console.error(data);
-                                                },
-                                                scope: ['read_inbox', 'write_access', 'no_expiry']
-                                            });
-                                            console.debug('end of 2nd IIFE for access token, after authenticating');
-                                        } + ')();';
-                                });
-                            }
-                        });
-                    } + ')();';
+                    //NOTE: `sox` object doesn't exist here because it will be put in the HEAD
+                    document.head.appendChild(document.createElement('script')).text =
+                        GM_getResourceText('SEAPI') + ';(' + function() {
+                            SE.init({
+                                clientId: 7138, //SOX client ID
+                                key: 'lL1S1jr2m*DRwOvXMPp26g((', //SOX key
+                                channelUrl: location.protocol + '//stackoverflow.com/blank',
+                                complete: function(d) {
+                                    console.debug('Successfully inited using SE SDK');
+                                    $(document).on('click', '#soxSettingsButton', function() {
+                                        //TODO: make the cogs button red?
+                                        console.debug('clicked button to open get token window');
+                                        //document.head.appendChild(document.createElement('script')).text =
+                                            (function() {
+                                                console.debug('beginning of 2nd IIFE for access token, before authenticating');
+                                                var script = document.createElement('script');
+                                                console.log($.browser);
+                                                SE.authenticate({
+                                                    success: function(data) {
+                                                        console.debug('Successfully authenticated using SE SDK');
+                                                        console.debug(data);
+                                                        window.postMessage(JSON.stringify({
+                                                            'SOX-accessToken': data.accessToken
+                                                        }), '*');
+                                                    },
+                                                    error: function(data) {
+                                                        console.error('SOX Authentication Error:');
+                                                        console.error(data);
+                                                    },
+                                                    scope: ['read_inbox', 'write_access', 'no_expiry']
+                                                });
+                                                console.debug('end of 2nd IIFE for access token, after authenticating');
+                                            })();
+                                    });
+                                }
+                            });
+                        } + ')();';
+                }
             }
         }
     }
