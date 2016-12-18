@@ -130,18 +130,11 @@
         fixedTopbar: function() {
             // Description: For making the topbar fixed (always stay at top of screen)
             // Written by @IStoleThePies (https://github.com/soscripted/sox/issues/152#issuecomment-267463392) to fix lots of bugs and compatability issues
+            // Modified by shu8
 
-            function checkShift() {
-                $('body').css({
-                    'padding-top': $('#notify-table').height() + $('.topbar').height() + 'px'
-                });
-
-                $('.topbar').css({
-                    'position': 'fixed',
-                    'z-index': '900',
-                    'margin-top': '-34px'
-                });
-            }
+            //Add class to page for topbar, calculated for every page for different sites.
+            //If the Area 51 popup closes or doesn't exist, $('#notify-table').height() = 0
+            GM_addStyle('.fixed-topbar-sox { padding-top: ' + ($('#notify-table').length ? $('#notify-table').height() : '') + $('.topbar').height() + 'px}');
 
             if (sox.site.type == 'chat') { //For some reason, chats don't need any modification to the body
                 $('.topbar').css({
@@ -149,9 +142,7 @@
                     'z-index': '900'
                 });
             } else if (!sox.location.on('askubuntu.com')) { //Disable on Ask Ubuntu
-                $('body').css({
-                    'padding-top': $('#notify-table').height() + $('.topbar').height() + 'px' //If the Area 51 popup closes or doesn't exist, $('#notify-table').height() = 0
-                });
+                $('body').addClass('fixed-topbar-sox');
 
                 $('.topbar').css({
                     'position': 'fixed',
@@ -165,16 +156,6 @@
                     'z-index': '900',
                     'margin-top': '-65px'
                 });
-
-                //TODO: can this be narrowed down more? it currently listens to EVERYTHING on a page!
-                //TODO: use helper function. Tried before and it BROKE ON FIREFOX CAUSING IT TO HANG
-                //new MutationObserver(checkShift).observe(document.body, {attributes: true}); //Re-add padding if you drag/close a popup box
-                /*new MutationObserver(function(mutations) {
-                    console.log('topbar');
-                    mutations.forEach(checkShift);
-                }).observe(document.body, {
-                    attributes: true
-                });*/
             }
         },
 
