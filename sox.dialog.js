@@ -211,6 +211,7 @@
                     id: 'soxSettingsButton',
                     class: 'topbar-icon yes-hover sox-settings-button',
                     title: 'Change SOX settings',
+                    href: '#',
                     'style': 'color: #858c93; background-image: none; height: 24px;', //https://github.com/soscripted/sox/issues/142
                     click: function(e) {
                         e.preventDefault();
@@ -313,7 +314,7 @@
 
             // add dialog to corral and sox button to topbar
             $soxSettingsButton.append($icon).appendTo('div.network-items');
-            $('.js-topbar-dialog-corral').append($soxSettingsDialog);
+            $('.js-topbar-dialog-corral').append($soxSettingsDialog.css('left', $('#soxSettingsButton').position().left));
         }
     };
 

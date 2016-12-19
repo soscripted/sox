@@ -928,6 +928,7 @@
 
             $('.vote-down-off, .vote-down-on, .vote-up-off, .vote-up-on, .star-off, .star-on').addClass('sox-better-css');
             $('head').append('<link rel="stylesheet" href="https://rawgit.com/shu8/SE-Answers_scripts/master/coolMaterialDesignCss.css" type="text/css" />');
+            $('#hlogo').css('-webkit-transform', 'translate3d(0,0,0)');
         },
 
         standOutDupeCloseMigrated: function() {
@@ -1421,6 +1422,7 @@ Toggle SBS?</div></li>';
                     class: 'topbar-icon yes-hover downvotedPostsEditAlert-buttonOff',
                     title: 'Watched posts that have been edited',
                     'style': 'color: #858c93; background-image: none; height: 24px;',
+                    href: '#',
                     click: function(e) {
                         e.preventDefault();
                         $('#downvotedPostsEditAlertDialog').toggle();
@@ -1437,7 +1439,7 @@ Toggle SBS?</div></li>';
 
             if ($('#metaNewQuestionAlertDialog').length) $dialog.css('left', '297px');
             $button.append($icon).appendTo('div.network-items');
-            $dialog.append($header).append($content.append($posts)).prependTo('.js-topbar-dialog-corral');
+            $dialog.css('left', $('#downvotedPostsEditAlertButton').position().left).append($header).append($content.append($posts)).prependTo('.js-topbar-dialog-corral');
 
             $('#downvotedPostsEditAlertButton').hover(function() { //open on hover, just like the normal dropdowns
                 if ($('.topbar-icon').not('#downvotedPostsEditAlertButton').hasClass('topbar-icon-on')) {
@@ -2126,7 +2128,7 @@ Toggle SBS?</div></li>';
             });
 
             function checkAndAddReminder() {
-                if (!sox.user.loggedIn) {
+                if (!sox.user.loggedIn && !sox.location.on('winterbash2016.stackexchange.com')) {
                     if (!$('#loggedInReminder').length) $('.container').append(div);
                 } else {
                     $('#loggedInReminder').remove();
