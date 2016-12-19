@@ -936,11 +936,10 @@
         standOutDupeCloseMigrated: function() {
             // Description: For adding cooler signs that a questions has been closed/migrated/put on hod/is a dupe
 
-            $('head').append('<link rel="stylesheet" href="https://rawgit.com/shu8/SE-Answers_scripts/master/dupeClosedMigratedCSS.css" type="text/css" />'); //add the CSS
+            function addLabel($question) {
+                if ($question.attr('data-sox-question-state')) return; //don't run if question already has tag added
 
-            $('.question-summary').each(function() { //Find the questions and add their id's and statuses to an object
-                var $question = $(this);
-                var $anchor = $(this).find('.summary a:eq(0)');
+                var $anchor = $question.find('.summary a:eq(0)');
                 var text = $anchor.text().trim();
                 var id = $anchor.attr('href').split('/')[2];
 
@@ -972,8 +971,17 @@
                         $anchor.after("&nbsp;<span class='onhold' title='" + $(d).find('.question-status h2').text() + "'>&nbsp;onhold&nbsp;</span>"); //add appropiate message
                     });
                 }
+            }
+
+            $('head').append('<link rel="stylesheet" href="https://rawgit.com/shu8/SE-Answers_scripts/master/dupeClosedMigratedCSS.css" type="text/css" />'); //add the CSS
+
+            $('.question-summary').each(function() { //Find the questions and add their id's and statuses to an object
+                addLabel($(this));
             });
-            $(document).trigger('sox-added-labels');
+                $('.question-summary').each(function() { //Find the questions and add their id's and statuses to an object
+                    addLabel($(this));
+                });
+            });
         },
 
         editReasonTooltip: function() {
@@ -2146,6 +2154,8 @@ Toggle SBS?</div></li>';
         },
 
         disableOwnPostVoteButtons: function() {
+            // Description: disables vote buttons on your own posts
+
             $('.answer, .question')
                 .find('.user-details:last a')
                 .filter('a[href*=' + sox.user.id + ']')
@@ -2161,8 +2171,9 @@ Toggle SBS?</div></li>';
         },
 
         replyToOwnChatMessages: function() {
-            //I use $(document).on instead of .each, since using .each wouldn't apply to messages loaded via "Load more messages" and "Load to my last message"
-            //https://github.com/soscripted/sox/issues/118#issuecomment-266225764 by @IStoleThePies
+            // Description: Adds a reply button to your own chat messages so you can reply to your own messages easier and quicker
+            // I use $(document).on instead of .each, since using .each wouldn't apply to messages loaded via "Load more messages" and "Load to my last message"
+            // https://github.com/soscripted/sox/issues/118#issuecomment-266225764 by @IStoleThePies
 
             $(document).on('mouseenter', '.mine .message', function() {
                 //Remove excess spacing to the left of the button (by emptying .meta, which has "&nbsp" in it), and set the button color to the background color
@@ -2199,6 +2210,8 @@ Toggle SBS?</div></li>';
         },
 
         hideCertainQuestions: function(settings) {
+            // Description: Hide certain questions depending on your choices
+
             sox.debug('hideCertainQuestions settings', settings);
             if (settings.duplicate || settings.closed || settings.migrated || settings.onHold) {
                 $('.question-summary').each(function() { //Find the questions and add their id's and statuses to an object
