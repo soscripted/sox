@@ -314,6 +314,8 @@
 
             // add dialog to corral and sox button to topbar
             $soxSettingsButton.append($icon).appendTo('div.network-items');
+
+            //'$('#soxSettingsButton').position().left' from @IStoleThePies: https://github.com/soscripted/sox/issues/120#issuecomment-267857625:
             $('.js-topbar-dialog-corral').append($soxSettingsDialog.css('left', $('#soxSettingsButton').position().left));
         }
     };

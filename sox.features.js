@@ -134,7 +134,8 @@
 
             //Add class to page for topbar, calculated for every page for different sites.
             //If the Area 51 popup closes or doesn't exist, $('#notify-table').height() = 0
-            GM_addStyle('.fixed-topbar-sox { padding-top: ' + ($('#notify-table').length ? $('#notify-table').height() : '') + $('.topbar').height() + 'px}');
+            var paddingToAdd = ($('#notify-table').length ? $('#notify-table').height() : '') + $('.topbar').height() + 'px';
+            GM_addStyle('.fixed-topbar-sox { padding-top: ' + paddingToAdd + '}');
 
             if (sox.site.type == 'chat') { //For some reason, chats don't need any modification to the body
                 $('.topbar').css({
@@ -155,6 +156,10 @@
                     'position': 'fixed',
                     'z-index': '900',
                     'margin-top': '-65px'
+                });
+
+                sox.helpers.observe('#notify-container,#notify--1', function() { //Area51: https://github.com/soscripted/sox/issues/152#issuecomment-267885889
+                    $('body').css('padding-top', $('.topbar').height() + 'px');
                 });
             }
         },
@@ -928,7 +933,7 @@
 
             $('.vote-down-off, .vote-down-on, .vote-up-off, .vote-up-on, .star-off, .star-on').addClass('sox-better-css');
             $('head').append('<link rel="stylesheet" href="https://rawgit.com/shu8/SE-Answers_scripts/master/coolMaterialDesignCss.css" type="text/css" />');
-            $('#hlogo').css('-webkit-transform', 'translate3d(0,0,0)');
+            $('#hlogo').css('-webkit-transform', 'translate3d(0,0,0)'); //Thanks to @IStoleThePies: https://github.com/soscripted/sox/issues/79#issuecomment-267868040
         },
 
         standOutDupeCloseMigrated: function() {
@@ -1121,7 +1126,7 @@ Toggle SBS?</div></li>';
             //event listener for adding the sbs toggle button for posting new questions or answers
             //waitForKeyElements('#wmd-redo-button', SBS);
             sox.helpers.observe('li[id^="wmd-redo-button"]', SBS);
-
+            
             sox.helpers.observe('.wmd-preview.sbs-on', function() {
                 $('#tag-suggestions').parent().css('position', 'static'); //https://github.com/soscripted/sox/issues/140
             });
@@ -1439,6 +1444,7 @@ Toggle SBS?</div></li>';
 
             if ($('#metaNewQuestionAlertDialog').length) $dialog.css('left', '297px');
             $button.append($icon).appendTo('div.network-items');
+            //'$('#downvotedPostsEditAlertButton').position().left' from @IStoleThePies: https://github.com/soscripted/sox/issues/120#issuecomment-267857625:
             $dialog.css('left', $('#downvotedPostsEditAlertButton').position().left).append($header).append($content.append($posts)).prependTo('.js-topbar-dialog-corral');
 
             $('#downvotedPostsEditAlertButton').hover(function() { //open on hover, just like the normal dropdowns
