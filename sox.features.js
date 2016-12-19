@@ -1385,7 +1385,7 @@ Toggle SBS?</div></li>';
             //GM_deleteValue('downvotedPostsEditAlert');
             //GM_deleteValue('downvotedPostsEditAlert-notifications');
 
-            function addEditNotification(link, title, sitename, notificationPostId, unread, editor, editorLink, editTime, type) {
+            function addEditNotification(link, title, sitename, notificationPostId, unread, editor, editorLink, editTime, type, postsToCheck) {
                 sox.debug('downvotedPostsEditAlert addEditNotification editTime', editTime);
                 var $li = $('<li/>', {
                     'class': 'question-close-notification' + (unread ? ' unread-item' : '')
@@ -1399,7 +1399,7 @@ Toggle SBS?</div></li>';
                 var $message = $('<div/>', {
                     'class': 'message-text'
                 }).append($('<h4/>', {
-                    html: (type === 'question' ? 'Q: ' : 'A: ') + title + ' (edited by ' + editor + ' at ' + new Date(editTime * 1000).toLocaleString() + ')'
+                    html: (type === 'question' ? 'Q: ' : 'A: ') + title + ' (edited by ' + editor + ' at ' + new Date(editTime * 1000).toLocaleString() + ') ' + (link.split('/')[4] in postsToCheck ? '<span title="watching is still active for this post" style="float:right"><i class="fa fa-eye"></i></span>' : '')
                 })).append($('<span/>', {
                     'class': 'downvotedPostsEditAlert-delete',
                     style: 'color:blue;border: 1px solid gray;',
@@ -1488,7 +1488,7 @@ Toggle SBS?</div></li>';
 
                 if (!isToggle && !isChild) {
                     $dialog.hide();
-                    $button.removeClass('topbar-icon-on');
+                    $button.removeClass('topbar-icon-on glow');
                 }
             });
 
@@ -1685,7 +1685,7 @@ Toggle SBS?</div></li>';
                             id = +$parent.attr('data-answerid');
                         }
                     }
-                    $(this).append("<span class='lsep'></span><a " + (id in postsToCheck ? "style='color:green' " : "") + "class='downvotedPostsEditAlert-watchPostForEdits'>notify on edit</a>");
+                    $(this).append("<span class='lsep'></span><a " + (id in postsToCheck ? "style='color:green; font-weight:bold' " : "") + "class='downvotedPostsEditAlert-watchPostForEdits'>notify on edit</a>");
                 });
             }
 
@@ -1727,7 +1727,7 @@ Toggle SBS?</div></li>';
                                 title = d.items[0].title;
                                 notifications[data.data.id] = {
                                     'sitename': sitename,
-                                    'url': 'http://' + sitename + '.stackexchange.com/posts/' + data.data.id,
+                                    'url': 'http://' + sitename + '.stackexchange.com/' + (d.items[0].post_type == 'question' ? 'q/' : 'a/') + data.data.id,
                                     'title': title,
                                     'editor': d.items[0].last_editor.display_name,
                                     'editor_link': d.items[0].last_editor.link,
@@ -1735,7 +1735,7 @@ Toggle SBS?</div></li>';
                                     'type': d.items[0].post_type
                                 };
                                 GM_setValue('downvotedPostsEditAlert-notifications', JSON.stringify(notifications));
-                                addEditNotification('http://' + sitename + '.stackexchange.com/posts/' + data.data.id, title + ' [LIVE]', sitename, data.data.id, true, d.items[0].last_editor.display_name, d.items[0].last_editor.link, d.items[0].last_edit_date, d.items[0].post_type);
+                                addEditNotification('http://' + sitename + '.stackexchange.com/' + (d.items[0].post_type == 'question' ? 'q/' : 'a/') + data.data.id, title + ' [LIVE]', sitename, data.data.id, true, d.items[0].last_editor.display_name, d.items[0].last_editor.link, d.items[0].last_edit_date, d.items[0].post_type, postsToCheck);
                                 sox.debug('downvotedPostsEditAlert: adding notification from live');
                             }, 'activity&filter=!-*f(6qkz8Rkb');
                         }
@@ -1744,7 +1744,7 @@ Toggle SBS?</div></li>';
             };
 
             $.each(notifications, function(i, o) {
-                addEditNotification(o.url, o.title, o.sitename, i, false, o.editor, o.editor_link, o.edit_date, o.type);
+                addEditNotification(o.url, o.title, o.sitename, i, false, o.editor, o.editor_link, o.edit_date, o.type, postsToCheck);
             });
 
             if (!$.isEmptyObject(postsToCheck)) {
@@ -1758,7 +1758,7 @@ Toggle SBS?</div></li>';
                             sox.debug('downvotedPostsEditAlert evaluation', json.items[0].last_edit_date > (o.lastCheckedTime || o.addedDate) / 1000);
                             if (json.items[0].last_edit_date > (o.lastCheckedTime || o.addedDate) / 1000) {
                                 sox.debug('downvotedPostsEditAlert: adding notification from api');
-                                addEditNotification(json.items[0].link, json.items[0].title + ' [API]', json.items[0].link.split('/')[2].split('.')[0], i, true, json.items[0].last_editor.display_name, json.items[0].last_editor.link, json.items[0].last_edit_date, json.items[0].post_type);
+                                addEditNotification(json.items[0].link, json.items[0].title + ' [API]', json.items[0].link.split('/')[2].split('.')[0], i, true, json.items[0].last_editor.display_name, json.items[0].last_editor.link, json.items[0].last_edit_date, json.items[0].post_type, postsToCheck);
                                 notifications[i] = {
                                     'sitename': json.items[0].link.split('/')[2].split('.')[0],
                                     'url': json.items[0].link,

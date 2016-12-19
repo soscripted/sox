@@ -510,8 +510,8 @@ hr.or:after {
 }
 
 #downvotedPostsEditAlertButton.glow {
-    -webkit-text-stroke-color: red;
-    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: blue;
+    -webkit-text-stroke-width: 3px;
 }
 
 /*commentReplies -- for the reply buttons*/
