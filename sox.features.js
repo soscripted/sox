@@ -836,16 +836,19 @@
                 }),
                 $diamond = $('<a/>', {
                     id: 'metaNewQuestionAlertButton',
+                    href: '#',
                     'class': 'topbar-icon yes-hover metaNewQuestionAlert-diamondOff',
                     title: 'Moderator inbox (recent meta questions)',
-                    click: function() {
+                    click: function(e) {
+                        e.preventDefault();
                         $diamond.toggleClass('topbar-icon-on');
                         $dialog.toggle();
                     }
                 });
 
-            $dialog.append($header).append($content.append($questions)).prependTo('.js-topbar-dialog-corral');
+            //'$('#metaNewQuestionAlertButton').position().left' from @IStoleThePies: https://github.com/soscripted/sox/issues/120#issuecomment-267857625:
             $('#soxSettingsButton').after($diamond);
+            $dialog.css('left', $('#metaNewQuestionAlertButton').position().left).append($header).append($content.append($questions)).prependTo('.js-topbar-dialog-corral');
 
             $('#metaNewQuestionAlertButton').hover(function() { //open on hover, just like the normal dropdowns
                 if ($('.topbar-icon').not('#metaNewQuestionAlertButton').hasClass('topbar-icon-on')) {
