@@ -98,12 +98,6 @@
             });
         },
 
-        addEllipsis: function() {
-            // Description: Adds an ellipsis to long names
-
-            $('.user-info .user-details').css('text-overflow', 'ellipsis');
-        },
-
         copyCommentsLink: function() {
             // Description: Adds the 'show x more comments' link before the commnents
 
@@ -2230,6 +2224,16 @@ Toggle SBS?</div></li>';
                 var length = $('.answer.deleted-answer').hide().length;
                 $('.answers-subheader h2').append(' (' + length + ' deleted & hidden)');
             }
+        },
+
+        inlineEditorEverywhere: function() {
+            // Description: Enabled inline editor on all sites
+            // Written by @nicael: http://stackapps.com/questions/6216/inline-editor-regardless-of-reputation, and copied with nicael's permission
+
+            $(".suggest-edit-post").removeClass("suggest-edit-post").addClass("edit-post");
+            StackExchange.using("inlineEditing", function () {
+                StackExchange.inlineEditing.init();
+            });
         }
     };
 })(window.sox = window.sox || {}, jQuery);

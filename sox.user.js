@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Stack Overflow Extras (SOX)
 // @namespace    https://github.com/soscripted/sox
-// @version      2.0.2 DEV ao
+// @version      2.0.2 DEV ap
 // @description  Extra optional features for Stack Overflow and Stack Exchange sites
 // @contributor  ᴉʞuǝ (stackoverflow.com/users/1454538/)
 // @contributor  ᔕᖺᘎᕊ (stackexchange.com/users/4337810/)
@@ -131,13 +131,14 @@
                         }
                     }
                 } catch (err) {
-                    if (!sox.features[featureId]) { //remove deprecated/'corrupt' feature IDs from saved settings
+                    if (!sox.features[featureId] || !featureInfo[settings[i]]) { //remove deprecated/'corrupt' feature IDs from saved settings
+                        sox.loginfo('Deleting feature "' + settings[i] + '"');
                         settings.splice(i, 1);
                         sox.settings.save(settings);
                         $('#sox-settings-dialog-features').find('#' + settings[i].split('-')[1]).parent().parent().remove();
                     } else {
                         $('#sox-settings-dialog-features').find('#' + settings[i].split('-')[1]).parent().css('color', 'red').attr('title', 'There was an error loading this feature. Please raise an issue on GitHub.');
-                        sox.error('SOX error: There was an error loading the feature "' + settings[i] + '". Please raise an issue on GitHub, and copy the following error log:\n' + err);
+                        sox.error('There was an error loading the feature "' + settings[i] + '". Please raise an issue on GitHub, and copy the following error log:\n' + err);
                     }
                     i++;
                 }

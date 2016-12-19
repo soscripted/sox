@@ -8,13 +8,6 @@
             "match": "",
             "exclude": ""
         }, {
-            "name": "addEllipsis",
-            "desc": "Add ellipsis to long names",
-            "extended_description": "Instead of truncating long names, this feature will add an ellipsis near the end of the username",
-            "meta": "http://meta.stackexchange.com/questions/244729/provide-an-ellipsis-after-a-long-name-instead-of-truncating-it",
-            "match": "",
-            "exclude": "*://chat.*.com/*"
-        }, {
             "name": "alignBadgesByClass",
             "desc": "Align badges by their class on user profile pages",
             "meta": "http://meta.stackexchange.com/q/254607/260841",
@@ -25,13 +18,6 @@
             "desc": "Show tags for the question an answer belongs to on search pages (for better context)",
             "meta": "http://meta.stackexchange.com/questions/197874/include-tags-in-answers-entries-on-search-results",
             "match": "*://*.com/search*",
-            "exclude": "SE1.0"
-        }, {
-            "name": "betterCSS",
-            "desc": "Add extra CSS for voting signs and favourite button (currently only on Android SE)",
-            "extended_description": "Pulse effect when hovering over the upvote/downvote/star signs.",
-            "meta": "http://meta.stackexchange.com/questions/252685/i-want-to-have-those-voting-animations-like-on-android-se-pretty-please",
-            "match": "*://*/questions*",
             "exclude": "SE1.0"
         }, {
             "name": "bulletReplace",
@@ -65,36 +51,6 @@
             "match": "",
             "exclude": ""
         }, {
-            "name": "grayOutVotes",
-            "desc": "Gray out deleted vote buttons",
-            "meta": "http://meta.stackexchange.com/a/174806/260841",
-            "match": "*://*/questions*",
-            "exclude": "SE1.0"
-        }, {
-            "name": "hiddenCommentsIndicator",
-            "desc": "Add a darker border underneath comments if there are some hidden after it",
-            "meta": "http://meta.stackoverflow.com/q/296582/3541881",
-            "match": "*://*/questions*",
-            "exclude": "SE1.0"
-        }, {
-            "name": "hideCommunityBulletin",
-            "desc": "Hide the Community Bulletin module",
-            "meta": "",
-            "match": "",
-            "exclude": "*://chat.*.com/*"
-        }, {
-            "name": "hideHireMe",
-            "desc": "Hide the Looking for a Job module",
-            "meta": "",
-            "match": "",
-            "exclude": "*://chat.*.com/*"
-        }, {
-            "name": "hideHotNetworkQuestions",
-            "desc": "Hide the Hot Network Questions module",
-            "meta": "",
-            "match": "",
-            "exclude": "*://chat.*.com/*"
-        }, {
             "name": "highlightQuestions",
             "desc": "Change highlighting for questions with favorite tags",
             "meta": "http://meta.stackexchange.com/questions/238591/should-favorite-tag-highlighting-in-question-lists-be-changed",
@@ -104,12 +60,6 @@
             "name": "isQuestionHot",
             "desc": "Add a label on questions which are hot-network questions",
             "meta": "http://meta.stackexchange.com/questions/245390/let-mods-and-10k-know-when-questions-go-hot",
-            "match": "*://*/questions*",
-            "exclude": "SE1.0"
-        }, {
-            "name": "linkedToFrom",
-            "desc": "Add an arrow to linked posts in the sidebar to show whether they are linked to or linked from",
-            "meta": "http://meta.stackexchange.com/q/276235/260841",
             "match": "*://*/questions*",
             "exclude": "SE1.0"
         }, {
@@ -131,18 +81,6 @@
             "match": "",
             "exclude": "*://chat.*.com/*,SE1.0"
         }, {
-            "name": "moveBounty",
-            "desc": "Move 'start bounty' to top",
-            "meta": "http://meta.stackexchange.com/questions/234095/can-we-move-start-a-bounty-to-a-more-intuitive-location",
-            "match": "*://*/questions*",
-            "exclude": "SE1.0"
-        }, {
-            "name": "renameChat",
-            "desc": "Prepend 'Chat - ' to chat tabs' titles",
-            "meta": "http://meta.stackexchange.com/questions/246289/change-the-browser-tab-title-on-chat-pages-to-chat-sitename-or-chat-room-name",
-            "match": "*://chat.*.com/*",
-            "exclude": ""
-        }, {
             "name": "scrollToTop",
             "desc": "Add Scroll To Top button",
             "extended_description": "This feature adds a 'scroll to top' button at the bottom left of your screen that will jump to the top of the page when clicked",
@@ -163,12 +101,6 @@
             "match": "",
             "exclude": "*://chat.*.com/*,SE1.0"
         }, {
-            "name": "stickyVoteButtons",
-            "desc": "Make vote buttons next to posts sticky whilst scrolling on that post",
-            "meta": "http://meta.stackexchange.com/a/35047/260841",
-            "match": "*://*/questions*",
-            "exclude": "SE1.0"
-        }, {
             "name": "tabularReviewerStats",
             "desc": "Display reviewer stats on /review/suggested-edits in table form",
             "meta": "http://meta.stackexchange.com/q/276946/260841",
@@ -184,12 +116,6 @@
             "name": "unspoil",
             "desc": "Add a link to the bottom of a post to reveal all spoilers in a post",
             "meta": "http://meta.stackexchange.com/questions/249808/add-a-way-to-reveal-all-spoiler-blocks-in-a-post-at-once",
-            "match": "*://*/questions*",
-            "exclude": "SE1.0"
-        }, {
-            "name": "disableOwnPostVoteButtons",
-            "desc": "Disable vote buttons on your own posts",
-            "meta": "",
             "match": "*://*/questions*",
             "exclude": "SE1.0"
         }],
@@ -224,10 +150,22 @@
             "match": "*://*/questions*",
             "exclude": "SE1.0"
         }, {
+            "name": "moveBounty",
+            "desc": "Move the 'start a bounty' link to before the comments",
+            "meta": "http://meta.stackexchange.com/questions/234095/can-we-move-start-a-bounty-to-a-more-intuitive-location",
+            "match": "*://*/questions*",
+            "exclude": "SE1.0"
+        }, {
             "name": "showCommentScores",
             "desc": "Show your comment and comment replies scores in your profile tabs",
             "meta": "http://meta.stackexchange.com/questions/38285/display-the-number-of-comment-upvotes-in-recent-activity-pages",
             "match": "*://*/users/*",
+            "exclude": "SE1.0"
+        }, {
+            "name": "hiddenCommentsIndicator",
+            "desc": "Add a darker border underneath comments if there are some hidden after it",
+            "meta": "http://meta.stackoverflow.com/q/296582/3541881",
+            "match": "*://*/questions*",
             "exclude": "SE1.0"
         }],
         "Editing": [{
@@ -268,6 +206,19 @@
             "meta": "http://meta.stackexchange.com/questions/135710/please-show-changed-titles-separately-in-edit-diffs",
             "match": "*://*.com/review/suggested-edits*",
             "exclude": ""
+        }, {
+            "name": "inlineEditorEverywhere",
+            "desc": "Inline editor regardless of reputation",
+            "extended_description": "Enables the inline editor on all sites, even if you don't have 2k rep there yet",
+            "meta": "",
+            "match": "*://*/questions*",
+            "exclude": ""
+        }, {
+            "name": "downvotedPostsEditAlert",
+            "desc": "Add a notification to your inbox when a question you downvote is edited",
+            "meta": "http://meta.stackexchange.com/q/165962/260841",
+            "match": "",
+            "exclude": ""
         }],
         "Flags": [{
             "name": "flagOutcomeTime",
@@ -282,25 +233,30 @@
             "match": "",
             "exclude": "*://chat.*.com/*,SE1.0"
         }],
-        "Unsorted": [{
-            "name": "alwaysShowImageUploadLinkBox",
-            "desc": "Always show the 'Link from the web' box when uploading an image",
-            "extended_description": "Removes the 'you can also provide a link from the web' button when uploading images, and shows the URL input field by default",
-            "meta": "http://meta.stackoverflow.com/q/306888/3541881",
+        "Sidebar": [{
+            "name": "hideCommunityBulletin",
+            "desc": "Hide the Community Bulletin module",
+            "meta": "",
+            "match": "",
+            "exclude": "*://chat.*.com/*"
+        }, {
+            "name": "hideHireMe",
+            "desc": "Hide the Looking for a Job module",
+            "meta": "",
+            "match": "",
+            "exclude": "*://chat.*.com/*"
+        }, {
+            "name": "hideHotNetworkQuestions",
+            "desc": "Hide the Hot Network Questions module",
+            "meta": "",
+            "match": "",
+            "exclude": "*://chat.*.com/*"
+        }, {
+            "name": "linkedToFrom",
+            "desc": "Add an arrow to linked posts in the sidebar to show whether they are linked to or linked from",
+            "meta": "http://meta.stackexchange.com/q/276235/260841",
             "match": "*://*/questions*",
             "exclude": "SE1.0"
-        }, {
-            "name": "chatEasyAccess",
-            "desc": "Add buttons to user profiles to change user write access directly from a chat room",
-            "meta": "http://meta.stackexchange.com/q/203480/260841",
-            "match": "*://chat.*.com/*",
-            "exclude": ""
-        }, {
-            "name": "downvotedPostsEditAlert",
-            "desc": "Add a notification to your inbox when a question you downvote is edited",
-            "meta": "http://meta.stackexchange.com/q/165962/260841",
-            "match": "",
-            "exclude": ""
         }, {
             "name": "hotNetworkQuestionsFiltering",
             "desc": "Filter the hot network questions by their attributes",
@@ -320,6 +276,59 @@
                 "type": "textarea",
                 "desc": "Titles to hide (comma-separated regexes)"
             }]
+        }],
+        "Chat": [{
+            "name": "chatEasyAccess",
+            "desc": "Add buttons to user profiles to change user write access directly from a chat room",
+            "meta": "http://meta.stackexchange.com/q/203480/260841",
+            "match": "*://chat.*.com/*",
+            "exclude": ""
+        },  {
+            "name": "replyToOwnChatMessages",
+            "desc": "Add reply signs to your own chat messages",
+            "meta": "",
+            "match": "*://chat.*.com/*",
+            "exclude": ""
+        }, {
+            "name": "renameChat",
+            "desc": "Prepend 'Chat - ' to chat tabs' titles",
+            "meta": "http://meta.stackexchange.com/questions/246289/change-the-browser-tab-title-on-chat-pages-to-chat-sitename-or-chat-room-name",
+            "match": "*://chat.*.com/*",
+            "exclude": ""
+        }],
+        "Voting": [{
+            "name": "betterCSS",
+            "desc": "Add extra CSS for voting signs and favourite button (currently only on Android SE)",
+            "extended_description": "Pulse effect when hovering over the upvote/downvote/star signs.",
+            "meta": "http://meta.stackexchange.com/questions/252685/i-want-to-have-those-voting-animations-like-on-android-se-pretty-please",
+            "match": "*://*/questions*",
+            "exclude": "SE1.0"
+        }, {
+            "name": "grayOutVotes",
+            "desc": "Gray out deleted vote buttons",
+            "meta": "http://meta.stackexchange.com/a/174806/260841",
+            "match": "*://*/questions*",
+            "exclude": "SE1.0"
+        },  {
+            "name": "stickyVoteButtons",
+            "desc": "Make vote buttons next to posts sticky whilst scrolling on that post",
+            "meta": "http://meta.stackexchange.com/a/35047/260841",
+            "match": "*://*/questions*",
+            "exclude": "SE1.0"
+        }, {
+            "name": "disableOwnPostVoteButtons",
+            "desc": "Disable vote buttons on your own posts",
+            "meta": "",
+            "match": "*://*/questions*",
+            "exclude": "SE1.0"
+        }],
+        "Unsorted": [{
+            "name": "alwaysShowImageUploadLinkBox",
+            "desc": "Always show the 'Link from the web' box when uploading an image",
+            "extended_description": "Removes the 'you can also provide a link from the web' button when uploading images, and shows the URL input field by default",
+            "meta": "http://meta.stackoverflow.com/q/306888/3541881",
+            "match": "*://*/questions*",
+            "exclude": "SE1.0"
         }, {
             "name": "linkedPostsInline",
             "desc": "Display linked posts inline by clicking on an arrow",
@@ -338,7 +347,6 @@
             "meta": "",
             "match": "*://*/questions*",
             "exclude": "SE1.0"
-
         }, {
             "name": "shareLinksMarkdown",
             "desc": "Change 'share' link to format of [post-name](url)",
@@ -357,12 +365,6 @@
             "meta": "",
             "match": "",
             "exclude": "*://chat.*.com/*,SE1.0"
-        }, {
-            "name": "replyToOwnChatMessages",
-            "desc": "Add reply signs to your own chat messages",
-            "meta": "",
-            "match": "*://chat.*.com/*",
-            "exclude": ""
         }, {
             "name": "hideCertainQuestions",
             "desc": "Hide on hold, closed, or duplicate questions or deleted answers",
