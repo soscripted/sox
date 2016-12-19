@@ -978,6 +978,7 @@
             $('.question-summary').each(function() { //Find the questions and add their id's and statuses to an object
                 addLabel($(this));
             });
+            sox.helpers.observe('#user-tab-questions, #question-mini-list', function() { //new questions on homepage, or for on user profile page
                 $('.question-summary').each(function() { //Find the questions and add their id's and statuses to an object
                     addLabel($(this));
                 });
