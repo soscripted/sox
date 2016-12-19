@@ -2245,9 +2245,50 @@ Toggle SBS?</div></li>';
             // Written by @nicael: http://stackapps.com/questions/6216/inline-editor-regardless-of-reputation, and copied with nicael's permission
 
             $(".suggest-edit-post").removeClass("suggest-edit-post").addClass("edit-post");
-            StackExchange.using("inlineEditing", function () {
+            StackExchange.using("inlineEditing", function() {
                 StackExchange.inlineEditing.init();
             });
+        },
+
+        flagPercentageBar: function() {
+            // Description: Adds a coloured percentage bar above the pane on the right of the flag summary page to show percentage of helpful flags
+
+            var helpfulFlags = 0;
+            $("td > a:contains('helpful')").parent().prev().each(function() {
+                helpfulFlags += parseInt($(this).text().replace(",", ""));
+            });
+
+            var declinedFlags = 0;
+            $("td > a:contains('declined')").parent().prev().each(function() {
+                declinedFlags += parseInt($(this).text().replace(",", ""));
+            });
+
+            if (helpfulFlags > 0) {
+
+                var percentHelpful = Number(Math.round((helpfulFlags / (helpfulFlags + declinedFlags)) * 100 + 'e2') + 'e-2');
+
+                if (percentHelpful > 100) percentHelpful = 100;
+
+                var percentColor;
+                if (percentHelpful >= 90) {
+                    percentColor = "limegreen";
+                } else if (percentHelpful >= 80) {
+                    percentColor = "darkorange";
+                } else if (percentHelpful < 80) {
+                    percentColor = "red";
+                }
+
+                //this is for the dynamic part; the rest of the CSS is in the main CSS file
+                GM_addStyle("#sox-flagPercentProgressBar:after {\
+                               background: " + percentColor + ";\
+                               width: " + percentHelpful + "%;\
+                           }");
+
+                $("#flag-stat-info-table").before("<h3 id='sox-flagPercentHelpful' title='pending, aged away and disputed flags are not counted'><span id='percent'>" + percentHelpful + "%</span> helpful</h3>");
+                $("#sox-flagPercentHelpful span#percent").css("color", percentColor);
+
+                $("#sox-flagPercentHelpful").after("<div id='sox-flagPercentProgressBar'></div>");
+            }
         }
     };
 })(window.sox = window.sox || {}, jQuery);

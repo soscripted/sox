@@ -519,3 +519,21 @@ hr.or:after {
 .soxReplyLink {
     cursor: pointer;
 }
+
+/*flagPercentageBar -- for the percentage bar itself*/
+
+#sox-flagPercentProgressBar {
+    background: #ccc;
+    height: 10px;
+    width: 220px;
+    margin: 6px 10px 10px 0;
+    padding: 0px;
+}
+#sox-flagPercentProgressBar:after {
+    content: '';
+    display: block;
+    height: 100%;
+}
+#sox-flagPercentHelpful {
+    margin-bottom: 5px;
+}

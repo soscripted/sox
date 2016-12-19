@@ -229,7 +229,13 @@
         }, {
             "name": "flagPercentages",
             "desc": "Show flagging percentages for each type in the Flag Summary",
-            "meta": "https://meta.stackoverflow.com/questions/310881/overall-percentage-of-helpful-flags",
+            "meta": "",
+            "match": "",
+            "exclude": "*://chat.*.com/*,SE1.0"
+        }, {
+            "name": "flagPercentageBar",
+            "desc": "Show the total percentage of helpful flags as a coloured bar on the Flag Summary Page",
+            "meta": "http://meta.stackoverflow.com/questions/310881/overall-percentage-of-helpful-flags",
             "match": "",
             "exclude": "*://chat.*.com/*,SE1.0"
         }],
