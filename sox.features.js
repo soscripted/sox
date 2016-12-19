@@ -1126,7 +1126,11 @@ Toggle SBS?</div></li>';
             //event listener for adding the sbs toggle button for posting new questions or answers
             //waitForKeyElements('#wmd-redo-button', SBS);
             sox.helpers.observe('li[id^="wmd-redo-button"]', SBS);
-            
+
+            //https://github.com/soscripted/sox/issues/163
+            $('#tagnames').parent('.form-item').css('float', 'left');
+            $('#edit-comment').parent('.form-item').css('float', 'left');
+
             sox.helpers.observe('.wmd-preview.sbs-on', function() {
                 $('#tag-suggestions').parent().css('position', 'static'); //https://github.com/soscripted/sox/issues/140
             });
