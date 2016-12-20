@@ -1175,7 +1175,7 @@ Toggle SBS?</div></li>';
                             apiurl = 'https://api.stackexchange.com/2.2/suggested-edits/' + id + '?order=desc&sort=creation&site=' + sitename;
                             break;
                         default:
-                            console.info('SOX does not currently support get author information for type: ' + type);
+                            sox.loginfo('SOX does not currently support get author information for type: ' + type);
                             return;
                     }
 
@@ -1784,13 +1784,13 @@ Toggle SBS?</div></li>';
                         o.lastCheckedTime = new Date().getTime();
                     }
                     GM_setValue('downvotedPostsEditAlert', JSON.stringify(postsToCheck));
-                    console.debug(w);
-                    console.debug(w.readyState);
+                    sox.debug(w);
+                    sox.debug(w.readyState);
                     if (w.readyState === 1) {
                         sendWebSocket(siteCodes, o.sitename, o.questionId);
                     } else {
                         w.onopen = function() {
-                            console.debug('websocket opened');
+                            sox.debug('websocket opened');
                             sendWebSocket(websocketSiteCodes, o.sitename, o.questionId);
                         };
                     }
