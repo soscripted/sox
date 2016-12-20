@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Stack Overflow Extras (SOX)
 // @namespace    https://github.com/soscripted/sox
-// @version      2.0.2 DEV as
+// @version      2.0.2 DEV at
 // @description  Extra optional features for Stack Overflow and Stack Exchange sites
 // @contributor  ᴉʞuǝ (stackoverflow.com/users/1454538/)
 // @contributor  ᔕᖺᘎᕊ (stackexchange.com/users/4337810/)
@@ -145,7 +145,7 @@
             }
         }
 
-        if (GM_getValue('SOX-accessToken', -1) == -1) {
+        /*if (GM_getValue('SOX-accessToken', -1) == -1) {
             if (sox.location.on('oauth/login_success')) {
                 var script = document.createElement('script');
                 script.src = location.protocol + '//code.jquery.com/jquery-migrate-1.0.0.js';
@@ -217,7 +217,7 @@
                         } + ')();';
                 }
             }
-        }
+        }*/
     }
     sox.ready(init);
 })(window.sox = window.sox || {}, jQuery);
