@@ -2162,6 +2162,7 @@ Toggle SBS?</div></li>';
                 .filter('a[href*=' + sox.user.id + ']')
                 .closest('.answer, .question')
                 .find('.votecell .vote a[class*="vote"]')
+                .not('[id*="vote-accept"]') //https://github.com/soscripted/sox/issues/165
                 .removeClass('sox-better-css')
                 .css({
                     'cursor': 'default',
