@@ -1387,33 +1387,43 @@ Toggle SBS?</div></li>';
 
             function addEditNotification(link, title, sitename, notificationPostId, unread, editor, editorLink, editTime, type, postsToCheck) {
                 sox.debug('downvotedPostsEditAlert addEditNotification editTime', editTime);
-                var $li = $('<li/>', {
-                    'class': 'question-close-notification' + (unread ? ' unread-item' : '')
-                });
-                var $link = $('<a/>', {
-                    href: link
-                });
-                var $icon = $('<div/>', {
-                    'class': 'site-icon favicon favicon-stackexchange'
-                });
-                var $message = $('<div/>', {
-                    'class': 'message-text'
-                }).append($('<h4/>', {
-                    html: (type === 'question' ? 'Q: ' : 'A: ') + title + ' (edited by ' + editor + ' at ' + new Date(editTime * 1000).toLocaleString() + ') ' + (link.split('/')[4] in postsToCheck ? '<span title="watching is still active for this post" style="float:right"><i class="fa fa-eye"></i></span>' : '')
-                })).append($('<span/>', {
-                    'class': 'downvotedPostsEditAlert-delete',
-                    style: 'color:blue;border: 1px solid gray;',
-                    id: 'delete_' + sitename + '-' + notificationPostId,
-                    text: 'delete'
-                }));
+                var id = link.split('/')[4];
+                sox.helpers.getFromAPI('posts', id + '/revisions', sitename, function(d) {
+                    var comment = d.items[0].comment;
+                    var $li = $('<li/>', {
+                        'class': 'question-close-notification' + (unread ? ' unread-item' : '')
+                    });
+                    var $link = $('<a/>', {
+                        href: link
+                    });
+                    var $icon = $('<div/>', {
+                        'class': 'site-icon favicon favicon-stackexchange'
+                    });
+                    var $message = $('<div/>', {
+                        'class': 'message-text'
+                    }).append($('<h4/>', {
+                        html: (type === 'question' ? 'Q: ' : 'A: ') + title + ' (edited by ' + editor + ' at ' + new Date(editTime * 1000).toLocaleString() + ') ' + (id in postsToCheck ? '<span title="watching is still active for this post" style="float:right"><i class="fa fa-eye"></i></span>' : ''),
+                        title: comment
+                    })).append($('<span/>', {
+                        'class': 'downvotedPostsEditAlert-delete',
+                        style: 'color:blue;border: 1px solid gray;',
+                        id: 'delete_' + sitename + '-' + notificationPostId,
+                        text: 'delete'
+                    }));
 
-                $('#downvotedPostsEditAlertButton').addClass(unread ? 'glow' : '');
-                $link.append($icon).append($message).appendTo($li);
-                if ($('#downvotedPostsEditAlertDialog #downvotedPostsEditAlertList').find('a[href*="' + link + '"]').length) {
-                    $('#downvotedPostsEditAlertDialog #downvotedPostsEditAlertList a[href*="' + link + '"]').parent().replaceWith($li);
-                } else {
-                    $('#downvotedPostsEditAlertDialog #downvotedPostsEditAlertList').prepend($li);
-                }
+                    $('#downvotedPostsEditAlertButton').addClass(unread ? 'glow' : '');
+                    $link.append($icon).append($message).appendTo($li);
+                    if ($('#downvotedPostsEditAlertDialog #downvotedPostsEditAlertList').find('a[href*="' + link + '"]').length) {
+                        $('#downvotedPostsEditAlertDialog #downvotedPostsEditAlertList a[href*="' + link + '"]').parent().replaceWith($li);
+                    } else {
+                        $('#downvotedPostsEditAlertDialog #downvotedPostsEditAlertList').prepend($li);
+                    }
+                }, 'creation?pagesize=1', false);
+            }
+
+            function sendWebSocket(siteCodes, sitename, questionId) {
+                sox.debug('downvotedPostsEditAlert: sending websocket message: ' + siteCodes[sitename] + "-question-" + questionId);
+                w.send(siteCodes[sitename] + "-question-" + questionId);
             }
 
             var $dialog = $('<div/>', {
@@ -1685,7 +1695,7 @@ Toggle SBS?</div></li>';
                             id = +$parent.attr('data-answerid');
                         }
                     }
-                    $(this).append("<span class='lsep'></span><a " + (id in postsToCheck ? "style='color:green; font-weight:bold' " : "") + "class='downvotedPostsEditAlert-watchPostForEdits'>notify on edit</a>");
+                    $(this).append("<span class='lsep'></span><a " + (id in postsToCheck ? "style='color:green; font-weight:bold'" : "") + "class='downvotedPostsEditAlert-watchPostForEdits'>notify on edit</a>");
                 });
             }
 
@@ -1711,7 +1721,7 @@ Toggle SBS?</div></li>';
             });
 
             //set up websockets
-            var w = new WebSocket("ws://qa.sockets.stackexchange.com/");
+            var w = new WebSocket("wss://qa.sockets.stackexchange.com/");
             var posts = Object.keys(postsToCheck);
             w.onmessage = function(e) {
                 var data = JSON.parse(e.data);
@@ -1774,10 +1784,16 @@ Toggle SBS?</div></li>';
                         o.lastCheckedTime = new Date().getTime();
                     }
                     GM_setValue('downvotedPostsEditAlert', JSON.stringify(postsToCheck));
-                    w.onopen = function() {
-                        sox.debug('downvotedPostsEditAlert: sending websocket message: ' + websocketSiteCodes[o.sitename] + "-question-" + o.questionId);
-                        w.send(websocketSiteCodes[o.sitename] + "-question-" + o.questionId);
-                    };
+                    console.debug(w);
+                    console.debug(w.readyState);
+                    if (w.readyState === 1) {
+                        sendWebSocket(siteCodes, o.sitename, o.questionId);
+                    } else {
+                        w.onopen = function() {
+                            console.debug('websocket opened');
+                            sendWebSocket(websocketSiteCodes, o.sitename, o.questionId);
+                        };
+                    }
                 });
             }
         },
