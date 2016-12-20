@@ -27,19 +27,19 @@
 
             <p>SOX</p>
 
-            <div style='display:none' id='access-token'>
-                <h3><a id="acccess-token" class="anchor" href="#access-token" aria-hidden="true"><span class="octicon octicon-link"></span></a>Your acces token</h3>
-                
-                <p>Your access token:</p>
+            <div style="display: none; background-color: beige; padding: 10px; border-radius: 10px;" id='access-token'>
+                <hr>
+                <h3><a id="acccess-token" class="anchor" href="#access-token" aria-hidden="true"><span class="octicon octicon-link"></span></a>Your access token</h3>
+
                 <pre id='token'></pre>
-                <p>Please enter this by going to your profile and clicking 'question close notifier access-token' at the top :)</p>
+                <p>Please copy this access token and paste it in the SOX settings dialog by clicking the key icon at the top :)</p>
                 <script>
                     if (window.location.href.split('=').length != 1) {
                         document.getElementById('access-token').style.display = 'inline-block';
                         document.getElementById("token").innerHTML = window.location.href.split('=')[1].split('&')[0]
                     }
                 </script>
-
+            <hr>
             </div>
 
             <p>Stack Overflow Extras (<em>SOX</em>) is a project that stemmed from the <a href="https://github.com/shu8/Stack-Overflow-Optional-Features">Stack Overflow Optional Features (SOOF)</a> project.</p>
