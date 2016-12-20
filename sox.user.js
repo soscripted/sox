@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Stack Overflow Extras (SOX)
 // @namespace    https://github.com/soscripted/sox
-// @version      2.0.2 DEV au
+// @version      2.0.2 DEV av
 // @description  Extra optional features for Stack Overflow and Stack Exchange sites
 // @contributor  ᴉʞuǝ (stackoverflow.com/users/1454538/)
 // @contributor  ᔕᖺᘎᕊ (stackexchange.com/users/4337810/)
@@ -14,6 +14,7 @@
 // @match        *://*.stackapps.com/*
 // @match        *://*.mathoverflow.net/*
 // @match        *://github.com/soscripted/*
+// @match        *://soscripted.github.io/sox/*
 // @exclude      *://data.stackexchange.com/*
 // @exclude      *://api.stackexchange.com/*
 
@@ -34,7 +35,6 @@
 // @resource     dialog sox.dialog.html
 // @resource     featuresJSON sox.features.info.json?v=1
 // @resource     common sox.common.info.json
-// @resource     SEAPI https://api.stackexchange.com/js/2.0/all.js
 
 // @grant        GM_setValue
 // @grant        GM_getValue
@@ -53,7 +53,20 @@
             try {
                 sox.github.init(sox.info.version, sox.info.handler);
             } catch (e) {
-                throw ('SOX: There was an error while attempting to initialize the sox.github.js file, please report this on GitHub.\n' + e);
+                throw('SOX: There was an error while attempting to initialize the sox.github.js file, please report this on GitHub.\n' + e);
+            } finally {
+                return;
+            }
+        }
+
+        if (sox.location.on('soscripted.github.io/sox/#access_token')) { //save access token
+            try {
+                var access_token = window.location.href.split('=')[1].split('&')[0];
+                sox.loginfo('SOX ACCESS TOKEN: ', access_token);
+                GM_setValue('SOX-accessToken', access_token);
+                alert('Access token successfully saved! You can close this window :)');
+            } catch (e) {
+                throw('SOX: There was an error saving your access token');
             } finally {
                 return;
             }
@@ -145,79 +158,17 @@
             }
         }
 
-        /*if (GM_getValue('SOX-accessToken', -1) == -1) {
-            if (sox.location.on('oauth/login_success')) {
-                var script = document.createElement('script');
-                script.src = location.protocol + '//code.jquery.com/jquery-migrate-1.0.0.js';
-                script.type = 'text/javascript';
-                document.head.appendChild(script);
-                console.log('added $.browser');
-            } else {
-                if (!sox.location.on('stackoverflow.com')) {
-                    // TODO: find a more user friendly way of handling this
-                    window.open('http://stackoverflow.com');
-                    alert('Stack Overflow has been opened for you. To complete the SOX installation please click on the cogs icon that has been added to the topbar to recieve your access token (on the Stack Overflow site!).');
-                    sox.warn("Please go to stackoverflow.com to get your access token for certain SOX features");
-                } else {
-                    //everything in this `else` is only weird to make it work on Firefox
-                    //the solution has come from http://stackoverflow.com/a/38924760/3541881
-                    //in effect, it makes and appends an IIFE to the head that `init`s SE
-                    //and then when done appends another IIFE to `authenticate` SE
-                    //the access token is sent with postMessage to the webpage
-                    //and the script receives the message and saves the access token.
-                    //a hacky fix, but it works for now.
-                    window.addEventListener("message", function(event) {
-                        sox.debug('recieved message for access token');
-                        var accesstoken;
-                        try {
-                            accesstoken = JSON.parse(event.data);
-                            sox.debug(accesstoken);
-                        } catch (error) {}
-                        if (!('SOX-accessToken' in accesstoken)) return;
-                        sox.loginfo('SOX ACCESS TOKEN: ', accesstoken['SOX-accessToken']);
-                        GM_setValue('SOX-accessToken', accesstoken['SOX-accessToken']);
-                    }, false);
+        if (GM_getValue('SOX-accessToken', -1) == -1) { //set access token
+            //This was originally a series of IIFEs appended to the head which used the SE API JS SDK but
+            //it was very uncertain and often caused issues, especially in FF
+            //it now uses a Github page to show the access token
+            //and detects that page and saves it automatically.
+            //this seems to be a much cleaner and easier-to-debug method!
 
-                    //NOTE: `sox` object doesn't exist here because it will be put in the HEAD
-                    document.head.appendChild(document.createElement('script')).text =
-                        GM_getResourceText('SEAPI') + ';(' + function() {
-                            SE.init({
-                                clientId: 7138, //SOX client ID
-                                key: 'lL1S1jr2m*DRwOvXMPp26g((', //SOX key
-                                channelUrl: location.protocol + '//stackoverflow.com/blank',
-                                complete: function(d) {
-                                    console.debug('Successfully inited using SE SDK');
-                                    $(document).on('click', '#soxSettingsButton', function() {
-                                        //TODO: make the cogs button red?
-                                        console.debug('clicked button to open get token window');
-                                        //document.head.appendChild(document.createElement('script')).text =
-                                            (function() {
-                                                console.debug('beginning of 2nd IIFE for access token, before authenticating');
-                                                var script = document.createElement('script');
-                                                console.log($.browser);
-                                                SE.authenticate({
-                                                    success: function(data) {
-                                                        console.debug('Successfully authenticated using SE SDK');
-                                                        console.debug(data);
-                                                        window.postMessage(JSON.stringify({
-                                                            'SOX-accessToken': data.accessToken
-                                                        }), '*');
-                                                    },
-                                                    error: function(data) {
-                                                        console.error('SOX Authentication Error:');
-                                                        console.error(data);
-                                                    },
-                                                    scope: ['read_inbox', 'write_access', 'no_expiry']
-                                                });
-                                                console.debug('end of 2nd IIFE for access token, after authenticating');
-                                            })();
-                                    });
-                                }
-                            });
-                        } + ')();';
-                }
-            }
-        }*/
+            window.open('https://stackexchange.com/oauth/dialog?client_id=7138&redirect_uri=http://soscripted.github.io/sox/');
+            alert('To complete the SOX installation please follow the instructions in the window that has been opened for you to recieve your access token.');
+            sox.warn('Please go to the following URL to get your access token for certain SOX features', 'https://stackexchange.com/oauth/dialog?client_id=7138&redirect_uri=http://soscripted.github.io/sox/');
+        }
     }
     sox.ready(init);
 })(window.sox = window.sox || {}, jQuery);

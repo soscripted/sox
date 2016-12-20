@@ -309,6 +309,7 @@
             } else {
                 // no settings found, mark all inputs as checked and display settings dialog
                 $soxSettingsDialogFeatures.find('input').prop('checked', true);
+                $soxSettingsButton.addClass('topbar-icon-on');
                 $soxSettingsDialog.show();
             }
 
