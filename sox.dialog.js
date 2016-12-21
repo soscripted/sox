@@ -138,8 +138,10 @@
             });
 
             $soxSettingsReset.on('click', function() {
-                if(confirm('Are you sure you want to reset SOX?')) sox.settings.reset();
-                location.reload(); // reload page to reflect changed settings
+                if(confirm('Are you sure you want to reset SOX?')) {
+                    sox.settings.reset();
+                    location.reload(); // reload page to reflect changed settings
+                }
             });
 
             $soxSettingsDebugging.on('click', function() {
