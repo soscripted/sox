@@ -134,11 +134,21 @@
             function adjust() {
                 setTimeout(function() {
                     sox.debug('fixedtopbar adjust function running');
-                    var id = window.location.hash.match(/^#comment(\d+)_/)[1];
-                    sox.debug('fixedtopbat comment in hash and getBoundingClientRect', $('#comment-' + id)[0], $('#comment-' + id)[0].getBoundingClientRect());
-                    if ($('#comment-' + id)[0].getBoundingClientRect().top < 30) {
-                        window.scrollBy(0, -34);
-                        sox.debug('fixedtopbar adjusting');
+                    var id;
+                    if (location.href.indexOf('#comment') > -1) {
+                        id = window.location.hash.match(/^#comment(\d+)_/)[1];
+                        sox.debug('fixedtopbar comment in hash and getBoundingClientRect', $('#comment-' + id)[0], $('#comment-' + id)[0].getBoundingClientRect());
+                        if ($('#comment-' + id)[0].getBoundingClientRect().top < 30) {
+                            window.scrollBy(0, -34);
+                            sox.debug('fixedtopbar adjusting');
+                        }
+                    } else {
+                        id = window.location.hash.match(/^#(\d+)/)[1];
+                        sox.debug('fixedtopbar answer in hash and getBoundingClientRect', $('#answer-' + id)[0], $('#answer-' + id)[0].getBoundingClientRect());
+                        if ($('#answer-' + id)[0].getBoundingClientRect().top < 30) {
+                            window.scrollBy(0, -34);
+                            sox.debug('fixedtopbar adjusting');
+                        }
                     }
                 }, 10);
             }
@@ -165,10 +175,9 @@
                 });
 
                 //https://github.com/soscripted/sox/issues/74
-                if (location.href.indexOf('#comment') > -1) adjust();
-                $(window).bind('hashchange', function() {
-                    adjust();
-                });
+                if (location.href.indexOf('#') > -1) adjust();
+                $(window).bind('hashchange', adjust);
+                if (typeof MathJax !== "undefined") MathJax.Hub.Queue(adjust);
 
                 sox.helpers.observe('#notify-container,#notify--1', function() { //Area51: https://github.com/soscripted/sox/issues/152#issuecomment-267885889
                     $('body').css('padding-top', $('.topbar').height() + 'px');
