@@ -131,6 +131,18 @@
             var paddingToAdd = ($('#notify-table').length ? $('#notify-table').height() : '') + $('.topbar').height() + 'px';
             GM_addStyle('.fixed-topbar-sox { padding-top: ' + paddingToAdd + '}');
 
+            function adjust() {
+                setTimeout(function() {
+                    sox.debug('fixedtopbar adjust function running');
+                    var id = window.location.hash.match(/^#comment(\d+)_/)[1];
+                    sox.debug('fixedtopbat comment in hash and getBoundingClientRect', $('#comment-' + id)[0], $('#comment-' + id)[0].getBoundingClientRect());
+                    if ($('#comment-' + id)[0].getBoundingClientRect().top < 30) {
+                        window.scrollBy(0, -34);
+                        sox.debug('fixedtopbar adjusting');
+                    }
+                }, 10);
+            }
+
             if (sox.site.type == 'chat') { //For some reason, chats don't need any modification to the body
                 $('.topbar').css({
                     'position': 'fixed',
@@ -150,6 +162,12 @@
                     'position': 'fixed',
                     'z-index': '900',
                     'margin-top': '-65px'
+                });
+
+                //https://github.com/soscripted/sox/issues/74
+                if (location.href.indexOf('#comment') > -1) adjust();
+                $(window).bind('hashchange', function() {
+                    adjust();
                 });
 
                 sox.helpers.observe('#notify-container,#notify--1', function() { //Area51: https://github.com/soscripted/sox/issues/152#issuecomment-267885889
