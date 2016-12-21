@@ -1,0 +1,91 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>sox by soscripted</title>
+
+    <link rel="stylesheet" href="/sox/assets/css/style.css?v=a419cba670696de26f5508f589ecdcb9bc1a6377">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+    <div class="wrapper">
+        <header>
+            <h1>sox</h1>
+            <p>A userscript for the Stack Exchange websites to add a bunch of optional user-selectable features</p>
+            <p class="view"><a href="https://github.com/soscripted/sox">View the Project on GitHub <small></small></a></p>
+        </header>
+        <section>
+            <p>
+                <a href="https://gitter.im/soscripted/sox?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge&amp;utm_content=badge"><img src="https://badges.gitter.im/soscripted/sox.svg" alt="Join the chat at https://gitter.im/soscripted/sox" /></a>
+            </p>
+
+            <p>SOX</p>
+
+            <div style="display: none; background-color: beige; padding: 10px; border-radius: 10px;" id='access-token'>
+                <hr>
+                <h3><a id="acccess-token" class="anchor" href="#access-token" aria-hidden="true"><span class="octicon octicon-link"></span></a>Your access token</h3>
+
+                <pre id='token'></pre>
+                <p>An alert should have appeared saying the token has been saved. If not, please open the console ((FN +) F12) and copy and paste the entire log in an issue at http://github.com/soscripted/sox/issues/new so we can fix this for you! :)</p>
+                <script>
+                    if (window.location.href.split('=').length != 1) {
+                        document.getElementById('access-token').style.display = 'inline-block';
+                        document.getElementById("token").innerHTML = window.location.href.split('=')[1].split('&')[0]
+                    }
+                </script>
+            <hr>
+            </div>
+
+            <p>Stack Overflow Extras (<em>SOX</em>) is a project that stemmed from the <a href="https://github.com/shu8/Stack-Overflow-Optional-Features">Stack Overflow Optional Features (SOOF)</a> project.</p>
+
+            <p>The SOX userscript adds a bunch of <strong>optional</strong> features to all sites in the Stack Exchange network. These can be toggled on or off from an easy to use control panel (see screenshot below).</p>
+
+            <p>Note: This project has no relation to Stack Overflow or Stack Exchange; it is simply a userscript that enhances the sites!</p>
+
+            <p>##Installation &amp; Requirements</p>
+
+            <ol>
+                <li>Install <a href="http://www.greasespot.net/">Greasemonkey</a> (for Firefox), <a href="http://tampermonkey.net/">Tampermonkey</a> (for Chrome), or <a href="https://github.com/os0x/NinjaKit">NinjaKit</a> for Safari. These are userscript
+                    managers that <em>must</em> be installed in order for this to work, as the script relies on certain <code class="highlighter-rouge">GM_*</code> functions in order to save your settings!</li>
+                <li>
+                    <p>Install the script. Clicking on ‘install’ below will make your userscript manager prompt you automatically to install it.</p>
+
+                    <ul>
+                        <li>Official Version: <kbd>[install](https://github.com/soscripted/sox/raw/v2.0.1/sox.user.js)</kbd>. <kbd>[view source](https://github.com/soscripted/sox/blob/v2.0.1/sox.user.js)</kbd></li>
+                        <li>Development Version: <kbd>[install](https://github.com/soscripted/sox/raw/dev/sox.user.js)</kbd>. <kbd>[view source](https://github.com/soscripted/sox/blob/dev/sox.user.js)</kbd></li>
+                    </ul>
+                </li>
+                <li>Go to any site in the Stack Exchange Network (eg. <a href="http://superuser.com/">Super User</a> or <a href="http://stackoverflow.com/">Stack Overflow</a>). You will automatically be asked to choose and save your settings. A toggle button
+                    (gears icon) will be added to your topbar where you can change these later on:</li>
+            </ol>
+
+            <p><img src="https://cloud.githubusercontent.com/assets/12533449/14296194/c732b1b2-fb2d-11e5-9563-1e34b12eada9.png" alt="newdialog" /></p>
+
+            <p>##What features are included?</p>
+
+            <p>A full list of all the features is available on the SOX wiki page <a href="https://github.com/soscripted/sox/wiki/Features">here</a>.</p>
+
+            <p>##Bugs and Feature Requests</p>
+
+            <p>Please post bugs and feature requests as issues on <a href="https://github.com/soscripted/sox">Github</a>, where we can track them easily and push updates quickly. Please <strong>do not</strong> post them as answers on Stack Apps – they are
+                much harder to manage!</p>
+
+            <p>##Changes</p>
+
+            <p>Please see the change log <a href="http://stackapps.com/a/6358">at Stack Apps</a>.</p>
+        </section>
+        <footer>
+            <p>This project is maintained by <a href="https://github.com/soscripted">soscripted</a></p>
+            <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+        </footer>
+    </div>
+    <script src="/sox/assets/js/scale.fix.js"></script>
+</body>
+
+</html>
