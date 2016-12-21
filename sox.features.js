@@ -131,7 +131,7 @@
             var paddingToAdd = ($('#notify-table').length ? $('#notify-table').height() : '') + $('.topbar').height() + 'px';
             GM_addStyle('.fixed-topbar-sox { padding-top: ' + paddingToAdd + '}');
 
-            function adjust() {
+            function adjust() { //http://stackoverflow.com/a/31408076/3541881 genius! :)
                 setTimeout(function() {
                     sox.debug('fixedtopbar adjust function running');
                     var id;

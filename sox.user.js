@@ -1,11 +1,12 @@
 // ==UserScript==
 // @name         Stack Overflow Extras (SOX)
 // @namespace    https://github.com/soscripted/sox
-// @version      2.0.2 DEV ba
+// @version      2.0.2
 // @description  Extra optional features for Stack Overflow and Stack Exchange sites
 // @contributor  ᴉʞuǝ (stackoverflow.com/users/1454538/)
 // @contributor  ᔕᖺᘎᕊ (stackexchange.com/users/4337810/)
 // @updateURL    https://rawgit.com/soscripted/sox/master/sox.user.js
+
 // @match        *://*.stackoverflow.com/*
 // @match        *://*.stackexchange.com/*
 // @match        *://*.superuser.com/*
@@ -15,6 +16,7 @@
 // @match        *://*.mathoverflow.net/*
 // @match        *://github.com/soscripted/*
 // @match        *://soscripted.github.io/sox/*
+
 // @exclude      *://data.stackexchange.com/*
 // @exclude      *://api.stackexchange.com/*
 
@@ -45,6 +47,7 @@
 // @grant        GM_info
 // ==/UserScript==
 //jQuery.noConflict();
+/*jshint loopfunc: true*/
 (function(sox, $, undefined) {
     'use strict';
 
