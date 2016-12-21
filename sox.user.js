@@ -1,11 +1,12 @@
 // ==UserScript==
 // @name         Stack Overflow Extras (SOX)
 // @namespace    https://github.com/soscripted/sox
-// @version      2.0.1
+// @version      2.0.2
 // @description  Extra optional features for Stack Overflow and Stack Exchange sites
 // @contributor  ᴉʞuǝ (stackoverflow.com/users/1454538/)
 // @contributor  ᔕᖺᘎᕊ (stackexchange.com/users/4337810/)
 // @updateURL    https://rawgit.com/soscripted/sox/master/sox.user.js
+
 // @match        *://*.stackoverflow.com/*
 // @match        *://*.stackexchange.com/*
 // @match        *://*.superuser.com/*
@@ -14,12 +15,17 @@
 // @match        *://*.stackapps.com/*
 // @match        *://*.mathoverflow.net/*
 // @match        *://github.com/soscripted/*
+// @match        *://soscripted.github.io/sox/*
+
+// @exclude      *://data.stackexchange.com/*
+// @exclude      *://api.stackexchange.com/*
 
 // @require      https://code.jquery.com/jquery-2.1.4.min.js
 // @require      https://code.jquery.com/ui/1.11.4/jquery-ui.min.js
 // @require      https://api.stackexchange.com/js/2.0/all.js
 // @require      https://cdn.rawgit.com/timdown/rangyinputs/master/rangyinputs-jquery-src.js
 // @require      https://cdn.rawgit.com/jeresig/jquery.hotkeys/master/jquery.hotkeys.js
+// @require      https://cdnjs.cloudflare.com/ajax/libs/jquery-timeago/1.5.3/jquery.timeago.min.js
 
 // @require      sox.common.js
 // @require      sox.github.js
@@ -31,7 +37,6 @@
 // @resource     dialog sox.dialog.html
 // @resource     featuresJSON sox.features.info.json?v=1
 // @resource     common sox.common.info.json
-// @resource     SEAPI https://api.stackexchange.com/js/2.0/all.js
 
 // @grant        GM_setValue
 // @grant        GM_getValue
@@ -42,6 +47,7 @@
 // @grant        GM_info
 // ==/UserScript==
 //jQuery.noConflict();
+/*jshint loopfunc: true*/
 (function(sox, $, undefined) {
     'use strict';
 
@@ -50,10 +56,30 @@
             try {
                 sox.github.init(sox.info.version, sox.info.handler);
             } catch (e) {
-                throw ('SOX: There was an error while attempting to initialize the sox.github.js file, please report this on GitHub.\n' + e);
+                throw('SOX: There was an error while attempting to initialize the sox.github.js file, please report this on GitHub.\n' + e);
             } finally {
                 return;
             }
+        }
+
+        if (sox.location.on('soscripted.github.io/sox/#access_token')) { //save access token
+            try {
+                var access_token = window.location.href.split('=')[1].split('&')[0];
+                sox.loginfo('SOX ACCESS TOKEN: ', access_token);
+                GM_setValue('SOX-accessToken', access_token);
+                alert('Access token successfully saved! You can close this window :)');
+            } catch (e) {
+                throw('SOX: There was an error saving your access token');
+            } finally {
+                return;
+            }
+        }
+
+        if(sox.info.debugging) {
+            sox.debug('DEBUGGING SOX VERSION ' + sox.info.version);
+            sox.debug('----------------saved variables---------------------');
+            sox.settings.writeToConsole(true); //true => hide access token
+            sox.debug('----------------end saved variables---------------------');
         }
 
         GM_addStyle(GM_getResourceText('css'));
@@ -78,22 +104,23 @@
         if (sox.settings.available) {
             // execute features
             for (var i = 0; i < settings.length; ++i) {
+                var category = settings[i].split('-')[0],
+                    featureId = settings[i].split('-')[1],
+                    feature = featureInfo.categories[category].filter(function(obj) {
+                        return obj.name == featureId;
+                    })[0],
+                    runFeature = true,
+                    sites,
+                    pattern;
+                sox.debug(category, featureId, feature);
                 try {
-                    var category = settings[i].split('-')[0],
-                        featureId = settings[i].split('-')[1],
-                        feature = featureInfo.categories[category].filter(function(obj) {
-                            return obj.name == featureId;
-                        })[0],
-                        runFeature = true,
-                        sites,
-                        pattern;
                     //NOTE: there is no else if() because it is possible to have both match and exclude patterns..
                     //which could have minor exceptions making it neccessary to check both
                     if (feature.match !== '') {
                         sites = feature.match.split(',');
 
                         for (pattern = 0; pattern < sites.length; pattern++) {
-                            if (!sox.location.match(sites[pattern])) {
+                            if (!sox.location.matchWithPattern(sites[pattern])) {
                                 runFeature = false; //none of the patterns match the current site.. yet.
                             } else {
                                 runFeature = true;
@@ -105,13 +132,14 @@
                         sites = feature.exclude.split(',');
 
                         for (pattern = 0; pattern < sites.length; pattern++) {
-                            if (sox.location.match(sites[pattern])) { //if current site is in list, DON'T run feature
+                            if (sox.location.matchWithPattern(sites[pattern])) { //if current site is in list, DON'T run feature
                                 runFeature = false; //don't run feature
                                 break; //no need to keep on looping
                             }
                         }
                     }
                     if (runFeature) {
+                        sox.debug('running ' + featureId);
                         if (feature.settings) {
                             var settingsToPass = GM_getValue("SOX-" + featureId + "-settings") ? JSON.parse(GM_getValue("SOX-" + featureId + "-settings")) : {};
                             sox.features[featureId](settingsToPass); //run the feature if match and exclude conditions are met, pass on settings object
@@ -120,70 +148,30 @@
                         }
                     }
                 } catch (err) {
-                    if (!sox.features[featureId]) { //remove deprecated/'corrupt' feature IDs from saved settings
+                    if (!sox.features[featureId] || !feature) { //remove deprecated/'corrupt' feature IDs from saved settings
+                        sox.loginfo('Deleting feature "' + settings[i] + '"');
                         settings.splice(i, 1);
                         sox.settings.save(settings);
                         $('#sox-settings-dialog-features').find('#' + settings[i].split('-')[1]).parent().parent().remove();
                     } else {
                         $('#sox-settings-dialog-features').find('#' + settings[i].split('-')[1]).parent().css('color', 'red').attr('title', 'There was an error loading this feature. Please raise an issue on GitHub.');
-                        console.error('SOX error: There was an error loading the feature "' + settings[i] + '". Please raise an issue on GitHub, and copy the following error log:\n' + err);
+                        sox.error('There was an error loading the feature "' + settings[i] + '". Please raise an issue on GitHub, and copy the following error log:\n' + err);
                     }
                     i++;
                 }
             }
         }
 
-        if (GM_getValue('SOX-accessToken', -1) == -1) {
-            if (!sox.location.on('stackoverflow.com') && !sox.location.on('oauth/login_success')) {
-                // TODO: find a more user friendly way of handling this
-                window.open('http://stackoverflow.com');
-                alert('Stack Overflow has been opened for you. To complete the SOX installation please click on the cogs icon that has been added to the topbar to recieve your access token (on the Stack Overflow site!).');
-                sox.helpers.notify("Please go to stackoverflow.com to get your access token for certain SOX features");
-            } else {
-                //everything in this `else` is only weird to make it work on Firefox
-                //the solution has come from http://stackoverflow.com/a/38924760/3541881
-                //in effect, it makes and appends an IIFE to the head that `init`s SE
-                //and then when done appends another IIFE to `authenticate` SE
-                //the access token is sent with postMessage to the webpage
-                //and the script receives the message and saves the access token.
-                //a hacky fix, but it works for now.
-                window.addEventListener("message", function(event) {
-                    var accesstoken;
-                    try {
-                        accesstoken = JSON.parse(event.data);
-                    } catch (error) {}
-                    if (!('SOX-accessToken' in accesstoken)) return;
-                    console.log(accesstoken['SOX-accessToken']);
-                    GM_setValue('SOX-accessToken', accesstoken['SOX-accessToken']);
-                }, false);
-                document.head.appendChild(document.createElement('script')).text =
-                    GM_getResourceText('SEAPI') + ';(' + function() {
-                        SE.init({
-                            clientId: 7138, //SOX client ID
-                            key: 'lL1S1jr2m*DRwOvXMPp26g((', //SOX key
-                            channelUrl: location.protocol + '//stackoverflow.com/blank',
-                            complete: function(d) {
-                                $(document).on('click', '#soxSettingsButton', function() {
-                                    //make the cogs button red?
-                                    document.head.appendChild(document.createElement('script')).text =
-                                        '(' + function() {
-                                            SE.authenticate({
-                                                success: function(data) {
-                                                    window.postMessage(JSON.stringify({
-                                                        'SOX-accessToken': data.accessToken
-                                                    }), '*');
-                                                },
-                                                error: function(data) {
-                                                    console.log(data);
-                                                },
-                                                scope: ['read_inbox', 'write_access', 'no_expiry']
-                                            });
-                                        } + ')();';
-                                });
-                            }
-                        });
-                    } + ')();';
-            }
+        if (GM_getValue('SOX-accessToken', -1) == -1) { //set access token
+            //This was originally a series of IIFEs appended to the head which used the SE API JS SDK but
+            //it was very uncertain and often caused issues, especially in FF
+            //it now uses a Github page to show the access token
+            //and detects that page and saves it automatically.
+            //this seems to be a much cleaner and easier-to-debug method!
+
+            window.open('https://stackexchange.com/oauth/dialog?client_id=7138&redirect_uri=http://soscripted.github.io/sox/');
+            alert('To complete the SOX installation please follow the instructions in the window that has been opened for you to receive your access token.');
+            sox.warn('Please go to the following URL to get your access token for certain SOX features', 'https://stackexchange.com/oauth/dialog?client_id=7138&redirect_uri=http://soscripted.github.io/sox/');
         }
     }
     sox.ready(init);

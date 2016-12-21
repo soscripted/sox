@@ -12,6 +12,7 @@
 
                     issueText = issueText.replace('1.X.X', version); //inject the SOX version by replacing the issue template's placeholder '1.X.X'
                     issueText = issueText.replace('Chrome/Tampermonkey', handler); //inject the SOX userscript manager+platform by replacing the issue template's placeholder 'Chrome/Tampermonkey'
+                    issueText += "\n---\n\n### Features Enabled \n\n    " + JSON.stringify(sox.settings.load());
                     $('#issue_body').delay(500).text(issueText).removeAttr('disabled');
                 }
             }

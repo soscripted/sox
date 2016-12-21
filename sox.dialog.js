@@ -3,7 +3,7 @@
 
     sox.dialog = {
         init: function(options) {
-            sox.helpers.notify('initializing SOX dialog');
+            sox.debug('initializing SOX dialog');
 
             var version = options.version,
                 features = options.features,
@@ -16,6 +16,7 @@
                 $soxSettingsDialogVersion = $soxSettingsDialog.find('#sox-settings-dialog-version'),
                 $soxSettingsSave = $soxSettingsDialog.find('#sox-settings-dialog-save'),
                 $soxSettingsReset = $soxSettingsDialog.find('#sox-settings-dialog-reset'),
+                $soxSettingsDebugging = $soxSettingsDialog.find('#sox-settings-dialog-debugging'),
                 $soxSettingsToggleAccessTokensDiv = $soxSettingsDialog.find('#sox-settings-dialog-access-tokens'),
                 $soxSettingsAccessTokensToggle = $soxSettingsToggleAccessTokensDiv.find('#toggle-access-token-links'),
                 $soxSettingsToggle = $soxSettingsDialog.find('#sox-settings-dialog-check-toggle'),
@@ -44,16 +45,30 @@
                 }
             }
 
-            function addFeature(category, name, description, featureSettings) {
+            function addFeature(category, name, description, featureSettings, extendedDescription, metaLink) {
                 var $div = $('<div/>', {
-                        'class': 'feature'
+                        'class': 'sox-feature'
+                    }),
+                    $info = $('<i/>', {
+                        'class': 'fa fa-info',
+                        'aria-hidden': true
+                    }).hover(function() {
+                        if (extendedDescription && !$(this).parent().find('.sox-feature-info').length) {
+                            $(this).parent().append($('<div/>', {
+                                'class': 'sox-feature-info',
+                                'html': extendedDescription + (metaLink ? ' <a href="' + metaLink + '">[meta]</a>' : '')
+                            }));
+                        }
                     }),
                     $label = $('<label/>'),
                     $input = $('<input/>', {
                         id: name,
                         type: 'checkbox'
                     });
-                $div.append($label);
+
+                $div.on('mouseleave', function() {
+                    $(this).find('.sox-feature-info').remove();
+                }).append($label).append(extendedDescription ? $info : '');
                 $label.append($input);
                 $input.after(description);
                 $soxSettingsDialogFeatures.find('#' + category).append($div);
@@ -98,7 +113,7 @@
                             e.preventDefault(); //don't uncheck the checkbox
                             var settingsToSave = {};
                             $(this).parent().find('.featureSetting').each(function() {
-                                settingsToSave[$(this).attr('id')] = $(this).val();
+                                settingsToSave[$(this).attr('id')] = $(this).is(':checked') || $(this).val();
                             });
                             GM_setValue('SOX-' + name + '-settings', JSON.stringify(settingsToSave));
                         }
@@ -109,11 +124,13 @@
             }
 
             // display sox version number in the dialog
-            if(version != 'unknown' && version !== null) {
-                $soxSettingsDialogVersion.text(' v' + version.toLowerCase());
+            if (version != 'unknown' && version !== null) {
+                $soxSettingsDialogVersion.text(' v' + (version ? version.toLowerCase() : ''));
             } else {
                 $soxSettingsDialogVersion.text('');
             }
+
+            if(sox.info.debugging) $soxSettingsDebugging.text('Disable debugging');
 
             // wire up event handlers
             $soxSettingsClose.on('click', function() {
@@ -121,8 +138,22 @@
             });
 
             $soxSettingsReset.on('click', function() {
-                sox.settings.reset();
-                location.reload(); // reload page to reflect changed settings
+                if(confirm('Are you sure you want to reset SOX?')) {
+                    sox.settings.reset();
+                    location.reload(); // reload page to reflect changed settings
+                }
+            });
+
+            $soxSettingsDebugging.on('click', function() {
+                var currentState = sox.info.debugging;
+                if(typeof currentState === 'undefined') {
+                    GM_setValue('SOX-debug', true);
+                    $soxSettingsDebugging.text('Disable debugging');
+                } else {
+                    GM_setValue('SOX-debug', !currentState);
+                    $soxSettingsDebugging.text(currentState ? 'Enable debugging' : 'Disable debugging');
+                }
+                location.reload();
             });
 
             $soxSettingsToggle.on('click', function() {
@@ -155,24 +186,24 @@
             });
 
             $searchBox.on('keyup keydown', function() { //search box
-                if ($(this).val() != '') {
+                if ($(this).val() !== '') {
                     var t = $(this).val();
-                    $('#sox-settings-dialog label').each(function() {
+                    $('#sox-settings-dialog .sox-feature').each(function() {
                         var $features = $(this).closest('.features');
-                        if ($(this).text().toLowerCase().indexOf(t) == -1) {
+                        if ($(this).find('label').text().toLowerCase().indexOf(t) == -1) {
                             $(this).hide();
                         } else {
                             $(this).show();
                         }
 
-                        if ($features.find('label:visible').length == 0 && $features.find('label[style*="display: inline"]').length == 0) {
+                        if ($features.find('label:visible').length === 0 && $features.find('label[style*="display: inline"]').length === 0) {
                             $features.hide().prev().hide();
                         } else {
                             $features.show().prev().show();
                         }
                     });
                 } else {
-                    $('.category, .features, #sox-settings-dialog label').fadeIn();
+                    $('.category, .features, #sox-settings-dialog .sox-feature').fadeIn();
                 }
             });
 
@@ -181,8 +212,9 @@
             var $soxSettingsButton = $('<a/>', {
                     id: 'soxSettingsButton',
                     class: 'topbar-icon yes-hover sox-settings-button',
-                    title: 'Change SOX Settings',
-                    style: 'color: #A1A1A1',
+                    title: 'Change SOX settings',
+                    href: '#',
+                    'style': 'color: #858c93; background-image: none; height: 24px;', //https://github.com/soscripted/sox/issues/142
                     click: function(e) {
                         e.preventDefault();
                         $('#sox-settings-dialog').toggle();
@@ -212,7 +244,7 @@
                         $('#soxSettingsButton').removeClass('topbar-icon-on');
                         var which = $(this).attr('class').match(/js[\w-]*\b/)[0].split('-')[1];
                         if (which != 'site') { //site-switcher dropdown is slightly different
-                            $('.' + which + '-dialog').not('#sox-settings-dialog, #metaNewQuestionAlertDialog').show();
+                            $('.' + which + '-dialog').not('#sox-settings-dialog, #metaNewQuestionAlertDialog, #downvotedPostsEditAlertDialog').show();
                             $(this).addClass('topbar-icon-on');
                         } else {
                             if ($(this).css('top') != '34px') {
@@ -238,7 +270,7 @@
             });
 
             //close dialog if clicked outside it
-            $(document).click(function(e) { //close agenda dialog if clicked outside it
+            $(document).click(function(e) { //close dialog if clicked outside it
                 var $target = $(e.target),
                     isToggle = $target.is('#soxSettingsButton, #sox-settings-dialog'),
                     isChild = $target.parents('#soxSettingsButton, #sox-settings-dialog').is("#soxSettingsButton, #sox-settings-dialog");
@@ -256,7 +288,7 @@
             });
 
             // load features into dialog
-            sox.helpers.notify('injecting features into dialog');
+            sox.debug('injecting features into dialog');
             for (var category in features.categories) {
                 addCategory(category);
                 for (var feature in features.categories[category]) {
@@ -265,7 +297,9 @@
                         category,
                         currentFeature.name,
                         currentFeature.desc,
-                        (currentFeature.settings ? currentFeature.settings : false) //add the settings panel for this feautre if indicated in the JSON
+                        (currentFeature.settings ? currentFeature.settings : false), //add the settings panel for this feautre if indicated in the JSON
+                        (currentFeature.extended_description ? currentFeature.extended_description : false), //add the extra description on hover if the feature has the extended description
+                        (currentFeature.meta ? currentFeature.meta : false) //add the meta link to the extra description on hover
                     );
                 }
             }
@@ -277,12 +311,15 @@
             } else {
                 // no settings found, mark all inputs as checked and display settings dialog
                 $soxSettingsDialogFeatures.find('input').prop('checked', true);
+                $soxSettingsButton.addClass('topbar-icon-on');
                 $soxSettingsDialog.show();
             }
 
             // add dialog to corral and sox button to topbar
             $soxSettingsButton.append($icon).appendTo('div.network-items');
-            $('.js-topbar-dialog-corral').append($soxSettingsDialog);
+
+            //'$('#soxSettingsButton').position().left' from @IStoleThePies: https://github.com/soscripted/sox/issues/120#issuecomment-267857625:
+            $('.js-topbar-dialog-corral').append($soxSettingsDialog.css('left', $('#soxSettingsButton').position().left));
         }
     };
 
