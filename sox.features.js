@@ -457,6 +457,7 @@
                 var link = $('.share-tip input').val();
                 $('.share-tip input').val('[' + $('#question-header a').html() + '](' + link + ')');
                 $('.share-tip input').select();
+                document.execCommand('copy'); //https://github.com/soscripted/sox/issues/177
             });
         },
 
@@ -551,6 +552,7 @@
             $('.post-text a').not('.expand-post-sox').each(function() {
                 var anchor = $(this),
                     href = $(this).attr('href');
+                if (!href) return;
                 if (sites.indexOf(href.split('/')[2].split('.')[0]) > -1) { //if the link is to an SE site (not, for example, to google), do the necessary stuff
                     if (href.indexOf('/questions/') > -1) { //if the link is to a question
                         if ($(this).text() == href) { //if there isn't text on it (ie. bare url)
@@ -1956,27 +1958,52 @@ Toggle SBS?</div></li>';
         linkedToFrom: function() {
             // Description: Add an arrow to linked posts in the sidebar to show whether they are linked to or linked from
 
-            var currentId = location.href.split('/')[4];
-            $('.linked .spacer a.question-hyperlink').each(function() {
-                var id = $(this).attr('href').split('/')[4];
-                if ($('a[href*="' + id + '"]').not('.spacer a').length) {
-                    var $that = $(this);
-                    $that.append('<i class="fa fa-chevron-right"  title="Current question links to this question" style="color:black;margin-left:5px;"></i>');
-                    $.ajax({
-                        url: '/questions/' + id,
-                        type: 'get',
-                        dataType: 'html',
-                        async: 'false',
-                        success: function(d) {
-                            if ($(d).find('a[href*="' + currentId + '"]').not('.spacer a').length) {
-                                $that.append('<i class="fa fa-chevron-left" title="Current question is linked from this question" style="color:black;margin-left:5px;"></i>');
-                            }
-                        }
-                    });
-                } else {
-                    $(this).append('<i class="fa fa-chevron-left" title="Current question is linked from this question" style="color:black;margin-left:5px;"></i>');
-                }
+            /*var currentQuestionId = location.href.split('/')[4],
+                linkedQuestions = {},
+                keys = [];
+
+            $('.linked a.question-hyperlink').each(function() {
+                linkedQuestions[$(this).attr('href').split('/')[4]] = $(this);
             });
+
+            keys = Object.keys(linkedQuestions);
+            console.log(currentQuestionId);
+            console.log(linkedQuestions);
+            console.log(keys);
+
+           sox.helpers.getFromAPI('posts', keys.join(';'), sox.site.currentApiParameter, function(d) {
+               console.log(d);
+               var items = d.items;
+               for (var i = 0; i < items.length; i++) {
+                   var $body = $(items[i].body);
+                   console.log($body);
+                   if ($body.find('a[href*="' + currentQuestionId + '"]').not('.spacer a').length) {
+                       $(linkedQuestions[items.post_id]).append('<i class="fa fa-chevron-left" title="Current question is linked from this question" style="color:black;margin-left:5px;"></i>');
+                   }
+               }
+           }, 'activity&filter=!LH22RNnZjCnsF)6E22pmFx');*/
+
+           var currentId = location.href.split('/')[4];
+           $('.linked .spacer a.question-hyperlink').each(function() {
+               var id = $(this).attr('href').split('/')[4];
+               if ($('a[href*="' + id + '"]').not('.spacer a').length) {
+                   var $that = $(this);
+                   $that.append('<i class="fa fa-chevron-right"  title="Current question links to this question" style="color:black;margin-left:5px;"></i>');
+                   $.ajax({
+                       url: '/questions/' + id,
+                       type: 'get',
+                       dataType: 'html',
+                       async: 'false',
+                       success: function(d) {
+                           if ($(d).find('a[href*="' + currentId + '"]').not('.spacer a').length) {
+                               $that.append('<i class="fa fa-chevron-left" title="Current question is linked from this question" style="color:black;margin-left:5px;"></i>');
+                           }
+                       }
+                   });
+               } else {
+                   $(this).append('<i class="fa fa-chevron-left" title="Current question is linked from this question" style="color:black;margin-left:5px;"></i>');
+               }
+           });
         },
 
         alignBadgesByClass: function() {

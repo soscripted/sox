@@ -202,7 +202,7 @@
             "exclude": "*://chat.*.com/*,SE1.0"
         }, {
             "name": "titleEditDiff",
-            "desc": "Make title edits show seperately rather than merged in edit suggestions",
+            "desc": "Make title edits show separately rather than merged in edit suggestions",
             "meta": "http://meta.stackexchange.com/questions/135710/please-show-changed-titles-separately-in-edit-diffs",
             "match": "*://*.com/review/suggested-edits*",
             "exclude": ""
@@ -356,6 +356,7 @@
         }, {
             "name": "shareLinksMarkdown",
             "desc": "Change 'share' link to format of [post-name](url)",
+            "extended_description": "When you click 'share' under a post, this will convert the URL given to a markdown-friendly version, with the post name as the link text. This feature also automatically copies the converted string to your clipboard",
             "meta": "http://meta.stackexchange.com/questions/126544/add-a-second-share-button-to-posts-with-comment-ready-links",
             "match": "*://*/questions*",
             "exclude": "SE1.0"
