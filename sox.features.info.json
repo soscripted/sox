@@ -398,6 +398,12 @@
                 "type": "checkbox",
                 "desc": "Hide deleted answers?"
             }]
+        }, {
+            "name": "showMetaReviewCount",
+            "desc": "Add how many reviews are available on Meta to the main site review page",
+            "meta": "",
+            "match": "*://*/review",
+            "exclude": ""
         }]
     }
 }

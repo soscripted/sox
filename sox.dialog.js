@@ -196,7 +196,7 @@
                             $(this).show();
                         }
 
-                        if ($features.find('label:visible').length === 0 && $features.find('label[style*="display: inline"]').length === 0) {
+                        if ($features.find('.sox-feature:visible').length === 0 && $features.find('.sox-feature[style*="display: block"]').length === 0) {
                             $features.hide().prev().hide();
                         } else {
                             $features.show().prev().show();

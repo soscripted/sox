@@ -1031,7 +1031,7 @@
                     var id = $(this).attr('data-questionid') || $(this).attr('data-answerid');
                     $(this).find('.post-signature:eq(0)').find('.user-action-time a').wrapInner('<span class="sox-revision-comment"></span>');
                     var $that = $(this);
-                    getComment('http://' + sox.site.url + '/posts/' + id + '/revisions', $that);
+                    getComment(location.protocol + '//' + sox.site.url + '/posts/' + id + '/revisions', $that);
                 }
             });
         },
@@ -2333,6 +2333,28 @@ Toggle SBS?</div></li>';
 
                 $("#sox-flagPercentHelpful").after("<div id='sox-flagPercentProgressBar'></div>");
             }
+        },
+
+        showMetaReviewCount: function() {
+            $.get('https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20html%20where%20url%3D%22http%3A%2F%2Fmeta.' + location.hostname + '%2Freview%22&diagnostics=true', function(d) {
+                var $doc = $(d);
+                var total = 0;
+
+                $doc.find('.dashboard-num').each(function() {
+                    total += +$(this).text();
+                });
+
+                var $metaDashboardEl = $('.dashboard-item').last().find('.dashboard-count');
+                $metaDashboardEl.append($('<div/>', {
+                    text: total,
+                    'title': total,
+                    'class': 'dashboard-num'
+                }));
+                $metaDashboardEl.append($('<div/>', {
+                    text: (total == 1 ? 'post' : 'posts'),
+                    'class': 'dashboard-unit'
+                }));
+            });
         }
     };
 })(window.sox = window.sox || {}, jQuery);

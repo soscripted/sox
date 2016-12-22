@@ -244,7 +244,7 @@
             }
         },
         get currentApiParameter() {
-            return this.apiParameter(this.name);
+            return this.apiParameter(this.name || (location.href.indexOf('stackapps.com/') > -1 ? "Stack Apps" : undefined));
         },
         get icon() {
             return "favicon-" + $(".current-site a:not([href*='meta']) .site-icon").attr('class').split('favicon-')[1];
