@@ -42,10 +42,13 @@
     };
 
     //var Stack = (typeof StackExchange === "undefined" ? window.eval('if (typeof StackExchange != "undefined") StackExchange') : StackExchange) | undefined;
-    var Chat = (typeof CHAT === "undefined" ? window.eval("typeof CHAT != 'undefined' ? CHAT : undefined") : CHAT);
-    sox.debug(Chat);
-    var Stack = (typeof Chat === "undefined" ? (typeof StackExchange === "undefined" ? window.eval('if (typeof StackExchange != "undefined") StackExchange') : StackExchange) : undefined);
-    sox.debug(Stack);
+    var Chat, Stack;
+    if(location.href.indexOf('github.com') === -1) { //need this so it works on FF -- CSP blocks window.eval() it seems
+        Chat = (typeof CHAT === "undefined" ? window.eval("typeof CHAT != 'undefined' ? CHAT : undefined") : CHAT);
+        sox.debug(Chat);
+        Stack = (typeof Chat === "undefined" ? (typeof StackExchange === "undefined" ? window.eval('if (typeof StackExchange != "undefined") StackExchange') : StackExchange) : undefined);
+        sox.debug(Stack);
+    }
 
     sox.exists = function(path) {
         if(!Stack) return false;
