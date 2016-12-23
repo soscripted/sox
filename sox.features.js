@@ -1453,12 +1453,18 @@ Toggle SBS?</div></li>';
                         text: 'delete'
                     }));
 
-                    $('#downvotedPostsEditAlertButton').addClass(unread ? 'glow' : '');
+                    //$('#downvotedPostsEditAlertButton').addClass(unread ? 'glow' : '');
                     $link.append($icon).append($message).appendTo($li);
                     if ($('#downvotedPostsEditAlertDialog #downvotedPostsEditAlertList').find('a[href*="' + link + '"]').length) {
                         $('#downvotedPostsEditAlertDialog #downvotedPostsEditAlertList a[href*="' + link + '"]').parent().replaceWith($li);
                     } else {
                         $('#downvotedPostsEditAlertDialog #downvotedPostsEditAlertList').prepend($li);
+                    }
+                    var count = $('#downvotedPostsEditAlertList li.unread-item').length;
+                    if (count) {
+                        $('.downvotedPostsEditAlertButtonCount').text(count).show();
+                    } else {
+                        $('.downvotedPostsEditAlertButtonCount').hide();
                     }
                 }, 'creation?pagesize=1', false);
             }
@@ -1502,10 +1508,15 @@ Toggle SBS?</div></li>';
                 }),
                 $icon = $('<i/>', {
                     class: 'fa fa-edit'
+                }),
+                $count = $('<div/>', {
+                    'class': 'downvotedPostsEditAlertButtonCount',
+                    'style': 'display:none'
                 });
 
             if ($('#metaNewQuestionAlertDialog').length) $dialog.css('left', '297px');
-            $button.append($icon).appendTo('div.network-items');
+            $button.append($count).append($icon).appendTo('div.network-items');
+
             //'$('#downvotedPostsEditAlertButton').position().left' from @IStoleThePies: https://github.com/soscripted/sox/issues/120#issuecomment-267857625:
             $dialog.css('left', $('#downvotedPostsEditAlertButton').position().left).append($header).append($content.append($posts)).prependTo('.js-topbar-dialog-corral');
 
@@ -1541,6 +1552,7 @@ Toggle SBS?</div></li>';
                 if (!isToggle && !isChild) {
                     $dialog.hide();
                     $button.removeClass('topbar-icon-on glow');
+                    $count.text('');
                 }
             });
 
@@ -1752,7 +1764,10 @@ Toggle SBS?</div></li>';
                     $(this).removeAttr('style');
                     delete postsToCheck[posts[index]];
                 } else { //new watch item
-                    $(this).css('color', 'green');
+                    $(this).css({
+                        'color': 'green',
+                        'font-weight': 'bold'
+                    });
                     postsToCheck[postId] = {
                         'questionId': questionId,
                         'addedDate': new Date().getTime(),

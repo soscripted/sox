@@ -502,6 +502,18 @@ hr.or:after {
     color: #999;
 }
 
+.downvotedPostsEditAlertButtonCount {
+    background-color: red;
+    width: 22px;
+    margin-left: 4px;
+    border-radius: 10px;
+    color: white;
+    font-weight: bold;
+    position: absolute;
+    font-size: 20px;
+    top: 8px;
+}
+
 #downvotedPostsEditAlertDialog {
     top: 34px;
     left: 264px;

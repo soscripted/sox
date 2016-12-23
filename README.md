@@ -10,7 +10,7 @@ Note: This project has no relation to Stack Overflow or Stack Exchange; it is si
 
 ##Installation & Requirements
 
-1. Install [Greasemonkey](http://www.greasespot.net/) (for Firefox), [Tampermonkey](http://tampermonkey.net/) (for Chrome), or [NinjaKit](https://github.com/os0x/NinjaKit) for Safari. These are userscript managers that *must* be installed in order for this to work, as the script relies on certain `GM_*` functions in order to save your settings!
+1. Install [Greasemonkey](http://www.greasespot.net/) (for Firefox) or [Tampermonkey](http://tampermonkey.net/) (for Chrome or Safari). These are userscript managers that *must* be installed in order for this to work, as the script relies on certain `GM_*` functions in order to save your settings!
 2. Install the script. Clicking on 'install' below will make your userscript manager prompt you automatically to install it.
 
     - Official Version: <kbd>[install](https://github.com/soscripted/sox/raw/v2.0.2/sox.user.js)</kbd>. <kbd>[view source](https://github.com/soscripted/sox/blob/v2.0.2/sox.user.js)</kbd>
