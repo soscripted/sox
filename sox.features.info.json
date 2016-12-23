@@ -304,8 +304,8 @@
         }],
         "Voting": [{
             "name": "betterCSS",
-            "desc": "Add extra CSS for voting signs and favourite button (currently only on Android SE)",
-            "extended_description": "Pulse effect when hovering over the upvote/downvote/star signs.",
+            "desc": "Add extra CSS for animation actions on voting and favourite buttons",
+            "extended_description": "Pulse effect when hovering over the upvote/downvote/favourite buttons. Currently only implemented natively on Android.SE.",
             "meta": "http://meta.stackexchange.com/questions/252685/i-want-to-have-those-voting-animations-like-on-android-se-pretty-please",
             "match": "*://*/questions*",
             "exclude": "SE1.0"

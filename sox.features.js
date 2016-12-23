@@ -129,7 +129,7 @@
             //Add class to page for topbar, calculated for every page for different sites.
             //If the Area 51 popup closes or doesn't exist, $('#notify-table').height() = 0
             var paddingToAdd = ($('#notify-table').length ? $('#notify-table').height() : '') + $('.topbar').height() + 'px';
-            GM_addStyle('.fixed-topbar-sox { padding-top: ' + paddingToAdd + '}');
+            GM_addStyle('.fixed-topbar-sox { padding-top: ' + paddingToAdd + ' !important}');
 
             function adjust() { //http://stackoverflow.com/a/31408076/3541881 genius! :)
                 setTimeout(function() {
@@ -181,6 +181,16 @@
 
                 sox.helpers.observe('#notify-container,#notify--1', function() { //Area51: https://github.com/soscripted/sox/issues/152#issuecomment-267885889
                     $('body').css('padding-top', $('.topbar').height() + 'px');
+                });
+            }
+
+            if (sox.location.on('/review/')) { //https://github.com/soscripted/sox/issues/180
+                sox.helpers.observe('.review-bar', function() {
+                    if($('.review-bar').css('position') === 'fixed') {
+                        $('.review-bar').addClass('fixed-topbar-sox');
+                    } else {
+                        $('.review-bar').removeClass('fixed-topbar-sox');
+                    }
                 });
             }
         },
@@ -972,11 +982,14 @@
                 var text = $anchor.text().trim();
                 var id = $anchor.attr('href').split('/')[2];
 
+                $('.question-summary .answer-hyperlink, .question-summary .question-hyperlink, .question-summary .result-link a').css('display', 'inline-block'); //https://github.com/soscripted/sox/issues/181
+
                 if (text.substr(text.length - 11) == '[duplicate]') {
                     $anchor.text(text.substr(0, text.length - 11)); //remove [duplicate]
                     $question.attr('data-sox-question-state', 'duplicate'); //used for hideCertainQuestions feature compatability
                     $.get('//' + location.hostname + '/questions/' + id, function(d) {
-                        $anchor.after("&nbsp;<a href='" + $(d).find('.question-status.question-originals-of-duplicate a:eq(0)').attr('href') + "'><span class='duplicate' title='click to visit duplicate'>&nbsp;duplicate&nbsp;</span></a>"); //add appropiate message
+                        //styling for https://github.com/soscripted/sox/issues/181
+                        $anchor.after("&nbsp;<a style='display: inline' href='" + $(d).find('.question-status.question-originals-of-duplicate a:eq(0)').attr('href') + "'><span class='duplicate' title='click to visit duplicate'>&nbsp;duplicate&nbsp;</span></a>"); //add appropiate message
                     });
 
                 } else if (text.substr(text.length - 8) == '[closed]') {
