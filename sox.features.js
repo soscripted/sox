@@ -1915,7 +1915,7 @@ Toggle SBS?</div></li>';
                     }),
                     $icon = $('<i/>', {
                         class: icon,
-                        style: 'margin-bottom: 0; padding-right: 5px;'
+                        style: 'margin-bottom: 0;'
                     });
 
                 $link.append($icon).append('Score: ' + score);
