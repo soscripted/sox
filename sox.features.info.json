@@ -54,8 +54,8 @@
                 "id": "enableOnAskUbuntu",
                 "type": "checkbox",
                 "desc": "Enable on Ask Ubuntu?"
-            }
-        ]}, {
+            }]
+        }, {
             "name": "highlightQuestions",
             "desc": "Change highlighting for questions with favorite tags",
             "meta": "http://meta.stackexchange.com/questions/238591/should-favorite-tag-highlighting-in-question-lists-be-changed",

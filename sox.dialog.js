@@ -93,6 +93,7 @@
                             }
                         });
 
+                    var optionalSettings = GM_getValue("SOX-" + name + "-settings", -1);
                     for (var i = 0; i < featureSettings.length; i++) {
                         var currentSetting = featureSettings[i];
                         $settingsDiv
@@ -101,7 +102,8 @@
                             .append(sox.helpers.newElement(currentSetting.type, { //use newElement helper so the type can be things like 'checkbox' or 'radio'
                                 id: currentSetting.id,
                                 'class': 'featureSetting',
-                                value: (GM_getValue("SOX-" + name + "-settings", -1) == -1 ? '' : JSON.parse(GM_getValue("SOX-" + name + "-settings"))[currentSetting.id])
+                                'checked': (currentSetting.type === 'checkbox' ? JSON.parse(optionalSettings)[currentSetting.id] : false),
+                                value: (optionalSettings === -1 ? '' : JSON.parse(optionalSettings)[currentSetting.id])
                             }))
                             .append('<br>');
                     }
