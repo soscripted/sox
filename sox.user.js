@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Stack Overflow Extras (SOX)
 // @namespace    https://github.com/soscripted/sox
-// @version      2.0.3 DEV f
+// @version      2.0.3 DEV g
 // @description  Extra optional features for Stack Overflow and Stack Exchange sites
 // @contributor  ᴉʞuǝ (stackoverflow.com/users/1454538/)
 // @contributor  ᔕᖺᘎᕊ (stackexchange.com/users/4337810/)
@@ -157,12 +157,12 @@
                         $('#sox-settings-dialog-features').find('#' + settings[i].split('-')[1]).parent().css('color', 'red').attr('title', 'There was an error loading this feature. Please raise an issue on GitHub.');
                         sox.error('There was an error loading the feature "' + settings[i] + '". Please raise an issue on GitHub, and copy the following error log:\n' + err);
                     }
-                    i++;
                 }
             }
         }
 
-        if (GM_getValue('SOX-accessToken', -1) == -1) { //set access token
+        var accessToken = GM_getValue('SOX-accessToken', -1);
+        if (accessToken == -1 || accessToken == -2) { //set access token
             //This was originally a series of IIFEs appended to the head which used the SE API JS SDK but
             //it was very uncertain and often caused issues, especially in FF
             //it now uses a Github page to show the access token
@@ -170,7 +170,10 @@
             //this seems to be a much cleaner and easier-to-debug method!
 
             window.open('https://stackexchange.com/oauth/dialog?client_id=7138&redirect_uri=http://soscripted.github.io/sox/');
-            alert('To complete the SOX installation please follow the instructions in the window that has been opened for you to receive your access token.');
+            if (accessToken !== -2) {
+                alert('To complete the SOX installation please follow the instructions in the window that has been opened for you to receive your access token.');
+                GM_setValue('SOX-accessToken', -2); //-2 means to not show the alert ever again, because it gets annoying
+            }
             sox.warn('Please go to the following URL to get your access token for certain SOX features', 'https://stackexchange.com/oauth/dialog?client_id=7138&redirect_uri=http://soscripted.github.io/sox/');
         }
     }

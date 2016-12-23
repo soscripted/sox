@@ -2328,10 +2328,15 @@ Toggle SBS?</div></li>';
             // Description: Enabled inline editor on all sites
             // Written by @nicael: http://stackapps.com/questions/6216/inline-editor-regardless-of-reputation, and copied with nicael's permission
 
-            $(".suggest-edit-post").removeClass("suggest-edit-post").addClass("edit-post");
-            StackExchange.using("inlineEditing", function() {
-                StackExchange.inlineEditing.init();
-            });
+            if (sox.Stack.using) {
+                $(".suggest-edit-post").removeClass("suggest-edit-post").addClass("edit-post");
+                sox.Stack.using("inlineEditing", function() {
+                    sox.Stack.inlineEditing.init();
+                });
+            } else {
+                sox.warn('inlineEditorEverywhere error: sox.Stack.using not found');
+                sox.debug('inlineEditorEverywhere: Stack object:', sox.Stack);
+            }
         },
 
         flagPercentageBar: function() {

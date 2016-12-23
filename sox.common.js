@@ -50,6 +50,8 @@
         sox.debug(Stack);
     }
 
+    sox.Stack = Stack;
+
     sox.exists = function(path) {
         if(!Stack) return false;
         var toCheck = path.split('.'),
