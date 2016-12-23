@@ -121,7 +121,7 @@
 
         },
 
-        fixedTopbar: function() {
+        fixedTopbar: function(settings) {
             // Description: For making the topbar fixed (always stay at top of screen)
             // Written by @IStoleThePies (https://github.com/soscripted/sox/issues/152#issuecomment-267463392) to fix lots of bugs and compatability issues
             // Modified by shu8
@@ -158,7 +158,14 @@
                     'position': 'fixed',
                     'z-index': '900'
                 });
-            } else if (!sox.location.on('askubuntu.com')) { //Disable on Ask Ubuntu
+            } else {
+                if (!settings.enableOnAskUbuntu) return; //Disable on Ask Ubuntu if user said so
+                if (sox.location.on('askubuntu.com')) {
+                    $('#custom-header').remove();
+                    $('.topbar').css('width', '100%');
+                    $('.topbar-wrapper').css('width', '1060px');
+                }
+
                 $('body').addClass('fixed-topbar-sox');
 
                 $('.topbar').css({

@@ -49,8 +49,13 @@
             "extended_description": "Locks the topbar to the top of the window so you can see it at all times, even when scrolling down. Disabled on Ask Ubuntu due to the different styling of the topbar.",
             "meta": "http://meta.stackexchange.com/questions/101385/should-the-top-navigation-be-frozen-optional",
             "match": "",
-            "exclude": ""
-        }, {
+            "exclude": "",
+            "settings": [{
+                "id": "enableOnAskUbuntu",
+                "type": "checkbox",
+                "desc": "Enable on Ask Ubuntu?"
+            }
+        ]}, {
             "name": "highlightQuestions",
             "desc": "Change highlighting for questions with favorite tags",
             "meta": "http://meta.stackexchange.com/questions/238591/should-favorite-tag-highlighting-in-question-lists-be-changed",
