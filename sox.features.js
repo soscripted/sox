@@ -296,10 +296,7 @@
                 $node.surroundSelectedText("<kbd>", "</kbd>");
             }
 
-            var kbdBtn = '<li class="wmd-button" title="surround selected text with <kbd> tags" style="left: 400px;"><span id="wmd-kbd-button" style="background-image: none;">kbd</span></li>';
-            var listBtn = '<li class="wmd-button" title="add dashes (\"-\") before every line to make a bulvar point list" style="left: 425px;"><span id="wmd-bullet-button" style="background-image:none;">&#x25cf;</span></li>';
-
-            sox.helpers.observe('[id^="wmd-redo-button"]', function() {
+            function loopAndAddHandlers() {
                 $('[id^="wmd-redo-button"]').each(function() {
                     if (!$(this).parent().find('#wmd-kbd-button').length) $(this).after(kbdBtn);
                 });
@@ -313,7 +310,13 @@
                 $('#wmd-bullet-button').on('click', function() {
                     addBullets($(this).parents('div[id*="wmd-button-bar"]').parent().find('textarea'));
                 });
-            });
+            }
+
+            var kbdBtn = '<li class="wmd-button" title="surround selected text with <kbd> tags" style="left: 400px;"><span id="wmd-kbd-button" style="background-image: none;">kbd</span></li>';
+            var listBtn = '<li class="wmd-button" title="add dashes (\"-\") before every line to make a bulvar point list" style="left: 425px;"><span id="wmd-bullet-button" style="background-image:none;">&#x25cf;</span></li>';
+
+            sox.helpers.observe('[id^="wmd-redo-button"]', loopAndAddHandlers);
+            loopAndAddHandlers();
 
             $('[id^="wmd-input"]').bind('keydown', 'alt+l', function() {
                 addBullets($(this).parents('div[id*="wmd-button-bar"]').parent().find('textarea'));
@@ -1181,6 +1184,10 @@ Toggle SBS?</div></li>';
             //event listener for adding the sbs toggle button for posting new questions or answers
             //waitForKeyElements('#wmd-redo-button', SBS);
             sox.helpers.observe('li[id^="wmd-redo-button"]', SBS);
+            $('li[id^="wmd-redo-button"]').each(function() {
+                console.log($(this));
+                SBS($(this));
+            });
 
             //https://github.com/soscripted/sox/issues/163
             $('#tagnames').parent('.form-item').css('float', 'left');

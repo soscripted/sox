@@ -141,7 +141,7 @@
                 for (var i = 0; i < mutations.length; i++) {
                     if($(mutations[i].target).is((Array.isArray(elements) ? elements.join(',') : elements))) {
                         callback(mutations[i].target);
-                        sox.debug('fire: target: ' + mutations[i].target);
+                        sox.debug('fire: target: ', mutations[i].target);
                         return;
                     }
                 }

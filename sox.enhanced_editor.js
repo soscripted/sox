@@ -3,19 +3,22 @@
     'use strict';
 
     sox.enhancedEditor = {
-        startFeature: function() {
-            sox.helpers.observe('li[id^="wmd-redo-button"], textarea[id^="wmd-input"]', function() {
-                $('textarea[id^="wmd-input"].processed').each(function() {
-                    sox.enhancedEditor.init($(this).attr('id'));
-                });
+        initLoop: function() {
+            $('textarea[id^="wmd-input"].processed').each(function() {
+                sox.enhancedEditor.init($(this).attr('id'));
+            });
 
-                $('.edit-post').click(function() {
-                    var $that = $(this);
-                    sox.helpers.observe('#wmd-redo-button-' + $that.attr('href').split('/')[2], function() {
-                        sox.enhancedEditor.init($that.parents('table').find('.inline-editor textarea.processed').attr('id'));
-                    });
+            $('.edit-post').click(function() {
+                var $that = $(this);
+                sox.helpers.observe('#wmd-redo-button-' + $that.attr('href').split('/')[2], function() {
+                    sox.enhancedEditor.init($that.parents('table').find('.inline-editor textarea.processed').attr('id'));
                 });
             });
+        },
+
+        startFeature: function() {
+            sox.helpers.observe('li[id^="wmd-redo-button"], textarea[id^="wmd-input"]', sox.enhancedEditor.initLoop);
+            sox.enhancedEditor.initLoop();
         },
 
         init: function(wmd) {
