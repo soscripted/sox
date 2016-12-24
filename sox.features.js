@@ -294,6 +294,13 @@
                 newVal = origVal.slice(0, start) + "<kbd>" + selected + "</kbd>" + origVal.substr(end);
                 console.log(newVal);*/
                 $node.surroundSelectedText("<kbd>", "</kbd>");
+                var surroundedText = $node.getSelection(),
+                    trimmed = surroundedText.text.trim();
+
+                //https://github.com/soscripted/sox/issues/189:
+                //if no trimming occured, then we have to add another space
+                $node.replaceSelectedText(trimmed);
+                $node.insertText(' ', surroundedText.end + (trimmed == surroundedText.text ? 6 : 5), 'collapseToEnd'); //add a space after the `</kbd>`
             }
 
             function loopAndAddHandlers() {
@@ -475,7 +482,10 @@
 
             sox.helpers.observe('.share-tip', function() {
                 var link = $('.share-tip input').val();
-                $('.share-tip input').val('[' + $('#question-header a').html() + '](' + link + ')');
+                var title = $('#question-header a').text();
+
+                if(link.indexOf(title) != -1) return; //don't do anything if the function's alread done its thing
+                $('.share-tip input').val('[' + title + '](' + link + ')');
                 $('.share-tip input').select();
                 document.execCommand('copy'); //https://github.com/soscripted/sox/issues/177
             });
