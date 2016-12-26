@@ -159,8 +159,8 @@
                     'z-index': '900'
                 });
             } else {
-                if (!settings.enableOnAskUbuntu) return; //Disable on Ask Ubuntu if user said so
                 if (sox.location.on('askubuntu.com')) {
+                    if (!settings.enableOnAskUbuntu) return; //Disable on Ask Ubuntu if user said so
                     $('#custom-header').remove();
                     $('.topbar').css('width', '100%');
                     $('.topbar-wrapper').css('width', '1060px');
@@ -304,6 +304,9 @@
             }
 
             function loopAndAddHandlers() {
+                var kbdBtn = '<li class="wmd-button" title="surround selected text with <kbd> tags" style="left: 400px;"><span id="wmd-kbd-button" style="background-image: none;">kbd</span></li>';
+                var listBtn = '<li class="wmd-button" title="add dashes (\"-\") before every line to make a bulvar point list" style="left: 425px;"><span id="wmd-bullet-button" style="background-image:none;">&#x25cf;</span></li>';
+                
                 $('[id^="wmd-redo-button"]').each(function() {
                     if (!$(this).parent().find('#wmd-kbd-button').length) $(this).after(kbdBtn);
                 });
@@ -318,9 +321,6 @@
                     addBullets($(this).parents('div[id*="wmd-button-bar"]').parent().find('textarea'));
                 });
             }
-
-            var kbdBtn = '<li class="wmd-button" title="surround selected text with <kbd> tags" style="left: 400px;"><span id="wmd-kbd-button" style="background-image: none;">kbd</span></li>';
-            var listBtn = '<li class="wmd-button" title="add dashes (\"-\") before every line to make a bulvar point list" style="left: 425px;"><span id="wmd-bullet-button" style="background-image:none;">&#x25cf;</span></li>';
 
             sox.helpers.observe('[id^="wmd-redo-button"]', loopAndAddHandlers);
             loopAndAddHandlers();

@@ -115,7 +115,7 @@
                             e.preventDefault(); //don't uncheck the checkbox
                             var settingsToSave = {};
                             $(this).parent().find('.featureSetting').each(function() {
-                                settingsToSave[$(this).attr('id')] = $(this).is(':checked') || $(this).val();
+                                settingsToSave[$(this).attr('id')] = ($(this).is(':checkbox') ? $(this).is(':checked') : $(this).val());
                             });
                             GM_setValue('SOX-' + name + '-settings', JSON.stringify(settingsToSave));
                         }
