@@ -61,9 +61,13 @@
     float: right;
 }
 
-#sox-settings-dialog-reset, #sox-settings-dialog-report, #sox-settings-dialog-debugging {
+#sox-settings-dialog-actions .action {
     float: right;
     padding: 14px;
+}
+
+#sox-settings-dialog-actions #sox-settings-dialog-paste-access-token {
+    transform: scaleX(-1);
 }
 
 .sox-settings-button {
@@ -486,6 +490,7 @@ hr.or:after {
     opacity: 0.8 !important;
 }
 
+
 /*downvotedPostsEditAlert -- for the button and dropdown*/
 
 #downvotedPostsEditAlertButton {
@@ -526,11 +531,13 @@ hr.or:after {
     -webkit-text-stroke-width: 3px;
 }
 
+
 /*commentReplies -- for the reply buttons*/
 
 .soxReplyLink {
     cursor: pointer;
 }
+
 
 /*flagPercentageBar -- for the percentage bar itself*/
 
@@ -541,11 +548,13 @@ hr.or:after {
     margin: 6px 10px 10px 0;
     padding: 0px;
 }
+
 #sox-flagPercentProgressBar:after {
     content: '';
     display: block;
     height: 100%;
 }
+
 #sox-flagPercentHelpful {
     margin-bottom: 5px;
 }

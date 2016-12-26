@@ -11,7 +11,7 @@
     };
 
     sox.debug = function() {
-        if(!sox.info.debugging) return;
+        if (!sox.info.debugging) return;
         for (var arg = 0; arg < arguments.length; ++arg) {
             console.debug('SOX: ', arguments[arg]);
         }
@@ -43,7 +43,7 @@
 
     //var Stack = (typeof StackExchange === "undefined" ? window.eval('if (typeof StackExchange != "undefined") StackExchange') : StackExchange) | undefined;
     var Chat, Stack;
-    if(location.href.indexOf('github.com') === -1) { //need this so it works on FF -- CSP blocks window.eval() it seems
+    if (location.href.indexOf('github.com') === -1) { //need this so it works on FF -- CSP blocks window.eval() it seems
         Chat = (typeof CHAT === "undefined" ? window.eval("typeof CHAT != 'undefined' ? CHAT : undefined") : CHAT);
         sox.debug(Chat);
         Stack = (typeof Chat === "undefined" ? (typeof StackExchange === "undefined" ? window.eval('if (typeof StackExchange != "undefined") StackExchange') : StackExchange) : undefined);
@@ -53,7 +53,7 @@
     sox.Stack = Stack;
 
     sox.exists = function(path) {
-        if(!Stack) return false;
+        if (!Stack) return false;
         var toCheck = path.split('.'),
             cont = true,
             o = Stack,
@@ -106,7 +106,7 @@
             var keys = GM_listValues();
             for (var i = 0; i < keys.length; i++) {
                 var key = keys[i];
-                if(hideAccessToken && key == 'SOX-accessToken') {
+                if (hideAccessToken && key == 'SOX-accessToken') {
                     sox.loginfo('access token set');
                 } else {
                     sox.loginfo(key, GM_getValue(key));
@@ -136,10 +136,9 @@
         },
         observe: function(elements, callback, toObserve) {
             sox.debug('observe: ' + elements);
-            sox.debug(toObserve);
             var observer = new MutationObserver(function(mutations, observer) {
                 for (var i = 0; i < mutations.length; i++) {
-                    if($(mutations[i].target).is(elements)) {
+                    if ($(mutations[i].target).is(elements)) {
                         callback(mutations[i].target);
                         sox.debug('fire: target: ', mutations[i].target);
                         return;
@@ -230,7 +229,7 @@
         apiParameter: function(siteName) {
             if (commonInfo.apiParameters.hasOwnProperty(siteName)) {
                 return commonInfo.apiParameters[siteName];
-            } else if(sox.location.on('area51')) {
+            } else if (sox.location.on('area51')) {
                 return 'area51';
             }
         },
@@ -261,11 +260,11 @@
             return this.on('/questions/');
         },
         matchWithPattern: function(pattern, urlToMatchWith) { //commented version @ https://jsfiddle.net/shub01/t90kx2dv/
-            if(pattern == 'SE1.0') { //SE.com && Area51.SE.com special checking
-                if(urlToMatchWith) {
-                    if(urlToMatchWith.match(/https?:\/\/stackexchange\.com\/?/) || sox.location.matchWithPattern('*://area51.stackexchange.com/*')) return true;
+            if (pattern == 'SE1.0') { //SE.com && Area51.SE.com special checking
+                if (urlToMatchWith) {
+                    if (urlToMatchWith.match(/https?:\/\/stackexchange\.com\/?/) || sox.location.matchWithPattern('*://area51.stackexchange.com/*')) return true;
                 } else {
-                    if(location.href.match(/https?:\/\/stackexchange\.com\/?/) || sox.location.matchWithPattern('*://area51.stackexchange.com/*')) return true;
+                    if (location.href.match(/https?:\/\/stackexchange\.com\/?/) || sox.location.matchWithPattern('*://area51.stackexchange.com/*')) return true;
                 }
                 return false;
             }

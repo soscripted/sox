@@ -17,6 +17,7 @@
                 $soxSettingsSave = $soxSettingsDialog.find('#sox-settings-dialog-save'),
                 $soxSettingsReset = $soxSettingsDialog.find('#sox-settings-dialog-reset'),
                 $soxSettingsDebugging = $soxSettingsDialog.find('#sox-settings-dialog-debugging'),
+                $soxSettingsPasteAccessToken = $soxSettingsDialog.find('#sox-settings-dialog-paste-access-token'),
                 $soxSettingsToggleAccessTokensDiv = $soxSettingsDialog.find('#sox-settings-dialog-access-tokens'),
                 $soxSettingsAccessTokensToggle = $soxSettingsToggleAccessTokensDiv.find('#toggle-access-token-links'),
                 $soxSettingsToggle = $soxSettingsDialog.find('#sox-settings-dialog-check-toggle'),
@@ -132,7 +133,7 @@
                 $soxSettingsDialogVersion.text('');
             }
 
-            if(sox.info.debugging) $soxSettingsDebugging.text('Disable debugging');
+            if (sox.info.debugging) $soxSettingsDebugging.text('Disable debugging');
 
             // wire up event handlers
             $soxSettingsClose.on('click', function() {
@@ -140,7 +141,7 @@
             });
 
             $soxSettingsReset.on('click', function() {
-                if(confirm('Are you sure you want to reset SOX?')) {
+                if (confirm('Are you sure you want to reset SOX?')) {
                     sox.settings.reset();
                     location.reload(); // reload page to reflect changed settings
                 }
@@ -148,7 +149,7 @@
 
             $soxSettingsDebugging.on('click', function() {
                 var currentState = sox.info.debugging;
-                if(typeof currentState === 'undefined') {
+                if (typeof currentState === 'undefined') {
                     GM_setValue('SOX-debug', true);
                     $soxSettingsDebugging.text('Disable debugging');
                 } else {
@@ -156,6 +157,17 @@
                     $soxSettingsDebugging.text(currentState ? 'Enable debugging' : 'Disable debugging');
                 }
                 location.reload();
+            });
+
+            $soxSettingsPasteAccessToken.on('click', function() {
+                var token = window.prompt("Please enter your access token. Alternatively, press cancel and you can request a new access token by clicking the link in the console (Ctrl+Shift+J/Cmd+Opt+J in Chrome or Ctrl+Shift+I/Cmd+Opt+I in Firefox)");
+                if (token) {
+                    GM_setValue("SOX-accessToken", token);
+                    sox.loginfo('Your saved access token is now:', token);
+                } else {
+                    sox.loginfo('To get a new access token, please go to the following URL', 'https://stackexchange.com/oauth/dialog?client_id=7138&redirect_uri=http://soscripted.github.io/sox/');
+                    return;
+                }
             });
 
             $soxSettingsToggle.on('click', function() {

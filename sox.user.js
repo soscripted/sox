@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Stack Overflow Extras (SOX)
 // @namespace    https://github.com/soscripted/sox
-// @version      2.0.3 DEV n
+// @version      2.0.3 DEV o
 // @description  Extra optional features for Stack Overflow and Stack Exchange sites
 // @contributor  ᴉʞuǝ (stackoverflow.com/users/1454538/)
 // @contributor  ᔕᖺᘎᕊ (stackexchange.com/users/4337810/)
@@ -56,7 +56,7 @@
             try {
                 sox.github.init(sox.info.version, sox.info.handler);
             } catch (e) {
-                throw('SOX: There was an error while attempting to initialize the sox.github.js file, please report this on GitHub.\n' + e);
+                throw ('SOX: There was an error while attempting to initialize the sox.github.js file, please report this on GitHub.\n' + e);
             } finally {
                 return;
             }
@@ -69,13 +69,13 @@
                 GM_setValue('SOX-accessToken', access_token);
                 alert('Access token successfully saved! You can close this window :)');
             } catch (e) {
-                throw('SOX: There was an error saving your access token');
+                throw ('SOX: There was an error saving your access token');
             } finally {
                 return;
             }
         }
 
-        if(sox.info.debugging) {
+        if (sox.info.debugging) {
             sox.debug('DEBUGGING SOX VERSION ' + sox.info.version);
             sox.debug('----------------saved variables---------------------');
             sox.settings.writeToConsole(true); //true => hide access token
