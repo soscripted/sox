@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Stack Overflow Extras (SOX)
 // @namespace    https://github.com/soscripted/sox
-// @version      2.0.3 DEV m
+// @version      2.0.3 DEV n
 // @description  Extra optional features for Stack Overflow and Stack Exchange sites
 // @contributor  ᴉʞuǝ (stackoverflow.com/users/1454538/)
 // @contributor  ᔕᖺᘎᕊ (stackexchange.com/users/4337810/)
@@ -112,7 +112,7 @@
                     runFeature = true,
                     sites,
                     pattern;
-                sox.debug(category, featureId, feature);
+                sox.debug(feature);
                 try {
                     //NOTE: there is no else if() because it is possible to have both match and exclude patterns..
                     //which could have minor exceptions making it neccessary to check both

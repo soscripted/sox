@@ -306,7 +306,7 @@
             function loopAndAddHandlers() {
                 var kbdBtn = '<li class="wmd-button" title="surround selected text with <kbd> tags" style="left: 400px;"><span id="wmd-kbd-button" style="background-image: none;">kbd</span></li>';
                 var listBtn = '<li class="wmd-button" title="add dashes (\"-\") before every line to make a bulvar point list" style="left: 425px;"><span id="wmd-bullet-button" style="background-image:none;">&#x25cf;</span></li>';
-                
+
                 $('[id^="wmd-redo-button"]').each(function() {
                     if (!$(this).parent().find('#wmd-kbd-button').length) $(this).after(kbdBtn);
                 });
@@ -322,7 +322,7 @@
                 });
             }
 
-            sox.helpers.observe('[id^="wmd-redo-button"]', loopAndAddHandlers);
+            sox.helpers.observe('[id^="wmd-redo-button"], textarea[id^="wmd-input"]', loopAndAddHandlers);
             loopAndAddHandlers();
 
             $('[id^="wmd-input"]').bind('keydown', 'alt+l', function() {
@@ -1148,6 +1148,7 @@
 
             function SBS(jNode) {
                 jNode = $(jNode);
+                if (jNode.is('textarea')) jNode = jNode.parent().find('[id^="wmd-redo-button"]');
                 var itemid = jNode[0].id.replace(/^\D+/g, '');
                 var toAppend = (itemid.length > 0 ? '-' + itemid : ''); //helps select tags specific to the question/answer being
                 // edited (or new question/answer being written)
@@ -1193,9 +1194,8 @@ Toggle SBS?</div></li>';
 
             //event listener for adding the sbs toggle button for posting new questions or answers
             //waitForKeyElements('#wmd-redo-button', SBS);
-            sox.helpers.observe('li[id^="wmd-redo-button"]', SBS);
+            sox.helpers.observe('li[id^="wmd-redo-button"], textarea[id^="wmd-input"]', SBS);
             $('li[id^="wmd-redo-button"]').each(function() {
-                console.log($(this));
                 SBS($(this));
             });
 
