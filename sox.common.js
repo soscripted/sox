@@ -125,6 +125,10 @@
                 success: function(d) {
                     if (d.backoff) {
                         sox.error('SOX Error: BACKOFF: ' + d.backoff);
+                    } else if (d.error_id == 403)  {
+                        sox.warn('Access token invalid! Opening window to get new one');
+                        window.open('https://stackexchange.com/oauth/dialog?client_id=7138&redirect_uri=http://soscripted.github.io/sox/');
+                        alert('Your access token is no longer valid. A window has been opened to request a new one.');
                     } else {
                         callback(d);
                     }
@@ -139,7 +143,6 @@
             var observer = new MutationObserver(function(mutations, observer) {
                 for (var i = 0; i < mutations.length; i++) {
                     if ($(mutations[i].target).is(elements)) {
-                        callback(mutations[i].target);
                         sox.debug('fire: target: ', mutations[i].target);
                         return;
                     }

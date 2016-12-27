@@ -708,7 +708,7 @@
             }
 
             addLabelsAndHandlers();
-            sox.helpers.observe('#user-tab-responses, #user-tab-activity', function() {
+            sox.helpers.observe('.history-table', function() {
                 addLabelsAndHandlers();
             });
         },
