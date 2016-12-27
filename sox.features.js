@@ -708,9 +708,7 @@
             }
 
             addLabelsAndHandlers();
-            sox.helpers.observe('.history-table', function() {
-                addLabelsAndHandlers();
-            });
+            sox.helpers.observe('.history-table', addLabelsAndHandlers);
         },
 
         answerTagsSearch: function() {
