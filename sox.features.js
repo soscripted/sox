@@ -102,18 +102,14 @@
             // Description: Adds the 'show x more comments' link before the commnents
 
             $('.js-show-link.comments-link').each(function() {
+                if (!$(this).parent().prev().find('.comment-text').length) return; //https://github.com/soscripted/sox/issues/196
+
                 var $this2 = $(this);
                 $('<tr><td></td><td>' + $this2.clone().wrap('<div>').parent().html() + '</td></tr>').insertBefore($(this).parent().closest('tr')).click(function() {
                     $(this).hide();
                 });
-                var commentParent;
-                // Determine if comment is on a question or an answer
-                if ($(this).parents('.answer').length) {
-                    commentParent = '.answer';
-                } else {
-                    commentParent = '.question';
-                }
 
+                var commentParent = ($(this).parents('.answer').length ? '.answer' : '.question');
                 $(this).click(function() {
                     $(this).closest(commentParent).find('.js-show-link.comments-link').hide();
                 });
@@ -605,9 +601,8 @@
                 $(window).bind('beforeunload', function() {
                     if ($('.comment-form textarea').length && $('.comment-form textarea').val()) {
                         return 'Do you really want to navigate away? Anything you have written will be lost!';
-                    } else {
-                        return;
                     }
+                    return;
                 });
             }
         },
@@ -793,7 +788,7 @@
             // Description: For showing the new version of a title in a diff separately rather than loads of crossing outs in red and additions in green
 
             function betterTitle() {
-                sox.debug('ran');
+                sox.debug('ran betterTitle from titleEditDiff');
                 var $questionHyperlink = $('.summary h2 .question-hyperlink').clone(),
                     $questionHyperlinkTwo = $('.summary h2 .question-hyperlink').clone(),
                     link = $('.summary h2 .question-hyperlink').attr('href'),
@@ -1185,13 +1180,11 @@ Toggle SBS?</div></li>';
 
                 //event listeners for adding the sbs toggle buttons for editing existing questions or answers
                 for (i = 0; i <= numAnchors - 2; i++) {
-                    //waitForKeyElements('#wmd-redo-button-' + itemIDs[i], SBS);
                     sox.helpers.observe('#wmd-redo-button-' + itemIDs[i], SBS);
                 }
             }
 
             //event listener for adding the sbs toggle button for posting new questions or answers
-            //waitForKeyElements('#wmd-redo-button', SBS);
             sox.helpers.observe('li[id^="wmd-redo-button"], textarea[id^="wmd-input"]', SBS);
             $('li[id^="wmd-redo-button"]').each(function() {
                 SBS($(this));
@@ -1297,9 +1290,7 @@ Toggle SBS?</div></li>';
                 'class': 'fa fa-angle-double-up fa-3x'
             })).appendTo('body');
 
-            if ($(window).scrollTop() < 200) {
-                $('#sox-scrollToTop').hide();
-            }
+            if ($(window).scrollTop() < 200) $('#sox-scrollToTop').hide();
 
             $(window).scroll(function() {
                 if ($(this).scrollTop() > 200) {
@@ -2334,7 +2325,6 @@ Toggle SBS?</div></li>';
         hideCertainQuestions: function(settings) {
             // Description: Hide certain questions depending on your choices
 
-            sox.debug('hideCertainQuestions settings', settings);
             if (settings.duplicate || settings.closed || settings.migrated || settings.onHold) {
                 $('.question-summary').each(function() { //Find the questions and add their id's and statuses to an object
                     var $question = $(this);
@@ -2418,6 +2408,8 @@ Toggle SBS?</div></li>';
         },
 
         showMetaReviewCount: function() {
+            // Description: Adds the total count of meta reviews on the main site on the /review page
+
             $.get('https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20html%20where%20url%3D%22http%3A%2F%2Fmeta.' + location.hostname + '%2Freview%22&diagnostics=true', function(d) {
                 var $doc = $(d);
                 var total = 0;
