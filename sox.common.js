@@ -142,6 +142,7 @@
             sox.debug('observe: ' + elements);
             var observer = new MutationObserver(function(mutations, observer) {
                 for (var i = 0; i < mutations.length; i++) {
+                    //sox.debug($(mutations[i].target));
                     if ($(mutations[i].target).is(elements)) {
                         callback(mutations[i].target);
                         sox.debug('fire: target: ', mutations[i].target);

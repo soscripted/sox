@@ -479,18 +479,6 @@ hr.or:after {
     background: black;
 }
 
-
-/*quickAuthorInfo -- for changing the style of the comments table*/
-
-.comments.quickAuthorInfoEnabled {
-    border-top: none !important;
-}
-
-.comments.quickAuthorInfoEnabled>table:nth-child(1)>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(2)>div:nth-child(1) {
-    opacity: 0.8 !important;
-}
-
-
 /*downvotedPostsEditAlert -- for the button and dropdown*/
 
 #downvotedPostsEditAlertButton {

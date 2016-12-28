@@ -183,7 +183,7 @@
                 if (typeof MathJax !== "undefined") MathJax.Hub.Queue(adjust);
 
                 sox.helpers.observe('#notify-container,#notify--1', function() { //Area51: https://github.com/soscripted/sox/issues/152#issuecomment-267885889
-                    $('body').css('padding-top', $('.topbar').height() + 'px');
+                    $('body').attr('style', 'padding-top: '+  $('.topbar').height() + 'px !important'); //.css() doesn't work...?
                 });
             }
 
@@ -2115,15 +2115,13 @@ Toggle SBS?</div></li>';
                         sox.debug('quickAuthorInfo addLastSeen(): userdetailscurrent id', userDetailsFromAPI[id]);
                         if (userDetailsFromAPI[id] && !$(this).find('.sox-last-seen').length) {
                             var lastSeenDate = new Date(userDetailsFromAPI[id].last_seen);
-                            $(this).find('.comments').removeClass('dno');
-                            $(this).find('.comments tbody:eq(0)').prepend("<tr class='comment'><td class='comment-actions sox-last-seen'></td><td class='comment-text'><div style='display: block; text-align: right;' class='comment-body'>last seen: <time class='timeago' datetime='" + lastSeenDate.toISOString() + "' title='" + lastSeenDate.toLocaleString() + "'>" + lastSeenDate.toLocaleString() + "</time> | type: " + userDetailsFromAPI[id].type + "</div></td></tr>");
+                            $(this).find('.post-signature').last().append("<i class='fa fa-clock-o'></i>&nbsp;<time class='timeago sox-last-seen' datetime='" + lastSeenDate.toISOString() + "' title='" + lastSeenDate.toLocaleString() + "'>" + lastSeenDate.toLocaleString() + "</time>, " + userDetailsFromAPI[id].type);
                         }
                     }
                 });
                 $("time.timeago").timeago();
             }
 
-            $('.comments').addClass('quickAuthorInfoEnabled');
             var answerers = {};
 
             $('.question, .answer').each(function() {
