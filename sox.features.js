@@ -183,7 +183,7 @@
                 if (typeof MathJax !== "undefined") MathJax.Hub.Queue(adjust);
 
                 sox.helpers.observe('#notify-container,#notify--1', function() { //Area51: https://github.com/soscripted/sox/issues/152#issuecomment-267885889
-                    $('body').attr('style', 'padding-top: '+  $('.topbar').height() + 'px !important'); //.css() doesn't work...?
+                    if(!$('#notify--1').length) $('body').attr('style', 'padding-top: '+  $('.topbar').height() + 'px !important'); //.css() doesn't work...?
                 });
             }
 
