@@ -205,13 +205,11 @@
 /*addHotText for the 'this question is hot' banner */
 
 .sox-hot {
-    float: right;
-    -ms-transform: rotate(30deg);
-    -webkit-transform: rotate(30deg);
-    transform: rotate(30deg);
+    float: left;
     font-size: xx-large;
     color: red;
-    margin-top: 20px;
+    margin-top: 5px;
+    margin-right: 8px;
 }
 
 
