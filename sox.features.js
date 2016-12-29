@@ -795,9 +795,9 @@
                     added = ($questionHyperlinkTwo.find('.diff-delete').remove().end().text()),
                     removed = ($questionHyperlink.find('.diff-add').remove().end().text());
 
-                if ($('.summary h2 .question-hyperlink').find('.diff-delete, .diff-add').length) {
+                if ($('.summary h2 .question-hyperlink').find('.diff-delete, .diff-add').length && !($('.sox-better-title').length)) {
                     $('.summary h2 .question-hyperlink').hide();
-                    $('.summary h2 .question-hyperlink').after('<a href="' + link + '" class="question-hyperlink"><span class="diff-delete">' + removed + '</span><span class="diff-add">' + added + '</span></a>');
+                    $('.summary h2 .question-hyperlink').after('<a href="' + link + '" class="question-hyperlink sox-better-title"><span class="diff-delete">' + removed + '</span><span class="diff-add">' + added + '</span></a>');
                 }
             }
             betterTitle();
@@ -1202,8 +1202,9 @@ Toggle SBS?</div></li>';
         alwaysShowImageUploadLinkBox: function() {
             // Description: For always showing the 'Link from the web' box when uploading an image.
 
-            sox.helpers.observe('.image-upload form', function(n) {
-                $('.image-upload form div.modal-options-default.tab-page > a')[0].click();
+            sox.helpers.observe('.image-upload', function(n) {
+                var toClick = $('.image-upload form div.modal-options-default.tab-page > a');
+                if (toClick.length) toClick[0].click();
             });
         },
 
@@ -1871,12 +1872,16 @@ Toggle SBS?</div></li>';
         chatEasyAccess: function() {
             // Description: Adds options to give a user read/write/no access in chat from their user popup dialog
 
-            sox.helpers.observe('.user-popup .last-dates', function(node) {
+            sox.helpers.observe('.user-popup', function(node) {
                 var $node = $(node).parent();
                 var id = $node.find('a')[0].href.split('/')[4];
+
+                //NOTE: $(node) !== $node
+                if ($(node).find('.chatEasyAccess').length) return;
                 if ($('.chatEasyAccess').length) $('.chatEasyAccess').remove();
 
-                $node.find('div:last-child').last().after('<div class="chatEasyAccess">give <b id="read-only">read</b> / <b id="read-write">write</b> / <b id="remove">no</b> access</div>');
+                //NOTE: $(node) !== $node
+                $(node).append('<div class="chatEasyAccess">give <b id="read-only">read</b> / <b id="read-write">write</b> / <b id="remove">no</b> access</div>');
                 $(document).on('click', '.chatEasyAccess b', function() {
                     var $that = $(this);
                     $.ajax({
@@ -1896,7 +1901,7 @@ Toggle SBS?</div></li>';
                         }
                     });
                 });
-            }, document.getElementById('chat-body'));
+            });
         },
 
         topAnswers: function() {
@@ -1960,7 +1965,7 @@ Toggle SBS?</div></li>';
             // Description: Adds a notification to the inbox if a question you downvoted and watched is edited
             // Idea by lolreppeatlol @ http://meta.stackexchange.com/a/277446/260841 :)
 
-            sox.helpers.observe('.review-more-instructions ul', function() {
+            sox.helpers.observe('.review-more-instructions', function() {
                 var info = {};
                 $('.review-more-instructions ul:eq(0) li').each(function() {
                     var text = $(this).text(),
