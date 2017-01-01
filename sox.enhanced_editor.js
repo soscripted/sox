@@ -27,6 +27,7 @@
             sox.enhancedEditor.startInsertLink(s);
             sox.enhancedEditor.betterTabKey(s);
             sox.enhancedEditor.keyboardShortcuts(s);
+            $('.wmd-button-bar').css('margin-top', '0'); //https://github.com/soscripted/sox/issues/203
 
             $(s).before("<span class='enhancedEditor-toolbar' id='enhancedEditor|" + s + "'>&nbsp;<span id='findReplace'>Find & Replace</span> | <span id='autoCorrect'>Auto correct</span></span>");
 

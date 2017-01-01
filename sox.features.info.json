@@ -357,7 +357,7 @@
             "name": "quickAuthorInfo",
             "desc": "Show when the post's author was last seen and whether they are registered in the comments section",
             "meta": "",
-            "match": "*://*/questions*",
+            "match": "*://*/questions*,*://*/review*",
             "exclude": "SE1.0"
         }, {
             "name": "shareLinksMarkdown",

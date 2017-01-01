@@ -995,7 +995,9 @@
                 var text = $anchor.text().trim();
                 var id = $anchor.attr('href').split('/')[2];
 
-                $('.question-summary .answer-hyperlink, .question-summary .question-hyperlink, .question-summary .result-link a').css('display', 'inline-block'); //https://github.com/soscripted/sox/issues/181
+                //https://github.com/soscripted/sox/issues/181
+                $('.question-summary .answer-hyperlink, .question-summary .question-hyperlink, .question-summary .result-link a').css('display', 'inline');
+                $('.summary h3').css('line-height', '1.2em'); //fixes line height on "Questions" page
 
                 if (text.substr(text.length - 11) == '[duplicate]') {
                     $anchor.text(text.substr(0, text.length - 11)); //remove [duplicate]
@@ -1142,11 +1144,15 @@
             function SBS(jNode) {
                 jNode = $(jNode);
                 if (jNode.is('textarea')) jNode = jNode.parent().find('[id^="wmd-redo-button"]');
+                if (!jNode.length) return;
+
                 var itemid = jNode[0].id.replace(/^\D+/g, '');
                 var toAppend = (itemid.length > 0 ? '-' + itemid : ''); //helps select tags specific to the question/answer being
                 // edited (or new question/answer being written)
                 setTimeout(function() {
-                    var sbsBtn = '<li class="wmd-button" title="side-by-side-editing" style="left: 500px;width: 170px;"> \
+                    if (jNode.parent().find('.sox-sbs-toggle').length) return; //don't add again if already exists
+
+                    var sbsBtn = '<li class="wmd-button sox-sbs-toggle" title="side-by-side-editing" style="left: 500px;width: 170px;"> \
 <div id="wmd-sbs-button' + toAppend + '" style="background-image: none;"> \
 Toggle SBS?</div></li>';
                     jNode.after(sbsBtn);
@@ -1185,7 +1191,10 @@ Toggle SBS?</div></li>';
             }
 
             //event listener for adding the sbs toggle button for posting new questions or answers
-            sox.helpers.observe('li[id^="wmd-redo-button"], textarea[id^="wmd-input"]', SBS);
+            sox.helpers.observe('li[id^="wmd-redo-button"], textarea[id^="wmd-input"]', function(target) {
+                SBS(target);
+            });
+
             $('li[id^="wmd-redo-button"]').each(function() {
                 SBS($(this));
             });
@@ -2111,7 +2120,7 @@ Toggle SBS?</div></li>';
             // Description: Shows when the post's author was last active and their registration state in the comments section
 
             function addLastSeen(userDetailsFromAPI) {
-                $('.question, .answer').each(function() {
+                $('.question, .answer, .reviewable-post').each(function() {
                     sox.debug('current post', $(this));
                     if ($(this).find('.post-signature a').length) {
                         var $anchor = $(this).find('.post-signature .user-details:last a:last');
@@ -2120,45 +2129,53 @@ Toggle SBS?</div></li>';
                         sox.debug('quickAuthorInfo addLastSeen(): userdetailscurrent id', userDetailsFromAPI[id]);
                         if (userDetailsFromAPI[id] && !$(this).find('.sox-last-seen').length) {
                             var lastSeenDate = new Date(userDetailsFromAPI[id].last_seen);
-                            $(this).find('.post-signature').last().append("<i class='fa fa-clock-o'></i>&nbsp;<time class='timeago sox-last-seen' datetime='" + lastSeenDate.toISOString() + "' title='" + lastSeenDate.toLocaleString() + "'>" + lastSeenDate.toLocaleString() + "</time>, " + userDetailsFromAPI[id].type);
+                            $(this).find('.post-signature').last().append("<i class='fa fa-clock-o'></i>&nbsp;<time class='timeago sox-last-seen' datetime='" + lastSeenDate.toISOString() + "' title='" + lastSeenDate.toUTCString() + "'>" + lastSeenDate.toLocaleString() + "</time>, " + userDetailsFromAPI[id].type);
                         }
                     }
                 });
                 $("time.timeago").timeago();
             }
 
+            function getIdsAndAddDetails(answerers) {
+                $('.question, .answer, .reviewable-post').each(function() {
+                    var $userDetailsAnchor = $(this).find('.post-signature .user-details a').last();
+                    if ($userDetailsAnchor.length) {
+                        var userid = ($userDetailsAnchor.attr('href') ? $userDetailsAnchor.attr('href').split('/')[2] : 0);
+                        var username = $userDetailsAnchor.text();
+                        if (userid !== 0) answerers[userid] = username;
+                    } else {
+                        sox.loginfo('Could not find user user link for: ', $(this));
+                    }
+                });
+
+                sox.helpers.getFromAPI('users', Object.keys(answerers).join(';'), sox.site.currentApiParameter, function(data) {
+                    sox.debug('quickAuthorInfo api dump', data);
+
+                    var userDetailsFromAPI = {};
+                    $.each(data.items, function(k, v) {
+                        userDetailsFromAPI[v.user_id] = {
+                            'last_seen': v.last_access_date * 1000,
+                            'type': v.user_type
+                        };
+                    });
+                    sox.debug('quickAuthorInfo userdetailsfromapi', userDetailsFromAPI);
+                    addLastSeen(userDetailsFromAPI);
+                    sox.helpers.observe('.new_comment', function() { //make sure it doesn't disappear when adding a new comment!
+                        addLastSeen(userDetailsFromAPI);
+                    }, document.querySelectorAll('.comments table'));
+                }, 'creation', 'false'); //false means async=false;
+            }
+
             var answerers = {};
 
-            $('.question, .answer').each(function() {
-                var $userDetailsAnchor = $(this).find('.post-signature .user-details a').last();
-                if ($userDetailsAnchor.length) {
-                    var userid = ($userDetailsAnchor.attr('href') ? $userDetailsAnchor.attr('href').split('/')[2] : 0);
-                    var username = $userDetailsAnchor.text();
-                    if (userid !== 0) answerers[userid] = username;
-                } else {
-                    sox.loginfo('Could not find user user link for: ', $(this));
-                }
+            sox.helpers.observe('.review-content', function() {
+                getIdsAndAddDetails(answerers);
             });
+
+            getIdsAndAddDetails(answerers);
 
             sox.debug('quickAuthorInfo answerer IDs', answerers);
             sox.debug('quickAuthorInfo API call parameters', 'users', Object.keys(answerers).join(';'), sox.site.currentApiParameter);
-
-            sox.helpers.getFromAPI('users', Object.keys(answerers).join(';'), sox.site.currentApiParameter, function(data) {
-                sox.debug('quickAuthorInfo api dump', data);
-
-                var userDetailsFromAPI = {};
-                $.each(data.items, function(k, v) {
-                    userDetailsFromAPI[v.user_id] = {
-                        'last_seen': v.last_access_date * 1000,
-                        'type': v.user_type
-                    };
-                });
-                sox.debug('quickAuthorInfor userdetailsfromapi', userDetailsFromAPI);
-                addLastSeen(userDetailsFromAPI);
-                sox.helpers.observe('.new_comment', function() { //make sure it doesn't disappear when adding a new comment!
-                    addLastSeen(userDetailsFromAPI);
-                }, document.querySelectorAll('.comments table'));
-            }, 'creation', 'false'); //false means async=false;
         },
 
         hiddenCommentsIndicator: function() {
