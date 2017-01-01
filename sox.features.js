@@ -310,12 +310,17 @@
                     if (!$(this).parent().find('#wmd-bullet-button').length) $(this).after(listBtn);
                 });
 
-                $('#wmd-kbd-button').on('click', function() {
-                    addKbd($(this).parents('div[id*="wmd-button-bar"]').parent().find('textarea'));
-                });
-                $('#wmd-bullet-button').on('click', function() {
-                    addBullets($(this).parents('div[id*="wmd-button-bar"]').parent().find('textarea'));
-                });
+                //https://github.com/soscripted/sox/issues/112
+                //http://meta.stackexchange.com/a/123256/260841
+                var textarea = $('textarea[id^="wmd-input"]');
+                function rejectKeyboardUndoRedo(e) {
+                    if (e.ctrlKey && (e.which == 90 || e.which == 89)) {
+                        e.stopPropagation();
+                    }
+                }
+                textarea.parent()[0].addEventListener('keydown', rejectKeyboardUndoRedo, true);
+                textarea.parent()[0].addEventListener('keypress', rejectKeyboardUndoRedo, true);
+                textarea.parent()[0].addEventListener('keyup', rejectKeyboardUndoRedo, true);
             }
 
             sox.helpers.observe('[id^="wmd-redo-button"], textarea[id^="wmd-input"]', loopAndAddHandlers);
@@ -327,6 +332,14 @@
 
             $('[id^="wmd-input"]').bind('keydown', 'alt+k', function() {
                 addKbd($(this).parents('div[id*="wmd-button-bar"]').parent().find('textarea'));
+            });
+
+            $(document).on('click', '#wmd-kbd-button', function() {
+                addKbd($(this).parents('div[id*="wmd-button-bar"]').parent().find('textarea'));
+            });
+
+            $(document).on('click', '#wmd-bullet-button', function() {
+                addBullets($(this).parents('div[id*="wmd-button-bar"]').parent().find('textarea'));
             });
         },
 
@@ -2129,7 +2142,12 @@ Toggle SBS?</div></li>';
                         sox.debug('quickAuthorInfo addLastSeen(): userdetailscurrent id', userDetailsFromAPI[id]);
                         if (userDetailsFromAPI[id] && !$(this).find('.sox-last-seen').length) {
                             var lastSeenDate = new Date(userDetailsFromAPI[id].last_seen);
-                            $(this).find('.post-signature').last().append("<i class='fa fa-clock-o'></i>&nbsp;<time class='timeago sox-last-seen' datetime='" + lastSeenDate.toISOString() + "' title='" + lastSeenDate.toUTCString() + "'>" + lastSeenDate.toLocaleString() + "</time>, " + userDetailsFromAPI[id].type);
+                            $(this).find('.post-signature').last().append(
+                                "<i class='fa fa-clock-o'></i>&nbsp;<time class='timeago sox-last-seen' datetime='" +
+                                lastSeenDate.toISOString() + "' title='" + //datetime
+                                lastSeenDate.toJSON().replace('T', ' ').replace('.000', '') + "'>" + //title, https://github.com/soscripted/sox/issues/204 hacky but short way '.000' always works because SE doesn't do such precise times
+                                lastSeenDate.toLocaleString() + "</time>, " + userDetailsFromAPI[id].type //contents of tag
+                            );
                         }
                     }
                 });
