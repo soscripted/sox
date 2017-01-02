@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Stack Overflow Extras (SOX)
 // @namespace    https://github.com/soscripted/sox
-// @version      2.0.3 DEV aa
+// @version      2.0.3 DEV ab
 // @description  Extra optional features for Stack Overflow and Stack Exchange sites
 // @contributor  ᴉʞuǝ (stackoverflow.com/users/1454538/)
 // @contributor  ᔕᖺᘎᕊ (stackexchange.com/users/4337810/)
@@ -160,6 +160,13 @@
                 }
             }
         }
+
+
+        //custom events....
+        sox.helpers.observe('.new_comment', function() { //custom event that triggers when a new comment appears/show more comments clicked; avoids lots of the same mutationobserver
+            $(document).trigger('sox-new-comment');
+            sox.debug('sox-new-comment event triggered');
+        });
 
         if (GM_getValue('SOX-accessToken', -1) == -1) { //set access token
             //This was originally a series of IIFEs appended to the head which used the SE API JS SDK but

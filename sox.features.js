@@ -257,9 +257,9 @@
                 });
             });
 
-            sox.helpers.observe('.new_comment', function() {
+            $(document).on('sox-new-comment', function() {
                 sox.features.colorAnswerer();
-            }, document.querySelectorAll('.comments table'));
+            });
         },
 
         kbdAndBullets: function() {
@@ -572,7 +572,8 @@
             });
 
             addReplyLinks();
-            sox.helpers.observe('.new_comment', addReplyLinks);
+
+            $(document).on('sox-new-comment', addReplyLinks);
         },
 
         parseCrossSiteLinks: function() {
@@ -684,7 +685,8 @@
             }
 
             setTimeout(showImages, 2000); //setTimeout needed because FF refuses to load the feature on page load and does it before so the comment isn't detected.
-            sox.helpers.observe('.new_comment', showImages, document.querySelectorAll('.comments table'));
+
+            $(document).on('sox-new-comment', showImages);
         },
 
         showCommentScores: function() {
@@ -2173,9 +2175,10 @@ Toggle SBS?</div></li>';
                     });
                     sox.debug('quickAuthorInfo userdetailsfromapi', userDetailsFromAPI);
                     addLastSeen(userDetailsFromAPI);
-                    sox.helpers.observe('.new_comment', function() { //make sure it doesn't disappear when adding a new comment!
+
+                    $(document).on('sox-new-comment', function() { //make sure it doesn't disappear when adding a new comment!
                         addLastSeen(userDetailsFromAPI);
-                    }, document.querySelectorAll('.comments table'));
+                    });
                 }, 'creation', 'false'); //false means async=false;
             }
 
