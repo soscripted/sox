@@ -90,14 +90,6 @@
             });
         },
 
-        bulletReplace: function() {
-            // Description: Replaces disclosure bullets with normal ones
-
-            $('.dingus').each(function() {
-                $(this).html('&#x25cf;');
-            });
-        },
-
         copyCommentsLink: function() {
             // Description: Adds the 'show x more comments' link before the commnents
 
@@ -1408,7 +1400,10 @@ Toggle SBS?</div></li>';
 
             $('.post-text a, .comments .comment-copy a').each(function() {
                 var url = $(this).attr('href');
-                if (url && url.indexOf(sox.site.url) > -1 && url.indexOf('#comment') == -1) {
+
+                //https://github.com/soscripted/sox/issues/205 -- check link's location is to same site, eg if on SU, don't allow on M.SU
+                //http://stackoverflow.com/a/4815665/3541881
+                if (url && $('<a>').prop('href', url).prop('hostname') == location.hostname && url.indexOf('#comment') == -1) {
                     $(this).css('color', '#0033ff');
                     $(this).before('<a class="expander-arrow-small-hide expand-post-sox"></a>');
                 }
@@ -1425,7 +1420,7 @@ Toggle SBS?</div></li>';
                     var $that = $(this);
                     var id = getIdFromUrl($(this).next().attr('href'));
                     $.get(location.protocol + '//' + sox.site.url + '/posts/' + id + '/body', function(d) {
-                        var div = '<div class="linkedPostsInline-loaded-body-sox" style="background-color: #ffffcc;">' + d + '</div>';
+                        var div = '<div class="linkedPostsInline-loaded-body-sox">' + d + '</div>';
                         $that.next().after(div);
                     });
                 }

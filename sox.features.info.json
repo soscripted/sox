@@ -20,12 +20,6 @@
             "match": "*://*.com/search*",
             "exclude": "SE1.0"
         }, {
-            "name": "bulletReplace",
-            "desc": "Replace triangular bullets with normal ones",
-            "meta": "http://meta.stackexchange.com/questions/195779/can-we-get-rid-of-the-disclosure-triangles-that-dont-disclose-anything-on-the-e",
-            "match": "",
-            "exclude": "SE1.0"
-        }, {
             "name": "colorAnswerer",
             "desc": "Color answerer's comments",
             "meta": "http://meta.stackexchange.com/questions/19574/highlight-comments-from-answer-author-in-addition-to-question-author",

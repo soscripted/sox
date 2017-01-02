@@ -350,12 +350,13 @@ li.fixedTopbar-siteLink {
 
 /*linkedPostsInline for the displayed post text; https://github.com/shu8/Stack-Overflow-Optional-Features/issues/48 */
 
-.linkedPostsInline-loaded-body-shub .post-text {
+.linkedPostsInline-loaded-body-sox {
+    background-color: aliceblue;
+    border-radius: 20px;
     overflow-wrap: break-word;
     width: 630px;
     padding: 10px;
 }
-
 
 /*enhancedEditor (enhanced_editor folder)*/
 
