@@ -802,13 +802,27 @@
                     added = ($questionHyperlinkTwo.find('.diff-delete').remove().end().text()),
                     removed = ($questionHyperlink.find('.diff-add').remove().end().text());
 
+                $('.summary h2 .question-hyperlink').before('<i class="sox-better-title-toggle fa fa-toggle-on" title="toggle SOX better title diff"></i>');
+
                 if ($('.summary h2 .question-hyperlink').find('.diff-delete, .diff-add').length && !($('.sox-better-title').length)) {
-                    $('.summary h2 .question-hyperlink').hide();
+                    $('.summary h2 .question-hyperlink').addClass('sox-original-title-diff').hide();
                     $('.summary h2 .question-hyperlink').after('<a href="' + link + '" class="question-hyperlink sox-better-title"><span class="diff-delete">' + removed + '</span><span class="diff-add">' + added + '</span></a>');
                 }
             }
             betterTitle();
             sox.helpers.observe('.review-status, .review-content, .suggested-edit, .post-id', betterTitle);
+
+            $(document).on('click', '.sox-better-title-toggle', function() { //https://github.com/soscripted/sox/issues/166#issuecomment-269925059
+                if ($('.sox-original-title-diff').is(':visible')) {
+                    $(this).addClass('fa-toggle-on').removeClass('fa-toggle-off');
+                    $('.sox-original-title-diff').hide();
+                    $('.sox-better-title').show();
+                } else {
+                    $(this).removeClass('fa-toggle-on').addClass('fa-toggle-off');
+                    $('.sox-original-title-diff').show();
+                    $('.sox-better-title').hide();
+                }
+            });
         },
 
         metaChatBlogStackExchangeButton: function() {
