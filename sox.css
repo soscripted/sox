@@ -545,3 +545,11 @@ hr.or:after {
 #sox-flagPercentHelpful {
     margin-bottom: 5px;
 }
+
+/*titleEditDiff -- for the toggle button*/
+
+.sox-better-title-toggle {
+    float: left;
+    margin-right: 10px;
+    cursor: pointer;
+}

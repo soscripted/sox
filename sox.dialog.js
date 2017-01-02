@@ -165,7 +165,7 @@
                     GM_setValue("SOX-accessToken", token);
                     sox.loginfo('Your saved access token is now:', token);
                 } else {
-                    sox.loginfo('To get a new access token, please go to the following URL', 'https://stackexchange.com/oauth/dialog?client_id=7138&redirect_uri=http://soscripted.github.io/sox/');
+                    sox.loginfo('To get a new access token, please go to the following URL', 'https://stackexchange.com/oauth/dialog?client_id=7138&scope=no_expiry&redirect_uri=http://soscripted.github.io/sox/');
                     return;
                 }
             });
