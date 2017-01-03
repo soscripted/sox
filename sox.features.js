@@ -651,7 +651,7 @@
             function addHotText() {
                 if (!$('.sox-hot').length) {
                     $('#feed').html('<p>One of the 100 hot network questions!</p>');
-                    $('#question-header').prepend('<div title="this question is a hot network question!" class="sox-hot">&#x1f525;<div>');
+                    $('#question-header').prepend('<div title="this question is a hot network question!" class="sox-hot"><i class="fa fa-free-code-camp"></i><div>');
                 }
             }
             $('#qinfo').after('<div id="feed"></div>');

@@ -160,13 +160,13 @@
             });
 
             $soxSettingsPasteAccessToken.on('click', function() {
-                var token = window.prompt("Please enter your access token. Alternatively, press cancel and you can request a new access token by clicking the link in the console (Ctrl+Shift+J/Cmd+Opt+J in Chrome or Ctrl+Shift+I/Cmd+Opt+I in Firefox)");
+                var token = window.prompt("If you want, you can enter an access token here if you have already have one. Alternatively, press cancel and a window will open so you can request a new one");
                 if (token) {
                     GM_setValue("SOX-accessToken", token);
                     sox.loginfo('Your saved access token is now:', token);
                 } else {
+                    window.open('https://stackexchange.com/oauth/dialog?client_id=7138&scope=no_expiry&redirect_uri=http://soscripted.github.io/sox/');
                     sox.loginfo('To get a new access token, please go to the following URL', 'https://stackexchange.com/oauth/dialog?client_id=7138&scope=no_expiry&redirect_uri=http://soscripted.github.io/sox/');
-                    return;
                 }
             });
 

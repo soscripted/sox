@@ -45,6 +45,7 @@
 
 #sox-settings-dialog-features .modal-content div {
     margin-bottom: 3px;
+    padding: 1px;
 }
 
 #sox-settings-dialog-features .modal-content label>input {
@@ -208,7 +209,6 @@
     float: left;
     font-size: xx-large;
     color: red;
-    margin-top: 5px;
     margin-right: 8px;
 }
 

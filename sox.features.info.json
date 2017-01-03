@@ -16,12 +16,14 @@
         }, {
             "name": "answerTagsSearch",
             "desc": "Show tags for the question an answer belongs to on search pages (for better context)",
+            "extended_description": "By default, any search results thar are answers do not show its question's tags. This feature adds the question's tags underneath the result.",
             "meta": "http://meta.stackexchange.com/questions/197874/include-tags-in-answers-entries-on-search-results",
             "match": "*://*.com/search*",
             "exclude": "SE1.0"
         }, {
             "name": "colorAnswerer",
             "desc": "Color answerer's comments",
+            "extended_description": "Highlight the username of a commenter if they have posted an answer on that page.",
             "meta": "http://meta.stackexchange.com/questions/19574/highlight-comments-from-answer-author-in-addition-to-question-author",
             "match": "*://*/questions*",
             "exclude": "SE1.0"
@@ -51,13 +53,15 @@
             }]
         }, {
             "name": "highlightQuestions",
-            "desc": "Change highlighting for questions with favorite tags",
+            "desc": "Change highlighting for questions with favourite tags",
+            "extended_description": "Changes the favourite tag question highlighting to be a more subtle, coloured left-border",
             "meta": "http://meta.stackexchange.com/questions/238591/should-favorite-tag-highlighting-in-question-lists-be-changed",
             "match": "",
             "exclude": "*://chat.*.com/*"
         }, {
             "name": "isQuestionHot",
             "desc": "Add a label on questions which are hot-network questions",
+            "extended_description": "If the question you are currently viewing is HOT, a flame icon is added next to the title",
             "meta": "http://meta.stackexchange.com/questions/245390/let-mods-and-10k-know-when-questions-go-hot",
             "match": "*://*/questions*",
             "exclude": "SE1.0"
@@ -121,6 +125,7 @@
         "Comments": [{
             "name": "autoShowCommentImages",
             "desc": "View linked images (to imgur) in comments inline",
+            "extended_description": "This feature will automatically detect comments with links to imgur and will display them inline",
             "meta": "",
             "match": "*://*/questions*",
             "exclude": "SE1.0"
@@ -157,6 +162,7 @@
         }, {
             "name": "showCommentScores",
             "desc": "Show your comment and comment replies scores in your profile tabs",
+            "extended_description": "Adds a button next to comments in your profile's responses/activity tabs that when clicked, show you the score of your comment",
             "meta": "http://meta.stackexchange.com/questions/38285/display-the-number-of-comment-upvotes-in-recent-activity-pages",
             "match": "*://*/users/*",
             "exclude": "SE1.0"
@@ -191,14 +197,16 @@
         }, {
             "name": "enhancedEditor",
             "desc": "Add more features to the markdown editor",
+            "extended_description": "Adds find/replace, changes the TAB key behaviour, adds DuckDuckGo integration, and basic auto-correct features.",
             "meta": "",
             "match": "*://*/questions*,*://*/review*",
             "exclude": "SE1.0"
         }, {
             "name": "kbdAndBullets",
             "desc": "Add KBD and list buttons to editor toolbar",
+            "extended_description": "Adds a kbd and bullet icon to the markdown editor toolbar that lets you surround the selected text with KBD tags or listify's the current selection",
             "meta": "http://meta.stackexchange.com/questions/102841/key-equivalent-for-kbd-kbd",
-            "match": "",
+            "match": "*://*/questions*",
             "exclude": "*://chat.*.com/*,SE1.0"
         }, {
             "name": "titleEditDiff",
@@ -209,7 +217,7 @@
         }, {
             "name": "inlineEditorEverywhere",
             "desc": "Inline editor regardless of reputation",
-            "extended_description": "Enables the inline editor on all sites, even if you don't have 2k rep there yet",
+            "extended_description": "Enables the inline editor on all sites, even if you don't have 2k rep there yet. Note: this feature may not work on Firefox.",
             "meta": "",
             "match": "*://*/questions*",
             "exclude": ""
@@ -338,18 +346,20 @@
         }, {
             "name": "linkedPostsInline",
             "desc": "Display linked posts inline by clicking on an arrow",
+            "extended_description": "Adds a button next to links to posts on the same site that expand to show the post inline",
             "meta": "",
             "match": "*://*/questions*",
             "exclude": "SE1.0"
         }, {
             "name": "parseCrossSiteLinks",
             "desc": "Parse titles to links cross-SE-sites",
+            "extended_description": "Detects links to other questions on SE sites and converts them to their title",
             "meta": "http://meta.stackexchange.com/questions/251183/parse-question-links-from-other-se-sites",
             "match": "*://*/questions*",
             "exclude": "SE1.0"
         }, {
             "name": "quickAuthorInfo",
-            "desc": "Show when the post's author was last seen and whether they are registered in the comments section",
+            "desc": "Show when the post's author was last seen and whether they are registered",
             "meta": "",
             "match": "*://*/questions*,*://*/review*",
             "exclude": "SE1.0"
