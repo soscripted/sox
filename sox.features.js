@@ -802,7 +802,7 @@
                     added = ($questionHyperlinkTwo.find('.diff-delete').remove().end().text()),
                     removed = ($questionHyperlink.find('.diff-add').remove().end().text());
 
-                $('.summary h2 .question-hyperlink').before('<i class="sox-better-title-toggle fa fa-toggle-on" title="toggle SOX better title diff"></i>');
+                if (!$('.sox-better-title-toggle').length) $('.summary h2 .question-hyperlink').before('<i class="sox-better-title-toggle fa fa-toggle-on" title="toggle SOX better title diff"></i>');
 
                 if ($('.summary h2 .question-hyperlink').find('.diff-delete, .diff-add').length && !($('.sox-better-title').length)) {
                     $('.summary h2 .question-hyperlink').addClass('sox-original-title-diff').hide();
@@ -1419,7 +1419,7 @@ Toggle SBS?</div></li>';
 
                 //https://github.com/soscripted/sox/issues/205 -- check link's location is to same site, eg if on SU, don't allow on M.SU
                 //http://stackoverflow.com/a/4815665/3541881
-                if (url && $('<a>').prop('href', url).prop('hostname') == location.hostname && url.indexOf('#comment') == -1) {
+                if (url && $('<a>').prop('href', url).prop('hostname') == location.hostname && url.indexOf('#comment') == -1 && getIdFromUrl(url)) { //getIdFromUrl(url) makes sure it won't fail later on
                     $(this).css('color', '#0033ff');
                     $(this).before('<a class="expander-arrow-small-hide expand-post-sox"></a>');
                 }
