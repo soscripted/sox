@@ -42,7 +42,7 @@
         }, {
             "name": "fixedTopbar",
             "desc": "Fix topbar position",
-            "extended_description": "Locks the topbar to the top of the window so you can see it at all times, even when scrolling down. Disabled on Ask Ubuntu due to the different styling of the topbar.",
+            "extended_description": "Locks the topbar to the top of the window so you can see it at all times, even when scrolling down. You can optionally enable this on Ask Ubuntu due to the different default styling of the topbar.",
             "meta": "http://meta.stackexchange.com/questions/101385/should-the-top-navigation-be-frozen-optional",
             "match": "",
             "exclude": "",
@@ -336,7 +336,7 @@
             "match": "*://*/questions*",
             "exclude": "SE1.0"
         }],
-        "Unsorted": [{
+        "Extras": [{
             "name": "alwaysShowImageUploadLinkBox",
             "desc": "Always show the 'Link from the web' box when uploading an image",
             "extended_description": "Removes the 'you can also provide a link from the web' button when uploading images, and shows the URL input field by default",

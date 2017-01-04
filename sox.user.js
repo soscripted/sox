@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Stack Overflow Extras (SOX)
 // @namespace    https://github.com/soscripted/sox
-// @version      2.0.3 DEV af
+// @version      2.0.3 DEV ag
 // @description  Extra optional features for Stack Overflow and Stack Exchange sites
 // @contributor  ᴉʞuǝ (stackoverflow.com/users/1454538/)
 // @contributor  ᔕᖺᘎᕊ (stackexchange.com/users/4337810/)
@@ -105,8 +105,16 @@
             // execute features
             for (var i = 0; i < settings.length; ++i) {
                 var category = settings[i].split('-')[0],
-                    featureId = settings[i].split('-')[1],
-                    feature = featureInfo.categories[category].filter(function(obj) {
+                    featureId = settings[i].split('-')[1];
+
+                if (!(category in featureInfo.categories)) { //if we ever rename a category
+                    sox.loginfo('Deleting feature "' + settings[i] + '"');
+                    settings.splice(i, 1);
+                    sox.settings.save(settings);
+                    continue;
+                }
+
+                var feature = featureInfo.categories[category].filter(function(obj) {
                         return obj.name == featureId;
                     })[0],
                     runFeature = true,
