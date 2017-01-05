@@ -17,13 +17,13 @@
         },
 
         startFeature: function() {
-            sox.helpers.observe('li[id^="wmd-redo-button"], textarea[id^="wmd-input"]', sox.enhancedEditor.initLoop);
+            $(document).on('sox-edit-window', sox.enhancedEditor.initLoop);
             sox.enhancedEditor.initLoop();
         },
 
         init: function(wmd) {
             var s = '#' + wmd; //s is the selector we pass onto each function so the action is applied to the correct textarea (and not, for example the 'add answer' textarea *and* the 'edit' textarea!)
-            if ($(s).parents('.question, .answer, #post-form').find('.enhancedEditor-toolbar').length) return;
+            if ($(s).parents('.wmd-container').find('.enhancedEditor-toolbar').length) return;
             sox.enhancedEditor.startInsertLink(s);
             sox.enhancedEditor.betterTabKey(s);
             sox.enhancedEditor.keyboardShortcuts(s);

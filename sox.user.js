@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Stack Overflow Extras (SOX)
 // @namespace    https://github.com/soscripted/sox
-// @version      2.0.4
+// @version      2.0.5
 // @description  Extra optional features for Stack Overflow and Stack Exchange sites
 // @contributor  ᴉʞuǝ (stackoverflow.com/users/1454538/)
 // @contributor  ᔕᖺᘎᕊ (stackexchange.com/users/4337810/)
@@ -174,6 +174,11 @@
         sox.helpers.observe('.new_comment', function() { //custom event that triggers when a new comment appears/show more comments clicked; avoids lots of the same mutationobserver
             $(document).trigger('sox-new-comment');
             sox.debug('sox-new-comment event triggered');
+        });
+
+        sox.helpers.observe('li[id^="wmd-redo-button"], textarea[id^="wmd-input"]', function(target) {
+            $(document).trigger('sox-edit-window', [target]);
+            sox.debug('sox-edit-window event triggered');
         });
 
         if (GM_getValue('SOX-accessToken', -1) == -1) { //set access token

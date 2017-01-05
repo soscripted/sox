@@ -206,7 +206,7 @@
             "desc": "Add KBD and list buttons to editor toolbar",
             "extended_description": "Adds a kbd and bullet icon to the markdown editor toolbar that lets you surround the selected text with KBD tags or listify's the current selection",
             "meta": "http://meta.stackexchange.com/questions/102841/key-equivalent-for-kbd-kbd",
-            "match": "*://*/questions*",
+            "match": "*://*/questions*,*://*/review*",
             "exclude": "*://chat.*.com/*,SE1.0"
         }, {
             "name": "titleEditDiff",

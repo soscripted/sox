@@ -316,7 +316,8 @@
                 textarea.parent()[0].addEventListener('keyup', rejectKeyboardUndoRedo, true);
             }
 
-            sox.helpers.observe('[id^="wmd-redo-button"], textarea[id^="wmd-input"]', loopAndAddHandlers);
+            $(document).on('sox-edit-window', loopAndAddHandlers);
+
             loopAndAddHandlers();
 
             $('[id^="wmd-input"]').bind('keydown', 'alt+l', function() {
@@ -1222,7 +1223,7 @@ Toggle SBS?</div></li>';
             }
 
             //event listener for adding the sbs toggle button for posting new questions or answers
-            sox.helpers.observe('li[id^="wmd-redo-button"], textarea[id^="wmd-input"]', function(target) {
+            $(document).on('sox-edit-window', function(e, target) {
                 SBS(target);
             });
 
