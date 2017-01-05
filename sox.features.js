@@ -248,18 +248,19 @@
         colorAnswerer: function() {
             // Description: For highlighting the names of answerers on comments
 
-            $('.answercell').each(function(i, obj) {
-                var x = $(this).find('.user-details a').text();
-                $('.answer .comment-user').each(function() {
-                    if ($(this).text() == x) {
-                        $(this).css('background-color', 'orange');
-                    }
+            function colour() {
+                $('.answercell').each(function(i, obj) {
+                    var x = $(this).find('.user-details a').text();
+                    $('.answer .comment-user').each(function() {
+                        if ($(this).text() == x) {
+                            $(this).css('background-color', 'orange');
+                        }
+                    });
                 });
-            });
+            }
 
-            $(document).on('sox-new-comment', function() {
-                sox.features.colorAnswerer();
-            });
+            colour();
+            $(document).on('sox-new-comment', colour);
         },
 
         kbdAndBullets: function() {
@@ -1032,21 +1033,30 @@
                     $anchor.text(text.substr(0, text.length - 8)); //remove [closed]
                     $question.attr('data-sox-question-state', 'closed'); //used for hideCertainQuestions feature compatability
                     $.get('//' + location.hostname + '/questions/' + id, function(d) {
-                        $anchor.after("&nbsp;<span class='closed' title='" + $(d).find('.question-status h2').text() + "'>&nbsp;closed&nbsp;</span>"); //add appropiate message
+                        $anchor.after('&nbsp;<span class="closed" title="' + $(d).find('.question-status h2').text() + '">&nbsp;closed&nbsp;</span>'); //add appropiate message
                     });
 
                 } else if (text.substr(text.length - 10) == '[migrated]') {
                     $anchor.text(text.substr(0, text.length - 10)); //remove [migrated]
                     $question.attr('data-sox-question-state', 'migrated'); //used for hideCertainQuestions feature compatability
                     $.get("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20html%20where%20url%3D%22" + encodeURIComponent('http://' + location.hostname + '/questions/' + id) + "%22&diagnostics=true", function(d) {
-                        $anchor.after("&nbsp;<span class='migrated' title='migrated to " + $(d).find('.current-site .site-icon').attr('title') + "'>&nbsp;migrated&nbsp;</span>"); //add appropiate message
+                        var text,
+                            questionStatus = $(d).find('.question-status:last');
+                        if (questionStatus.length) {
+                            if(questionStatus.text().indexOf('migrated from')) {
+                                text = 'migrated from ' + questionStatus.find('h2 a').text();
+                            }
+                        } else {
+                            text = 'migrated to' + $(d).find('.current-site .site-icon').attr('title');
+                        }
+                        $anchor.after("&nbsp;<span class='migrated' title='" + text + "'>&nbsp;migrated&nbsp;</span>"); //add appropiate message
                     });
 
                 } else if (text.substr(text.length - 9) == '[on hold]') {
                     $anchor.text(text.substr(0, text.length - 9)); //remove [on hold]
                     $question.attr('data-sox-question-state', 'on hold'); //used for hideCertainQuestions feature compatability
                     $.get('//' + location.hostname + '/questions/' + id, function(d) {
-                        $anchor.after("&nbsp;<span class='onhold' title='" + $(d).find('.question-status h2').text() + "'>&nbsp;onhold&nbsp;</span>"); //add appropiate message
+                        $anchor.after('&nbsp;<span class="onhold" title="' + $(d).find('.question-status h2').text() + '">&nbsp;onhold&nbsp;</span>'); //add appropiate message
                     });
                 }
             }
