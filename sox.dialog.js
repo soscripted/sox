@@ -17,7 +17,7 @@
                 $soxSettingsSave = $soxSettingsDialog.find('#sox-settings-dialog-save'),
                 $soxSettingsReset = $soxSettingsDialog.find('#sox-settings-dialog-reset'),
                 $soxSettingsDebugging = $soxSettingsDialog.find('#sox-settings-dialog-debugging'),
-                $soxSettingsPasteAccessToken = $soxSettingsDialog.find('#sox-settings-dialog-paste-access-token'),
+                $soxSettingsNewAccessTokenButton = $soxSettingsDialog.find('#sox-settings-dialog-access-token'),
                 $soxSettingsToggleAccessTokensDiv = $soxSettingsDialog.find('#sox-settings-dialog-access-tokens'),
                 $soxSettingsAccessTokensToggle = $soxSettingsToggleAccessTokensDiv.find('#toggle-access-token-links'),
                 $soxSettingsToggle = $soxSettingsDialog.find('#sox-settings-dialog-check-toggle'),
@@ -159,15 +159,9 @@
                 location.reload();
             });
 
-            $soxSettingsPasteAccessToken.on('click', function() {
-                var token = window.prompt("If you want, you can enter an access token here if you have already have one. Alternatively, press cancel and a window will open so you can request a new one");
-                if (token) {
-                    GM_setValue("SOX-accessToken", token);
-                    sox.loginfo('Your saved access token is now:', token);
-                } else {
-                    window.open('https://stackexchange.com/oauth/dialog?client_id=7138&scope=no_expiry&redirect_uri=http://soscripted.github.io/sox/');
-                    sox.loginfo('To get a new access token, please go to the following URL', 'https://stackexchange.com/oauth/dialog?client_id=7138&scope=no_expiry&redirect_uri=http://soscripted.github.io/sox/');
-                }
+            $soxSettingsNewAccessTokenButton.on('click', function() {
+                window.open('https://stackexchange.com/oauth/dialog?client_id=7138&scope=no_expiry&redirect_uri=http://soscripted.github.io/sox/');
+                sox.loginfo('To get a new access token, please go to the following URL', 'https://stackexchange.com/oauth/dialog?client_id=7138&scope=no_expiry&redirect_uri=http://soscripted.github.io/sox/');
             });
 
             $soxSettingsToggle.on('click', function() {

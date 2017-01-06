@@ -1088,14 +1088,18 @@
 
                 });
             }
-            $('.question, .answer').each(function() {
-                if ($(this).find('.post-signature').length > 1) {
-                    var id = $(this).attr('data-questionid') || $(this).attr('data-answerid');
-                    $(this).find('.post-signature:eq(0)').find('.user-action-time a').wrapInner('<span class="sox-revision-comment"></span>');
-                    var $that = $(this);
-                    getComment(location.protocol + '//' + sox.site.url + '/posts/' + id + '/revisions', $that);
-                }
-            });
+            function loopAndAddTooltip() {
+                $('.question, .answer').each(function() {
+                    if ($(this).find('.post-signature').length > 1) {
+                        var id = $(this).attr('data-questionid') || $(this).attr('data-answerid');
+                        $(this).find('.post-signature:eq(0)').find('.user-action-time a').wrapInner('<span class="sox-revision-comment"></span>');
+                        var $that = $(this);
+                        getComment(location.protocol + '//' + sox.site.url + '/posts/' + id + '/revisions', $that);
+                    }
+                });
+            }
+            loopAndAddTooltip();
+            sox.helpers.observe('.reviewable-post', loopAndAddTooltip);
         },
 
         addSBSBtn: function() {

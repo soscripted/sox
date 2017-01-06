@@ -67,7 +67,7 @@
     padding: 14px;
 }
 
-#sox-settings-dialog-actions #sox-settings-dialog-paste-access-token {
+#sox-settings-dialog-actions #sox-settings-dialog-access-token {
     transform: scaleX(-1);
 }
 
