@@ -247,7 +247,7 @@ NOTE: NEED TO MULTIPLY SE TIMES BY 1000!!
             if ((new Date().getTime() + 900000) >= lastCheckedTime) {
                 if (options.indexOf('newAnswers') !== -1 || options.indexOf('stateChange') !== -1) { //newAnswers || stateChange
                     //do API request to /questions or /answers
-                    fromAPI('http://api.stackexchange.com/2.2/' + currentType + 's/' + currentPostId + '?filter=' + (currentType == 'question' ? apiQuestionFilter : apiAnswerFilter), function(data) {
+                    fromAPI('http://api.stackexchange.com/2.2/' + currentType + 's/' + currentPostId + '?sitename=' + currentSitename + 'filter=' + (currentType == 'question' ? apiQuestionFilter : apiAnswerFilter), function(data) {
                         var newAnswerIds = (data.items[0].answers ? data.items[0].answers.map(function(o) {
                                 return o.answer_id;
                             }) : []),
@@ -256,24 +256,44 @@ NOTE: NEED TO MULTIPLY SE TIMES BY 1000!!
 
                         if (newAnswerIds) {
                             differentAnswerIds = newAnswerIds.filter(function(i) {
-                                return lastCheckedAnswerIds.indexOf(i) < 0;
+                                return lastCheckedAnswerIds.indexOf(i) === -1;
                             });
                         }
 
                         if (options.indexOf('newAnswers') !== -1 && options.indexOf('stateChange') == -1) { //newAnswers && !stateChange
                             //check for whether new answerId exists, notification = 'new answer'
+                            //http://stackoverflow.com/a/6230314/3541881 checking for whether they are equal
                             if (lastCheckedAnswerIds.sort().join(',') !== newAnswerIds.sort().join(',')) {
                                 //we have new answers (IDs in differentAnswerIds)
+                                addNotification({
+                                    'sitename': currentSitename,
+                                    'notificationType': 'newAnswers',
+                                    'link': data.items[0].link, //TODO: CHANGE [0] TO INDEX OF ITEM WITH ID IN differentAnswerIds
+                                });
                             }
                         } else if (options.indexOf('newAnswers') == -1 && options.indexOf('stateChange') !== -1) { //!newAnswers && stateChange
                             //check for whether lastCheckedState is same, notification = 'state change'
                             if (lastCheckedState !== newState) {
                                 //question state has changed
+                                addNotification({
+                                    'sitename': currentSitename,
+                                    'notificationType': 'stateChange',
+                                    'newState': newState,
+                                    'title': data.items[0].title,
+                                    'link': data.items[0].link
+                                });
                             }
                         } else if (options.indexOf('stateChange') !== -1 && options.indexOf('newAnswers') !== -1) { //newAnswers && stateChange
                             //check for whether new answerId exists, and whether state is different, notification = 'state change and new answer'
                             if (lastCheckedAnswerIds.sort().join(',') !== newAnswerIds.sort().join(',') || lastCheckedState !== newState) {
                                 //new answer IDs in differentAnswerIds
+                                addNotification({
+                                    'sitename': currentSitename,
+                                    'notificationType': 'newAnswersStateChange',
+                                    'newState': newState,
+                                    'title': data.items[0].title,
+                                    'link': data.items[0].link
+                                });
                             }
                         }
                     });
