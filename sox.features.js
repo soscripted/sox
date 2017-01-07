@@ -804,9 +804,9 @@
                     added = ($questionHyperlinkTwo.find('.diff-delete').remove().end().text()),
                     removed = ($questionHyperlink.find('.diff-add').remove().end().text());
 
-                if (!$('.sox-better-title-toggle').length) $('.summary h2 .question-hyperlink').before('<i class="sox-better-title-toggle fa fa-toggle-on" title="toggle SOX better title diff"></i>');
 
                 if ($('.summary h2 .question-hyperlink').find('.diff-delete, .diff-add').length && !($('.sox-better-title').length)) {
+                    if (!$('.sox-better-title-toggle').length) $('.summary h2 .question-hyperlink').before('<i class="sox-better-title-toggle fa fa-toggle-on" title="toggle SOX better title diff"></i>');
                     $('.summary h2 .question-hyperlink').addClass('sox-original-title-diff').hide();
                     $('.summary h2 .question-hyperlink').after('<a href="' + link + '" class="question-hyperlink sox-better-title"><span class="diff-delete">' + removed + '</span><span class="diff-add">' + added + '</span></a>');
                 }
