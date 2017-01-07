@@ -44,6 +44,7 @@ comments = [{
 NOTE: NEED TO MULTIPLY SE TIMES BY 1000!!
 */
 (function(sox, $, undefined) {
+    //The following CSS will be added to the style sheet when finished; this is just here to avoid having to got through the process of adding the stylesheet just for testing
     GM_addStyle(`.sox-watch-post {
                     margin-left: 5px;
                 }
@@ -105,10 +106,13 @@ NOTE: NEED TO MULTIPLY SE TIMES BY 1000!!
                 }`);
 
     function addNotification(details) {
-        var $li = $('<li>').append($('<a>').append($('<div>', {
-            'class': 'site-icon favicon favicon-codereview',
+        //TODO: look at notificationType and add appropriate info to notification
+        var $li = $('<li>').append($('<a>', {
+            'href': details.link
+        }).append($('<div>', {
+            'class': 'site-icon favicon favicon-' + details.sitename,
             'style': 'margin-right: 10px'
-        })).append('Question Title')).append($('<span>', {
+        })).append(details.title)).append($('<span>', {
             'style': 'color: black; margin-left: 5px',
             'text': 'question closed'
         }));
@@ -268,6 +272,7 @@ NOTE: NEED TO MULTIPLY SE TIMES BY 1000!!
                                 addNotification({
                                     'sitename': currentSitename,
                                     'notificationType': 'newAnswers',
+                                    'title': data.items[0].title,
                                     'link': data.items[0].link, //TODO: CHANGE [0] TO INDEX OF ITEM WITH ID IN differentAnswerIds
                                 });
                             }
