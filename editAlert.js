@@ -106,7 +106,22 @@ NOTE: NEED TO MULTIPLY SE TIMES BY 1000!!
                 }`);
 
     function addNotification(details) {
-        //TODO: look at notificationType and add appropriate info to notification
+        console.log('adding notification with details:', details);
+        var text;
+        if (details.notificationType === 'newAnswers') {
+            text = 'New answers have been posted on this question';
+        } else if (details.notificationType === 'stateChange') {
+            text = 'This question is now ' + details.newState;
+        } else if (details.notificationType === 'newAnswersStateChange') {
+            text = 'New answers have been posted. The new state is ' + details.newState;
+        } else if (details.notificationType === 'edit') {
+            text = 'Question has been edited (' + details.editComment + ')';
+        } else if (details.notificationType === 'retag') {
+            text = 'Question has been retagged (' + details.newTags.join(', ') + ')';
+        } else if (details.notificationType === 'editRetag') {
+            text = 'Question has been edited (' + details.editComment + ') and retagged (' + details.newTags.join(', ') + ')';
+        }
+
         var $li = $('<li>').append($('<a>', {
             'href': details.link
         }).append($('<div>', {
@@ -114,7 +129,7 @@ NOTE: NEED TO MULTIPLY SE TIMES BY 1000!!
             'style': 'margin-right: 10px'
         })).append(details.title)).append($('<span>', {
             'style': 'color: black; margin-left: 5px',
-            'text': 'question closed'
+            'text': text
         }));
 
         $('#sox-editNotificationDialogList').prepend($li);
@@ -135,6 +150,10 @@ NOTE: NEED TO MULTIPLY SE TIMES BY 1000!!
         $ul = $('<ul>', {
             'id': 'sox-edit-notification-options-list'
         });
+
+    console.log('postsToWatch', postsToWatch);
+    console.log('commentsToWatch', commentsToWatch);
+    console.log('notifications', notifications);
 
     //---------------------------------notification dialog------------------------------//
     var $dialog = $('<div/>', {
@@ -220,22 +239,46 @@ NOTE: NEED TO MULTIPLY SE TIMES BY 1000!!
 
     //---------------------------------/notification dialog------------------------------//
 
-    $('.comments').before('<i title="watch for new comments" class="fa fa-envelope-o sox-notify-on-change sox-watch-comments"></i>');
-    $('.post-menu').append('<span class="lsep"></span><i title="watch post for changes" class="fa fa-envelope-o sox-notify-on-change sox-watch-post"></i></a>');
+    $('.comments').before('<i title="watch for new comments" class="fa fa-pencil-square-o sox-notify-on-change sox-watch-comments"></i>');
+    $('.post-menu').append('<span class="lsep"></span><i title="watch post for changes" class="fa fa-pencil-square-o sox-notify-on-change sox-watch-post"></i></a>');
 
+    /*addNotification({
+        'sitename': 'meta',
+        'notificationType': 'newAnswers',
+        'title': 'Test question New Answers',
+        'link': 'http://superuser.com'
+    });
+
+    addNotification({
+        'sitename': 'superuser',
+        'notificationType': 'stateChange',
+        'newState': 'closed',
+        'title': 'Test question State Change',
+        'link': 'http://superuser.com'
+    });
+
+    addNotification({
+        'sitename': 'serverfault',
+        'notificationType': 'newAnswersStateChange',
+        'newState': 'oprn',
+        'title': 'Test question New Answers State Change',
+        'link': 'http://superuser.com'
+    });*/
 
     function fromAPI(url, callback) {
         $.getJSON(url, callback);
     }
     //----------------------------------MAIN PART---------------------------------------//
     if (postsToWatch.length) { //make the envelope sign black if the post is already on the watch list
+        console.log('about to start looping postsToWatch:', postsToWatch);
         $.each(postsToWatch, function(i, o) {
+            console.log('looping postsToWatch. currently on:', o);
             var currentType = o.type,
                 currentPostId = o.postId,
                 currentSitename = o.sitename,
                 lastCheckedTime = o.lastCheckedTime,
                 lastCheckedState = o.lastCheckedState,
-                lastCheckedAnswerIds = o.lastCheckedAnswerIds,
+                lastCheckedAnswerIds = o.lastCheckedAnswerIds || [], //if undefined, make an empty array for comparison later
                 currentOptions = o.options;
                 /*options = {
                     'retag': 'retag',
@@ -245,38 +288,56 @@ NOTE: NEED TO MULTIPLY SE TIMES BY 1000!!
                 }*/
 
             var $post = $('div[data-' + currentType + 'id="' + currentPostId + '"]');
-            $post.find('.sox-watch-post').removeClass('fa-envelope-o').addClass('fa-envelope');
+            $post.find('.sox-watch-post').removeClass('fa-pencil-square-o').addClass('fa-pencil-square');
 
-            //TODO: do the API checking
-            if ((new Date().getTime() + 900000) >= lastCheckedTime) {
-                if (options.indexOf('newAnswers') !== -1 || options.indexOf('stateChange') !== -1) { //newAnswers || stateChange
+            //TODO: change this logic. We need to add notifications around what has CHANGED rather than what the user wants
+            //FIRST see what's changed then check whether what's changed matches the user's settings and add notification accordingly.
+            if (new Date().getTime() >= (lastCheckedTime + 300000)) { //15 mins = 900000
+                console.log('Been more than 15 minutes since checking post. Doing API requst for', o);
+                if (currentOptions.indexOf('newAnswers') !== -1 || currentOptions.indexOf('stateChange') !== -1) { //newAnswers || stateChange
                     //do API request to /questions or /answers
-                    fromAPI('http://api.stackexchange.com/2.2/' + currentType + 's/' + currentPostId + '?sitename=' + currentSitename + 'filter=' + (currentType == 'question' ? apiQuestionFilter : apiAnswerFilter), function(data) {
+                    fromAPI('http://api.stackexchange.com/2.2/' + currentType + 's/' + currentPostId + '?site=' + currentSitename + '&filter=' + (currentType == 'question' ? apiQuestionFilter : apiAnswerFilter), function(data) {
                         var newAnswerIds = (data.items[0].answers ? data.items[0].answers.map(function(o) {
                                 return o.answer_id;
                             }) : []),
-                            newState = (data.items[0].closed_details ? 'closed': 'open'),
+                            newState = (data.items[0].closed_details ? 'closed (' + data.items[0].closed_reason + ')': 'open'),
                             differentAnswerIds = [];
 
-                        if (newAnswerIds) {
+                        if (newAnswerIds && lastCheckedAnswerIds) { //if there are new answers, and there were old answers
+                            console.log('newAnswerIds:', newAnswerIds);
                             differentAnswerIds = newAnswerIds.filter(function(i) {
                                 return lastCheckedAnswerIds.indexOf(i) === -1;
                             });
+                            console.log('lastCheckedAnswerIds', lastCheckedAnswerIds);
                         }
 
-                        if (options.indexOf('newAnswers') !== -1 && options.indexOf('stateChange') == -1) { //newAnswers && !stateChange
+                        console.log('newAnswerIds:', newAnswerIds);
+                        console.log('lastCheckedAnswerIds', lastCheckedAnswerIds);
+
+                        var answer, newLink, score, i;
+                        if (currentOptions.indexOf('newAnswers') !== -1 && currentOptions.indexOf('stateChange') == -1) { //newAnswers && !stateChange
                             //check for whether new answerId exists, notification = 'new answer'
                             //http://stackoverflow.com/a/6230314/3541881 checking for whether they are equal
-                            if (lastCheckedAnswerIds.sort().join(',') !== newAnswerIds.sort().join(',')) {
+                            //check first whether there are *any* answers at all, and if there are, check for whether there are any new ones
+                            if (newAnswerIds && lastCheckedAnswerIds.sort().join(',') !== newAnswerIds.sort().join(',')) {
                                 //we have new answers (IDs in differentAnswerIds)
+
+                                for (i = 0; i< newAnswerIds.length; i++) {
+                                    answer = $.grep(data.items[0].answers, function(d) {
+                                        return d.answer_id == newAnswerIds[i];
+                                    })[0];
+                                    newLink = answer.link;
+                                    score = answer.score;
+                                }
                                 addNotification({
                                     'sitename': currentSitename,
                                     'notificationType': 'newAnswers',
                                     'title': data.items[0].title,
-                                    'link': data.items[0].link, //TODO: CHANGE [0] TO INDEX OF ITEM WITH ID IN differentAnswerIds
+                                    'link': newLink,
+                                    'score': score
                                 });
                             }
-                        } else if (options.indexOf('newAnswers') == -1 && options.indexOf('stateChange') !== -1) { //!newAnswers && stateChange
+                        } else if (currentOptions.indexOf('newAnswers') == -1 && currentOptions.indexOf('stateChange') !== -1) { //!newAnswers && stateChange
                             //check for whether lastCheckedState is same, notification = 'state change'
                             if (lastCheckedState !== newState) {
                                 //question state has changed
@@ -285,33 +346,83 @@ NOTE: NEED TO MULTIPLY SE TIMES BY 1000!!
                                     'notificationType': 'stateChange',
                                     'newState': newState,
                                     'title': data.items[0].title,
-                                    'link': data.items[0].link
+                                    'link': data.items[0].link,
+                                    'score': data.items[0].score
                                 });
                             }
-                        } else if (options.indexOf('stateChange') !== -1 && options.indexOf('newAnswers') !== -1) { //newAnswers && stateChange
+                        } else if (currentOptions.indexOf('stateChange') !== -1 && currentOptions.indexOf('newAnswers') !== -1) { //newAnswers && stateChange
                             //check for whether new answerId exists, and whether state is different, notification = 'state change and new answer'
-                            if (lastCheckedAnswerIds.sort().join(',') !== newAnswerIds.sort().join(',') || lastCheckedState !== newState) {
+                            if (newAnswerIds && lastCheckedAnswerIds.sort().join(',') !== newAnswerIds.sort().join(',') || lastCheckedState !== newState) {
                                 //new answer IDs in differentAnswerIds
+
+                                for (i = 0; i< newAnswerIds.length; i++) {
+                                    answer = $.grep(data.items[0].answers, function(d) {
+                                        return d.answer_id == newAnswerIds[i];
+                                    })[0];
+                                    newLink = answer.link;
+                                    score = answer.score;
+                                }
+
                                 addNotification({
                                     'sitename': currentSitename,
                                     'notificationType': 'newAnswersStateChange',
                                     'newState': newState,
                                     'title': data.items[0].title,
-                                    'link': data.items[0].link
+                                    'link': newLink,
+                                    'score': score
                                 });
                             }
                         }
                     });
                 }
-                if (options.indexOf('edit') !== -1 || options.indexOf('retag') !== -1) { //edit || retag
-                    //do API requst to posts/id/revisions
-                    var retag = true, //TRUE/FALSE FROM API
-                        edit = true; //TRUE/FALSE FROM API
-                    if (options.indexOf('retag') !== -1) { //retag
-                        //check for retag and edit comment, notification = 'edit and retag'
-                    } else { //edit
-                        //check for edit comment, notification = 'edit'
-                    }
+                if (currentOptions.indexOf('edit') !== -1 || currentOptions.indexOf('retag') !== -1) { //edit || retag
+                    //do API request to posts/id/revisions
+                    fromAPI('http://api.stackexchange.com/2.2/posts/' + currentPostId + '/revisions?site=' + currentSitename + '&filter=' + (currentType == 'question' ? apiQuestionFilter : apiAnswerFilter), function(data) {
+                        console.log('data retrieved from API:', data);
+                        var retag = data.items[0].last_tags ? true : false,
+                            edit = data.items[0].creation_date > lastCheckedTime,
+                            itemIndex;
+
+                        if (data.items.length != 1) { //if there's only one revision, then there have been no edits (rev 1 is the original post)
+                            for (var z = 0; z < data.items.length; z++) { //vote_based revision means state change, ie. no edit
+                                if (data.items[z].revision_type !== 'vote_based') itemIndex = z; break;
+                            }
+                            if (currentOptions.indexOf('retag') !== -1 && currentOptions.indexOf('edit') === -1) { //retag
+                                //check for retag and edit comment, notification = 'edit and retag'
+                                if (retag) {
+                                    addNotification({
+                                        'sitename': currentSitename,
+                                        'notificationType': 'retag',
+                                        'title': data.items[itemIndex].title,
+                                        'link': 'http://' + currentSitename + '.com/' + data.items[itemIndex].post_type[0] + '/' + data.items[itemIndex].post_id, //data.items[itemIndex].post_type[0] => 'question'/'answer'->'q'/'a'
+                                        'newTags': data.items[itemIndex].tags
+                                    });
+                                }
+                            } else if (currentOptions.indexOf('retag') === -1 && currentOptions.indexOf('edit') !== -1) { //edit
+                                //check for edit comment, notification = 'edit'
+                                if (edit) {
+                                    addNotification({
+                                        'sitename': currentSitename,
+                                        'notificationType': 'edit',
+                                        'title': data.items[itemIndex].title,
+                                        'link': 'http://' + currentSitename + '.com/' + data.items[itemIndex].post_type[0] + '/' + data.items[itemIndex].post_id, //data.items[itemIndex].post_type[0] => 'question'/'answer'->'q'/'a'
+                                        'editComment': data.items[itemIndex].comment
+                                    });
+                                }
+                            } else { //both
+                                if (edit && retag) {
+                                    addNotification({
+                                        'sitename': currentSitename,
+                                        'notificationType': 'editRetag',
+                                        'title': data.items[itemIndex].title,
+                                        'link': 'http://' + currentSitename + '.com/' + data.items[itemIndex].post_type[0] + '/' + data.items[itemIndex].post_id, //data.items[0].post_type[0] => 'question'/'answer'->'q'/'a'
+                                        'editComment': data.items[itemIndex].comment,
+                                        'newTags': data.items[itemIndex].tags
+                                    });
+                                }
+                            }
+                        }
+                    });
                 }
             }
         });
@@ -324,7 +435,7 @@ NOTE: NEED TO MULTIPLY SE TIMES BY 1000!!
                 lastCheckedCommentIds = o.lastCheckedCommentIds;
 
             var $comments = $('comments-' + currentPostId);
-            $comments.prev('.sox-watch-comments').removeClass('fa-envelope-o').addClass('fa-envelope');
+            $comments.prev('.sox-watch-comments').removeClass('fa-pencil-square-o').addClass('fa-pencil-square');
             //TODO: do the API checking
 
         });
@@ -360,10 +471,10 @@ NOTE: NEED TO MULTIPLY SE TIMES BY 1000!!
     $(document).on('click', '.sox-watch-comments', function() {
         var $post = $(this).parents('.question, .answer');
 
-        if ($(this).hasClass('fa-envelope-o')) { //toggle button state
-            $(this).removeClass('fa-envelope-o').addClass('fa-envelope');
-        } else if ($(this).hasClass('fa-envelope')) {
-            $(this).removeClass('fa-envelope').addClass('fa-envelope-o');
+        if ($(this).hasClass('fa-pencil-square-o')) { //toggle button state
+            $(this).removeClass('fa-pencil-square-o').addClass('fa-pencil-square');
+        } else if ($(this).hasClass('fa-pencil-square')) {
+            $(this).removeClass('fa-pencil-square').addClass('fa-pencil-square-o');
         }
 
         commentsToWatch.push({
@@ -376,7 +487,7 @@ NOTE: NEED TO MULTIPLY SE TIMES BY 1000!!
         });
 
         console.log('commentsToWatch', commentsToWatch);
-        //TODO: GM_setValue
+        GM_setValue('sox-editNotification-commentsToWatch', JSON.stringify(commentsToWatch));
     });
 
     $(document).on('click', '.sox-watch-post', function(e) {
@@ -385,6 +496,11 @@ NOTE: NEED TO MULTIPLY SE TIMES BY 1000!!
             questionTitle = $('#question-header').text().trim(),
             questionState = (questionTitle.substr(questionTitle.length - 11) == '[duplicate]' || questionTitle.substr(questionTitle.length - 8) == '[closed]' || questionTitle.substr(questionTitle.length - 9) == '[on hold]' ? 'closed' : 'open'); //long winded way of finding question state without using StackExchange object (not compatabile with FF)
 
+        if (isQuestion) {
+            $optionsDiv.find('#stateChange, #newAnswers').parents('li').show();
+        } else {
+            $optionsDiv.find('#stateChange, #newAnswers').parents('li').hide();
+        }
         $optionsDiv //add the post details as data-* attributes now for use later (when clicking save)
         .attr('data-postid', isQuestion ? $post.attr('data-questionid') : $post.attr('data-answerid'))
         .attr('data-posttype', isQuestion ? 'question' : 'answer')
@@ -415,10 +531,11 @@ NOTE: NEED TO MULTIPLY SE TIMES BY 1000!!
         });
 
         //toggle button state
-        if ($postToggle.hasClass('fa-envelope-o')) $postToggle.removeClass('fa-envelope-o').addClass('fa-envelope');
+        if ($postToggle.hasClass('fa-pencil-square-o')) $postToggle.removeClass('fa-pencil-square-o').addClass('fa-pencil-square');
         $optionsDiv.hide();
         console.log('postsToWatch', postsToWatch);
-        //TODO: GM_setValue
+        GM_setValue('sox-editNotification-postsToWatch', JSON.stringify(postsToWatch));
+
     });
 
     $optionsDivCancel.click(function() {
@@ -429,13 +546,13 @@ NOTE: NEED TO MULTIPLY SE TIMES BY 1000!!
             $postToggle = $post.find('.sox-watch-post');
 
         //toggle button state
-        if ($postToggle.hasClass('fa-envelope')) $postToggle.removeClass('fa-envelope').addClass('fa-envelope-o');
+        if ($postToggle.hasClass('fa-pencil-square')) $postToggle.removeClass('fa-pencil-square').addClass('fa-pencil-square-o');
         $optionsDiv.hide();
 
         postsToWatch.filter(function(o, i) { //delete from postsToWatch array
             if (o.postId == postId && o.sitename == sox.site.currentApiParameter) postsToWatch.splice(i, 1);
+            GM_setValue('sox-editNotification-postsToWatch', JSON.stringify(postsToWatch));
         });
-        //TODO: GM_setValue
     });
 
     $(document).click(function(e) { //close options div if clicked outside it

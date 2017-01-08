@@ -677,7 +677,7 @@
 
             function showImages() {
                 $('.comment .comment-text .comment-copy a').each(function() {
-                    if ($(this).attr('href') && $(this).attr('href').indexOf('imgur.com') != -1) {
+                    if ($(this).attr('href') && ($(this).attr('href').indexOf('i.imgur.com') != -1 || $(this).attr('href').indexOf('i.stack.imgur.com') != -1)) { //https://github.com/soscripted/sox/issues/219
                         var src = $(this).attr('href');
                         if (!$(this).parent().find('img[src="' + src + '"]').length) {
                             $(this).parent().append('<img src="' + src + '" width="100%">'); //add image to end of comments, but keep link in same position
@@ -2509,13 +2509,17 @@ Toggle SBS?</div></li>';
             });
 
             $(document).on('click', '.sox-copyCodeButton', function() {
-            	if(!$('.sox-copyCodeTextarea').length) $('body').append('<textarea class="sox-copyCodeTextarea">');
-            	$('.sox-copyCodeTextarea').val($(this).parents('pre').text());
-            	$('.sox-copyCodeTextarea').select();
-            	document.execCommand('copy');
-                $(this).effect("highlight", {
-                    color: 'white'
-                }, 3000);
+            	try {
+                    if(!$('.sox-copyCodeTextarea').length) $('body').append('<textarea class="sox-copyCodeTextarea">');
+                	$('.sox-copyCodeTextarea').val($(this).parents('pre').text());
+                	$('.sox-copyCodeTextarea').select();
+                    document.execCommand('copy');
+                    $(this).effect("highlight", {
+                        color: 'white'
+                    }, 3000);
+                } catch(e) {
+                    sox.info('Browser doesn\'t support execComand for copyCode feature');
+                }
             });
         }
     };
