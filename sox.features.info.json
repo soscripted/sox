@@ -415,6 +415,12 @@
             "meta": "",
             "match": "*://*/review",
             "exclude": "*://meta.*.com/*"
+        }, {
+            "name": "copyCode",
+            "desc": "Add a button to code in posts to let you copy it",
+            "meta": "",
+            "match": "*://*/questions*",
+            "exclude": ""
         }]
     }
 }

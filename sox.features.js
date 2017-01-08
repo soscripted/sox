@@ -2494,6 +2494,29 @@ Toggle SBS?</div></li>';
                     'class': 'dashboard-unit'
                 }));
             });
+        },
+
+        copyCode: function() {
+            // Description: Add a button to code in posts to let you copy it
+
+            //button uses CSS mainly from http://stackoverflow.com/a/30810322/3541881
+            $('pre').prepend('<i class="fa fa-clipboard sox-copyCodeButton" style="display:none;"></i>');
+
+            $('pre').hover(function() {
+                $(this).find('.sox-copyCodeButton').show();
+            }, function() {
+                $(this).find('.sox-copyCodeButton').hide();
+            });
+
+            $(document).on('click', '.sox-copyCodeButton', function() {
+            	if(!$('.sox-copyCodeTextarea').length) $('body').append('<textarea class="sox-copyCodeTextarea">');
+            	$('.sox-copyCodeTextarea').val($(this).parents('pre').text());
+            	$('.sox-copyCodeTextarea').select();
+            	document.execCommand('copy');
+                $(this).effect("highlight", {
+                    color: 'white'
+                }, 3000);
+            });
         }
     };
 })(window.sox = window.sox || {}, jQuery);

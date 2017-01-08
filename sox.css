@@ -553,3 +553,23 @@ hr.or:after {
     margin-right: 10px;
     cursor: pointer;
 }
+
+/*sox-copyCode -- for the button and textarea (completely hide it)*/
+
+.sox-copyCodeButton {
+    float: right;
+}
+
+.sox-copyCodeTextarea {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 1px;
+    width: 1px;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    box-shadow: none;
+    background: transparent;
+    overflow: hidden;
+}
