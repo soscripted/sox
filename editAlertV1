@@ -1,18 +1,5 @@
-/*jshint loopfunc: true, esversion: 6*/
 /*
 TODO:
-
-detailsWeKnow:
- - sitename
- - title
- - newLink
- - score
- - newScore
- - newState
- - link
- - newTags
- - editComment
-
 posts = [{ //check for edits, (closure, reopen, new answers if question)
     type: 'question/answer',
     postId: 1234,
@@ -39,6 +26,9 @@ comments = [{
     lastCheckedCommentIds: (optional) [1, 2, 3]
 }]
 
+- add helper function to add notification
+- add helper function to get required info from API
+
 - to show in notification:
     - site logo (favicon on left)
     - delete button
@@ -52,7 +42,6 @@ comments = [{
     - if new comment: comment body? time, author, score
 
 NOTE: NEED TO MULTIPLY SE TIMES BY 1000!!
-NEED TO SAVE NEW TIME!
 */
 (function(sox, $, undefined) {
     //The following CSS will be added to the style sheet when finished; this is just here to avoid having to got through the process of adding the stylesheet just for testing
@@ -118,55 +107,32 @@ NEED TO SAVE NEW TIME!
 
     function addNotification(details) {
         console.log('adding notification with details:', details);
-        var text = '';
-        if (details.newLink && details.newScore) {
-            console.log('here');
-            console.log(details);
-            if (details.score && details.newState) { //newAnswersStateChange
-                console.log('newAnswersStateChange');
-                //sitename, title, newLink, newScore, score, newState
-                text = 'New answers have been posted. The new state is ' + details.newState;
-            } else { //newAnswers
-                console.log('newAnswers');
-                //sitename, title, newLink, newScore
-                text = 'New answers have been posted on this question';
-            }
-        } else if (details.score && details.newState) { //stateChange
-            console.log('statechange');
-            //sitename, title, score, newState
+        var text;
+        if (details.notificationType === 'newAnswers') {
+            text = 'New answers have been posted on this question';
+        } else if (details.notificationType === 'stateChange') {
             text = 'This question is now ' + details.newState;
-        } else if (details.score) {
-            if (details.newTags) {
-                if (details.editComment ) {//editRetag
-                    console.log('editretag');
-                    //sitename, title, link, editComment, score, newTags
-                    text = 'Question has been edited (' + details.editComment + ') and retagged (' + details.newTags.join(', ') + ')';
-                } else { //retag
-                    console.log('retag');
-                    //sitename, title, link, newTags, score
-                    text = 'Question has been retagged (' + details.newTags.join(', ') + ')';
-                }
-            } else { //edit
-                console.log('edit');
-                //sitename, title, link, editComment, score
-                text = 'Question has been edited (' + details.editComment + ')';
-            }
+        } else if (details.notificationType === 'newAnswersStateChange') {
+            text = 'New answers have been posted. The new state is ' + details.newState;
+        } else if (details.notificationType === 'edit') {
+            text = 'Question has been edited (' + details.editComment + ')';
+        } else if (details.notificationType === 'retag') {
+            text = 'Question has been retagged (' + details.newTags.join(', ') + ')';
+        } else if (details.notificationType === 'editRetag') {
+            text = 'Question has been edited (' + details.editComment + ') and retagged (' + details.newTags.join(', ') + ')';
         }
 
-        console.log('text', text);
-        if (text) {
-            var $li = $('<li>').append($('<a>', {
-                'href': details.link
-            }).append($('<div>', {
-                'class': 'site-icon favicon favicon-' + details.sitename,
-                'style': 'margin-right: 10px'
-            })).append(details.title)).append($('<span>', {
-                'style': 'color: black; margin-left: 5px',
-                'text': text
-            }));
+        var $li = $('<li>').append($('<a>', {
+            'href': details.link
+        }).append($('<div>', {
+            'class': 'site-icon favicon favicon-' + details.sitename,
+            'style': 'margin-right: 10px'
+        })).append(details.title)).append($('<span>', {
+            'style': 'color: black; margin-left: 5px',
+            'text': text
+        }));
 
-            $('#sox-editNotificationDialogList').prepend($li);
-        }
+        $('#sox-editNotificationDialogList').prepend($li);
     }
 
     var postsToWatch = JSON.parse(GM_getValue('sox-editNotification-postsToWatch', '[]')), //[{"type":"question","postId":"289490","sitename":"meta","lastCheckedTime":1483799031360,"options":["edit"],"lastCheckedState":"open"}],
@@ -313,8 +279,7 @@ NEED TO SAVE NEW TIME!
                 lastCheckedTime = o.lastCheckedTime,
                 lastCheckedState = o.lastCheckedState,
                 lastCheckedAnswerIds = o.lastCheckedAnswerIds || [], //if undefined, make an empty array for comparison later
-                currentOptions = o.options,
-                detailsWeKnow = {};
+                currentOptions = o.options;
 
             var $post = $('div[data-' + currentType + 'id="' + currentPostId + '"]');
             $post.find('.sox-watch-post').removeClass('fa-pencil-square-o').addClass('fa-pencil-square');
@@ -332,7 +297,7 @@ NEED TO SAVE NEW TIME!
                             newState = (data.items[0].closed_details ? 'closed (' + data.items[0].closed_reason + ')': 'open'),
                             differentAnswerIds = [];
 
-                        if (newAnswerIds.length && lastCheckedAnswerIds) { //if there are new answers, and there were old answers
+                        if (newAnswerIds && lastCheckedAnswerIds) { //if there are new answers, and there were old answers
                             console.log('newAnswerIds:', newAnswerIds);
                             differentAnswerIds = newAnswerIds.filter(function(i) {
                                 return lastCheckedAnswerIds.indexOf(i) === -1;
@@ -358,24 +323,30 @@ NEED TO SAVE NEW TIME!
                                     newLink = answer.link;
                                     score = answer.score;
                                 }
-                                detailsWeKnow.sitename = currentSitename;
-                                detailsWeKnow.title = data.items[0].title;
-                                detailsWeKnow.newLink = newLink;
-                                detailsWeKnow.newScore = score;
+                                addNotification({
+                                    'sitename': currentSitename,
+                                    'notificationType': 'newAnswers',
+                                    'title': data.items[0].title,
+                                    'link': newLink,
+                                    'score': score
+                                });
                             }
                         } else if (currentOptions.indexOf('newAnswers') == -1 && currentOptions.indexOf('stateChange') !== -1) { //!newAnswers && stateChange
                             //check for whether lastCheckedState is same, notification = 'state change'
                             if (lastCheckedState !== newState) {
                                 //question state has changed
-                                detailsWeKnow.sitename = currentSitename;
-                                detailsWeKnow.newState = newState;
-                                detailsWeKnow.title = data.items[0].title;
-                                detailsWeKnow.link = data.items[0].link;
-                                detailsWeKnow.score =  data.items[0].score;
+                                addNotification({
+                                    'sitename': currentSitename,
+                                    'notificationType': 'stateChange',
+                                    'newState': newState,
+                                    'title': data.items[0].title,
+                                    'link': data.items[0].link,
+                                    'score': data.items[0].score
+                                });
                             }
                         } else if (currentOptions.indexOf('stateChange') !== -1 && currentOptions.indexOf('newAnswers') !== -1) { //newAnswers && stateChange
                             //check for whether new answerId exists, and whether state is different, notification = 'state change and new answer'
-                            if ((newAnswerIds.length && lastCheckedAnswerIds.sort().join(',') !== newAnswerIds.sort().join(',')) || lastCheckedState !== newState) {
+                            if (newAnswerIds && lastCheckedAnswerIds.sort().join(',') !== newAnswerIds.sort().join(',') || lastCheckedState !== newState) {
                                 //new answer IDs in differentAnswerIds
 
                                 for (i = 0; i< newAnswerIds.length; i++) {
@@ -386,20 +357,21 @@ NEED TO SAVE NEW TIME!
                                     score = answer.score;
                                 }
 
-                                detailsWeKnow.sitename = currentSitename;
-                                if (newLink && score) {
-                                    detailsWeKnow.newLink = newLink;
-                                    detailsWeKnow.newScore = score;
-                                }
-                                detailsWeKnow.title = data.items[0].title;
-                                detailsWeKnow.newState = newState;
+                                addNotification({
+                                    'sitename': currentSitename,
+                                    'notificationType': 'newAnswersStateChange',
+                                    'newState': newState,
+                                    'title': data.items[0].title,
+                                    'link': newLink,
+                                    'score': score
+                                });
                             }
                         }
                     });
                 }
                 if (currentOptions.indexOf('edit') !== -1 || currentOptions.indexOf('retag') !== -1) { //edit || retag
                     //do API request to posts/id/revisions
-                    fromAPI('http://api.stackexchange.com/2.2/posts/' + currentPostId + '/revisions?site=' + currentSitename + '&filter=' + apiRevisionFilter, function(data) {
+                    fromAPI('http://api.stackexchange.com/2.2/posts/' + currentPostId + '/revisions?site=' + currentSitename + '&filter=' + (currentType == 'question' ? apiQuestionFilter : apiAnswerFilter), function(data) {
                         console.log('data retrieved from API:', data);
                         var retag = data.items[0].last_tags ? true : false,
                             edit = data.items[0].creation_date > lastCheckedTime,
@@ -412,32 +384,40 @@ NEED TO SAVE NEW TIME!
                             if (currentOptions.indexOf('retag') !== -1 && currentOptions.indexOf('edit') === -1) { //retag
                                 //check for retag and edit comment, notification = 'edit and retag'
                                 if (retag) {
-                                    detailsWeKnow.sitename = currentSitename;
-                                    detailsWeKnow.title = data.items[itemIndex].title;
-                                    detailsWeKnow.link = 'http://' + currentSitename + '.com/' + data.items[itemIndex].post_type[0] + '/' + data.items[itemIndex].post_id; //data.items[itemIndex].post_type[0] => 'question'/'answer'->'q'/'a
-                                    detailsWeKnow.newTags = data.items[itemIndex].tag;
+                                    addNotification({
+                                        'sitename': currentSitename,
+                                        'notificationType': 'retag',
+                                        'title': data.items[itemIndex].title,
+                                        'link': 'http://' + currentSitename + '.com/' + data.items[itemIndex].post_type[0] + '/' + data.items[itemIndex].post_id, //data.items[itemIndex].post_type[0] => 'question'/'answer'->'q'/'a'
+                                        'newTags': data.items[itemIndex].tags
+                                    });
                                 }
                             } else if (currentOptions.indexOf('retag') === -1 && currentOptions.indexOf('edit') !== -1) { //edit
                                 //check for edit comment, notification = 'edit'
                                 if (edit) {
-                                    detailsWeKnow.sitename = currentSitename;
-                                    detailsWeKnow.title = data.items[itemIndex].title;
-                                    detailsWeKnow.link = 'http://' + currentSitename + '.com/' + data.items[itemIndex].post_type[0] + '/' + data.items[itemIndex].post_id; //data.items[itemIndex].post_type[0] => 'question'/'answer'->'q'/'a
-                                    detailsWeKnow.editComment = data.items[itemIndex].commen;
+                                    addNotification({
+                                        'sitename': currentSitename,
+                                        'notificationType': 'edit',
+                                        'title': data.items[itemIndex].title,
+                                        'link': 'http://' + currentSitename + '.com/' + data.items[itemIndex].post_type[0] + '/' + data.items[itemIndex].post_id, //data.items[itemIndex].post_type[0] => 'question'/'answer'->'q'/'a'
+                                        'editComment': data.items[itemIndex].comment
+                                    });
                                 }
                             } else { //both
                                 if (edit && retag) {
-                                    detailsWeKnow.sitename = currentSitename;
-                                    detailsWeKnow.title = data.items[itemIndex].title;
-                                    detailsWeKnow.link = 'http://' + currentSitename + '.com/' + data.items[itemIndex].post_type[0] + '/' + data.items[itemIndex].post_id; //data.items[0].post_type[0] => 'question'/'answer'->'q'/'a
-                                    detailsWeKnow.editComment = data.items[itemIndex].comment;
-                                    detailsWeKnow.newTags = data.items[itemIndex].tag;
+                                    addNotification({
+                                        'sitename': currentSitename,
+                                        'notificationType': 'editRetag',
+                                        'title': data.items[itemIndex].title,
+                                        'link': 'http://' + currentSitename + '.com/' + data.items[itemIndex].post_type[0] + '/' + data.items[itemIndex].post_id, //data.items[0].post_type[0] => 'question'/'answer'->'q'/'a'
+                                        'editComment': data.items[itemIndex].comment,
+                                        'newTags': data.items[itemIndex].tags
+                                    });
                                 }
                             }
                         }
                     });
                 }
-                addNotification(detailsWeKnow);
             }
         });
     }
