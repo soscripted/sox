@@ -116,49 +116,48 @@ NEED TO SAVE NEW TIME!
                     -webkit-text-stroke-width: 3px;
                 }`);
 
-    function addNotification(details) {
+    function addNotification(details, callback) {
         console.log('adding notification with details:', details);
         var text = '';
         if (details.newLink && details.newScore) {
-            console.log('here');
-            console.log(details);
+            //console.log('here');
+            //console.log(details);
             if (details.score && details.newState) { //newAnswersStateChange
-                console.log('newAnswersStateChange');
+                //console.log('newAnswersStateChange');
                 //sitename, title, newLink, newScore, score, newState
                 text = 'New answers have been posted. The new state is ' + details.newState;
             } else { //newAnswers
-                console.log('newAnswers');
+                //console.log('newAnswers');
                 //sitename, title, newLink, newScore
                 text = 'New answers have been posted on this question';
             }
         } else if (details.score && details.newState) { //stateChange
-            console.log('statechange');
+            //console.log('statechange');
             //sitename, title, score, newState
             text = 'This question is now ' + details.newState;
         } else if (details.score) {
             if (details.newTags) {
                 if (details.editComment ) {//editRetag
-                    console.log('editretag');
+                    //console.log('editretag');
                     //sitename, title, link, editComment, score, newTags
                     text = 'Question has been edited (' + details.editComment + ') and retagged (' + details.newTags.join(', ') + ')';
                 } else { //retag
-                    console.log('retag');
+                    //console.log('retag');
                     //sitename, title, link, newTags, score
                     text = 'Question has been retagged (' + details.newTags.join(', ') + ')';
                 }
             } else { //edit
-                console.log('edit');
+                //console.log('edit');
                 //sitename, title, link, editComment, score
                 text = 'Question has been edited (' + details.editComment + ')';
             }
         }
 
-        console.log('text', text);
         if (text) {
             var $li = $('<li>').append($('<a>', {
-                'href': details.link
+                'href': details.link || details.newLink
             }).append($('<div>', {
-                'class': 'site-icon favicon favicon-' + details.sitename,
+                'class': 'site-icon favicon favicon-' + (details.sitename == 'meta' ? 'stackexchangemeta' : details.sitename),
                 'style': 'margin-right: 10px'
             })).append(details.title)).append($('<span>', {
                 'style': 'color: black; margin-left: 5px',
@@ -166,7 +165,9 @@ NEED TO SAVE NEW TIME!
             }));
 
             $('#sox-editNotificationDialogList').prepend($li);
+            callback({'addedNotification': true});
         }
+        callback({'addedNotification': false});
     }
 
     var postsToWatch = JSON.parse(GM_getValue('sox-editNotification-postsToWatch', '[]')), //[{"type":"question","postId":"289490","sitename":"meta","lastCheckedTime":1483799031360,"options":["edit"],"lastCheckedState":"open"}],
@@ -276,29 +277,6 @@ NEED TO SAVE NEW TIME!
     $('.comments').before('<i title="watch for new comments" class="fa fa-pencil-square-o sox-notify-on-change sox-watch-comments"></i>');
     $('.post-menu').append('<span class="lsep"></span><i title="watch post for changes" class="fa fa-pencil-square-o sox-notify-on-change sox-watch-post"></i></a>');
 
-    /*addNotification({
-        'sitename': 'meta',
-        'notificationType': 'newAnswers',
-        'title': 'Test question New Answers',
-        'link': 'http://superuser.com'
-    });
-
-    addNotification({
-        'sitename': 'superuser',
-        'notificationType': 'stateChange',
-        'newState': 'closed',
-        'title': 'Test question State Change',
-        'link': 'http://superuser.com'
-    });
-
-    addNotification({
-        'sitename': 'serverfault',
-        'notificationType': 'newAnswersStateChange',
-        'newState': 'oprn',
-        'title': 'Test question New Answers State Change',
-        'link': 'http://superuser.com'
-    });*/
-
     function fromAPI(url, callback) {
         $.ajax({
             method: 'get',
@@ -309,6 +287,7 @@ NEED TO SAVE NEW TIME!
             async: false //make sure the notification is added at the right time
         });
     }
+
     //----------------------------------MAIN PART---------------------------------------//
     if (postsToWatch.length) { //make the envelope sign black if the post is already on the watch list
         console.log('about to start looping postsToWatch:', postsToWatch);
@@ -328,8 +307,8 @@ NEED TO SAVE NEW TIME!
 
             //TODO: change this logic. We need to add notifications around what has CHANGED rather than what the user wants
             //FIRST see what's changed then check whether what's changed matches the user's settings and add notification accordingly.
-            if (new Date().getTime() >= (lastCheckedTime + 300000)) { //15 mins = 900000
-                console.log('Been more than 15 minutes since checking post. Doing API requst for', o);
+            if (new Date().getTime() >= (lastCheckedTime + 900000)) { //15 mins = 900000
+                console.log('Been more than 15 minutes since checking post. Doing API request for', o);
                 if (currentOptions.indexOf('newAnswers') !== -1 || currentOptions.indexOf('stateChange') !== -1) { //newAnswers || stateChange
                     //do API request to /questions or /answers
                     fromAPI('http://api.stackexchange.com/2.2/' + currentType + 's/' + currentPostId + '?site=' + currentSitename + '&filter=' + (currentType == 'question' ? apiQuestionFilter : apiAnswerFilter), function(data) {
@@ -409,7 +388,7 @@ NEED TO SAVE NEW TIME!
                     fromAPI('http://api.stackexchange.com/2.2/posts/' + currentPostId + '/revisions?site=' + currentSitename + '&filter=' + apiRevisionFilter, function(data) {
                         console.log('data retrieved from API:', data);
                         var retag = data.items[0].last_tags ? true : false,
-                            edit = data.items[0].creation_date > lastCheckedTime,
+                            edit = data.items[0].creation_date*1000 > lastCheckedTime,
                             itemIndex;
 
                         if (data.items.length != 1) { //if there's only one revision, then there have been no edits (rev 1 is the original post)
@@ -444,10 +423,16 @@ NEED TO SAVE NEW TIME!
                         }
                     });
                 }
-                addNotification(detailsWeKnow);
+                addNotification(detailsWeKnow, function(r) {
+                    if (r.addedNotification) {
+                        o.lastCheckedTime = new Date().getTime();
+                    }
+                });
             }
         });
+        GM_setValue('sox-editNotification-postsToWatch', JSON.stringify(postsToWatch));
     }
+    
     if (commentsToWatch.length) { //make the envelope sign black if the comments section is already on the watch list
         $.each(commentsToWatch, function(i, o) {
             var currentPostId = o.postId,
