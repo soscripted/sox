@@ -305,7 +305,6 @@ NEED TO SAVE NEW TIME!
             var $post = $('div[data-' + currentType + 'id="' + currentPostId + '"]');
             $post.find('.sox-watch-post').removeClass('fa-pencil-square-o').addClass('fa-pencil-square');
 
-            //TODO: change this logic. We need to add notifications around what has CHANGED rather than what the user wants
             //FIRST see what's changed then check whether what's changed matches the user's settings and add notification accordingly.
             if (new Date().getTime() >= (lastCheckedTime + 900000)) { //15 mins = 900000
                 console.log('Been more than 15 minutes since checking post. Doing API request for', o);
@@ -432,7 +431,7 @@ NEED TO SAVE NEW TIME!
         });
         GM_setValue('sox-editNotification-postsToWatch', JSON.stringify(postsToWatch));
     }
-    
+
     if (commentsToWatch.length) { //make the envelope sign black if the comments section is already on the watch list
         $.each(commentsToWatch, function(i, o) {
             var currentPostId = o.postId,
