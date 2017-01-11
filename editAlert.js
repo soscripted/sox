@@ -176,6 +176,7 @@ NEED TO SAVE NEW TIME!
         apiQuestionFilter = '!SCam31W85iAdF11znRBpj2qWFPRJV_*8fTZTOPnclcMRL3Dxjmxr-5DJdNc07fPo',
         apiAnswerFilter = '!*IXxMt)cy3)mYENixz4JCogmlz1T(H0s*KHikYPCS4H3YAaTeot5E.A9HbhuHZ',
         apiRevisionFilter = '!*K)GWE1gDcf3YaWY',
+        commentsFilter = '!*K)GSjDWh5AAh)g(',
         options = {
             'retag': 'retag',
             'edit': 'edit',
@@ -375,9 +376,9 @@ NEED TO SAVE NEW TIME!
                                 if (newLink && score) {
                                     detailsWeKnow.newLink = newLink;
                                     detailsWeKnow.newScore = score;
+                                    detailsWeKnow.title = data.items[0].title;
+                                    detailsWeKnow.newState = newState;
                                 }
-                                detailsWeKnow.title = data.items[0].title;
-                                detailsWeKnow.newState = newState;
                             }
                         }
                     });
@@ -424,6 +425,7 @@ NEED TO SAVE NEW TIME!
                 }
                 addNotification(detailsWeKnow, function(r) {
                     if (r.addedNotification) {
+                        console.log('changing lastCheckedTime to current time');
                         o.lastCheckedTime = new Date().getTime();
                     }
                 });
@@ -442,8 +444,30 @@ NEED TO SAVE NEW TIME!
             var $comments = $('comments-' + currentPostId);
             $comments.prev('.sox-watch-comments').removeClass('fa-pencil-square-o').addClass('fa-pencil-square');
             //TODO: do the API checking
-
+            if (new Date().getTime() >= (lastCheckedTime + 900000)) { //15 mins = 900000
+                fromAPI('http://api.stackexchange.com/2.2/posts/' + currentPostId + '/comments?filter=' + commentsFilter + '&site=' + currentSitename, function(data) {
+                    var newCommentIds = data.items.map(function(d) {
+                        return d.comment_id;
+                    });
+                    var differentCommentIds = newCommentIds.filter(function(i) {
+                        return lastCheckedCommentIds.indexOf(i) === -1;
+                    });
+                    if (differentCommentIds.length) {
+                        addNotification({
+                            'sitename': currentSitename,
+                            'postId': currentPostId,
+                            'commentBody': data.items[0].body,
+                            'commentsLink': 'http://' + currentSitename + '.com/' + data.items[0].post_type[0] + '/' + currentPostId + '#comments-' + currentPostId
+                        }, function(r) {
+                            if (r.addedNotification) {
+                                o.lastCheckedTime = new Date().getTime();
+                            }
+                        });
+                    }
+                });
+            }
         });
+        //GM_setValue('sox-editNotification-commentsToWatch', JSON.stringify(commentsToWatch));
     }
     //----------------------------------/MAIN PART---------------------------------------//
 
