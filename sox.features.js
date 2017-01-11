@@ -146,6 +146,12 @@
                     'position': 'fixed',
                     'z-index': '900'
                 });
+
+                //https://github.com/soscripted/sox/issues/221
+                $('.notification').css('margin-top', paddingToAdd);
+                sox.helpers.observe('.notification', function() {
+                    $('.notification').css('margin-top', paddingToAdd);
+                });
             } else {
                 if (sox.location.on('askubuntu.com')) {
                     if (!settings.enableOnAskUbuntu) return; //Disable on Ask Ubuntu if user said so
@@ -311,9 +317,12 @@
                         e.stopPropagation();
                     }
                 }
-                textarea.parent()[0].addEventListener('keydown', rejectKeyboardUndoRedo, true);
-                textarea.parent()[0].addEventListener('keypress', rejectKeyboardUndoRedo, true);
-                textarea.parent()[0].addEventListener('keyup', rejectKeyboardUndoRedo, true);
+
+                if (textarea.length) { //https://github.com/soscripted/sox/issues/220
+                    textarea.parent()[0].addEventListener('keydown', rejectKeyboardUndoRedo, true);
+                    textarea.parent()[0].addEventListener('keypress', rejectKeyboardUndoRedo, true);
+                    textarea.parent()[0].addEventListener('keyup', rejectKeyboardUndoRedo, true);
+                }
             }
 
             $(document).on('sox-edit-window', loopAndAddHandlers);
@@ -485,7 +494,7 @@
 
             sox.helpers.observe('.share-tip', function() {
                 var link = $('.share-tip input').val();
-                var title = $('#question-header a').text();
+                var title = $('#question-header a').text().replace(/\[(.*?)\]/g, '($1)'); //https://github.com/soscripted/sox/issues/226
 
                 if (link.indexOf(title) != -1) return; //don't do anything if the function's alread done its thing
                 $('.share-tip input').val('[' + title + '](' + link + ')');
@@ -680,7 +689,7 @@
                     if ($(this).attr('href') && ($(this).attr('href').indexOf('i.imgur.com') != -1 || $(this).attr('href').indexOf('i.stack.imgur.com') != -1)) { //https://github.com/soscripted/sox/issues/219
                         var src = $(this).attr('href');
                         if (!$(this).parent().find('img[src="' + src + '"]').length) {
-                            $(this).parent().append('<img src="' + src + '" width="100%">'); //add image to end of comments, but keep link in same position
+                            $(this).parent().append('<br><img src="' + src + '" style="max-width:100%">'); //add image to end of comments, but keep link in same position
                         }
                     }
                 });

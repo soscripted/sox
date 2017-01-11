@@ -300,7 +300,14 @@ NEED TO SAVE NEW TIME!
     });*/
 
     function fromAPI(url, callback) {
-        $.getJSON(url, callback);
+        $.ajax({
+            method: 'get',
+            url: url,
+            success: function(d) {
+                callback(d);
+            },
+            async: false //make sure the notification is added at the right time
+        });
     }
     //----------------------------------MAIN PART---------------------------------------//
     if (postsToWatch.length) { //make the envelope sign black if the post is already on the watch list
