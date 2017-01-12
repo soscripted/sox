@@ -11,6 +11,9 @@
 // @match        *://*.askubuntu.com/*
 // @match        *://*.stackapps.com/*
 // @match        *://*.mathoverflow.net/*
+
+// @require      https://code.jquery.com/jquery-2.1.4.min.js
+// @require      https://code.jquery.com/ui/1.11.4/jquery-ui.min.js
 // @require      https://rawgit.com/soscripted/sox/dev/sox.common.js
 // @require      https://rawgit.com/shu8/824a7f0e307f2cf469958c950a54a631/raw/e559a2a6aaba5f4bee1e3df9f6eb4c2100da76c8/editAlert.js
 // @resource     common https://rawgit.com/soscripted/sox/dev/sox.common.info.json
