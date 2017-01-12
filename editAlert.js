@@ -55,6 +55,7 @@ NOTE: NEED TO MULTIPLY SE TIMES BY 1000!!
 NEED TO SAVE NEW TIME!
 */
 (function(sox, $, undefined) {
+    console.log('running editAlert.js');
     //The following CSS will be added to the style sheet when finished; this is just here to avoid having to got through the process of adding the stylesheet just for testing
     GM_addStyle(`.sox-watch-post {
                     margin-left: 5px;
@@ -125,11 +126,11 @@ NEED TO SAVE NEW TIME!
             if (details.score && details.newState) { //newAnswersStateChange
                 //console.log('newAnswersStateChange');
                 //sitename, title, newLink, newScore, score, newState
-                text = 'New answers have been posted. The new state is ' + details.newState;
+                text = (details.newAnswerCount === 1 ? 'A new answer has been posted on this question' : 'New answers have been posted on this question') + '. The state has also changed to ' + details.newState;
             } else { //newAnswers
                 //console.log('newAnswers');
                 //sitename, title, newLink, newScore
-                text = 'New answers have been posted on this question';
+                text = details.newAnswerCount === 1 ? 'A new answer has been posted on this question' : 'New answers have been posted on this question';
             }
         } else if (details.score && details.newState) { //stateChange
             //console.log('statechange');
@@ -140,22 +141,24 @@ NEED TO SAVE NEW TIME!
                 if (details.editComment ) {//editRetag
                     //console.log('editretag');
                     //sitename, title, link, editComment, score, newTags
-                    text = 'Question has been edited (' + details.editComment + ') and retagged (' + details.newTags.join(', ') + ')';
+                    text = 'This question has been edited (' + details.editComment + ') and retagged (' + details.newTags.join(', ') + ')';
                 } else { //retag
                     //console.log('retag');
                     //sitename, title, link, newTags, score
-                    text = 'Question has been retagged (' + details.newTags.join(', ') + ')';
+                    text = 'This question was retagged (' + details.newTags.join(', ') + ')';
                 }
             } else { //edit
                 //console.log('edit');
                 //sitename, title, link, editComment, score
-                text = 'Question has been edited (' + details.editComment + ')';
+                text = 'This question has been edited (' + details.editComment + ')';
             }
+        } else if (details.commentBody && details.commentsLink) {
+            text = (details.newCommentsCount === 1 ? 'A new comment has been posted (' + $('<div>').html(details.commentBody).text() + ')' : 'New comments have been posted'); //div creation is to unescape string for eg. quotes
         }
 
         if (text) {
             var $li = $('<li>').append($('<a>', {
-                'href': details.link || details.newLink
+                'href': details.link || details.newLink || details.commentsLink
             }).append($('<div>', {
                 'class': 'site-icon favicon favicon-' + (details.sitename == 'meta' ? 'stackexchangemeta' : details.sitename),
                 'style': 'margin-right: 10px'
@@ -301,7 +304,13 @@ NEED TO SAVE NEW TIME!
                 lastCheckedState = o.lastCheckedState,
                 lastCheckedAnswerIds = o.lastCheckedAnswerIds || [], //if undefined, make an empty array for comparison later
                 currentOptions = o.options,
-                detailsWeKnow = {};
+                detailsWeKnow = {},
+                currentSiteUrl = currentSitename + '.stackexchange.com';
+
+            if (currentSitename === 'superuser') currentSiteUrl = 'superuser.com';
+            if (currentSitename === 'serverfault') currentSiteUrl = 'serverfault.com';
+            if (currentSitename === 'stackoverflow') currentSiteUrl = 'stackoverflow.com';
+            if (currentSitename === 'meta') currentSiteUrl = 'meta.stackexchange.com';
 
             var $post = $('div[data-' + currentType + 'id="' + currentPostId + '"]');
             $post.find('.sox-watch-post').removeClass('fa-pencil-square-o').addClass('fa-pencil-square');
@@ -348,6 +357,7 @@ NEED TO SAVE NEW TIME!
                                 detailsWeKnow.title = data.items[0].title;
                                 detailsWeKnow.newLink = newLink;
                                 detailsWeKnow.newScore = score;
+                                detailsWeKnow.newAnswerCount = differentAnswerIds.length;
                             }
                         } else if (currentOptions.indexOf('newAnswers') == -1 && currentOptions.indexOf('stateChange') !== -1) { //!newAnswers && stateChange
                             //check for whether lastCheckedState is same, notification = 'state change'
@@ -378,6 +388,7 @@ NEED TO SAVE NEW TIME!
                                     detailsWeKnow.newScore = score;
                                     detailsWeKnow.title = data.items[0].title;
                                     detailsWeKnow.newState = newState;
+                                    detailsWeKnow.newAnswerCount = differentAnswerIds.length;
                                 }
                             }
                         }
@@ -400,7 +411,7 @@ NEED TO SAVE NEW TIME!
                                 if (retag) {
                                     detailsWeKnow.sitename = currentSitename;
                                     detailsWeKnow.title = data.items[itemIndex].title;
-                                    detailsWeKnow.link = 'http://' + currentSitename + '.com/' + data.items[itemIndex].post_type[0] + '/' + data.items[itemIndex].post_id; //data.items[itemIndex].post_type[0] => 'question'/'answer'->'q'/'a
+                                    detailsWeKnow.link = 'http://' + currentSiteUrl + '/' + data.items[itemIndex].post_type[0] + '/' + data.items[itemIndex].post_id; //data.items[itemIndex].post_type[0] => 'question'/'answer'->'q'/'a
                                     detailsWeKnow.newTags = data.items[itemIndex].tag;
                                 }
                             } else if (currentOptions.indexOf('retag') === -1 && currentOptions.indexOf('edit') !== -1) { //edit
@@ -408,14 +419,14 @@ NEED TO SAVE NEW TIME!
                                 if (edit) {
                                     detailsWeKnow.sitename = currentSitename;
                                     detailsWeKnow.title = data.items[itemIndex].title;
-                                    detailsWeKnow.link = 'http://' + currentSitename + '.com/' + data.items[itemIndex].post_type[0] + '/' + data.items[itemIndex].post_id; //data.items[itemIndex].post_type[0] => 'question'/'answer'->'q'/'a
+                                    detailsWeKnow.link = 'http://' + currentSiteUrl + '/' + data.items[itemIndex].post_type[0] + '/' + data.items[itemIndex].post_id; //data.items[itemIndex].post_type[0] => 'question'/'answer'->'q'/'a
                                     detailsWeKnow.editComment = data.items[itemIndex].commen;
                                 }
                             } else { //both
                                 if (edit && retag) {
                                     detailsWeKnow.sitename = currentSitename;
                                     detailsWeKnow.title = data.items[itemIndex].title;
-                                    detailsWeKnow.link = 'http://' + currentSitename + '.com/' + data.items[itemIndex].post_type[0] + '/' + data.items[itemIndex].post_id; //data.items[0].post_type[0] => 'question'/'answer'->'q'/'a
+                                    detailsWeKnow.link = 'http://' + currentSiteUrl + '/' + data.items[itemIndex].post_type[0] + '/' + data.items[itemIndex].post_id; //data.items[0].post_type[0] => 'question'/'answer'->'q'/'a
                                     detailsWeKnow.editComment = data.items[itemIndex].comment;
                                     detailsWeKnow.newTags = data.items[itemIndex].tag;
                                 }
@@ -435,16 +446,25 @@ NEED TO SAVE NEW TIME!
     }
 
     if (commentsToWatch.length) { //make the envelope sign black if the comments section is already on the watch list
+        console.log('about to start looping commentsToWatch:', postsToWatch);
         $.each(commentsToWatch, function(i, o) {
+            console.log('looping commentsToWatch. currently on:', o);
             var currentPostId = o.postId,
                 currentSitename = o.sitename,
                 lastCheckedTime = o.lastCheckedTime,
-                lastCheckedCommentIds = o.lastCheckedCommentIds;
+                lastCheckedCommentIds = o.lastCheckedCommentIds,
+                currentSiteUrl = currentSitename + '.stackexchange.com';
 
-            var $comments = $('comments-' + currentPostId);
+            if (currentSitename === 'superuser') currentSiteUrl = 'superuser.com';
+            if (currentSitename === 'serverfault') currentSiteUrl = 'serverfault.com';
+            if (currentSitename === 'stackoverflow') currentSiteUrl = 'stackoverflow.com';
+            if (currentSitename === 'meta') currentSiteUrl = 'meta.stackexchange.com';
+
+            var $comments = $('#comments-' + currentPostId);
             $comments.prev('.sox-watch-comments').removeClass('fa-pencil-square-o').addClass('fa-pencil-square');
             //TODO: do the API checking
             if (new Date().getTime() >= (lastCheckedTime + 900000)) { //15 mins = 900000
+                console.log('Been more than 15 minutes since checking comments. Doing API request for', o);
                 fromAPI('http://api.stackexchange.com/2.2/posts/' + currentPostId + '/comments?filter=' + commentsFilter + '&site=' + currentSitename, function(data) {
                     var newCommentIds = data.items.map(function(d) {
                         return d.comment_id;
@@ -457,7 +477,8 @@ NEED TO SAVE NEW TIME!
                             'sitename': currentSitename,
                             'postId': currentPostId,
                             'commentBody': data.items[0].body,
-                            'commentsLink': 'http://' + currentSitename + '.com/' + data.items[0].post_type[0] + '/' + currentPostId + '#comments-' + currentPostId
+                            'commentsLink': 'http://' + currentSiteUrl + '/' + data.items[0].post_type[0] + '/' + currentPostId + '#comments-' + currentPostId,
+                            'newCommentsCount': differentCommentIds.length
                         }, function(r) {
                             if (r.addedNotification) {
                                 o.lastCheckedTime = new Date().getTime();
@@ -467,7 +488,7 @@ NEED TO SAVE NEW TIME!
                 });
             }
         });
-        //GM_setValue('sox-editNotification-commentsToWatch', JSON.stringify(commentsToWatch));
+        GM_setValue('sox-editNotification-commentsToWatch', JSON.stringify(commentsToWatch));
     }
     //----------------------------------/MAIN PART---------------------------------------//
 
@@ -530,6 +551,14 @@ NEED TO SAVE NEW TIME!
         } else {
             $optionsDiv.find('#stateChange, #newAnswers').parents('li').hide();
         }
+        var currentPostIfExists = postsToWatch.filter(function(d) {
+            return d.postId == $post.attr('data-answerid') || $post.attr('data-questionid');
+        });
+        if(currentPostIfExists.length) {
+            var currentChosenOptions = currentPostIfExists[0].options;
+            $optionsDiv.find('#' + currentChosenOptions.join(',#')).prop('checked', true); //mark chosen options as checked
+        }
+
         $optionsDiv //add the post details as data-* attributes now for use later (when clicking save)
         .attr('data-postid', isQuestion ? $post.attr('data-questionid') : $post.attr('data-answerid'))
         .attr('data-posttype', isQuestion ? 'question' : 'answer')
