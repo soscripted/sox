@@ -23,15 +23,6 @@ posts = [{ //check for edits, (closure, reopen, new answers if question)
     options: ['retag', 'edit', 'state change', 'new answers']
 }, {}, ...]
 
-/questions/ids filter: !SCam31W85iAdF11znRBpj2qWFPRJV_*8fTZTOPnclcMRL3Dxjmxr-5DJdNc07fPo
-/answers/ids filter:   !*IXxMt)cy3)mYENixz4JCogmlz1T(H0s*KHikYPCS4H3YAaTeot5E.A9HbhuHZ
-/posts/ids/revisions filter: !*K)GWE1gDcf3YaWY
-
-/posts/ids/revisions:
-    - to check for retag, check if items[0].last_tags exists
-    - to check whether body has been edited, check whether items[0].body exists
-    - if title changed, items[0].last_title will exist
-
 comments = [{
     postId: 12
     sitename: 'meta',
@@ -50,9 +41,6 @@ comments = [{
     - if state change: new state (colour?)
     - if new answer: time and user and score of latest answer, (how many new answers?), whether accepted
     - if new comment: comment body? time, author, score
-
-NOTE: NEED TO MULTIPLY SE TIMES BY 1000!!
-NEED TO SAVE NEW TIME!
 */
 (function(sox, $, undefined) {
     console.log('running editAlert.js');
@@ -173,6 +161,8 @@ NEED TO SAVE NEW TIME!
         callback({'addedNotification': false});
     }
 
+    //GM_deleteValue('sox-editNotification-postsToWatch');
+    //GM_deleteValue('sox-editNotification-commentsToWatch');
     var postsToWatch = JSON.parse(GM_getValue('sox-editNotification-postsToWatch', '[]')), //[{"type":"question","postId":"289490","sitename":"meta","lastCheckedTime":1483799031360,"options":["edit"],"lastCheckedState":"open"}],
         commentsToWatch = JSON.parse(GM_getValue('sox-editNotification-commentsToWatch', '[]')),
         notifications = JSON.parse(GM_getValue('sox-editNotification-notifications', '[]')),
@@ -278,9 +268,11 @@ NEED TO SAVE NEW TIME!
 
     //---------------------------------/notification dialog------------------------------//
 
-    $('.comments').before('<i title="watch for new comments" class="fa fa-pencil-square-o sox-notify-on-change sox-watch-comments"></i>');
-    $('.post-menu').append('<span class="lsep"></span><i title="watch post for changes" class="fa fa-pencil-square-o sox-notify-on-change sox-watch-post"></i></a>');
-
+    if(!sox.location.on('/users/')) {
+        $('.comments').before('<i title="watch for new comments" class="fa fa-pencil-square-o sox-notify-on-change sox-watch-comments"></i>');
+        $('.post-menu').append('<span class="lsep"></span><i title="watch post for changes" class="fa fa-pencil-square-o sox-notify-on-change sox-watch-post"></i></a>');
+    }
+    
     function fromAPI(url, callback) {
         $.ajax({
             method: 'get',
@@ -407,20 +399,18 @@ NEED TO SAVE NEW TIME!
                                 if (data.items[z].revision_type !== 'vote_based') itemIndex = z; break;
                             }
                             if (currentOptions.indexOf('retag') !== -1 && currentOptions.indexOf('edit') === -1) { //retag
-                                //check for retag and edit comment, notification = 'edit and retag'
                                 if (retag) {
                                     detailsWeKnow.sitename = currentSitename;
                                     detailsWeKnow.title = data.items[itemIndex].title;
                                     detailsWeKnow.link = 'http://' + currentSiteUrl + '/' + data.items[itemIndex].post_type[0] + '/' + data.items[itemIndex].post_id; //data.items[itemIndex].post_type[0] => 'question'/'answer'->'q'/'a
-                                    detailsWeKnow.newTags = data.items[itemIndex].tag;
+                                    detailsWeKnow.newTags = data.items[itemIndex].tags;
                                 }
                             } else if (currentOptions.indexOf('retag') === -1 && currentOptions.indexOf('edit') !== -1) { //edit
-                                //check for edit comment, notification = 'edit'
-                                if (edit) {
+                                if (edit && !retag) { //if retag wasn't selected, then don't add notification if retag occured
                                     detailsWeKnow.sitename = currentSitename;
                                     detailsWeKnow.title = data.items[itemIndex].title;
                                     detailsWeKnow.link = 'http://' + currentSiteUrl + '/' + data.items[itemIndex].post_type[0] + '/' + data.items[itemIndex].post_id; //data.items[itemIndex].post_type[0] => 'question'/'answer'->'q'/'a
-                                    detailsWeKnow.editComment = data.items[itemIndex].commen;
+                                    detailsWeKnow.editComment = data.items[itemIndex].comment;
                                 }
                             } else { //both
                                 if (edit && retag) {
@@ -428,7 +418,7 @@ NEED TO SAVE NEW TIME!
                                     detailsWeKnow.title = data.items[itemIndex].title;
                                     detailsWeKnow.link = 'http://' + currentSiteUrl + '/' + data.items[itemIndex].post_type[0] + '/' + data.items[itemIndex].post_id; //data.items[0].post_type[0] => 'question'/'answer'->'q'/'a
                                     detailsWeKnow.editComment = data.items[itemIndex].comment;
-                                    detailsWeKnow.newTags = data.items[itemIndex].tag;
+                                    detailsWeKnow.newTags = data.items[itemIndex].tags;
                                 }
                             }
                         }

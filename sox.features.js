@@ -351,7 +351,7 @@
 
             function addCheckboxes() {
                 $('#reasons').remove(); //remove the div containing everything, we're going to add/remove stuff now:
-                if (/\/edit/.test(window.location.href) || $('[class^="inline-editor"]').length) {
+                if (/\/edit/.test(window.location.href) || $('[class^="inline-editor"]').length || $('.edit-comment').length) {
                     $('.form-submit').before('<div id="reasons" style="float:left;"></div>');
 
                     $.each(JSON.parse(GM_getValue('editReasons')), function(i, obj) {
@@ -481,6 +481,7 @@
                     $('#dialogEditReasons').show(500); //Show the dialog to view and update values
                 });
             }, 500);
+            $(document).on('sox-edit-window', addCheckboxes);
 
             $('.post-menu > .edit-post').click(function() {
                 setTimeout(function() {
@@ -493,8 +494,16 @@
             // Description: For changing the 'share' button link to the format [name](link)
 
             sox.helpers.observe('.share-tip', function() {
-                var link = $('.share-tip input').val();
-                var title = $('#question-header a').text().replace(/\[(.*?)\]/g, '($1)'); //https://github.com/soscripted/sox/issues/226
+                var link = $('.share-tip input').val(),
+                    title, documentTitle;
+
+                if($('#question-header a').find('.MathJax')) { //https://github.com/soscripted/sox/issues/227
+                    documentTitle = document.title.split('-');
+                    //if length == 2 it will not have a tag ie. ['title', 'sitename'] instead of ['tag', 'title', 'sitename']
+                    title = documentTitle.slice((documentTitle.length == 2 ? 0 : 1), documentTitle.length-1).join().trim().replace(/\[(.*?)\]/g, '($1)');
+                } else {
+                    title = $('#question-header a').text().replace(/\[(.*?)\]/g, '($1)'); //https://github.com/soscripted/sox/issues/226
+                }
 
                 if (link.indexOf(title) != -1) return; //don't do anything if the function's alread done its thing
                 $('.share-tip input').val('[' + title + '](' + link + ')');

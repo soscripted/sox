@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Edit notification
 // @namespace    https://github.com/soscripted/sox
-// @version      0.0.2
+// @version      0.0.3
 // @description  Notifications on changes to posts on the SE network
 // @author       ᔕᖺᘎᕊ (stackexchange.com/users/4337810/)
 // @match        *://*.stackoverflow.com/*
@@ -11,9 +11,12 @@
 // @match        *://*.askubuntu.com/*
 // @match        *://*.stackapps.com/*
 // @match        *://*.mathoverflow.net/*
-// @require      https://rawgit.com/soscripted/sox/dev/sox.common.js
-// @require      https://rawgit.com/shu8/824a7f0e307f2cf469958c950a54a631/raw/e559a2a6aaba5f4bee1e3df9f6eb4c2100da76c8/editAlert.js
-// @resource     common https://rawgit.com/soscripted/sox/dev/sox.common.info.json
+
+// @require      https://code.jquery.com/jquery-2.1.4.min.js
+// @require      https://code.jquery.com/ui/1.11.4/jquery-ui.min.js
+// @require      sox.common.js
+// @require      editAlert.js
+// @resource     common sox.common.info.json
 
 // @grant        GM_setValue
 // @grant        GM_getValue
