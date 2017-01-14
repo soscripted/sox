@@ -350,6 +350,9 @@
             // Description: For adding checkboxes when editing to add pre-defined edit reasons
 
             function addCheckboxes() {
+                function toLocaleSentenceCase(str) {
+                  return str.substr(0, 1).toLocaleUpperCase() + str.substr(1);
+                }
                 $('#reasons').remove(); //remove the div containing everything, we're going to add/remove stuff now:
                 if (/\/edit/.test(window.location.href) || $('[class^="inline-editor"]').length || $('.edit-comment').length) {
                     $('.form-submit').before('<div id="reasons" style="float:left;"></div>');
@@ -376,14 +379,15 @@
                     $('#reasons input[type="checkbox"]').change(function() {
                         if (this.checked) { //Add it to the summary
                             if (!editCommentField.val()) {
-                                editCommentField.val(editCommentField.val() + $(this).val().replace(/on$/g, ''));
+                                editCommentField.val(toLocaleSentenceCase($(this).val()).replace(/on$/g, ''));
                             } else {
                                 editCommentField.val(editCommentField.val() + '; ' + $(this).val().replace(/on$/g, ''));
                             }
                             var newEditComment = editCommentField.val(); //Remove the last space and last semicolon
                             editCommentField.val(newEditComment).focus();
                         } else if (!this.checked) { //Remove it from the summary
-                            editCommentField.val(editCommentField.val().replace($(this).val() + '; ', '')); //for middle/beginning values
+                            editCommentField.val(toLocaleSentenceCase(editCommentField.val().replace(new RegExp(toLocaleSentenceCase($(this).val()) + ';? ?'), ''))); //for beginning values
+                            editCommentField.val(editCommentField.val().replace($(this).val() + '; ', '')); //for middle values
                             editCommentField.val(editCommentField.val().replace(new RegExp(';? ?' + $(this).val()), '')); //for last value
                         }
                     });
