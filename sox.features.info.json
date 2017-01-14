@@ -63,7 +63,7 @@
             "desc": "Add a label on questions which are hot-network questions",
             "extended_description": "If the question you are currently viewing is HOT, a flame icon is added next to the title",
             "meta": "http://meta.stackexchange.com/questions/245390/let-mods-and-10k-know-when-questions-go-hot",
-            "match": "*://*/questions*",
+            "match": "",
             "exclude": "SE1.0"
         }, {
             "name": "markEmployees",

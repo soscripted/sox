@@ -495,17 +495,9 @@
 
             sox.helpers.observe('.share-tip', function() {
                 var link = $('.share-tip input').val(),
-                    title, documentTitle;
+                    title = $('meta[name="twitter:title"]').attr('content').replace(/\[(.*?)\]/g, '($1)'); //https://github.com/soscripted/sox/issues/226
 
-                if($('#question-header a').find('.MathJax')) { //https://github.com/soscripted/sox/issues/227
-                    documentTitle = document.title.split('-');
-                    //if length == 2 it will not have a tag ie. ['title', 'sitename'] instead of ['tag', 'title', 'sitename']
-                    title = documentTitle.slice((documentTitle.length == 2 ? 0 : 1), documentTitle.length-1).join().trim().replace(/\[(.*?)\]/g, '($1)');
-                } else {
-                    title = $('#question-header a').text().replace(/\[(.*?)\]/g, '($1)'); //https://github.com/soscripted/sox/issues/226
-                }
-
-                if (link.indexOf(title) != -1) return; //don't do anything if the function's alread done its thing
+                if (link.indexOf(title) != -1) return; //don't do anything if the function's already done its thing
                 $('.share-tip input').val('[' + title + '](' + link + ')');
                 $('.share-tip input').select();
                 document.execCommand('copy'); //https://github.com/soscripted/sox/issues/177
@@ -676,18 +668,31 @@
             }
             $('#qinfo').after('<div id="feed"></div>');
 
-            $.ajax({
-                type: 'get',
-                url: 'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20json%20where%20url%3D"http%3A%2F%2Fstackexchange.com%2Fhot-questions-for-mobile"&format=json',
-                success: function(d) {
-                    var results = d.query.results.json.json;
-                    $.each(results, function(i, o) {
-                        if (document.URL.indexOf(o.site + '/questions/' + o.question_id) > -1) {
-                            addHotText();
+            if(sox.location.on('/questions') || $('.question-summary').length) {
+                $.ajax({
+                    type: 'get',
+                    url: 'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20json%20where%20url%3D"http%3A%2F%2Fstackexchange.com%2Fhot-questions-for-mobile"&format=json',
+                    success: function(d) {
+                        var results = d.query.results.json.json;
+                        if (sox.location.on('/questions/')) {
+                            $.each(results, function(i, o) {
+                                if (document.URL.indexOf(o.site + '/questions/' + o.question_id) > -1) {
+                                    addHotText();
+                                }
+                            });
+                        } else {
+                            $('.question-summary').each(function() {
+                                var id = $(this).attr('id').split('-')[2];
+                                if(results.filter(function(d) {
+                                    return d.question_id == id;
+                                }).length) {
+                                    $(this).find('.summary h3').append('<div title="this question is a hot network question!" class="sox-hot" style="font-size:x-large;float:left"><i class="fa fa-free-code-camp"></i></div>');
+                                }
+                            });
                         }
-                    });
-                }
-            });
+                    }
+                });
+            }
         },
 
         autoShowCommentImages: function() {
@@ -1431,6 +1436,8 @@ Toggle SBS?</div></li>';
             // Description: Displays linked posts inline with an arrow
 
             function getIdFromUrl(url) {
+                if (url.indexOf('/questions/tagged/') !== -1) return false;
+
                 if (url.indexOf('/a/') > -1) { //eg. http://meta.stackexchange.com/a/26764/260841
                     return url.split('/a/')[1].split('/')[0];
 

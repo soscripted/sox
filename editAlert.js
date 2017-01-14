@@ -272,8 +272,9 @@ comments = [{
         $('.comments').before('<i title="watch for new comments" class="fa fa-pencil-square-o sox-notify-on-change sox-watch-comments"></i>');
         $('.post-menu').append('<span class="lsep"></span><i title="watch post for changes" class="fa fa-pencil-square-o sox-notify-on-change sox-watch-post"></i></a>');
     }
-    
+
     function fromAPI(url, callback) {
+        console.log('getting from API with URL: ', url);
         $.ajax({
             method: 'get',
             url: url,
@@ -436,7 +437,7 @@ comments = [{
     }
 
     if (commentsToWatch.length) { //make the envelope sign black if the comments section is already on the watch list
-        console.log('about to start looping commentsToWatch:', postsToWatch);
+        console.log('about to start looping commentsToWatch:', commentsToWatch);
         $.each(commentsToWatch, function(i, o) {
             console.log('looping commentsToWatch. currently on:', o);
             var currentPostId = o.postId,
