@@ -124,7 +124,7 @@ comments = [{
             //console.log('statechange');
             //sitename, title, score, newState
             text = 'This question is now ' + details.newState;
-        } else if (details.score) {
+        } else if (details.editComment || details.newTags) {
             if (details.newTags) {
                 if (details.editComment ) {//editRetag
                     //console.log('editretag');
@@ -141,12 +141,13 @@ comments = [{
                 text = 'This question has been edited (' + details.editComment + ')';
             }
         } else if (details.commentBody && details.commentsLink) {
-            text = (details.newCommentsCount === 1 ? 'A new comment has been posted (' + $('<div>').html(details.commentBody).text() + ')' : 'New comments have been posted'); //div creation is to unescape string for eg. quotes
+            text = (details.newCommentsCount === 1 ? 'A new comment has been posted' : 'New comments have been posted') + ' (' + (details.commentBody.length > 100 ? $('<div>').html(details.commentBody.substr(0, 100)).text() + '...' : $('<div>').html(details.commentBody.substr(0, 100)).text()) + ')'; //div creation is to unescape string for eg. quotes
         }
 
         if (text) {
             var $li = $('<li>').append($('<a>', {
-                'href': details.link || details.newLink || details.commentsLink
+                'href': details.link || details.newLink || details.commentsLink,
+                'text': (details.score ? details.score : '') + ' ' + details.title
             }).append($('<div>', {
                 'class': 'site-icon favicon favicon-' + (details.sitename == 'meta' ? 'stackexchangemeta' : details.sitename),
                 'style': 'margin-right: 10px'
@@ -309,7 +310,7 @@ comments = [{
             $post.find('.sox-watch-post').removeClass('fa-pencil-square-o').addClass('fa-pencil-square');
 
             //FIRST see what's changed then check whether what's changed matches the user's settings and add notification accordingly.
-            if (new Date().getTime() >= (lastCheckedTime + 900000)) { //15 mins = 900000
+            if (new Date().getTime() >= (new Date(lastCheckedTime + 900000).getTime())) { //15 mins = 900000
                 console.log('Been more than 15 minutes since checking post. Doing API request for', o);
                 if (currentOptions.indexOf('newAnswers') !== -1 || currentOptions.indexOf('stateChange') !== -1) { //newAnswers || stateChange
                     //do API request to /questions or /answers
@@ -405,6 +406,7 @@ comments = [{
                                     detailsWeKnow.title = data.items[itemIndex].title;
                                     detailsWeKnow.link = 'http://' + currentSiteUrl + '/' + data.items[itemIndex].post_type[0] + '/' + data.items[itemIndex].post_id; //data.items[itemIndex].post_type[0] => 'question'/'answer'->'q'/'a
                                     detailsWeKnow.newTags = data.items[itemIndex].tags;
+                                    detailsWeKnow.title = data.items[itemIndex].title || data.items[items.length-1].title;
                                 }
                             } else if (currentOptions.indexOf('retag') === -1 && currentOptions.indexOf('edit') !== -1) { //edit
                                 if (edit && !retag) { //if retag wasn't selected, then don't add notification if retag occured
@@ -412,6 +414,7 @@ comments = [{
                                     detailsWeKnow.title = data.items[itemIndex].title;
                                     detailsWeKnow.link = 'http://' + currentSiteUrl + '/' + data.items[itemIndex].post_type[0] + '/' + data.items[itemIndex].post_id; //data.items[itemIndex].post_type[0] => 'question'/'answer'->'q'/'a
                                     detailsWeKnow.editComment = data.items[itemIndex].comment;
+                                    detailsWeKnow.title = data.items[itemIndex].title || data.items[items.length-1].title;
                                 }
                             } else { //both
                                 if (edit && retag) {
@@ -420,6 +423,7 @@ comments = [{
                                     detailsWeKnow.link = 'http://' + currentSiteUrl + '/' + data.items[itemIndex].post_type[0] + '/' + data.items[itemIndex].post_id; //data.items[0].post_type[0] => 'question'/'answer'->'q'/'a
                                     detailsWeKnow.editComment = data.items[itemIndex].comment;
                                     detailsWeKnow.newTags = data.items[itemIndex].tags;
+                                    detailsWeKnow.title = data.items[itemIndex].title || data.items[items.length-1].title;
                                 }
                             }
                         }
@@ -429,6 +433,7 @@ comments = [{
                     if (r.addedNotification) {
                         console.log('changing lastCheckedTime to current time');
                         o.lastCheckedTime = new Date().getTime();
+                        o.lastCheckedAnswerIds = newAnswerIds;
                     }
                 });
             }
@@ -453,8 +458,8 @@ comments = [{
 
             var $comments = $('#comments-' + currentPostId);
             $comments.prev('.sox-watch-comments').removeClass('fa-pencil-square-o').addClass('fa-pencil-square');
-            //TODO: do the API checking
-            if (new Date().getTime() >= (lastCheckedTime + 900000)) { //15 mins = 900000
+
+            if (new Date().getTime() >= (new Date(lastCheckedTime + 900000).getTime())) { //15 mins = 900000
                 console.log('Been more than 15 minutes since checking comments. Doing API request for', o);
                 fromAPI('http://api.stackexchange.com/2.2/posts/' + currentPostId + '/comments?filter=' + commentsFilter + '&site=' + currentSitename, function(data) {
                     var newCommentIds = data.items.map(function(d) {
@@ -472,7 +477,10 @@ comments = [{
                             'newCommentsCount': differentCommentIds.length
                         }, function(r) {
                             if (r.addedNotification) {
+                                console.log('updating lastCheckedTime for comment', o);
                                 o.lastCheckedTime = new Date().getTime();
+                                o.lastCheckedCommentIds = newCommentIds;
+                                console.log('new comment object', o);
                             }
                         });
                     }
@@ -540,7 +548,7 @@ comments = [{
         if (isQuestion) {
             $optionsDiv.find('#stateChange, #newAnswers').parents('li').show();
         } else {
-            $optionsDiv.find('#stateChange, #newAnswers').parents('li').hide();
+            $optionsDiv.find('#stateChange, #newAnswers, #retag').parents('li').hide();
         }
         var currentPostIfExists = postsToWatch.filter(function(d) {
             return d.postId == $post.attr('data-answerid') || $post.attr('data-questionid');
