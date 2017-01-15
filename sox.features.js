@@ -690,7 +690,7 @@
                                 if(results.filter(function(d) {
                                     return d.question_id == id;
                                 }).length) {
-                                    $(this).find('.summary h3').append('<div title="this question is a hot network question!" class="sox-hot" style="font-size:x-large;float:left"><i class="fa fa-free-code-camp"></i></div>');
+                                    $(this).find('.summary h3').prepend('<div title="this question is a hot network question!" class="sox-hot" style="font-size:x-large;float:none;display:inline"><i class="fa fa-free-code-camp"></i></div>');
                                 }
                             });
                         }
@@ -1315,7 +1315,7 @@ Toggle SBS?</div></li>';
                                 $author = $('<span/>', {
                                     class: 'author',
                                     style: 'padding-left: 5px;',
-                                    text: author
+                                    text: $('<div>').html(author).text() //https://github.com/soscripted/sox/issues/233
                                 });
 
                             var $header = $node.find('.item-header'),

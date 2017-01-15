@@ -386,6 +386,14 @@ comments = [{
                                 }
                             }
                         }
+
+                        addNotification(detailsWeKnow, function(r) {
+                            if (r.addedNotification) {
+                                console.log('changing lastCheckedTime to current time');
+                                o.lastCheckedTime = new Date().getTime();
+                                o.lastCheckedAnswerIds = newAnswerIds;
+                            }
+                        });
                     });
                 }
                 if (currentOptions.indexOf('edit') !== -1 || currentOptions.indexOf('retag') !== -1) { //edit || retag
@@ -406,7 +414,7 @@ comments = [{
                                     detailsWeKnow.title = data.items[itemIndex].title;
                                     detailsWeKnow.link = 'http://' + currentSiteUrl + '/' + data.items[itemIndex].post_type[0] + '/' + data.items[itemIndex].post_id; //data.items[itemIndex].post_type[0] => 'question'/'answer'->'q'/'a
                                     detailsWeKnow.newTags = data.items[itemIndex].tags;
-                                    detailsWeKnow.title = data.items[itemIndex].title || data.items[items.length-1].title;
+                                    detailsWeKnow.title = data.items[itemIndex].title || data.items[data.items.length-1].title;
                                 }
                             } else if (currentOptions.indexOf('retag') === -1 && currentOptions.indexOf('edit') !== -1) { //edit
                                 if (edit && !retag) { //if retag wasn't selected, then don't add notification if retag occured
@@ -414,7 +422,7 @@ comments = [{
                                     detailsWeKnow.title = data.items[itemIndex].title;
                                     detailsWeKnow.link = 'http://' + currentSiteUrl + '/' + data.items[itemIndex].post_type[0] + '/' + data.items[itemIndex].post_id; //data.items[itemIndex].post_type[0] => 'question'/'answer'->'q'/'a
                                     detailsWeKnow.editComment = data.items[itemIndex].comment;
-                                    detailsWeKnow.title = data.items[itemIndex].title || data.items[items.length-1].title;
+                                    detailsWeKnow.title = data.items[itemIndex].title || data.items[data.items.length-1].title;
                                 }
                             } else { //both
                                 if (edit && retag) {
@@ -423,19 +431,18 @@ comments = [{
                                     detailsWeKnow.link = 'http://' + currentSiteUrl + '/' + data.items[itemIndex].post_type[0] + '/' + data.items[itemIndex].post_id; //data.items[0].post_type[0] => 'question'/'answer'->'q'/'a
                                     detailsWeKnow.editComment = data.items[itemIndex].comment;
                                     detailsWeKnow.newTags = data.items[itemIndex].tags;
-                                    detailsWeKnow.title = data.items[itemIndex].title || data.items[items.length-1].title;
+                                    detailsWeKnow.title = data.items[itemIndex].title || data.items[data.items.length-1].title;
                                 }
                             }
                         }
+                        addNotification(detailsWeKnow, function(r) {
+                            if (r.addedNotification) {
+                                console.log('changing lastCheckedTime to current time');
+                                o.lastCheckedTime = new Date().getTime();
+                            }
+                        });
                     });
                 }
-                addNotification(detailsWeKnow, function(r) {
-                    if (r.addedNotification) {
-                        console.log('changing lastCheckedTime to current time');
-                        o.lastCheckedTime = new Date().getTime();
-                        o.lastCheckedAnswerIds = newAnswerIds;
-                    }
-                });
             }
         });
         GM_setValue('sox-editNotification-postsToWatch', JSON.stringify(postsToWatch));
