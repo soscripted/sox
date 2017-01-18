@@ -2558,9 +2558,16 @@ Toggle SBS?</div></li>';
 
             function addBar() {
                 var currentUrl = location.href.split('/'),
-                    sliced = currentUrl.slice(0, currentUrl.length-1).join('/');
+                    sliced = currentUrl.slice(0, currentUrl.length-1).join('/'),
+                    urlToGet;
 
-                $.get(sliced + '/stats', function(d) {
+                if ($('.reviewable-post').length) {
+                    urlToGet = sliced + '/stats';
+                } else {
+                    urlToGet = currentUrl.join('/') + '/stats';
+                }
+
+                $.get(urlToGet, function(d) {
                     var count = +$(d).find('.review-stats-count-current-user').first().text().trim(),
                         width = (count/20)*100;
                     if ($('#sox-daily-review-count').length) {

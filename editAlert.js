@@ -179,10 +179,12 @@ comments = [{
         },
         $ul = $('<ul>', {
             'id': 'sox-edit-notification-options-list'
-        });
+        }),
+        throttled = JSON.parse(GM_getValue('sox-editNotification-throttled', '{throttled: false}'));
 
     console.log('postsToWatch', postsToWatch);
     console.log('commentsToWatch', commentsToWatch);
+    console.log('throttled', throttled);
     console.log('notifications', notifications);
 
     //---------------------------------notification dialog------------------------------//
@@ -274,13 +276,23 @@ comments = [{
         $('.post-menu').append('<span class="lsep"></span><i title="watch post for changes" class="fa fa-pencil-square-o sox-notify-on-change sox-watch-post"></i></a>');
     }
 
-    function fromAPI(url, callback) {
+    function fromAPI(url, throttled, callback) {
+        if (throttled.throttled) {
+            if (new Date().getTime() < throttled.time + 7200000) { //7200000 == 2 hours
+                callback(false);
+                return;
+            }
+        }
         console.log('getting from API with URL: ', url);
         $.ajax({
             method: 'get',
             url: url,
             success: function(d) {
-                callback(d);
+                if (d.error_id == 502) {
+                    callback(false);
+                } else {
+                    callback(d);
+                }
             },
             async: false //make sure the notification is added at the right time
         });
@@ -314,7 +326,14 @@ comments = [{
                 console.log('Been more than 15 minutes since checking post. Doing API request for', o);
                 if (currentOptions.indexOf('newAnswers') !== -1 || currentOptions.indexOf('stateChange') !== -1) { //newAnswers || stateChange
                     //do API request to /questions or /answers
-                    fromAPI('http://api.stackexchange.com/2.2/' + currentType + 's/' + currentPostId + '?site=' + currentSitename + '&filter=' + (currentType == 'question' ? apiQuestionFilter : apiAnswerFilter), function(data) {
+                    fromAPI('http://api.stackexchange.com/2.2/' + currentType + 's/' + currentPostId + '?site=' + currentSitename + '&filter=' + (currentType == 'question' ? apiQuestionFilter : apiAnswerFilter), throttled, function(data) {
+                        console.log('data retrieved from API:', data);
+                        if (!d) { //throttle
+                            throttled = true;
+                            GM_setValue('sox-editNotification-throttled', JSON.stringify({throttled: true, time: new Date().getTime()}));
+                            return false;
+                        }
+
                         var newAnswerIds = (data.items[0].answers ? data.items[0].answers.map(function(o) {
                                 return o.answer_id;
                             }) : []),
@@ -398,8 +417,14 @@ comments = [{
                 }
                 if (currentOptions.indexOf('edit') !== -1 || currentOptions.indexOf('retag') !== -1) { //edit || retag
                     //do API request to posts/id/revisions
-                    fromAPI('http://api.stackexchange.com/2.2/posts/' + currentPostId + '/revisions?site=' + currentSitename + '&filter=' + apiRevisionFilter, function(data) {
+                    fromAPI('http://api.stackexchange.com/2.2/posts/' + currentPostId + '/revisions?site=' + currentSitename + '&filter=' + apiRevisionFilter, throttled, function(data) {
                         console.log('data retrieved from API:', data);
+                        if (!d) { //throttle
+                            throttled = true;
+                            GM_setValue('sox-editNotification-throttled', JSON.stringify({throttled: true, time: new Date().getTime()}));
+                            return false;
+                        }
+
                         var retag = data.items[0].last_tags ? true : false,
                             edit = data.items[0].creation_date*1000 > lastCheckedTime,
                             itemIndex;
@@ -468,7 +493,14 @@ comments = [{
 
             if (new Date().getTime() >= (new Date(lastCheckedTime + 900000).getTime())) { //15 mins = 900000
                 console.log('Been more than 15 minutes since checking comments. Doing API request for', o);
-                fromAPI('http://api.stackexchange.com/2.2/posts/' + currentPostId + '/comments?filter=' + commentsFilter + '&site=' + currentSitename, function(data) {
+                fromAPI('http://api.stackexchange.com/2.2/posts/' + currentPostId + '/comments?filter=' + commentsFilter + '&site=' + currentSitename, throttled, function(data) {
+                    console.log('data retrieved from API:', data);
+                    if (!d) { //throttle
+                        throttled = true;
+                        GM_setValue('sox-editNotification-throttled', JSON.stringify({throttled: true, time: new Date().getTime()}));
+                        return false;
+                    }
+
                     var newCommentIds = data.items.map(function(d) {
                         return d.comment_id;
                     });

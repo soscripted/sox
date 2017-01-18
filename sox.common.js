@@ -125,6 +125,8 @@
                 success: function(d) {
                     if (d.backoff) {
                         sox.error('SOX Error: BACKOFF: ' + d.backoff);
+                    } else if (d.error_id == 502) {
+                        sox.error('THROTTLE VIOLATION', d);
                     } else if (d.error_id == 403)  {
                         sox.warn('Access token invalid! Opening window to get new one');
                         window.open('https://stackexchange.com/oauth/dialog?client_id=7138&scope=no_expiry&redirect_uri=http://soscripted.github.io/sox/');
