@@ -370,7 +370,7 @@
                         });
                     }, function() {
                         $(this).css({ //on un-hover
-                            'background-color': 'white',
+                            'background-color': 'inherit',
                             'color': 'inherit'
                         });
                     });
@@ -796,18 +796,19 @@
                     var $topbar = $('.topbar'),
                         topbarHeight = $topbar.outerHeight(),
                         offset = 10;
-                    if ($topbar.css('position') == 'fixed') {
-                        offset += topbarHeight;
-                    }
+
+                    if ($topbar.css('position') == 'fixed') offset += topbarHeight;
+
                     var $voteCell = $(this),
                         $vote = $voteCell.find('.vote'),
                         vcOfset = $voteCell.offset(),
                         scrollTop = $(window).scrollTop();
+
                     if (vcOfset.top - scrollTop - offset <= 0) {
                         if (vcOfset.top + $voteCell.height() - scrollTop - offset - $vote.height() > topbarHeight) {
                             $vote.css({
                                 position: 'fixed',
-                                left: vcOfset.left + 4,
+                                left: vcOfset.left + 3.5,
                                 top: offset
                             });
                         } else {
@@ -1084,7 +1085,7 @@
                     $anchor.text(text.substr(0, text.length - 9)); //remove [on hold]
                     $question.attr('data-sox-question-state', 'on hold'); //used for hideCertainQuestions feature compatability
                     $.get('//' + location.hostname + '/questions/' + id, function(d) {
-                        $anchor.after('&nbsp;<span class="onhold" title="' + $(d).find('.question-status h2').text() + '">&nbsp;onhold&nbsp;</span>'); //add appropiate message
+                        $anchor.after('&nbsp;<span class="onhold" title="' + $(d).find('.question-status h2').text() + '">&nbsp;on hold&nbsp;</span>'); //add appropiate message
                     });
                 }
             }
