@@ -421,6 +421,12 @@
             "meta": "",
             "match": "*://*/questions*",
             "exclude": ""
+        }, {
+            "name": "dailyReviewBar",
+            "desc": "Add a progress bar showing how many reviews you have left in the day",
+            "meta": "",
+            "match": "*://*/review*",
+            "exclude": ""
         }]
     }
 }

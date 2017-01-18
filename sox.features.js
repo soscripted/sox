@@ -1,4 +1,4 @@
-/*jshint multistr: true, loopfunc: true*/
+/*jshint multistr: true, loopfunc: true, esversion: 6*/
 /*global GM_getValue, GM_setValue, fkey*/
 
 (function(sox, $, undefined) {
@@ -2551,6 +2551,36 @@ Toggle SBS?</div></li>';
                     sox.info('Browser doesn\'t support execComand for copyCode feature');
                 }
             });
+        },
+
+        dailyReviewBar: function() {
+            // Description: Adds a progress bar showing how many reviews you have left in the day
+
+            function addBar() {
+                var currentUrl = location.href.split('/'),
+                    sliced = currentUrl.slice(0, currentUrl.length-1).join('/');
+
+                $.get(sliced + '/stats', function(d) {
+                    var count = +$(d).find('.review-stats-count-current-user').first().text().trim(),
+                        width = (count/20)*100;
+                    if ($('#sox-daily-review-count').length) {
+                        $('#sox-daily-review-count').find('#badge-progress-bar').css('width', width);
+                        $('#sox-daily-review-count').find('#badge-progress-count').text(count);
+                    } else {
+                        $('.subheader.tools-rev').append(`<div id="sox-daily-review-count" title="your daily review cap in this queue" class="review-badge-progress">
+                            <div class="meter" style="width: 100px;margin-top: 14px;margin-right: 15px;height: 9px;float: right;">
+                                <div id="badge-progress-bar" style="width: ` + width + `%;">
+                                    <div id="badge-progress-bar-vis" style="border:none"></div>
+                                </div>
+                            </div>
+                            <div id="badge-progress-count">` + count + `</div>
+                        </div>`);
+                    }
+                });
+            }
+
+            addBar();
+            sox.helpers.observe('.reviewable-post, .review-content', addBar);
         }
     };
 })(window.sox = window.sox || {}, jQuery);
