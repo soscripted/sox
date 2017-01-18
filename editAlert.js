@@ -281,6 +281,8 @@ comments = [{
             if (new Date().getTime() < throttled.time + 7200000) { //7200000 == 2 hours
                 callback(false);
                 return;
+            } else {
+                GM_setValue('sox-editNotification-throttled', JSON.stringify('{throttled: false}'));
             }
         }
         console.log('getting from API with URL: ', url);
