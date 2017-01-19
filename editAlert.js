@@ -157,6 +157,7 @@ comments = [{
             }));
 
             $('#sox-editNotificationDialogList').prepend($li);
+            $('#sox-editNotificationDialogButton').css('-webkit-text-stroke', '2px blue');
             callback({'addedNotification': true});
         }
         callback({'addedNotification': false});
@@ -330,7 +331,7 @@ comments = [{
 
             //FIRST see what's changed then check whether what's changed matches the user's settings and add notification accordingly.
             if (new Date().getTime() >= (new Date(lastCheckedTime + 900000).getTime())) { //15 mins = 900000
-                console.log('Been more than 15 minutes since checking post. Doing API request for', o);
+                console.log('Been more than 15 (or 10) minutes since checking post. Doing API request for', o);
                 if (currentOptions.indexOf('newAnswers') !== -1 || currentOptions.indexOf('stateChange') !== -1) { //newAnswers || stateChange
                     //do API request to /questions or /answers
                     fromAPI('http://api.stackexchange.com/2.2/' + currentType + 's/' + currentPostId + '?site=' + currentSitename + '&filter=' + (currentType == 'question' ? apiQuestionFilter : apiAnswerFilter), throttled, function(data) {
@@ -414,10 +415,13 @@ comments = [{
                         }
 
                         addNotification(detailsWeKnow, function(r) {
-                            if (r.addedNotification) {
+                            if (r.addedNotification) { //now it can only check at the earliest 15 mins later
                                 console.log('changing lastCheckedTime to current time');
                                 o.lastCheckedTime = new Date().getTime();
                                 o.lastCheckedAnswerIds = newAnswerIds;
+                            } else { //now it can only check at the earliest 10 mins later (just reducing the wait for posts with no activity)
+                                console.log('changing lastCheckedTime to time 10 minutes ago');
+                                o.lastCheckedTime = new Date().getTime() - 600000; //600000ms == 10 mins
                             }
                         });
                     });
@@ -468,9 +472,12 @@ comments = [{
                             }
                         }
                         addNotification(detailsWeKnow, function(r) {
-                            if (r.addedNotification) {
+                            if (r.addedNotification) { //now it can only check at the earliest 15 mins later
                                 console.log('changing lastCheckedTime to current time');
                                 o.lastCheckedTime = new Date().getTime();
+                            } else { //now it can only check at the earliest 10 mins later (just reducing the wait for posts with no activity)
+                                console.log('changing lastCheckedTime to time 10 minutes ago');
+                                o.lastCheckedTime = new Date().getTime() - 600000; //600000ms == 10 mins
                             }
                         });
                     });
@@ -499,7 +506,7 @@ comments = [{
             $comments.prev('.sox-watch-comments').removeClass('fa-pencil-square-o').addClass('fa-pencil-square');
 
             if (new Date().getTime() >= (new Date(lastCheckedTime + 900000).getTime())) { //15 mins = 900000
-                console.log('Been more than 15 minutes since checking comments. Doing API request for', o);
+                console.log('Been more than 15 (or 10) minutes since checking comments. Doing API request for', o);
                 fromAPI('http://api.stackexchange.com/2.2/posts/' + currentPostId + '/comments?filter=' + commentsFilter + '&site=' + currentSitename, throttled, function(data) {
                     console.log('data retrieved from API:', data);
                     if (!data) { //throttle
@@ -514,22 +521,23 @@ comments = [{
                     var differentCommentIds = newCommentIds.filter(function(i) {
                         return lastCheckedCommentIds.indexOf(i) === -1;
                     });
-                    if (differentCommentIds.length) {
-                        addNotification({
-                            'sitename': currentSitename,
-                            'postId': currentPostId,
-                            'commentBody': data.items[0].body,
-                            'commentsLink': 'http://' + currentSiteUrl + '/' + data.items[0].post_type[0] + '/' + currentPostId + '#comments-' + currentPostId,
-                            'newCommentsCount': differentCommentIds.length
-                        }, function(r) {
-                            if (r.addedNotification) {
-                                console.log('updating lastCheckedTime for comment', o);
-                                o.lastCheckedTime = new Date().getTime();
-                                o.lastCheckedCommentIds = newCommentIds;
-                                console.log('new comment object', o);
-                            }
-                        });
-                    }
+                    addNotification({
+                        'sitename': currentSitename,
+                        'postId': currentPostId,
+                        'commentBody': (data.items.length && 'body' in data.items[0] ? data.items[0].body : undefined),
+                        'commentsLink': (data.items.length && 'post_type' in data.items[0] ? 'http://' + currentSiteUrl + '/' + data.items[0].post_type[0] + '/' + currentPostId + '#comments-' + currentPostId: undefined),
+                        'newCommentsCount': differentCommentIds.length
+                    }, function(r) {
+                        if (r.addedNotification) { //now it can only check at the earliest 15 mins later
+                            console.log('updating lastCheckedTime for comment', o);
+                            o.lastCheckedTime = new Date().getTime();
+                            o.lastCheckedCommentIds = newCommentIds;
+                            console.log('new comment object', o);
+                        } else { //now it can only check at the earliest 10 mins later (just reducing the wait for posts with no activity)
+                            console.log('changing lastCheckedTime to time 10 minutes ago');
+                            o.lastCheckedTime = new Date().getTime() - 600000; //600000ms == 10 mins
+                        }
+                    });
                 });
             }
         });
