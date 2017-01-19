@@ -335,7 +335,7 @@ comments = [{
                     //do API request to /questions or /answers
                     fromAPI('http://api.stackexchange.com/2.2/' + currentType + 's/' + currentPostId + '?site=' + currentSitename + '&filter=' + (currentType == 'question' ? apiQuestionFilter : apiAnswerFilter), throttled, function(data) {
                         console.log('data retrieved from API:', data);
-                        if (!d) { //throttle
+                        if (!data) { //throttle
                             throttled = true;
                             GM_setValue('sox-editNotification-throttled', JSON.stringify({"throttled": true, time: new Date().getTime()}));
                             return false;
@@ -426,7 +426,7 @@ comments = [{
                     //do API request to posts/id/revisions
                     fromAPI('http://api.stackexchange.com/2.2/posts/' + currentPostId + '/revisions?site=' + currentSitename + '&filter=' + apiRevisionFilter, throttled, function(data) {
                         console.log('data retrieved from API:', data);
-                        if (!d) { //throttle
+                        if (!data) { //throttle
                             throttled = true;
                             GM_setValue('sox-editNotification-throttled', JSON.stringify({"throttled": true, time: new Date().getTime()}));
                             return false;
@@ -502,7 +502,7 @@ comments = [{
                 console.log('Been more than 15 minutes since checking comments. Doing API request for', o);
                 fromAPI('http://api.stackexchange.com/2.2/posts/' + currentPostId + '/comments?filter=' + commentsFilter + '&site=' + currentSitename, throttled, function(data) {
                     console.log('data retrieved from API:', data);
-                    if (!d) { //throttle
+                    if (!data) { //throttle
                         throttled = true;
                         GM_setValue('sox-editNotification-throttled', JSON.stringify({"throttled": true, time: new Date().getTime()}));
                         return false;
