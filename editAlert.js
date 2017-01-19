@@ -564,22 +564,26 @@ comments = [{
 
     //all the handlers for clicking on watch icons, clicking save, clicking cancel, closing div if clicked outside
     $(document).on('click', '.sox-watch-comments', function() {
-        var $post = $(this).parents('.question, .answer');
+        var $post = $(this).parents('.question, .answer'),
+            postId = ($post.hasClass('question') ? $post.attr('data-questionid') : $post.attr('data-answerid'));
 
         if ($(this).hasClass('fa-pencil-square-o')) { //toggle button state
             $(this).removeClass('fa-pencil-square-o').addClass('fa-pencil-square');
+            commentsToWatch.push({
+                'postId': postId,
+                'sitename': sox.site.currentApiParameter,
+                'lastCheckedTime': new Date().getTime(),
+                'lastCheckedCommentIds': $(this).next('.comments').find('tr.comment').map(function() { //get the IDs of all the comments on this post, returns [] if no comments
+                    return $(this).attr('id').split('-')[1];
+                }).get()
+            });
         } else if ($(this).hasClass('fa-pencil-square')) {
             $(this).removeClass('fa-pencil-square').addClass('fa-pencil-square-o');
+            commentsToWatch.filter(function(o, i) { //delete from commentsToWatch array
+                if (o.postId == postId && o.sitename == sox.site.currentApiParameter) commentsToWatch.splice(i, 1);
+                GM_setValue('sox-editNotification-commentsToWatch', JSON.stringify(commentsToWatch));
+            });
         }
-
-        commentsToWatch.push({
-            'postId': ($post.hasClass('question') ? $post.attr('data-questionid') : $post.attr('data-answerid')),
-            'sitename': sox.site.currentApiParameter,
-            'lastCheckedTime': new Date().getTime(),
-            'lastCheckedCommentIds': $(this).next('.comments').find('tr.comment').map(function() { //get the IDs of all the comments on this post, returns [] if no comments
-                return $(this).attr('id').split('-')[1];
-            }).get()
-        });
 
         console.log('commentsToWatch', commentsToWatch);
         GM_setValue('sox-editNotification-commentsToWatch', JSON.stringify(commentsToWatch));
