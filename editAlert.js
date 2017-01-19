@@ -307,8 +307,12 @@ comments = [{
                     fromAPI('http://api.stackexchange.com/2.2/' + currentType + 's/' + currentPostId + '?site=' + currentSitename + '&filter=' + (currentType == 'question' ? apiQuestionFilter : apiAnswerFilter), throttled, function(data) {
                         console.log('data retrieved from API:', data);
                         if (!data) { //throttle
-                            throttled = true;
-                            GM_setValue('sox-editNotification-throttled', JSON.stringify({"throttled": true, time: new Date().getTime()}));
+                            console.log('Erorr: throttled');
+                            throttled = {
+                                "throttled": true,
+                                "time": new Date().getTime()
+                            };
+                            GM_setValue('sox-editNotification-throttled', JSON.stringify(throttled));
                             return false;
                         }
 
@@ -401,8 +405,12 @@ comments = [{
                     fromAPI('http://api.stackexchange.com/2.2/posts/' + currentPostId + '/revisions?site=' + currentSitename + '&filter=' + apiRevisionFilter, throttled, function(data) {
                         console.log('data retrieved from API:', data);
                         if (!data) { //throttle
-                            throttled = true;
-                            GM_setValue('sox-editNotification-throttled', JSON.stringify({"throttled": true, time: new Date().getTime()}));
+                            console.log('Erorr: throttled');
+                            throttled = {
+                                "throttled": true,
+                                "time": new Date().getTime()
+                            };
+                            GM_setValue('sox-editNotification-throttled', JSON.stringify(throttled));
                             return false;
                         }
 
@@ -480,8 +488,12 @@ comments = [{
                 fromAPI('http://api.stackexchange.com/2.2/posts/' + currentPostId + '/comments?filter=' + commentsFilter + '&site=' + currentSitename, throttled, function(data) {
                     console.log('data retrieved from API:', data);
                     if (!data) { //throttle
-                        throttled = true;
-                        GM_setValue('sox-editNotification-throttled', JSON.stringify({"throttled": true, time: new Date().getTime()}));
+                        console.log('Erorr: throttled');
+                        throttled = {
+                            "throttled": true,
+                            "time": new Date().getTime()
+                        };
+                        GM_setValue('sox-editNotification-throttled', JSON.stringify(throttled));
                         return false;
                     }
 
