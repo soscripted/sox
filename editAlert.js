@@ -180,7 +180,7 @@ comments = [{
         $ul = $('<ul>', {
             'id': 'sox-edit-notification-options-list'
         }),
-        throttled = JSON.parse(GM_getValue('sox-editNotification-throttled', '{throttled: false}'));
+        throttled = JSON.parse(GM_getValue('sox-editNotification-throttled', '{"throttled": false}'));
 
     console.log('postsToWatch', postsToWatch);
     console.log('commentsToWatch', commentsToWatch);
@@ -282,7 +282,7 @@ comments = [{
                 callback(false);
                 return;
             } else {
-                GM_setValue('sox-editNotification-throttled', JSON.stringify('{throttled: false}'));
+                GM_setValue('sox-editNotification-throttled', JSON.stringify('{"throttled": false}'));
             }
         }
         console.log('getting from API with URL: ', url);
@@ -332,7 +332,7 @@ comments = [{
                         console.log('data retrieved from API:', data);
                         if (!d) { //throttle
                             throttled = true;
-                            GM_setValue('sox-editNotification-throttled', JSON.stringify({throttled: true, time: new Date().getTime()}));
+                            GM_setValue('sox-editNotification-throttled', JSON.stringify({"throttled": true, time: new Date().getTime()}));
                             return false;
                         }
 
@@ -423,7 +423,7 @@ comments = [{
                         console.log('data retrieved from API:', data);
                         if (!d) { //throttle
                             throttled = true;
-                            GM_setValue('sox-editNotification-throttled', JSON.stringify({throttled: true, time: new Date().getTime()}));
+                            GM_setValue('sox-editNotification-throttled', JSON.stringify({"throttled": true, time: new Date().getTime()}));
                             return false;
                         }
 
@@ -499,7 +499,7 @@ comments = [{
                     console.log('data retrieved from API:', data);
                     if (!d) { //throttle
                         throttled = true;
-                        GM_setValue('sox-editNotification-throttled', JSON.stringify({throttled: true, time: new Date().getTime()}));
+                        GM_setValue('sox-editNotification-throttled', JSON.stringify({"throttled": true, time: new Date().getTime()}));
                         return false;
                     }
 
