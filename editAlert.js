@@ -187,6 +187,11 @@ comments = [{
     console.log('throttled', throttled);
     console.log('notifications', notifications);
 
+    $('<link/>', {
+        rel: 'stylesheet',
+        href: 'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'
+    }).appendTo('head');
+
     //---------------------------------notification dialog------------------------------//
     var $dialog = $('<div/>', {
             id: 'sox-editNotificationDialog',
