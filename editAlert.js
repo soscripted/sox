@@ -82,15 +82,19 @@ comments = [{
                 }
 
                 .sox-editNotificationButtonCount {
-                    background-color: red;
-                    width: 22px;
-                    margin-left: 4px;
-                    border-radius: 10px;
-                    color: white;
+                    background-color: blue;
+                    display: block;
+                    color: #FFF;
                     font-weight: bold;
+                    text-indent: 0;
+                    border-radius: 2px;
+                    padding: 1px 6px 1px 6px;
+                    font-size: 11px;
+                    line-height: 1;
+                    width: 8px;
                     position: absolute;
-                    font-size: 20px;
-                    top: 8px;
+                    height: 11px;
+                    margin-left: 7px;
                 }
 
                 #sox-editNotificationDialog {
@@ -146,19 +150,19 @@ comments = [{
 
         if (text) {
             var $li = $('<li>').append($('<a>', {
-                'href': details.link || details.newLink || details.commentsLink,
-                'text': (details.score ? details.score : '') + ' ' + details.title
+                'href': details.link || details.newLink || details.commentsLink
             }).append($('<div>', {
                 'class': 'site-icon favicon favicon-' + (details.sitename == 'meta' ? 'stackexchangemeta' : details.sitename),
                 'style': 'margin-right: 10px'
-            })).append(details.title)).append($('<span>', {
+            })).append((details.score || details.newScore ? details.score || details.newScore : '') + ' ' + details.title)).append($('<span>', {
                 'style': 'color: black; margin-left: 5px',
                 'text': text
             }));
 
             $('#sox-editNotificationDialogList').prepend($li);
-            $('#sox-editNotificationDialogButton').css('-webkit-text-stroke', '2px blue');
+            $('.sox-editNotificationButtonCount').text($('#sox-editNotificationDialogList li').length).show();
             callback({'addedNotification': true});
+            return;
         }
         callback({'addedNotification': false});
     }
@@ -229,7 +233,7 @@ comments = [{
         $icon = $('<i/>', {
             class: 'fa fa-edit'
         }),
-        $count = $('<div/>', {
+        $count = $('<span/>', {
             'class': 'sox-editNotificationButtonCount',
             'style': 'display:none'
         });
