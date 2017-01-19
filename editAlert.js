@@ -1,18 +1,5 @@
 /*jshint loopfunc: true, esversion: 6*/
 /*
-TODO:
-
-detailsWeKnow:
- - sitename
- - title
- - newLink
- - score
- - newScore
- - newState
- - link
- - newTags
- - editComment
-
 posts = [{ //check for edits, (closure, reopen, new answers if question)
     type: 'question/answer',
     postId: 1234,
@@ -31,20 +18,11 @@ comments = [{
 }]
 
 - to show in notification:
-    - site logo (favicon on left)
     - delete button
-    - retag/edit/state change/new answer
-    - comment/post current score
-
-    - if retag: new tags
-    - if edit: edit comment
-    - if state change: new state (colour?)
-    - if new answer: time and user and score of latest answer, (how many new answers?), whether accepted
-    - if new comment: comment body? time, author, score
 */
 (function(sox, $, undefined) {
     console.log('running editAlert.js');
-    //The following CSS will be added to the style sheet when finished; this is just here to avoid having to got through the process of adding the stylesheet just for testing
+    //TODO add to SOX stylesheet when adding this feature to SOX
     GM_addStyle(`.sox-watch-post {
                     margin-left: 5px;
                 }
@@ -113,35 +91,21 @@ comments = [{
         console.log('adding notification with details:', details);
         var text = '';
         if (details.newLink && details.newScore) {
-            //console.log('here');
-            //console.log(details);
-            if (details.score && details.newState) { //newAnswersStateChange
-                //console.log('newAnswersStateChange');
-                //sitename, title, newLink, newScore, score, newState
+            if (details.score && details.newState) { //newAnswersStateChange; sitename, title, newLink, newScore, score, newState
                 text = (details.newAnswerCount === 1 ? 'A new answer has been posted on this question' : 'New answers have been posted on this question') + '. The state has also changed to ' + details.newState;
-            } else { //newAnswers
-                //console.log('newAnswers');
-                //sitename, title, newLink, newScore
+            } else { //newAnswers; sitename, title, newLink, newScore
                 text = details.newAnswerCount === 1 ? 'A new answer has been posted on this question' : 'New answers have been posted on this question';
             }
-        } else if (details.score && details.newState) { //stateChange
-            //console.log('statechange');
-            //sitename, title, score, newState
+        } else if (details.score && details.newState) { //stateChange; sitename, title, score, newState
             text = 'This question is now ' + details.newState;
         } else if (details.editComment || details.newTags) {
             if (details.newTags) {
-                if (details.editComment ) {//editRetag
-                    //console.log('editretag');
-                    //sitename, title, link, editComment, score, newTags
+                if (details.editComment ) {//editRetag; sitename, title, link, editComment, score, newTags
                     text = 'This question has been edited (' + details.editComment + ') and retagged (' + details.newTags.join(', ') + ')';
-                } else { //retag
-                    //console.log('retag');
-                    //sitename, title, link, newTags, score
+                } else { //retag; sitename, title, link, newTags, score
                     text = 'This question was retagged (' + details.newTags.join(', ') + ')';
                 }
-            } else { //edit
-                //console.log('edit');
-                //sitename, title, link, editComment, score
+            } else { //edit; sitename, title, link, editComment, score
                 text = 'This question has been edited (' + details.editComment + ')';
             }
         } else if (details.commentBody && details.commentsLink) {
@@ -169,7 +133,7 @@ comments = [{
 
     //GM_deleteValue('sox-editNotification-postsToWatch');
     //GM_deleteValue('sox-editNotification-commentsToWatch');
-    var postsToWatch = JSON.parse(GM_getValue('sox-editNotification-postsToWatch', '[]')), //[{"type":"question","postId":"289490","sitename":"meta","lastCheckedTime":1483799031360,"options":["edit"],"lastCheckedState":"open"}],
+    var postsToWatch = JSON.parse(GM_getValue('sox-editNotification-postsToWatch', '[]')),
         commentsToWatch = JSON.parse(GM_getValue('sox-editNotification-commentsToWatch', '[]')),
         notifications = JSON.parse(GM_getValue('sox-editNotification-notifications', '[]')),
         apiQuestionFilter = '!SCam31W85iAdF11znRBpj2qWFPRJV_*8fTZTOPnclcMRL3Dxjmxr-5DJdNc07fPo',
@@ -192,6 +156,7 @@ comments = [{
     console.log('throttled', throttled);
     console.log('notifications', notifications);
 
+    //TODO: when moved to SOX, this line can go
     $('<link/>', {
         rel: 'stylesheet',
         href: 'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'
@@ -274,6 +239,7 @@ comments = [{
 
         if (!isToggle && !isChild) {
             $dialog.hide();
+            $('.sox-editNotificationButtonCount').hide();
             $button.removeClass('topbar-icon-on glow');
             $count.text('');
         }
@@ -311,7 +277,7 @@ comments = [{
     }
 
     //----------------------------------MAIN PART---------------------------------------//
-    if (postsToWatch.length) { //make the envelope sign black if the post is already on the watch list
+    if (postsToWatch.length) { //make the watch icon black if the post is already on the watch list
         console.log('about to start looping postsToWatch:', postsToWatch);
         $.each(postsToWatch, function(i, o) {
             console.log('looping postsToWatch. currently on:', o);
@@ -334,7 +300,7 @@ comments = [{
             $post.find('.sox-watch-post').removeClass('fa-pencil-square-o').addClass('fa-pencil-square');
 
             //FIRST see what's changed then check whether what's changed matches the user's settings and add notification accordingly.
-            if (new Date().getTime() >= (new Date(lastCheckedTime + 900000).getTime())) { //15 mins = 900000
+            if (new Date().getTime() >= lastCheckedTime + 900000) { //15 mins = 900000
                 console.log('Been more than 15 (or 10) minutes since checking post. Doing API request for', o);
                 if (currentOptions.indexOf('newAnswers') !== -1 || currentOptions.indexOf('stateChange') !== -1) { //newAnswers || stateChange
                     //do API request to /questions or /answers
@@ -491,7 +457,7 @@ comments = [{
         GM_setValue('sox-editNotification-postsToWatch', JSON.stringify(postsToWatch));
     }
 
-    if (commentsToWatch.length) { //make the envelope sign black if the comments section is already on the watch list
+    if (commentsToWatch.length) { //make the watch icon black if the comments section is already on the watch list
         console.log('about to start looping commentsToWatch:', commentsToWatch);
         $.each(commentsToWatch, function(i, o) {
             console.log('looping commentsToWatch. currently on:', o);
@@ -509,7 +475,7 @@ comments = [{
             var $comments = $('#comments-' + currentPostId);
             $comments.prev('.sox-watch-comments').removeClass('fa-pencil-square-o').addClass('fa-pencil-square');
 
-            if (new Date().getTime() >= (new Date(lastCheckedTime + 900000).getTime())) { //15 mins = 900000
+            if (new Date().getTime() >= lastCheckedTime + 900000) { //15 mins = 900000
                 console.log('Been more than 15 (or 10) minutes since checking comments. Doing API request for', o);
                 fromAPI('http://api.stackexchange.com/2.2/posts/' + currentPostId + '/comments?filter=' + commentsFilter + '&site=' + currentSitename, throttled, function(data) {
                     console.log('data retrieved from API:', data);
@@ -549,7 +515,7 @@ comments = [{
     }
     //----------------------------------/MAIN PART---------------------------------------//
 
-    //setup div that appears when you click on 'watch post' envelope
+    //setup div that appears when you click on 'watch post' icon
     $.each(options, function(text, id) { //create list items, in form <label><input type='checkbox' id='id'>text</label>
         $ul.append($('<li>').append($('<label>').append($('<input>', {
             'id': id,
