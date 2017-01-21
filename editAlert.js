@@ -87,7 +87,7 @@ comments = [{
                     -webkit-text-stroke-width: 3px;
                 }`);
 
-    function addNotification(details, callback) {
+    function addNotification(details, callback, alreadySaved) {
         console.log('adding notification with details:', details);
         var text = '';
         if (details.newLink && details.newScore) {
@@ -126,8 +126,10 @@ comments = [{
             $('#sox-editNotificationDialogList').prepend($li);
             $('.sox-editNotificationButtonCount').text($('#sox-editNotificationDialogList li').length).show();
             callback({'addedNotification': true});
-            notifications.push(details);
-            GM_setValue('sox-editNotification-notifications', JSON.stringify(notifications));
+            if (!alreadySaved) {
+                notifications.push(details);
+                GM_setValue('sox-editNotification-notifications', JSON.stringify(notifications));
+            }
             return;
         }
         callback({'addedNotification': false});
@@ -135,6 +137,7 @@ comments = [{
 
     //GM_deleteValue('sox-editNotification-postsToWatch');
     //GM_deleteValue('sox-editNotification-commentsToWatch');
+    //GM_deleteValue('sox-editNotification-notifications');
     var postsToWatch = JSON.parse(GM_getValue('sox-editNotification-postsToWatch', '[]')),
         commentsToWatch = JSON.parse(GM_getValue('sox-editNotification-commentsToWatch', '[]')),
         notifications = JSON.parse(GM_getValue('sox-editNotification-notifications', '[]')),
@@ -286,7 +289,7 @@ comments = [{
                 if (d.addedNotification) {
                     console.log('added saved notification:', o);
                 }
-            });
+            }, true); //true => alreadySaved, to not re-add to notifications object again
         });
     }
 
