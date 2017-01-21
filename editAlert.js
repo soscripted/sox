@@ -516,24 +516,29 @@ comments = [{
                     var differentCommentIds = newCommentIds.filter(function(i) {
                         return lastCheckedCommentIds.indexOf(i) === -1;
                     });
-                    addNotification({
-                        'sitename': currentSitename,
-                        'postId': currentPostId,
-                        'commentBody': (data.items.length && 'body' in data.items[0] ? data.items[0].body : undefined),
-                        'commentsLink': (data.items.length && 'post_type' in data.items[0] ? 'http://' + currentSiteUrl + '/' + data.items[0].post_type[0] + '/' + currentPostId + '#comments-' + currentPostId: undefined),
-                        'newCommentsCount': differentCommentIds.length
-                    }, function(r) {
-                        if (r.addedNotification) { //now it can only check at the earliest 15 mins later
-                            console.log('updating lastCheckedTime for comment', o);
-                            o.lastCheckedTime = new Date().getTime();
-                            console.log('resaving newCommentIds', newCommentIds);
-                            o.lastCheckedCommentIds = newCommentIds;
-                            console.log('new comment object', o);
-                        } else { //now it can only check at the earliest 10 mins later (just reducing the wait for posts with no activity)
-                            console.log('changing lastCheckedTime to time 10 minutes ago');
-                            o.lastCheckedTime = new Date().getTime() - 600000; //600000ms == 10 mins
-                        }
-                    });
+                    if (newCommentIds.length) {
+                        addNotification({
+                            'sitename': currentSitename,
+                            'postId': currentPostId,
+                            'commentBody': (data.items.length && 'body' in data.items[0] ? data.items[0].body : undefined),
+                            'commentsLink': (data.items.length && 'post_type' in data.items[0] ? 'http://' + currentSiteUrl + '/' + data.items[0].post_type[0] + '/' + currentPostId + '#comments-' + currentPostId: undefined),
+                            'newCommentsCount': differentCommentIds.length
+                        }, function(r) {
+                            if (r.addedNotification) { //now it can only check at the earliest 15 mins later
+                                console.log('updating lastCheckedTime for comment', o);
+                                o.lastCheckedTime = new Date().getTime();
+                                console.log('resaving newCommentIds', newCommentIds);
+                                o.lastCheckedCommentIds = newCommentIds;
+                                console.log('new comment object', o);
+                            } else { //now it can only check at the earliest 10 mins later (just reducing the wait for posts with no activity)
+                                console.log('changing lastCheckedTime to time 10 minutes ago');
+                                o.lastCheckedTime = new Date().getTime() - 600000; //600000ms == 10 mins
+                            }
+                        });
+                    } else {
+                        console.log('changing lastCheckedTime to time 10 minutes ago');
+                        o.lastCheckedTime = new Date().getTime() - 600000; //600000ms == 10 mins
+                    }
                 });
             }
         });
