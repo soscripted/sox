@@ -126,6 +126,8 @@ comments = [{
             $('#sox-editNotificationDialogList').prepend($li);
             $('.sox-editNotificationButtonCount').text($('#sox-editNotificationDialogList li').length).show();
             callback({'addedNotification': true});
+            notifications.push(details);
+            GM_setValue('sox-editNotification-notifications', JSON.stringify(notifications));
             return;
         }
         callback({'addedNotification': false});
@@ -277,6 +279,17 @@ comments = [{
     }
 
     //----------------------------------MAIN PART---------------------------------------//
+    if (notifications.length) {
+        $.each(notifications, function(i, o) {
+            console.log('looping saved notifications. currently on:', o);
+            addNotification(o, function(d) {
+                if (d.addedNotification) {
+                    console.log('added saved notification:', o);
+                }
+            });
+        });
+    }
+
     if (postsToWatch.length) { //make the watch icon black if the post is already on the watch list
         console.log('about to start looping postsToWatch:', postsToWatch);
         $.each(postsToWatch, function(i, o) {
@@ -513,6 +526,7 @@ comments = [{
                         if (r.addedNotification) { //now it can only check at the earliest 15 mins later
                             console.log('updating lastCheckedTime for comment', o);
                             o.lastCheckedTime = new Date().getTime();
+                            console.log('resaving newCommentIds', newCommentIds);
                             o.lastCheckedCommentIds = newCommentIds;
                             console.log('new comment object', o);
                         } else { //now it can only check at the earliest 10 mins later (just reducing the wait for posts with no activity)

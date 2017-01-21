@@ -107,6 +107,11 @@
                 });
             });
 
+            $(document).on('click', '.js-add-link', function() { //https://github.com/soscripted/sox/issues/239
+                var commentParent = ($(this).parents('.answer').length ? '.answer' : '.question');
+                $(this).closest(commentParent).find('.js-show-link.comments-link').hide();
+            });
+
         },
 
         fixedTopbar: function(settings) {
