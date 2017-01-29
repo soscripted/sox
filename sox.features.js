@@ -283,24 +283,16 @@
             }
 
             function addKbd($node) {
-                /*var start = $node.get(0).selectionStart,
-                    end = $node.get(0).selectionEnd,
-                    origVal = $node.val(),
-                    selected = origVal.slice(start, end),
-                    newVal = '';
-
-                console.log(start, end, selected);
-
-                newVal = origVal.slice(0, start) + "<kbd>" + selected + "</kbd>" + origVal.substr(end);
-                console.log(newVal);*/
                 $node.surroundSelectedText("<kbd>", "</kbd>");
                 var surroundedText = $node.getSelection(),
                     trimmed = surroundedText.text.trim();
 
-                //https://github.com/soscripted/sox/issues/189:
-                //if no trimming occured, then we have to add another space
-                $node.replaceSelectedText(trimmed);
-                $node.insertText(' ', surroundedText.end + (trimmed == surroundedText.text ? 6 : 5), 'collapseToEnd'); //add a space after the `</kbd>`
+                if ($node.getSelection().text !== '') { //https://github.com/soscripted/sox/issues/240
+                    //https://github.com/soscripted/sox/issues/189:
+                    //if no trimming occured, then we have to add another space
+                    $node.replaceSelectedText(trimmed);
+                    $node.insertText(' ', surroundedText.end + (trimmed == surroundedText.text ? 6 : 5), 'collapseToEnd'); //add a space after the `</kbd>`
+                }
             }
 
             function loopAndAddHandlers() {
@@ -555,12 +547,16 @@
         spoilerTip: function() {
             // Description: For adding some text to spoilers to tell people to hover over it
 
-            $('.spoiler').prepend('<div id="isSpoiler" style="color:red; font-size:smaller; float:right;">hover to show spoiler<div>');
-            $('.spoiler').hover(function() {
-                $(this).find('#isSpoiler').hide(500);
-            }, function() {
-                $(this).find('#isSpoiler').show(500);
-            });
+            function addSpoilerTip() {
+                $('.spoiler').prepend('<div id="isSpoiler" style="color:red; font-size:smaller; float:right;">hover to show spoiler<div>');
+                $('.spoiler').hover(function() {
+                    $(this).find('#isSpoiler').hide(500);
+                }, function() {
+                    $(this).find('#isSpoiler').show(500);
+                });
+            }
+            addSpoilerTip();
+            $(document).on('sox-new-review-post-appeared', addSpoilerTip);
         },
 
         commentReplies: function() {
@@ -595,30 +591,36 @@
             addReplyLinks();
 
             $(document).on('sox-new-comment', addReplyLinks);
+            $(document).on('sox-new-review-post-appeared', addReplyLinks);
         },
 
         parseCrossSiteLinks: function() {
             // Description: For converting cross-site links to their titles
 
-            var sites = ['stackexchange', 'stackoverflow', 'superuser', 'serverfault', 'askubuntu', 'stackapps', 'mathoverflow', 'programmers', 'bitcoin'];
+            function expandLinks() {
+                var sites = ['stackexchange', 'stackoverflow', 'superuser', 'serverfault', 'askubuntu', 'stackapps', 'mathoverflow', 'programmers', 'bitcoin'];
 
-            $('.post-text a').not('.expand-post-sox').each(function() {
-                var anchor = $(this),
-                    href = $(this).attr('href');
-                if (!href) return;
-                if (sites.indexOf(href.split('/')[2].split('.')[0]) > -1) { //if the link is to an SE site (not, for example, to google), do the necessary stuff
-                    if (href.indexOf('/questions/') > -1) { //if the link is to a question
-                        if ($(this).text() == href) { //if there isn't text on it (ie. bare url)
-                            var sitename = href.split('/')[2].split('.')[0],
-                                id = href.split('/')[4];
+                $('.post-text a').not('.expand-post-sox').each(function() {
+                    var anchor = $(this),
+                        href = $(this).attr('href');
+                    if (!href) return;
+                    if (sites.indexOf(href.split('/')[2].split('.')[0]) > -1) { //if the link is to an SE site (not, for example, to google), do the necessary stuff
+                        if (href.indexOf('/questions/') > -1) { //if the link is to a question
+                            if ($(this).text() == href) { //if there isn't text on it (ie. bare url)
+                                var sitename = href.split('/')[2].split('.')[0],
+                                    id = href.split('/')[4];
 
-                            sox.helpers.getFromAPI('questions', id, sitename, function(json) {
-                                anchor.html(json.items[0].title); //Get the title and add it in
-                            }, 'activity');
+                                sox.helpers.getFromAPI('questions', id, sitename, function(json) {
+                                    anchor.html(json.items[0].title); //Get the title and add it in
+                                }, 'activity');
+                            }
                         }
                     }
-                }
-            });
+                });
+            }
+
+            expandLinks();
+            $(document).on('sox-new-review-post-appeared', expandLinks);
         },
 
         confirmNavigateAway: function() {
@@ -721,6 +723,7 @@
             setTimeout(showImages, 2000); //setTimeout needed because FF refuses to load the feature on page load and does it before so the comment isn't detected.
 
             $(document).on('sox-new-comment', showImages);
+            $(document).on('sox-new-review-post-appeared', showImages);
         },
 
         showCommentScores: function() {
@@ -787,20 +790,21 @@
             //https://github.com/shu8/SE_OptionalFeatures/pull/14:
             //https://github.com/shu8/Stack-Overflow-Optional-Features/issues/28: Thanks @SnoringFrog for fixing this!
 
-            var $votecells = $(".votecell");
-            $votecells.css("width", "61px");
-
             stickcells();
+            $(document).on('sox-new-review-post-appeared', stickcells);
 
             $(window).scroll(function() {
                 stickcells();
             });
 
             function stickcells() {
+                var $votecells = $(".votecell");
+                $votecells.css("width", "61px");
+
                 $votecells.each(function() {
                     var $topbar = $('.topbar'),
                         topbarHeight = $topbar.outerHeight(),
-                        offset = 10;
+                        offset = (sox.location.on('/review') ? 60 : 10);
 
                     if ($topbar.css('position') == 'fixed') offset += topbarHeight;
 
@@ -1036,9 +1040,13 @@
         betterCSS: function() {
             // Description: For adding the better CSS for the voting buttons and favourite button
 
-            $('.vote-down-off, .vote-down-on, .vote-up-off, .vote-up-on, .star-off, .star-on').addClass('sox-better-css');
-            $('head').append('<link rel="stylesheet" href="https://rawgit.com/shu8/SE-Answers_scripts/master/coolMaterialDesignCss.css" type="text/css" />');
-            $('#hlogo').css('-webkit-transform', 'translate3d(0,0,0)'); //Thanks to @IStoleThePies: https://github.com/soscripted/sox/issues/79#issuecomment-267868040
+            function addCSS() {
+                $('.vote-down-off, .vote-down-on, .vote-up-off, .vote-up-on, .star-off, .star-on').addClass('sox-better-css');
+                $('head').append('<link rel="stylesheet" href="https://rawgit.com/shu8/SE-Answers_scripts/master/coolMaterialDesignCss.css" type="text/css" />');
+                $('#hlogo').css('-webkit-transform', 'translate3d(0,0,0)'); //Thanks to @IStoleThePies: https://github.com/soscripted/sox/issues/79#issuecomment-267868040
+            }
+            addCSS();
+            $(document).on('sox-new-review-post-appeared', addCSS);
         },
 
         standOutDupeCloseMigrated: function() {
@@ -1132,7 +1140,7 @@
                 });
             }
             loopAndAddTooltip();
-            sox.helpers.observe('.reviewable-post', loopAndAddTooltip);
+            $(document).on('sox-new-review-post-appeared', loopAndAddTooltip);
         },
 
         addSBSBtn: function() {
@@ -1464,16 +1472,21 @@ Toggle SBS?</div></li>';
                 }
             }
 
-            $('.post-text a, .comments .comment-copy a').each(function() {
-                var url = $(this).attr('href');
+            function addButton() {
+                $('.post-text a, .comments .comment-copy a').each(function() {
+                    var url = $(this).attr('href');
 
-                //https://github.com/soscripted/sox/issues/205 -- check link's location is to same site, eg if on SU, don't allow on M.SU
-                //http://stackoverflow.com/a/4815665/3541881
-                if (url && $('<a>').prop('href', url).prop('hostname') == location.hostname && url.indexOf('#comment') == -1 && getIdFromUrl(url)) { //getIdFromUrl(url) makes sure it won't fail later on
-                    $(this).css('color', '#0033ff');
-                    $(this).before('<a class="expander-arrow-small-hide expand-post-sox"></a>');
-                }
-            });
+                    //https://github.com/soscripted/sox/issues/205 -- check link's location is to same site, eg if on SU, don't allow on M.SU
+                    //http://stackoverflow.com/a/4815665/3541881
+                    if (url && $('<a>').prop('href', url).prop('hostname') == location.hostname && url.indexOf('#comment') == -1 && getIdFromUrl(url)) { //getIdFromUrl(url) makes sure it won't fail later on
+                        $(this).css('color', '#0033ff');
+                        $(this).before('<a class="expander-arrow-small-hide expand-post-sox"></a>');
+                    }
+                });
+            }
+
+            addButton();
+            $(document).on('sox-new-review-post-appeared', addButton);
 
             $(document).on('click', 'a.expand-post-sox', function() {
                 if ($(this).hasClass('expander-arrow-small-show')) {
@@ -2535,13 +2548,17 @@ Toggle SBS?</div></li>';
             // Description: Add a button to code in posts to let you copy it
 
             //button uses CSS mainly from http://stackoverflow.com/a/30810322/3541881
-            $('pre').prepend('<i class="fa fa-clipboard sox-copyCodeButton" style="display:none;"></i>');
+            function addButton() {
+                $('pre').prepend('<i class="fa fa-clipboard sox-copyCodeButton" style="display:none;"></i>');
 
-            $('pre').hover(function() {
-                $(this).find('.sox-copyCodeButton').show();
-            }, function() {
-                $(this).find('.sox-copyCodeButton').hide();
-            });
+                $('pre').hover(function() {
+                    $(this).find('.sox-copyCodeButton').show();
+                }, function() {
+                    $(this).find('.sox-copyCodeButton').hide();
+                });
+            }
+            addButton();
+            $(document).on('sox-new-review-post-appeared', addButton);
 
             $(document).on('click', '.sox-copyCodeButton', function() {
             	try {
@@ -2592,7 +2609,7 @@ Toggle SBS?</div></li>';
             }
 
             addBar();
-            sox.helpers.observe('.reviewable-post, .review-content', addBar);
+            $(document).on('sox-new-review-post-appeared', addBar);
         }
     };
 })(window.sox = window.sox || {}, jQuery);

@@ -108,7 +108,7 @@ comments = [{
             } else { //edit; sitename, title, link, editComment, score
                 text = 'This question has been edited (' + details.editComment + ')';
             }
-        } else if (details.commentBody && details.commentsLink) {
+        } else if (details.commentBody && details.commentsLink && details.newCommentsCount > 0) {
             text = (details.newCommentsCount === 1 ? 'A new comment has been posted' : 'New comments have been posted') + ' (' + (details.commentBody.length > 100 ? $('<div>').html(details.commentBody.substr(0, 100)).text() + '...' : $('<div>').html(details.commentBody.substr(0, 100)).text()) + ')'; //div creation is to unescape string for eg. quotes
         }
 
@@ -124,8 +124,15 @@ comments = [{
             }));
 
             $('#sox-editNotificationDialogList').prepend($li);
-            $('.sox-editNotificationButtonCount').text($('#sox-editNotificationDialogList li').length).show();
+
+            var noOfNotifications = $('#sox-editNotificationDialogList li').length;
+            //if double figures, add padding to fix alignment:
+            $('.sox-editNotificationButtonCount').css('padding-right', noOfNotifications > 9 ? '9px' : '0px').text(noOfNotifications).show();
             callback({'addedNotification': true});
+
+            if (!alreadySaved) alreadySaved = notifications.filter(function(d) {
+                return d.postId == details.originalPostId;
+            }).length;
             if (!alreadySaved) {
                 notifications.push(details);
                 GM_setValue('sox-editNotification-notifications', JSON.stringify(notifications));
@@ -197,6 +204,9 @@ comments = [{
                     $(this).addClass('topbar-icon-on');
                 } else {
                     $(this).removeClass('topbar-icon-on');
+                    $('.sox-editNotificationButtonCount').hide();
+                    $button.removeClass('topbar-icon-on glow');
+                    $count.text('');
                 }
             }
         }),
@@ -243,10 +253,12 @@ comments = [{
             isChild = $target.parents('#sox-editNotificationDialog, #sox-editNotificationDialogButton').is("#sox-editNotificationDialog, #sox-editNotificationDialogButton");
 
         if (!isToggle && !isChild) {
+            if ($dialog.is(':visible')) {
+                $('.sox-editNotificationButtonCount').hide();
+                $button.removeClass('topbar-icon-on glow');
+                $count.text('');
+            }
             $dialog.hide();
-            $('.sox-editNotificationButtonCount').hide();
-            $button.removeClass('topbar-icon-on glow');
-            $count.text('');
         }
     });
 
@@ -404,6 +416,8 @@ comments = [{
                             }
                         }
 
+                        detailsWeKnow.originalPostId = currentPostId;
+
                         addNotification(detailsWeKnow, function(r) {
                             if (r.addedNotification) { //now it can only check at the earliest 15 mins later
                                 console.log('changing lastCheckedTime to current time');
@@ -465,6 +479,9 @@ comments = [{
                                 }
                             }
                         }
+
+                        detailsWeKnow.originalPostId = currentPostId;
+
                         addNotification(detailsWeKnow, function(r) {
                             if (r.addedNotification) { //now it can only check at the earliest 15 mins later
                                 console.log('changing lastCheckedTime to current time');
@@ -525,7 +542,9 @@ comments = [{
                             'postId': currentPostId,
                             'commentBody': (data.items.length && 'body' in data.items[0] ? data.items[0].body : undefined),
                             'commentsLink': (data.items.length && 'post_type' in data.items[0] ? 'http://' + currentSiteUrl + '/' + data.items[0].post_type[0] + '/' + currentPostId + '#comments-' + currentPostId: undefined),
-                            'newCommentsCount': differentCommentIds.length
+                            'newCommentsCount': differentCommentIds.length,
+                            'originalPostId': currentPostId
+
                         }, function(r) {
                             if (r.addedNotification) { //now it can only check at the earliest 15 mins later
                                 console.log('updating lastCheckedTime for comment', o);

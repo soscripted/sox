@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Stack Overflow Extras (SOX)
 // @namespace    https://github.com/soscripted/sox
-// @version      2.0.19
+// @version      2.0.20
 // @description  Extra optional features for Stack Overflow and Stack Exchange sites
 // @contributor  ᴉʞuǝ (stackoverflow.com/users/1454538/)
 // @contributor  ᔕᖺᘎᕊ (stackexchange.com/users/4337810/)
@@ -179,6 +179,11 @@
         sox.helpers.observe('li[id^="wmd-redo-button"], textarea[id^="wmd-input"]', function(target) {
             $(document).trigger('sox-edit-window', [target]);
             sox.debug('sox-edit-window event triggered');
+        });
+
+        sox.helpers.observe('.reviewable-post, .review-content', function(target) {
+            $(document).trigger('sox-new-review-post-appeared', [target]);
+            sox.debug('sox-new-review-post-appeared event triggered');
         });
 
         if (GM_getValue('SOX-accessToken', -1) == -1) { //set access token

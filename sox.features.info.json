@@ -94,7 +94,7 @@
             "name": "spoilerTip",
             "desc": "Differentiate spoilers from empty blockquotes",
             "meta": "http://meta.stackexchange.com/questions/104085/differentiate-spoilers-from-empty-block-quotes",
-            "match": "*://*/questions*",
+            "match": "*://*/questions*,*://*/review*",
             "exclude": "SE1.0"
         }, {
             "name": "standOutDupeCloseMigrated",
@@ -127,13 +127,13 @@
             "desc": "View linked images (to imgur) in comments inline",
             "extended_description": "This feature will automatically detect comments with links to imgur and will display them inline",
             "meta": "",
-            "match": "*://*/questions*",
+            "match": "*://*/questions*,*://*/review*",
             "exclude": "SE1.0"
         }, {
             "name": "commentReplies",
             "desc": "Add reply links to comments for quick replying (without having to type someone's username)",
             "meta": "http://meta.stackexchange.com/questions/74778/add-reply-link-to-comment-that-pre-populates-comment-box-with-username",
-            "match": "*://*/questions*",
+            "match": "*://*/questions*,*://*/review*",
             "exclude": "SE1.0"
         }, {
             "name": "commentShortcuts",
@@ -315,7 +315,7 @@
             "desc": "Add extra CSS for animation actions on voting and favourite buttons",
             "extended_description": "Pulse effect when hovering over the upvote/downvote/favourite buttons. Currently only implemented natively on Android.SE.",
             "meta": "http://meta.stackexchange.com/questions/252685/i-want-to-have-those-voting-animations-like-on-android-se-pretty-please",
-            "match": "*://*/questions*",
+            "match": "*://*/questions*,*://*/review*",
             "exclude": "SE1.0"
         }, {
             "name": "grayOutVotes",
@@ -327,7 +327,7 @@
             "name": "stickyVoteButtons",
             "desc": "Make vote buttons next to posts sticky whilst scrolling on that post",
             "meta": "http://meta.stackexchange.com/a/35047/260841",
-            "match": "*://*/questions*",
+            "match": "*://*/questions*,*://*/review*",
             "exclude": "SE1.0"
         }, {
             "name": "disableOwnPostVoteButtons",
@@ -341,21 +341,21 @@
             "desc": "Always show the 'Link from the web' box when uploading an image",
             "extended_description": "Removes the 'you can also provide a link from the web' button when uploading images, and shows the URL input field by default",
             "meta": "http://meta.stackoverflow.com/q/306888/3541881",
-            "match": "*://*/questions*",
+            "match": "*://*/questions*,*://*/review*",
             "exclude": "SE1.0"
         }, {
             "name": "linkedPostsInline",
             "desc": "Display linked posts inline by clicking on an arrow",
             "extended_description": "Adds a button next to links to posts on the same site that expand to show the post inline",
             "meta": "",
-            "match": "*://*/questions*",
+            "match": "*://*/questions*,*://*/review*",
             "exclude": "SE1.0"
         }, {
             "name": "parseCrossSiteLinks",
             "desc": "Parse titles to links cross-SE-sites",
             "extended_description": "Detects links to other questions on SE sites and converts them to their title",
             "meta": "http://meta.stackexchange.com/questions/251183/parse-question-links-from-other-se-sites",
-            "match": "*://*/questions*",
+            "match": "*://*/questions*,*://*/review*",
             "exclude": "SE1.0"
         }, {
             "name": "quickAuthorInfo",
@@ -368,7 +368,7 @@
             "desc": "Change 'share' link to format of [post-name](url)",
             "extended_description": "When you click 'share' under a post, this will convert the URL given to a markdown-friendly version, with the post name as the link text. This feature also automatically copies the converted string to your clipboard",
             "meta": "http://meta.stackexchange.com/questions/126544/add-a-second-share-button-to-posts-with-comment-ready-links",
-            "match": "*://*/questions*",
+            "match": "*://*/questions*,*://*/review*",
             "exclude": "SE1.0"
         }, {
             "name": "sortByBountyAmount",
@@ -419,7 +419,7 @@
             "name": "copyCode",
             "desc": "Add a button to code in posts to let you copy it",
             "meta": "",
-            "match": "*://*/questions*",
+            "match": "*://*/questions*,*://*/review*",
             "exclude": ""
         }, {
             "name": "dailyReviewBar",
