@@ -127,7 +127,7 @@ comments = [{
 
             var noOfNotifications = $('#sox-editNotificationDialogList li').length;
             //if double figures, add padding to fix alignment:
-            $('.sox-editNotificationButtonCount').css('padding-right', noOfNotifications > 9 ? '9px' : '0px').text(noOfNotifications).show();
+            $('.sox-editNotificationButtonCount').css('padding-right', noOfNotifications > 9 ? '9px' : '6px').text(noOfNotifications).show();
             callback({'addedNotification': true});
 
             if (!alreadySaved) alreadySaved = notifications.filter(function(d) {
