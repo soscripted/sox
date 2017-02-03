@@ -1,24 +1,8 @@
 /*jshint loopfunc: true, esversion: 6*/
 /*
-posts = [{ //check for edits, (closure, reopen, new answers if question)
-    type: 'question/answer',
-    postId: 1234,
-    sitename: 'meta',
-    lastCheckedTime: 12344566,
-    lastCheckedState: (optional) 'open/closed',
-    lastCheckedAnswerIds: (optional) [1, 2, 3],
-    options: ['retag', 'edit', 'state change', 'new answers']
-}, {}, ...]
-
-comments = [{
-    postId: 12
-    sitename: 'meta',
-    lastCheckedTime: 12344566,
-    lastCheckedCommentIds: (optional) [1, 2, 3]
-}]
-
 - to show in notification:
     - delete button
+    - title if notification is a comment (add current title to saved object when watching a comments section)
 */
 (function(sox, $, undefined) {
     console.log('running editAlert.js');
@@ -114,7 +98,8 @@ comments = [{
 
         if (text) {
             var $li = $('<li>').append($('<a>', {
-                'href': details.link || details.newLink || details.commentsLink
+                'href': details.link || details.newLink || details.commentsLink,
+                'class': alreadySaved ? '' : 'new'
             }).append($('<div>', {
                 'class': 'site-icon favicon favicon-' + (details.sitename == 'meta' ? 'stackexchangemeta' : details.sitename),
                 'style': 'margin-right: 10px'
@@ -125,17 +110,18 @@ comments = [{
 
             $('#sox-editNotificationDialogList').prepend($li);
 
-            var noOfNotifications = $('#sox-editNotificationDialogList li').length;
+            var noOfNotifications = $('#sox-editNotificationDialogList li.new').length;
             //if double figures, add padding to fix alignment:
             $('.sox-editNotificationButtonCount').css('padding-right', noOfNotifications > 9 ? '9px' : '6px').text(noOfNotifications).show();
             callback({'addedNotification': true});
 
-            if (!alreadySaved) alreadySaved = notifications.filter(function(d) {
+            var nots = JSON.parse(GM_getValue('sox-editNotification-notifications', '[]'));
+            if (!alreadySaved) alreadySaved = nots.filter(function(d) {
                 return d.postId == details.originalPostId;
             }).length;
             if (!alreadySaved) {
-                notifications.push(details);
-                GM_setValue('sox-editNotification-notifications', JSON.stringify(notifications));
+                nots.push(details);
+                GM_setValue('sox-editNotification-notifications', JSON.stringify(nots));
             }
             return;
         }
