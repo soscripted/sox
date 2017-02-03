@@ -674,7 +674,9 @@
             function addHotText() {
                 if (!$('.sox-hot').length) {
                     $('#feed').html('<p>One of the 100 hot network questions!</p>');
-                    $('#question-header').prepend('<div title="this question is a hot network question!" class="sox-hot"><i class="fa fa-free-code-camp"></i><div>');
+
+                    //display:block to fix https://github.com/soscripted/sox/issues/243:
+                    $('#question-header').css('display', 'block').prepend('<div title="this question is a hot network question!" class="sox-hot"><i class="fa fa-free-code-camp"></i><div>');
                 }
             }
             $('#qinfo').after('<div id="feed"></div>');
@@ -1068,14 +1070,14 @@
                     $question.attr('data-sox-question-state', 'duplicate'); //used for hideCertainQuestions feature compatability
                     $.get('//' + location.hostname + '/questions/' + id, function(d) {
                         //styling for https://github.com/soscripted/sox/issues/181
-                        $anchor.after("&nbsp;<a style='display: inline' href='" + $(d).find('.question-status.question-originals-of-duplicate a:eq(0)').attr('href') + "'><span class='duplicate' title='click to visit duplicate'>&nbsp;duplicate&nbsp;</span></a>"); //add appropiate message
+                        $anchor.after("&nbsp;<a style='display: inline' href='" + $(d).find('.question-status.question-originals-of-duplicate a:eq(0)').attr('href') + "'><span class='standOutDupeCloseMigrated-duplicate' title='click to visit duplicate'>&nbsp;duplicate&nbsp;</span></a>"); //add appropiate message
                     });
 
                 } else if (text.substr(text.length - 8) == '[closed]') {
                     $anchor.text(text.substr(0, text.length - 8)); //remove [closed]
                     $question.attr('data-sox-question-state', 'closed'); //used for hideCertainQuestions feature compatability
                     $.get('//' + location.hostname + '/questions/' + id, function(d) {
-                        $anchor.after('&nbsp;<span class="closed" title="' + $(d).find('.question-status h2').text() + '">&nbsp;closed&nbsp;</span>'); //add appropiate message
+                        $anchor.after('&nbsp;<span class="standOutDupeCloseMigrated-closed" title="' + $(d).find('.question-status h2').text() + '">&nbsp;closed&nbsp;</span>'); //add appropiate message
                     });
 
                 } else if (text.substr(text.length - 10) == '[migrated]') {
@@ -1091,19 +1093,18 @@
                         } else {
                             text = 'migrated to' + $(d).find('.current-site .site-icon').attr('title');
                         }
-                        $anchor.after("&nbsp;<span class='migrated' title='" + text + "'>&nbsp;migrated&nbsp;</span>"); //add appropiate message
+                        $anchor.after("&nbsp;<span class='standOutDupeCloseMigrated-migrated' title='" + text + "'>&nbsp;migrated&nbsp;</span>"); //add appropiate message
                     });
 
                 } else if (text.substr(text.length - 9) == '[on hold]') {
                     $anchor.text(text.substr(0, text.length - 9)); //remove [on hold]
                     $question.attr('data-sox-question-state', 'on hold'); //used for hideCertainQuestions feature compatability
                     $.get('//' + location.hostname + '/questions/' + id, function(d) {
-                        $anchor.after('&nbsp;<span class="onhold" title="' + $(d).find('.question-status h2').text() + '">&nbsp;on hold&nbsp;</span>'); //add appropiate message
+                        $anchor.after('&nbsp;<span class="standOutDupeCloseMigrated-onhold" title="' + $(d).find('.question-status h2').text() + '">&nbsp;on hold&nbsp;</span>'); //add appropiate message
                     });
                 }
             }
 
-            $('head').append('<link rel="stylesheet" href="https://rawgit.com/shu8/SE-Answers_scripts/master/dupeClosedMigratedCSS.css" type="text/css" />'); //add the CSS
 
             $('.question-summary').each(function() { //Find the questions and add their id's and statuses to an object
                 addLabel($(this));
@@ -1305,16 +1306,16 @@ Toggle SBS?</div></li>';
                         apiurl,
                         id;
 
-                    switch (type) {
-                        case 'comment':
+                    switch (type) { //the ||'s are for fixing https://github.com/soscripted/sox/issues/242
+                        case 'comment' || link.indexOf('posts/comments/') > -1:
                             id = link.split('/')[5].split('?')[0];
                             apiurl = 'https://api.stackexchange.com/2.2/comments/' + id + '?order=desc&sort=creation&site=' + sitename;
                             break;
-                        case 'answer':
+                        case 'answer' || link.indexOf('com/a/') > -1:
                             id = link.split('/')[4].split('?')[0];
                             apiurl = 'https://api.stackexchange.com/2.2/answers/' + id + '?order=desc&sort=creation&site=' + sitename;
                             break;
-                        case 'edit suggested':
+                        case 'edit suggested' || link.indexOf('/suggested-edits/') > -1:
                             id = link.split('/')[4];
                             apiurl = 'https://api.stackexchange.com/2.2/suggested-edits/' + id + '?order=desc&sort=creation&site=' + sitename;
                             break;
@@ -1325,7 +1326,7 @@ Toggle SBS?</div></li>';
 
                     $.getJSON(apiurl, function(json) {
                         if (json.items.length) {
-                            var author = (type === 'edit suggested' ? json.items[0].proposing_user.display_name : json.items[0].owner.display_name),
+                            var author = (type === 'edit suggested' || link.indexOf('/suggested-edits/') > -1 ? json.items[0].proposing_user.display_name : json.items[0].owner.display_name),
                                 $author = $('<span/>', {
                                     class: 'author',
                                     style: 'padding-left: 5px;',
