@@ -31,7 +31,7 @@
                 }
                 #sox-editNotificationDialogButton {
                     background-image: none;
-                    padding-top: 10px;
+                    padding-top: 9px;
                     font-size: 14px;
                     color: #858c93;
                     height: 24px !important;
@@ -112,7 +112,7 @@
 
             var noOfNotifications = $('#sox-editNotificationDialogList li.new').length;
             //if double figures, add padding to fix alignment:
-            $('.sox-editNotificationButtonCount').css('padding-right', noOfNotifications > 9 ? '9px' : '6px').text(noOfNotifications).show();
+            if (noOfNotifications) $('.sox-editNotificationButtonCount').css('padding-right', noOfNotifications > 9 ? '9px' : '6px').text(noOfNotifications).show();
             callback({'addedNotification': true});
 
             var nots = JSON.parse(GM_getValue('sox-editNotification-notifications', '[]'));
@@ -408,6 +408,7 @@
                             if (r.addedNotification) { //now it can only check at the earliest 15 mins later
                                 console.log('changing lastCheckedTime to current time');
                                 o.lastCheckedTime = new Date().getTime();
+                                console.log('resaving newAnswerIds', newAnswerIds);
                                 o.lastCheckedAnswerIds = newAnswerIds;
                             } else { //now it can only check at the earliest 10 mins later (just reducing the wait for posts with no activity)
                                 console.log('changing lastCheckedTime to time 10 minutes ago');
@@ -484,7 +485,7 @@
         GM_setValue('sox-editNotification-postsToWatch', JSON.stringify(postsToWatch));
     }
 
-    if (commentsToWatch.length) { //make the watch icon black if the comments section is already on the watch list
+    if (commentsToWatch.length) {
         console.log('about to start looping commentsToWatch:', commentsToWatch);
         $.each(commentsToWatch, function(i, o) {
             console.log('looping commentsToWatch. currently on:', o);
@@ -492,6 +493,7 @@
                 currentSitename = o.sitename,
                 lastCheckedTime = o.lastCheckedTime,
                 lastCheckedCommentIds = o.lastCheckedCommentIds,
+                title = o.title,
                 currentSiteUrl = currentSitename + '.stackexchange.com';
 
             if (currentSitename === 'superuser') currentSiteUrl = 'superuser.com';
@@ -500,7 +502,7 @@
             if (currentSitename === 'meta') currentSiteUrl = 'meta.stackexchange.com';
 
             var $comments = $('#comments-' + currentPostId);
-            $comments.prev('.sox-watch-comments').removeClass('fa-pencil-square-o').addClass('fa-pencil-square');
+            $comments.prev('.sox-watch-comments').removeClass('fa-pencil-square-o').addClass('fa-pencil-square'); //make the watch icon black if the comments section is already on the watch list
 
             if (new Date().getTime() >= lastCheckedTime + 900000) { //15 mins = 900000
                 console.log('Been more than 15 (or 10) minutes since checking comments. Doing API request for', o);
@@ -529,8 +531,8 @@
                             'commentBody': (data.items.length && 'body' in data.items[0] ? data.items[0].body : undefined),
                             'commentsLink': (data.items.length && 'post_type' in data.items[0] ? 'http://' + currentSiteUrl + '/' + data.items[0].post_type[0] + '/' + currentPostId + '#comments-' + currentPostId: undefined),
                             'newCommentsCount': differentCommentIds.length,
-                            'originalPostId': currentPostId
-
+                            'originalPostId': currentPostId,
+                            'title': title
                         }, function(r) {
                             if (r.addedNotification) { //now it can only check at the earliest 15 mins later
                                 console.log('updating lastCheckedTime for comment', o);
@@ -588,6 +590,7 @@
             $(this).removeClass('fa-pencil-square-o').addClass('fa-pencil-square');
             commentsToWatch.push({
                 'postId': postId,
+                'title': $('#question-header > h1 > a').text(),
                 'sitename': sox.site.currentApiParameter,
                 'lastCheckedTime': new Date().getTime(),
                 'lastCheckedCommentIds': $(this).next('.comments').find('tr.comment').map(function() { //get the IDs of all the comments on this post, returns [] if no comments
