@@ -110,7 +110,7 @@
 
             $('#sox-editNotificationDialogList').prepend($li);
 
-            var noOfNotifications = $('#sox-editNotificationDialogList li.new').length;
+            var noOfNotifications = $('#sox-editNotificationDialogList li .new').length;
             //if double figures, add padding to fix alignment:
             if (noOfNotifications) $('.sox-editNotificationButtonCount').css('padding-right', noOfNotifications > 9 ? '9px' : '6px').text(noOfNotifications).show();
             callback({'addedNotification': true});
