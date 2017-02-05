@@ -322,7 +322,8 @@
             if (sox.site.type == sox.site.types.chat) {
                 return Chat.RoomUsers.current().name;
             } else {
-                return Stack && this.loggedIn ? decodeURI(Stack.options.user.profileUrl.split('/')[5]) : undefined;
+                var $uname = $('body > div.topbar > div > div.topbar-links > a > div.gravatar-wrapper-24');
+                return ($uname.length ? $uname.attr('title') : false);
             }
         },
         get loggedIn() {
