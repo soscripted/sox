@@ -11,7 +11,7 @@
     };
 
     sox.debug = function() {
-        if(!sox.info.debugging) return;
+        if (!sox.info.debugging) return;
         for (var arg = 0; arg < arguments.length; ++arg) {
             console.debug('SOX: ', arguments[arg]);
         }
@@ -42,13 +42,18 @@
     };
 
     //var Stack = (typeof StackExchange === "undefined" ? window.eval('if (typeof StackExchange != "undefined") StackExchange') : StackExchange) | undefined;
-    var Chat = (typeof CHAT === "undefined" ? window.eval("typeof CHAT != 'undefined' ? CHAT : undefined") : CHAT);
-    sox.debug(Chat);
-    var Stack = (typeof Chat === "undefined" ? (typeof StackExchange === "undefined" ? window.eval('if (typeof StackExchange != "undefined") StackExchange') : StackExchange) : undefined);
-    sox.debug(Stack);
+    var Chat, Stack;
+    if (location.href.indexOf('github.com') === -1) { //need this so it works on FF -- CSP blocks window.eval() it seems
+        Chat = (typeof CHAT === "undefined" ? window.eval("typeof CHAT != 'undefined' ? CHAT : undefined") : CHAT);
+        sox.debug(Chat);
+        Stack = (typeof Chat === "undefined" ? (typeof StackExchange === "undefined" ? window.eval('if (typeof StackExchange != "undefined") StackExchange') : StackExchange) : undefined);
+        sox.debug(Stack);
+    }
+
+    sox.Stack = Stack;
 
     sox.exists = function(path) {
-        if(!Stack) return false;
+        if (!Stack) return false;
         var toCheck = path.split('.'),
             cont = true,
             o = Stack,
@@ -101,7 +106,7 @@
             var keys = GM_listValues();
             for (var i = 0; i < keys.length; i++) {
                 var key = keys[i];
-                if(hideAccessToken && key == 'SOX-accessToken') {
+                if (hideAccessToken && key == 'SOX-accessToken') {
                     sox.loginfo('access token set');
                 } else {
                     sox.loginfo(key, GM_getValue(key));
@@ -120,6 +125,12 @@
                 success: function(d) {
                     if (d.backoff) {
                         sox.error('SOX Error: BACKOFF: ' + d.backoff);
+                    } else if (d.error_id == 502) {
+                        sox.error('THROTTLE VIOLATION', d);
+                    } else if (d.error_id == 403)  {
+                        sox.warn('Access token invalid! Opening window to get new one');
+                        window.open('https://stackexchange.com/oauth/dialog?client_id=7138&scope=no_expiry&redirect_uri=http://soscripted.github.io/sox/');
+                        alert('Your access token is no longer valid. A window has been opened to request a new one.');
                     } else {
                         callback(d);
                     }
@@ -131,22 +142,13 @@
         },
         observe: function(elements, callback, toObserve) {
             sox.debug('observe: ' + elements);
-            sox.debug(toObserve);
             var observer = new MutationObserver(function(mutations, observer) {
                 for (var i = 0; i < mutations.length; i++) {
-                    for (var a = 0; a < mutations[i].addedNodes.length; a++) {
-                        var $a = $(mutations[i].addedNodes[a]);
-                        if ($a && $a.is((Array.isArray(elements) ? elements.join(',') : elements))) {
-                            callback(mutations[i].addedNodes[a]);
-                            sox.debug('fire (added): ' + elements);
-                        }
-                    }
-                    for (var r = 0; r < mutations[i].removedNodes.length; r++) {
-                        var $r = $(mutations[i].removedNodes[r]);
-                        if ($r && $r.is((Array.isArray(elements) ? elements.join(',') : elements))) {
-                            callback(mutations[i].addedNodes[r]);
-                            sox.debug('fire (removed): ' + elements);
-                        }
+                    //sox.debug($(mutations[i].target));
+                    if ($(mutations[i].target).is(elements)) {
+                        callback(mutations[i].target);
+                        sox.debug('fire: target: ', mutations[i].target);
+                        return;
                     }
                 }
             });
@@ -234,7 +236,7 @@
         apiParameter: function(siteName) {
             if (commonInfo.apiParameters.hasOwnProperty(siteName)) {
                 return commonInfo.apiParameters[siteName];
-            } else if(sox.location.on('area51')) {
+            } else if (sox.location.on('area51')) {
                 return 'area51';
             }
         },
@@ -244,7 +246,7 @@
             }
         },
         get currentApiParameter() {
-            return this.apiParameter(this.name);
+            return this.apiParameter(this.name || (location.href.indexOf('stackapps.com/') > -1 ? "Stack Apps" : undefined));
         },
         get icon() {
             return "favicon-" + $(".current-site a:not([href*='meta']) .site-icon").attr('class').split('favicon-')[1];
@@ -265,11 +267,11 @@
             return this.on('/questions/');
         },
         matchWithPattern: function(pattern, urlToMatchWith) { //commented version @ https://jsfiddle.net/shub01/t90kx2dv/
-            if(pattern == 'SE1.0') { //SE.com && Area51.SE.com special checking
-                if(urlToMatchWith) {
-                    if(urlToMatchWith.match(/https?:\/\/stackexchange\.com\/?/) || sox.location.matchWithPattern('*://area51.stackexchange.com/*')) return true;
+            if (pattern == 'SE1.0') { //SE.com && Area51.SE.com special checking
+                if (urlToMatchWith) {
+                    if (urlToMatchWith.match(/https?:\/\/stackexchange\.com\/?/) || sox.location.matchWithPattern('*://area51.stackexchange.com/*')) return true;
                 } else {
-                    if(location.href.match(/https?:\/\/stackexchange\.com\/?/) || sox.location.matchWithPattern('*://area51.stackexchange.com/*')) return true;
+                    if (location.href.match(/https?:\/\/stackexchange\.com\/?/) || sox.location.matchWithPattern('*://area51.stackexchange.com/*')) return true;
                 }
                 return false;
             }
@@ -320,7 +322,8 @@
             if (sox.site.type == sox.site.types.chat) {
                 return Chat.RoomUsers.current().name;
             } else {
-                return Stack && this.loggedIn ? decodeURI(Stack.options.user.profileUrl.split('/')[5]) : undefined;
+                var $uname = $('body > div.topbar > div > div.topbar-links > a > div.gravatar-wrapper-24');
+                return ($uname.length ? $uname.attr('title') : false);
             }
         },
         get loggedIn() {

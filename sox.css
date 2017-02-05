@@ -45,6 +45,7 @@
 
 #sox-settings-dialog-features .modal-content div {
     margin-bottom: 3px;
+    padding: 1px;
 }
 
 #sox-settings-dialog-features .modal-content label>input {
@@ -61,9 +62,13 @@
     float: right;
 }
 
-#sox-settings-dialog-reset, #sox-settings-dialog-report, #sox-settings-dialog-debugging {
+#sox-settings-dialog-actions .action {
     float: right;
     padding: 14px;
+}
+
+#sox-settings-dialog-actions #sox-settings-dialog-access-token {
+    transform: scaleX(-1);
 }
 
 .sox-settings-button {
@@ -153,6 +158,7 @@
     padding: 2px;
     border-radius: 4px;
     font-size: 12px;
+    display: inline-block;
 }
 
 .standOutDupeCloseMigrated-duplicate {
@@ -201,13 +207,10 @@
 /*addHotText for the 'this question is hot' banner */
 
 .sox-hot {
-    float: right;
-    -ms-transform: rotate(30deg);
-    -webkit-transform: rotate(30deg);
-    transform: rotate(30deg);
+    float: left;
     font-size: xx-large;
     color: red;
-    margin-top: 20px;
+    margin-right: 8px;
 }
 
 
@@ -348,12 +351,13 @@ li.fixedTopbar-siteLink {
 
 /*linkedPostsInline for the displayed post text; https://github.com/shu8/Stack-Overflow-Optional-Features/issues/48 */
 
-.linkedPostsInline-loaded-body-shub .post-text {
+.linkedPostsInline-loaded-body-sox {
+    background-color: aliceblue;
+    border-radius: 20px;
     overflow-wrap: break-word;
     width: 630px;
     padding: 10px;
 }
-
 
 /*enhancedEditor (enhanced_editor folder)*/
 
@@ -475,17 +479,6 @@ hr.or:after {
     background: black;
 }
 
-
-/*quickAuthorInfo -- for changing the style of the comments table*/
-
-.comments.quickAuthorInfoEnabled {
-    border-top: none !important;
-}
-
-.comments.quickAuthorInfoEnabled>table:nth-child(1)>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(2)>div:nth-child(1) {
-    opacity: 0.8 !important;
-}
-
 /*downvotedPostsEditAlert -- for the button and dropdown*/
 
 #downvotedPostsEditAlertButton {
@@ -502,6 +495,18 @@ hr.or:after {
     color: #999;
 }
 
+.downvotedPostsEditAlertButtonCount {
+    background-color: red;
+    width: 22px;
+    margin-left: 4px;
+    border-radius: 10px;
+    color: white;
+    font-weight: bold;
+    position: absolute;
+    font-size: 20px;
+    top: 8px;
+}
+
 #downvotedPostsEditAlertDialog {
     top: 34px;
     left: 264px;
@@ -514,11 +519,13 @@ hr.or:after {
     -webkit-text-stroke-width: 3px;
 }
 
+
 /*commentReplies -- for the reply buttons*/
 
 .soxReplyLink {
     cursor: pointer;
 }
+
 
 /*flagPercentageBar -- for the percentage bar itself*/
 
@@ -529,11 +536,41 @@ hr.or:after {
     margin: 6px 10px 10px 0;
     padding: 0px;
 }
+
 #sox-flagPercentProgressBar:after {
     content: '';
     display: block;
     height: 100%;
 }
+
 #sox-flagPercentHelpful {
     margin-bottom: 5px;
+}
+
+/*titleEditDiff -- for the toggle button*/
+
+.sox-better-title-toggle {
+    float: left;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+/*sox-copyCode -- for the button and textarea (completely hide it)*/
+
+.sox-copyCodeButton {
+    float: right;
+}
+
+.sox-copyCodeTextarea {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 1px;
+    width: 1px;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    box-shadow: none;
+    background: transparent;
+    overflow: hidden;
 }

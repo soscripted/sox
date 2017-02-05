@@ -17,6 +17,7 @@
                 $soxSettingsSave = $soxSettingsDialog.find('#sox-settings-dialog-save'),
                 $soxSettingsReset = $soxSettingsDialog.find('#sox-settings-dialog-reset'),
                 $soxSettingsDebugging = $soxSettingsDialog.find('#sox-settings-dialog-debugging'),
+                $soxSettingsNewAccessTokenButton = $soxSettingsDialog.find('#sox-settings-dialog-access-token'),
                 $soxSettingsToggleAccessTokensDiv = $soxSettingsDialog.find('#sox-settings-dialog-access-tokens'),
                 $soxSettingsAccessTokensToggle = $soxSettingsToggleAccessTokensDiv.find('#toggle-access-token-links'),
                 $soxSettingsToggle = $soxSettingsDialog.find('#sox-settings-dialog-check-toggle'),
@@ -93,6 +94,7 @@
                             }
                         });
 
+                    var optionalSettings = GM_getValue("SOX-" + name + "-settings", -1);
                     for (var i = 0; i < featureSettings.length; i++) {
                         var currentSetting = featureSettings[i];
                         $settingsDiv
@@ -101,7 +103,8 @@
                             .append(sox.helpers.newElement(currentSetting.type, { //use newElement helper so the type can be things like 'checkbox' or 'radio'
                                 id: currentSetting.id,
                                 'class': 'featureSetting',
-                                value: (GM_getValue("SOX-" + name + "-settings", -1) == -1 ? '' : JSON.parse(GM_getValue("SOX-" + name + "-settings"))[currentSetting.id])
+                                'checked': (currentSetting.type === 'checkbox' ? JSON.parse(optionalSettings)[currentSetting.id] : false),
+                                value: (optionalSettings === -1 ? '' : JSON.parse(optionalSettings)[currentSetting.id])
                             }))
                             .append('<br>');
                     }
@@ -113,7 +116,7 @@
                             e.preventDefault(); //don't uncheck the checkbox
                             var settingsToSave = {};
                             $(this).parent().find('.featureSetting').each(function() {
-                                settingsToSave[$(this).attr('id')] = $(this).is(':checked') || $(this).val();
+                                settingsToSave[$(this).attr('id')] = ($(this).is(':checkbox') ? $(this).is(':checked') : $(this).val());
                             });
                             GM_setValue('SOX-' + name + '-settings', JSON.stringify(settingsToSave));
                         }
@@ -130,7 +133,7 @@
                 $soxSettingsDialogVersion.text('');
             }
 
-            if(sox.info.debugging) $soxSettingsDebugging.text('Disable debugging');
+            if (sox.info.debugging) $soxSettingsDebugging.text('Disable debugging');
 
             // wire up event handlers
             $soxSettingsClose.on('click', function() {
@@ -138,7 +141,7 @@
             });
 
             $soxSettingsReset.on('click', function() {
-                if(confirm('Are you sure you want to reset SOX?')) {
+                if (confirm('Are you sure you want to reset SOX?')) {
                     sox.settings.reset();
                     location.reload(); // reload page to reflect changed settings
                 }
@@ -146,7 +149,7 @@
 
             $soxSettingsDebugging.on('click', function() {
                 var currentState = sox.info.debugging;
-                if(typeof currentState === 'undefined') {
+                if (typeof currentState === 'undefined') {
                     GM_setValue('SOX-debug', true);
                     $soxSettingsDebugging.text('Disable debugging');
                 } else {
@@ -154,6 +157,11 @@
                     $soxSettingsDebugging.text(currentState ? 'Enable debugging' : 'Disable debugging');
                 }
                 location.reload();
+            });
+
+            $soxSettingsNewAccessTokenButton.on('click', function() {
+                window.open('https://stackexchange.com/oauth/dialog?client_id=7138&scope=no_expiry&redirect_uri=http://soscripted.github.io/sox/');
+                sox.loginfo('To get a new access token, please go to the following URL', 'https://stackexchange.com/oauth/dialog?client_id=7138&scope=no_expiry&redirect_uri=http://soscripted.github.io/sox/');
             });
 
             $soxSettingsToggle.on('click', function() {
@@ -196,7 +204,7 @@
                             $(this).show();
                         }
 
-                        if ($features.find('label:visible').length === 0 && $features.find('label[style*="display: inline"]').length === 0) {
+                        if ($features.find('.sox-feature:visible').length === 0 && $features.find('.sox-feature[style*="display: block"]').length === 0) {
                             $features.hide().prev().hide();
                         } else {
                             $features.show().prev().show();
@@ -273,7 +281,7 @@
             $(document).click(function(e) { //close dialog if clicked outside it
                 var $target = $(e.target),
                     isToggle = $target.is('#soxSettingsButton, #sox-settings-dialog'),
-                    isChild = $target.parents('#soxSettingsButton, #sox-settings-dialog').is("#soxSettingsButton, #sox-settings-dialog");
+                    isChild = $target.parents('#soxSettingsButton, #sox-settings-dialog').is('#soxSettingsButton, #sox-settings-dialog');
 
                 if (!isToggle && !isChild) {
                     $soxSettingsDialog.hide();
@@ -319,7 +327,8 @@
             $soxSettingsButton.append($icon).appendTo('div.network-items');
 
             //'$('#soxSettingsButton').position().left' from @IStoleThePies: https://github.com/soscripted/sox/issues/120#issuecomment-267857625:
-            $('.js-topbar-dialog-corral').append($soxSettingsDialog.css('left', $('#soxSettingsButton').position().left));
+            //only add dialog if button was added successfully
+            if ($('#soxSettingsButton').length) $('.js-topbar-dialog-corral').append($soxSettingsDialog.css('left', $('#soxSettingsButton').position().left));
         }
     };
 
