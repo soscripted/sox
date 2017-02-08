@@ -7,6 +7,10 @@
     width: 550px;
     display: none;
 }
+.so-header #sox-settings-dialog {
+  top: 57px;
+  left: initial !important;
+}
 
 #sox-settings-dialog .modal-content {
     /* max-height: calc(100vh - 175px); */
