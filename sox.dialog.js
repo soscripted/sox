@@ -222,7 +222,7 @@
                     class: 'sox-settings-button ' + (sox.NEW_TOPBAR ? '-link' : 'topbar-icon yes-hover sox-settings-button'),
                     title: 'Change SOX settings',
                     href: '#',
-                    'style': (sox.NEW_TOPBAR ? '' : 'color: #858c93; ') + 'background-image: none; height: 24px;', //https://github.com/soscripted/sox/issues/142
+                    'style': (sox.NEW_TOPBAR ? '' : 'color: #858c93; height: 24px; ') + 'background-image: none;', //https://github.com/soscripted/sox/issues/142
                     click: function(e) {
                         e.preventDefault();
                         $('#sox-settings-dialog').toggle();

@@ -76,9 +76,11 @@
     padding-top: 10px;
     font-size: 14px;
     color: #858c93;
-    height: 24px !important;
     min-width: 34px;
     cursor: pointer;
+}
+.sox-settings-button:not(.-link) {
+  height: 24px !important;
 }
 
 .sox-settings-button:hover {
