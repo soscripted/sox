@@ -7,6 +7,10 @@
     width: 550px;
     display: none;
 }
+.so-header #sox-settings-dialog {
+  top: 57px;
+  left: initial !important;
+}
 
 #sox-settings-dialog .modal-content {
     /* max-height: calc(100vh - 175px); */
@@ -76,9 +80,11 @@
     padding-top: 10px;
     font-size: 14px;
     color: #858c93;
-    height: 24px !important;
     min-width: 34px;
     cursor: pointer;
+}
+.sox-settings-button:not(.-link) {
+  height: 24px !important;
 }
 
 .sox-settings-button:hover {

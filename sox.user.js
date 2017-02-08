@@ -75,6 +75,8 @@
             }
         }
 
+        sox.NEW_TOPBAR = !!$('.js-so-header').length
+
         if (sox.info.debugging) {
             sox.debug('DEBUGGING SOX VERSION ' + sox.info.version);
             sox.debug('----------------saved variables---------------------');
