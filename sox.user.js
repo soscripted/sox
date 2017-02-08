@@ -52,7 +52,6 @@
     'use strict';
 
     function init() {
-        sox.NEW_TOPBAR = !!$('.js-so-header').length
         if (sox.location.on('github.com/soscripted')) {
             try {
                 sox.github.init(sox.info.version, sox.info.handler);
@@ -75,6 +74,8 @@
                 return;
             }
         }
+
+        sox.NEW_TOPBAR = !!$('.js-so-header').length
 
         if (sox.info.debugging) {
             sox.debug('DEBUGGING SOX VERSION ' + sox.info.version);
