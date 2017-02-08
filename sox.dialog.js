@@ -219,10 +219,10 @@
             // create sox settings button
             var $soxSettingsButton = $('<a/>', {
                     id: 'soxSettingsButton',
-                    class: 'topbar-icon yes-hover sox-settings-button',
+                    class: 'sox-settings-button ' + (sox.NEW_TOPBAR ? '-link' : 'topbar-icon yes-hover sox-settings-button'),
                     title: 'Change SOX settings',
                     href: '#',
-                    'style': 'color: #858c93; background-image: none; height: 24px;', //https://github.com/soscripted/sox/issues/142
+                    'style': (sox.NEW_TOPBAR ? '' : 'color: #858c93; ') + 'background-image: none; height: 24px;', //https://github.com/soscripted/sox/issues/142
                     click: function(e) {
                         e.preventDefault();
                         $('#sox-settings-dialog').toggle();
@@ -324,7 +324,12 @@
             }
 
             // add dialog to corral and sox button to topbar
-            $soxSettingsButton.append($icon).appendTo('div.network-items');
+            $soxSettingsButton.append($icon)
+            if (sox.NEW_TOPBAR) {
+                $('.so-header .secondary-nav .-list').prepend($('<li/>').addClass('-item').append($soxSettingsButton))
+            } else {
+                $soxSettingsButton.appendTo('div.network-items');
+            }
 
             //'$('#soxSettingsButton').position().left' from @IStoleThePies: https://github.com/soscripted/sox/issues/120#issuecomment-267857625:
             //only add dialog if button was added successfully
