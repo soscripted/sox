@@ -347,6 +347,9 @@
             // Description: For adding checkboxes when editing to add pre-defined edit reasons
 
             function addCheckboxes() {
+                var editCommentField = $('[id^="edit-comment"]');
+                if (!editCommentField.length) return; //https://github.com/soscripted/sox/issues/246
+
                 function toLocaleSentenceCase(str) {
                   return str.substr(0, 1).toLocaleUpperCase() + str.substr(1);
                 }
@@ -372,7 +375,6 @@
                         });
                     });
 
-                    var editCommentField = $('[id^="edit-comment"]');
                     $('#reasons input[type="checkbox"]').change(function() {
                         if (this.checked) { //Add it to the summary
                             if (!editCommentField.val()) {
@@ -800,8 +802,8 @@
             });
 
             function stickcells() {
-                var $votecells = $(".votecell");
-                $votecells.css("width", "61px");
+                var $votecells = $('.votecell');
+                $votecells.css('min-width', '46px');
 
                 $votecells.each(function() {
                     var $topbar = $('.topbar'),
@@ -813,20 +815,32 @@
                     var $voteCell = $(this),
                         $vote = $voteCell.find('.vote'),
                         vcOfset = $voteCell.offset(),
-                        scrollTop = $(window).scrollTop();
+                        scrollTop = $(window).scrollTop(),
+                        realHeight, votePos, endPos;
 
-                    if (vcOfset.top - scrollTop - offset <= 0) {
-                        if (vcOfset.top + $voteCell.height() - scrollTop - offset - $vote.height() > topbarHeight) {
+                    if (sox.location.on('/review/suggested-edits/')) $vote.css('padding-top', '35px');
+
+                    if ($vote.children().last().length && $vote.length && $voteCell.next().length) { //These values strangely alternate between existing and not existing. This if statement insures we only get their values when they exist, so no errors.
+                        realHeight = $vote.children(':not(:hidden, .message-dismissable)').last().offset().top + $vote.children(':not(:hidden, .message-dismissable)').last().height() - $vote.offset().top; //Get the original height; the difference between the last child and the first child's position
+                        votePos = $vote.offset().top;
+                        endPos = $voteCell.next().offset().top + $voteCell.next().height() - 51; //I think a bit above the end of the post (where the "edit", "delete", etc. buttons lie) is a good place to stop the stickiness.
+                    }
+
+                    if (realHeight + vcOfset.top < endPos - 25 && vcOfset.top - scrollTop - offset <= 0) { //Left condition is to get rid of a sticky zone on extremely short posts. Right condition is for scrolling down into the sticky zone from outside.
+                        if (endPos - realHeight > votePos || endPos - scrollTop - realHeight - offset >= 0) { //Left condition marks the bottom limit for the sticky zone. Right condition is for scrolling up into the sticky zone from outisde.
                             $vote.css({
                                 position: 'fixed',
-                                left: vcOfset.left + 3.5,
                                 top: offset
                             });
                         } else {
-                            $vote.removeAttr("style");
+                            //Stop stickiness when we've scrolled down past the sticky zone.
+                            $vote.css({
+                                position: 'absolute',
+                                top: endPos - realHeight //Leave the button at its bottommost position
+                            });
                         }
                     } else {
-                        $vote.removeAttr("style");
+                        $vote.removeAttr('style');
                     }
                 });
             }
@@ -1163,6 +1177,7 @@
                 posteditor.toggleClass('sbs-on');
                 wmdinput.parent().toggleClass('sbs-on'); //wmdinput.parent() has class wmd-container
                 wmdpreview.toggleClass('sbs-on');
+                if (sox.location.on('/edit-tag-wiki/')) $('#post-form').toggleClass('sbs-on'); //https://github.com/soscripted/sox/issues/247
 
                 if (toAppend.length > 0) { //options specific to making edits on existing questions/answers
                     posteditor.find('.hide-preview').toggleClass('sbs-on');
@@ -1479,7 +1494,11 @@ Toggle SBS?</div></li>';
 
                     //https://github.com/soscripted/sox/issues/205 -- check link's location is to same site, eg if on SU, don't allow on M.SU
                     //http://stackoverflow.com/a/4815665/3541881
-                    if (url && $('<a>').prop('href', url).prop('hostname') == location.hostname && url.indexOf('#comment') == -1 && getIdFromUrl(url)) { //getIdFromUrl(url) makes sure it won't fail later on
+                    if (url &&
+                            $('<a>').prop('href', url).prop('hostname') == location.hostname &&
+                            url.indexOf('#comment') == -1 &&
+                            getIdFromUrl(url) && //getIdFromUrl(url) makes sure it won't fail later on
+                            !$(this).parent().find('.expand-post-sox').length) {
                         $(this).css('color', '#0033ff');
                         $(this).before('<a class="expander-arrow-small-hide expand-post-sox"></a>');
                     }

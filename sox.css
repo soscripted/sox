@@ -363,6 +363,9 @@ li.fixedTopbar-siteLink {
     float: left !important;
 }
 
+.post-form.sbs-on { /*https://github.com/soscripted/sox/issues/247*/
+    width: 1335px;
+}
 
 /*linkedPostsInline for the displayed post text; https://github.com/shu8/Stack-Overflow-Optional-Features/issues/48 */
 
