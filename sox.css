@@ -3,9 +3,16 @@
 #sox-settings-dialog {
     top: 34px;
     left: 230px;
-    min-height: calc(100vh - 100px);
+    min-height: calc(100vh - 90px);
     width: 550px;
     display: none;
+}
+
+#sox-settings-dialog.new-topbar {
+    right: 170px;
+    left: inherit !important;
+    top: 57px;
+    min-height: calc(100vh - 75px);
 }
 
 #sox-settings-dialog .modal-content {
@@ -27,9 +34,14 @@
     min-height: 0;
 }
 
-#sox-settings-dialog #search-container .fa-search {
+#sox-settings-dialog:not(.new-topbar) #search-container .fa-search {
     position: relative;
     left: -475px;
+}
+
+#sox-settings-dialog.new-topbar #search-container .fa-search {
+    position: relative;
+    left: -465px;
 }
 
 #sox-settings-dialog #search-container #search {
@@ -76,9 +88,12 @@
     padding-top: 10px;
     font-size: 14px;
     color: #858c93;
-    height: 24px !important;
     min-width: 34px;
     cursor: pointer;
+}
+
+.sox-settings-button:not(.-link) {
+  height: 24px !important;
 }
 
 .sox-settings-button:hover {

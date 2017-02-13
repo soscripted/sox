@@ -10,6 +10,8 @@
         debugging: GM_getValue('SOX-debug', false)
     };
 
+    sox.NEW_TOPBAR = !!$('.js-so-header').length;
+
     sox.debug = function() {
         if (!sox.info.debugging) return;
         for (var arg = 0; arg < arguments.length; ++arg) {

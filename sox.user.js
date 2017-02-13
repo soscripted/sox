@@ -74,7 +74,7 @@
                 return;
             }
         }
-
+        
         if (sox.info.debugging) {
             sox.debug('DEBUGGING SOX VERSION ' + sox.info.version);
             sox.debug('----------------saved variables---------------------');
