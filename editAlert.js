@@ -110,7 +110,7 @@
             }).append($('<div>', {
                 'class': 'site-icon favicon favicon-' + (details.sitename == 'meta' ? 'stackexchangemeta' : details.sitename),
                 'style': 'margin-right: 10px'
-            })).append((details.score || details.newScore ? details.score || details.newScore : '') + ' ' + details.title)).append($('<span>', {
+            })).append('<strong>' + (details.score || details.newScore ? details.score || details.newScore : '') + '</strong> ' + details.title)).append($('<span>', {
                 'style': 'color: black; margin-left: 5px',
                 'html': $('<span/>', {
                     'text': text,
