@@ -2650,7 +2650,6 @@ Toggle SBS?</div></li>';
                 var href = $(this).attr('href');
                 for (var i = 0; i < settings.length; i++) {
                     if (sox.location.matchWithPattern(settings[i], href)) {
-                        console.log($(this), 'true');
                         $(this).prepend('<i class="fa fa-external-link openLinksInNewTab-externalLink"></i>');
                         $(this).prop('target', '_blank');
                     }

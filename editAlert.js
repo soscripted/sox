@@ -69,31 +69,38 @@
                 #sox-editNotificationDialogButton.glow {
                     -webkit-text-stroke-color: blue;
                     -webkit-text-stroke-width: 3px;
-                }`);
+                }
+
+                .sox-editNotification-messageType {
+                    color: gray;
+                    text-transform: uppercase;
+                    font-size: 11px;
+                }
+                `);
 
     function addNotification(details, callback, alreadySaved) {
         console.log('adding notification with details:', details);
         var text = '';
         if (details.newLink && details.newScore) {
             if (details.score && details.newState) { //newAnswersStateChange; sitename, title, newLink, newScore, score, newState
-                text = (details.newAnswerCount === 1 ? 'A new answer has been posted on this question' : 'New answers have been posted on this question') + '. The state has also changed to ' + details.newState;
+                text = (details.newAnswerCount === 1 ? 'new answer, state change' : 'new answers, state change'); // details.newState;
             } else { //newAnswers; sitename, title, newLink, newScore
-                text = details.newAnswerCount === 1 ? 'A new answer has been posted on this question' : 'New answers have been posted on this question';
+                text = 'new answers'; //details.newAnswerCount === 1 ? 'A new answer has been posted on this question' : 'New answers have been posted on this question';
             }
         } else if (details.score && details.newState) { //stateChange; sitename, title, score, newState
-            text = 'This question is now ' + details.newState;
+            text = 'state change'; //'This question is now ' + details.newState;
         } else if (details.editComment || details.newTags) {
             if (details.newTags) {
                 if (details.editComment ) {//editRetag; sitename, title, link, editComment, score, newTags
-                    text = 'This question has been edited (' + details.editComment + ') and retagged (' + details.newTags.join(', ') + ')';
+                    text = 'edited, new tags'; //'This question has been edited (' + details.editComment + ') and retagged (' + details.newTags.join(', ') + ')';
                 } else { //retag; sitename, title, link, newTags, score
-                    text = 'This question was retagged (' + details.newTags.join(', ') + ')';
+                    text = 'retag'; //'This question was retagged (' + details.newTags.join(', ') + ')';
                 }
             } else { //edit; sitename, title, link, editComment, score
-                text = 'This question has been edited (' + details.editComment + ')';
+                text = 'edited'; //'This question has been edited (' + details.editComment + ')';
             }
         } else if (details.commentBody && details.commentsLink && details.newCommentsCount > 0) {
-            text = (details.newCommentsCount === 1 ? 'A new comment has been posted' : 'New comments have been posted') + ' (' + (details.commentBody.length > 100 ? $('<div>').html(details.commentBody.substr(0, 100)).text() + '...' : $('<div>').html(details.commentBody.substr(0, 100)).text()) + ')'; //div creation is to unescape string for eg. quotes
+            text = (details.newCommentsCount === 1 ? 'new comment' : 'new comments'); // + ' (' + (details.commentBody.length > 100 ? $('<div>').html(details.commentBody.substr(0, 100)).text() + '...' : $('<div>').html(details.commentBody.substr(0, 100)).text()) + ')'; //div creation is to unescape string for eg. quotes
         }
 
         if (text) {
@@ -105,7 +112,10 @@
                 'style': 'margin-right: 10px'
             })).append((details.score || details.newScore ? details.score || details.newScore : '') + ' ' + details.title)).append($('<span>', {
                 'style': 'color: black; margin-left: 5px',
-                'text': text
+                'html': $('<span/>', {
+                    'text': text,
+                    'class': 'sox-editNotification-messageType'
+                })
             }));
 
             $('#sox-editNotificationDialogList').prepend($li);
