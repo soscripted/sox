@@ -678,7 +678,7 @@
                     $('#feed').html('<p>One of the 100 hot network questions!</p>');
 
                     //display:block to fix https://github.com/soscripted/sox/issues/243:
-                    $('#question-header').css('display', 'block').prepend('<div title="this question is a hot network question!" class="sox-hot"><i class="fa fa-free-code-camp"></i><div>');
+                    $('#question-header').css('display', 'block').prepend('<div title="this is a hot network question!" class="sox-hot"><i class="fa fa-free-code-camp"></i><div>');
                 }
             }
             $('#qinfo').after('<div id="feed"></div>');
@@ -816,22 +816,23 @@
                         $vote = $voteCell.find('.vote'),
                         vcOfset = $voteCell.offset(),
                         scrollTop = $(window).scrollTop(),
-                        realHeight, votePos, endPos;
+                        realHeight, votePos, endPos, addFixed = true;
 
                     if (sox.location.on('/review/suggested-edits/')) $vote.css('padding-top', '35px');
 
                     if ($vote.children().last().length && $vote.length && $voteCell.next().length) { //These values strangely alternate between existing and not existing. This if statement insures we only get their values when they exist, so no errors.
+                        if ($vote.get(0).getBoundingClientRect().top < 0) addFixed = false;
                         realHeight = $vote.children(':not(:hidden, .message-dismissable)').last().offset().top + $vote.children(':not(:hidden, .message-dismissable)').last().height() - $vote.offset().top; //Get the original height; the difference between the last child and the first child's position
                         votePos = $vote.offset().top;
                         endPos = $voteCell.next().offset().top + $voteCell.next().height() - 51; //I think a bit above the end of the post (where the "edit", "delete", etc. buttons lie) is a good place to stop the stickiness.
                     }
 
                     if (realHeight + vcOfset.top < endPos - 25 && vcOfset.top - scrollTop - offset <= 0) { //Left condition is to get rid of a sticky zone on extremely short posts. Right condition is for scrolling down into the sticky zone from outside.
-                        if (endPos - realHeight > votePos || endPos - scrollTop - realHeight - offset >= 0) { //Left condition marks the bottom limit for the sticky zone. Right condition is for scrolling up into the sticky zone from outisde.
-                            $vote.css({
-                                position: 'fixed',
-                                top: offset
-                            });
+                        if (addFixed & (endPos - realHeight > votePos || endPos - scrollTop - realHeight - offset >= 0)) { //Left condition marks the bottom limit for the sticky zone. Right condition is for scrolling up into the sticky zone from outisde.
+                                $vote.css({
+                                    position: 'fixed',
+                                    top: offset
+                                });
                         } else {
                             //Stop stickiness when we've scrolled down past the sticky zone.
                             $vote.css({
@@ -1316,27 +1317,26 @@ Toggle SBS?</div></li>';
             function getAuthorName($node) {
                 if ($node) {
                     var type = $node.find('.item-header .item-type').text(),
-                        sitename = $node.find('a').eq(0).attr('href').split('com/')[0].replace('http://', '') + 'com',
                         link = $node.find('a').eq(0).attr('href'),
-                        apiurl,
-                        id;
+                        apiurl, id;
 
-                    switch (type) { //the ||'s are for fixing https://github.com/soscripted/sox/issues/242
-                        case 'comment' || link.indexOf('posts/comments/') > -1:
-                            id = link.split('/')[5].split('?')[0];
-                            apiurl = 'https://api.stackexchange.com/2.2/comments/' + id + '?order=desc&sort=creation&site=' + sitename;
-                            break;
-                        case 'answer' || link.indexOf('com/a/') > -1:
-                            id = link.split('/')[4].split('?')[0];
-                            apiurl = 'https://api.stackexchange.com/2.2/answers/' + id + '?order=desc&sort=creation&site=' + sitename;
-                            break;
-                        case 'edit suggested' || link.indexOf('/suggested-edits/') > -1:
-                            id = link.split('/')[4];
-                            apiurl = 'https://api.stackexchange.com/2.2/suggested-edits/' + id + '?order=desc&sort=creation&site=' + sitename;
-                            break;
-                        default:
-                            sox.loginfo('SOX does not currently support get author information for type: ' + type);
-                            return;
+                    if (!link) return;
+
+                    var sitename = link.split('com/')[0].replace('http://', '') + 'com';
+
+                    //the ||'s are for fixing https://github.com/soscripted/sox/issues/242:
+                    if (type == 'comment' || link.indexOf('posts/comments/') > -1) {
+                        id = link.split('/')[5].split('?')[0];
+                        apiurl = 'https://api.stackexchange.com/2.2/comments/' + id + '?order=desc&sort=creation&site=' + sitename;
+                    } else if (type == 'answer' || link.indexOf('com/a/') > -1) {
+                        id = link.split('/')[4].split('?')[0];
+                        apiurl = 'https://api.stackexchange.com/2.2/answers/' + id + '?order=desc&sort=creation&site=' + sitename;
+                    } else if (type == 'edit suggested' || link.indexOf('/suggested-edits/') > -1) {
+                        id = link.split('/')[4];
+                        apiurl = 'https://api.stackexchange.com/2.2/suggested-edits/' + id + '?order=desc&sort=creation&site=' + sitename;
+                    } else {
+                        sox.loginfo('SOX does not currently support get author information for type: ' + type);
+                        return;
                     }
 
                     $.getJSON(apiurl, function(json) {
@@ -1542,6 +1542,18 @@ Toggle SBS?</div></li>';
             // Description: Hides the Community Bulletin module from the sidebar
 
             $('#sidebar .community-bulletin').remove();
+        },
+
+        hideChatSidebar: function() {
+            // Description: Hides the Chat module from the sidebar
+
+            $('#sidebar #chat-feature').remove();
+        },
+
+        hideLoveThisSite: function() {
+            // Description: Hides the "Love This Site?"" module from the sidebar
+
+            $('#sidebar #newsletter-ad').parent().remove();
         },
 
         enhancedEditor: function() {
@@ -2630,6 +2642,22 @@ Toggle SBS?</div></li>';
 
             addBar();
             $(document).on('sox-new-review-post-appeared', addBar);
+        },
+
+        openLinksInNewTab: function(settings) {
+            settings = settings.linksToOpenInNewTab.replace(' ', '').split(',');
+            console.log(settings);
+            $('.post-text a').each(function() {
+                console.log($(this));
+                var href = $(this).attr('href');
+                for (var i = 0; i < settings.length; i++) {
+                    if (sox.location.matchWithPattern(settings[i], href)) {
+                        console.log($(this), 'true');
+                        $(this).prepend('<i class="fa fa-external-link openLinksInNewTab-externalLink"></i>');
+                        $(this).prop('target', '_blank');
+                    }
+                }
+            });
         }
     };
 })(window.sox = window.sox || {}, jQuery);

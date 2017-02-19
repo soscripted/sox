@@ -260,6 +260,18 @@
             "match": "",
             "exclude": "*://chat.*.com/*"
         }, {
+            "name": "hideChatSidebar",
+            "desc": "Hide the Chat module",
+            "meta": "",
+            "match": "",
+            "exclude": "*://chat.*.com/*"
+        }, {
+            "name": "hideLoveThisSite",
+            "desc": "Hide the 'Love this site?' module",
+            "meta": "",
+            "match": "",
+            "exclude": "*://chat.*.com/*"
+        }, {
             "name": "hideHotNetworkQuestions",
             "desc": "Hide the Hot Network Questions module",
             "meta": "",
@@ -427,6 +439,17 @@
             "meta": "",
             "match": "*://*/review*",
             "exclude": ""
+        }, {
+            "name": "openLinksInNewTab",
+            "desc": "Open any links to the specified sites in a new tab by default",
+            "meta": "",
+            "match": "*://*/questions*",
+            "exclude": "",
+            "settings": [{
+                "id": "linksToOpenInNewTab",
+                "type": "textarea",
+                "desc": "Links to open in new tab (comma-separated match patterns)"
+            }]
         }]
     }
 }

@@ -577,6 +577,8 @@ hr.or:after {
 
 .sox-copyCodeButton {
     float: right;
+    position: sticky;
+    top: 0;
 }
 
 .sox-copyCodeTextarea {
@@ -591,4 +593,11 @@ hr.or:after {
     box-shadow: none;
     background: transparent;
     overflow: hidden;
+}
+
+/*openLinksInNewTab -- for the external link sign*/
+
+.openLinksInNewTab-externalLink {
+    display: inline !important;
+    padding-right: 3px;
 }

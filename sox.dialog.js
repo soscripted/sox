@@ -241,7 +241,7 @@
             $soxSettingsButton.hover(function() { //https://github.com/soscripted/sox/issues/44, open on hover, just like the normal dropdowns
                 if ($('.topbar-icon').not('#soxSettingsButton').hasClass('topbar-icon-on')) {
                     $('.topbar-dialog').hide();
-                    $('.topbar-icon').removeClass('topbar-icon-on').removeClass('icon-site-switcher-on');
+                    $('.topbar-icon-on').removeClass('topbar-icon-on').removeClass('icon-site-switcher-on');
                     $(this).addClass('topbar-icon-on');
                     $soxSettingsDialog.show();
                 }
@@ -290,7 +290,7 @@
             });
 
             //close dialog if one of the links on the topbar is clicked
-            $('.topbar-icon').not('.sox-settings-button').click(function() {
+            $('.topbar-icon, .-link').not('.sox-settings-button').click(function() {
                 $soxSettingsDialog.hide();
                 $soxSettingsButton.removeClass('topbar-icon-on');
             });
