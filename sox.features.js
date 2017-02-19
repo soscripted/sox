@@ -828,7 +828,7 @@
                     }
 
                     if (realHeight + vcOfset.top < endPos - 25 && vcOfset.top - scrollTop - offset <= 0) { //Left condition is to get rid of a sticky zone on extremely short posts. Right condition is for scrolling down into the sticky zone from outside.
-                        if (addFixed & (endPos - realHeight > votePos || endPos - scrollTop - realHeight - offset >= 0)) { //Left condition marks the bottom limit for the sticky zone. Right condition is for scrolling up into the sticky zone from outisde.
+                        if (addFixed && (endPos - realHeight > votePos || endPos - scrollTop - realHeight - offset >= 0)) { //Left condition marks the bottom limit for the sticky zone. Right condition is for scrolling up into the sticky zone from outisde.
                                 $vote.css({
                                     position: 'fixed',
                                     top: offset
@@ -2646,9 +2646,7 @@ Toggle SBS?</div></li>';
 
         openLinksInNewTab: function(settings) {
             settings = settings.linksToOpenInNewTab.replace(' ', '').split(',');
-            console.log(settings);
             $('.post-text a').each(function() {
-                console.log($(this));
                 var href = $(this).attr('href');
                 for (var i = 0; i < settings.length; i++) {
                     if (sox.location.matchWithPattern(settings[i], href)) {
