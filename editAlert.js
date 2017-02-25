@@ -2,7 +2,6 @@
 /*
 - to show in notification:
     - delete button
-    - title if notification is a comment (add current title to saved object when watching a comments section)
 */
 (function(sox, $, undefined) {
     console.log('running editAlert.js');
@@ -80,18 +79,20 @@
 
     function addNotification(details, callback, alreadySaved) {
         console.log('adding notification with details:', details);
-        var text = '';
+        var text = '',
+            time;
         if (details.newLink && details.newScore) {
             if (details.score && details.newState) { //newAnswersStateChange; sitename, title, newLink, newScore, score, newState
                 text = (details.newAnswerCount === 1 ? 'new answer, state change' : 'new answers, state change'); // details.newState;
             } else { //newAnswers; sitename, title, newLink, newScore
-                text = 'new answers'; //details.newAnswerCount === 1 ? 'A new answer has been posted on this question' : 'New answers have been posted on this question';
+                text = details.newAnswerCount === 1 ? 'new answer' : 'new answers';
             }
+            time = details.creationDate * 1000;
         } else if (details.score && details.newState) { //stateChange; sitename, title, score, newState
             text = 'state change'; //'This question is now ' + details.newState;
         } else if (details.editComment || details.newTags) {
             if (details.newTags) {
-                if (details.editComment ) {//editRetag; sitename, title, link, editComment, score, newTags
+                if (details.editComment) { //editRetag; sitename, title, link, editComment, score, newTags
                     text = 'edited, new tags'; //'This question has been edited (' + details.editComment + ') and retagged (' + details.newTags.join(', ') + ')';
                 } else { //retag; sitename, title, link, newTags, score
                     text = 'retag'; //'This question was retagged (' + details.newTags.join(', ') + ')';
@@ -99,8 +100,10 @@
             } else { //edit; sitename, title, link, editComment, score
                 text = 'edited'; //'This question has been edited (' + details.editComment + ')';
             }
+            time = details.editDate * 1000;
         } else if (details.commentBody && details.commentsLink && details.newCommentsCount > 0) {
             text = (details.newCommentsCount === 1 ? 'new comment' : 'new comments'); // + ' (' + (details.commentBody.length > 100 ? $('<div>').html(details.commentBody.substr(0, 100)).text() + '...' : $('<div>').html(details.commentBody.substr(0, 100)).text()) + ')'; //div creation is to unescape string for eg. quotes
+            time = detail.creationDate * 1000;
         }
 
         if (text) {
@@ -110,10 +113,10 @@
             }).append($('<div>', {
                 'class': 'site-icon favicon favicon-' + (details.sitename == 'meta' ? 'stackexchangemeta' : details.sitename),
                 'style': 'margin-right: 10px'
-            })).append('<strong>' + (details.score || details.newScore ? details.score || details.newScore : '') + '</strong> ' + details.title)).append($('<span>', {
+            })).append('<strong>' + (details.postType === 'question' ? 'Q: ' : 'A: ') + (details.score || details.newScore ? details.score || details.newScore : '') + '</strong> ' + details.title)).append($('<span>', {
                 'style': 'color: black; margin-left: 5px',
                 'html': $('<span/>', {
-                    'text': text,
+                    'html': text + (time ? ' | <time class="timeago" datetime="' + time.toISOString() + '">' + time.toLocaleString() + '</time>' : ''),
                     'class': 'sox-editNotification-messageType'
                 })
             }));
@@ -123,19 +126,25 @@
             var noOfNotifications = $('#sox-editNotificationDialogList li .new').length;
             //if double figures, add padding to fix alignment:
             if (noOfNotifications) $('.sox-editNotificationButtonCount').css('padding-right', noOfNotifications > 9 ? '9px' : '6px').text(noOfNotifications).show();
-            callback({'addedNotification': true});
+            callback({
+                'addedNotification': true
+            });
 
             var nots = JSON.parse(GM_getValue('sox-editNotification-notifications', '[]'));
-            if (!alreadySaved) alreadySaved = nots.filter(function(d) {
-                return d.postId == details.originalPostId;
-            }).length;
+            if (!alreadySaved) {
+                alreadySaved = nots.filter(function(d) {
+                    return d.postId == details.originalPostId;
+                }).length;
+            }
             if (!alreadySaved) {
                 nots.push(details);
                 GM_setValue('sox-editNotification-notifications', JSON.stringify(nots));
             }
             return;
         }
-        callback({'addedNotification': false});
+        callback({
+            'addedNotification': false
+        });
     }
 
     //GM_deleteValue('sox-editNotification-postsToWatch');
@@ -260,10 +269,17 @@
 
     //---------------------------------/notification dialog------------------------------//
 
-    if(!sox.location.on('/users/')) {
+    if (!sox.location.on('/users/')) {
         $('.comments').before('<i title="watch for new comments" class="fa fa-pencil-square-o sox-notify-on-change sox-watch-comments"></i>');
         $('.post-menu').append('<span class="lsep"></span><i title="watch post for changes" class="fa fa-pencil-square-o sox-notify-on-change sox-watch-post"></i></a>');
     }
+
+    //TODO: Use document event rather than observer when moving to SOX
+    //$(document).on('sox-new-review-post-appeared', function() {
+    sox.helpers.observe('.reviewable-post, .review-content', function(target) {
+        if (!$('.sox-watch-comments').length) $('.comments').before('<i title="watch for new comments" class="fa fa-pencil-square-o sox-notify-on-change sox-watch-comments"></i>');
+        $('.post-menu:not(:has(.sox-watch-post))').append('<span class="lsep"></span><i title="watch post for changes" class="fa fa-pencil-square-o sox-notify-on-change sox-watch-post"></i></a>');
+    });
 
     function fromAPI(url, throttled, callback) {
         if (throttled.throttled) {
@@ -301,7 +317,7 @@
         });
     }
 
-    if (postsToWatch.length) { //make the watch icon black if the post is already on the watch list
+    if (postsToWatch.length) {
         console.log('about to start looping postsToWatch:', postsToWatch);
         $.each(postsToWatch, function(i, o) {
             console.log('looping postsToWatch. currently on:', o);
@@ -320,6 +336,7 @@
             if (currentSitename === 'stackoverflow') currentSiteUrl = 'stackoverflow.com';
             if (currentSitename === 'meta') currentSiteUrl = 'meta.stackexchange.com';
 
+            //make the watch icon black if the post is already on the watch list:
             var $post = $('div[data-' + currentType + 'id="' + currentPostId + '"]');
             $post.find('.sox-watch-post').removeClass('fa-pencil-square-o').addClass('fa-pencil-square');
 
@@ -343,7 +360,7 @@
                         var newAnswerIds = (data.items[0].answers ? data.items[0].answers.map(function(o) {
                                 return o.answer_id;
                             }) : []),
-                            newState = (data.items[0].closed_details ? 'closed (' + data.items[0].closed_reason + ')': 'open'),
+                            newState = (data.items[0].closed_details ? 'closed (' + data.items[0].closed_reason + ')' : 'open'),
                             differentAnswerIds = [];
 
                         if (newAnswerIds.length && lastCheckedAnswerIds) { //if there are new answers, and there were old answers
@@ -365,7 +382,7 @@
                             if (newAnswerIds && lastCheckedAnswerIds.sort().join(',') !== newAnswerIds.sort().join(',')) {
                                 //we have new answers (IDs in differentAnswerIds)
 
-                                for (i = 0; i< newAnswerIds.length; i++) {
+                                for (i = 0; i < newAnswerIds.length; i++) {
                                     answer = $.grep(data.items[0].answers, function(d) {
                                         return d.answer_id == newAnswerIds[i];
                                     })[0];
@@ -377,6 +394,7 @@
                                 detailsWeKnow.newLink = newLink;
                                 detailsWeKnow.newScore = score;
                                 detailsWeKnow.newAnswerCount = differentAnswerIds.length;
+                                detailsWeKnow.creationDate = data.items[0].creation_date;
                             }
                         } else if (currentOptions.indexOf('newAnswers') == -1 && currentOptions.indexOf('stateChange') !== -1) { //!newAnswers && stateChange
                             //check for whether lastCheckedState is same, notification = 'state change'
@@ -386,14 +404,14 @@
                                 detailsWeKnow.newState = newState;
                                 detailsWeKnow.title = data.items[0].title;
                                 detailsWeKnow.link = data.items[0].link;
-                                detailsWeKnow.score =  data.items[0].score;
+                                detailsWeKnow.score = data.items[0].score;
                             }
                         } else if (currentOptions.indexOf('stateChange') !== -1 && currentOptions.indexOf('newAnswers') !== -1) { //newAnswers && stateChange
                             //check for whether new answerId exists, and whether state is different, notification = 'state change and new answer'
                             if ((newAnswerIds.length && lastCheckedAnswerIds.sort().join(',') !== newAnswerIds.sort().join(',')) || lastCheckedState !== newState) {
                                 //new answer IDs in differentAnswerIds
 
-                                for (i = 0; i< newAnswerIds.length; i++) {
+                                for (i = 0; i < newAnswerIds.length; i++) {
                                     answer = $.grep(data.items[0].answers, function(d) {
                                         return d.answer_id == newAnswerIds[i];
                                     })[0];
@@ -408,11 +426,13 @@
                                     detailsWeKnow.title = data.items[0].title;
                                     detailsWeKnow.newState = newState;
                                     detailsWeKnow.newAnswerCount = differentAnswerIds.length;
+                                    detailsWeKnow.creationDate = data.items[0].creation_date;
                                 }
                             }
                         }
 
                         detailsWeKnow.originalPostId = currentPostId;
+                        detailsWeKnow.postType = currentType;
 
                         addNotification(detailsWeKnow, function(r) {
                             if (r.addedNotification) { //now it can only check at the earliest 15 mins later
@@ -442,12 +462,15 @@
                         }
 
                         var retag = data.items[0].last_tags ? true : false,
-                            edit = data.items[0].creation_date*1000 > lastCheckedTime,
+                            edit = data.items[0].creation_date * 1000 > lastCheckedTime,
                             itemIndex;
 
                         if (data.items.length != 1) { //if there's only one revision, then there have been no edits (rev 1 is the original post)
                             for (var z = 0; z < data.items.length; z++) { //vote_based revision means state change, ie. no edit
-                                if (data.items[z].revision_type !== 'vote_based') itemIndex = z; break;
+                                if (data.items[z].revision_type !== 'vote_based') {
+                                    itemIndex = z;
+                                    break;
+                                }
                             }
                             if (currentOptions.indexOf('retag') !== -1 && currentOptions.indexOf('edit') === -1) { //retag
                                 if (retag) {
@@ -455,7 +478,7 @@
                                     detailsWeKnow.title = data.items[itemIndex].title;
                                     detailsWeKnow.link = 'http://' + currentSiteUrl + '/' + data.items[itemIndex].post_type[0] + '/' + data.items[itemIndex].post_id; //data.items[itemIndex].post_type[0] => 'question'/'answer'->'q'/'a
                                     detailsWeKnow.newTags = data.items[itemIndex].tags;
-                                    detailsWeKnow.title = data.items[itemIndex].title || data.items[data.items.length-1].title;
+                                    detailsWeKnow.title = data.items[itemIndex].title || data.items[data.items.length - 1].title;
                                 }
                             } else if (currentOptions.indexOf('retag') === -1 && currentOptions.indexOf('edit') !== -1) { //edit
                                 if (edit && !retag) { //if retag wasn't selected, then don't add notification if retag occured
@@ -463,7 +486,7 @@
                                     detailsWeKnow.title = data.items[itemIndex].title;
                                     detailsWeKnow.link = 'http://' + currentSiteUrl + '/' + data.items[itemIndex].post_type[0] + '/' + data.items[itemIndex].post_id; //data.items[itemIndex].post_type[0] => 'question'/'answer'->'q'/'a
                                     detailsWeKnow.editComment = data.items[itemIndex].comment;
-                                    detailsWeKnow.title = data.items[itemIndex].title || data.items[data.items.length-1].title;
+                                    detailsWeKnow.title = data.items[itemIndex].title || data.items[data.items.length - 1].title;
                                 }
                             } else { //both
                                 if (edit && retag) {
@@ -472,9 +495,10 @@
                                     detailsWeKnow.link = 'http://' + currentSiteUrl + '/' + data.items[itemIndex].post_type[0] + '/' + data.items[itemIndex].post_id; //data.items[0].post_type[0] => 'question'/'answer'->'q'/'a
                                     detailsWeKnow.editComment = data.items[itemIndex].comment;
                                     detailsWeKnow.newTags = data.items[itemIndex].tags;
-                                    detailsWeKnow.title = data.items[itemIndex].title || data.items[data.items.length-1].title;
+                                    detailsWeKnow.title = data.items[itemIndex].title || data.items[data.items.length - 1].title;
                                 }
                             }
+                            detailsWeKnow.editDate = data.items[itemIndex].creation_date;
                         }
 
                         detailsWeKnow.originalPostId = currentPostId;
@@ -539,10 +563,11 @@
                             'sitename': currentSitename,
                             'postId': currentPostId,
                             'commentBody': (data.items.length && 'body' in data.items[0] ? data.items[0].body : undefined),
-                            'commentsLink': (data.items.length && 'post_type' in data.items[0] ? 'http://' + currentSiteUrl + '/' + data.items[0].post_type[0] + '/' + currentPostId + '#comments-' + currentPostId: undefined),
+                            'commentsLink': (data.items.length && 'post_type' in data.items[0] ? 'http://' + currentSiteUrl + '/' + data.items[0].post_type[0] + '/' + currentPostId + '#comments-' + currentPostId : undefined),
                             'newCommentsCount': differentCommentIds.length,
                             'originalPostId': currentPostId,
-                            'title': title
+                            'title': title,
+                            'creationDate': data.items[0].creation_date
                         }, function(r) {
                             if (r.addedNotification) { //now it can only check at the earliest 15 mins later
                                 console.log('updating lastCheckedTime for comment', o);
@@ -633,19 +658,19 @@
         var currentPostIfExists = postsToWatch.filter(function(d) {
             return d.postId == $post.attr('data-answerid') || $post.attr('data-questionid');
         });
-        if(currentPostIfExists.length) {
+        if (currentPostIfExists.length) {
             var currentChosenOptions = currentPostIfExists[0].options;
             $optionsDiv.find('#' + currentChosenOptions.join(',#')).prop('checked', true); //mark chosen options as checked
         }
 
         $optionsDiv //add the post details as data-* attributes now for use later (when clicking save)
-        .attr('data-postid', isQuestion ? $post.attr('data-questionid') : $post.attr('data-answerid'))
-        .attr('data-posttype', isQuestion ? 'question' : 'answer')
-        .attr('data-questionstate', isQuestion ? questionState : '')
-        .css({
-            'left': e.pageX,
-            'top': e.pageY
-        }).show();
+            .attr('data-postid', isQuestion ? $post.attr('data-questionid') : $post.attr('data-answerid'))
+            .attr('data-posttype', isQuestion ? 'question' : 'answer')
+            .attr('data-questionstate', isQuestion ? questionState : '')
+            .css({
+                'left': e.pageX,
+                'top': e.pageY
+            }).show();
     });
 
     $optionsDivSave.click(function() {

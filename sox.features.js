@@ -186,7 +186,7 @@
                 if (typeof MathJax !== "undefined") MathJax.Hub.Queue(adjust);
 
                 sox.helpers.observe('#notify-container,#notify--1', function() { //Area51: https://github.com/soscripted/sox/issues/152#issuecomment-267885889
-                    if(!$('#notify--1').length) $('body').attr('style', 'padding-top: '+  $('.topbar').height() + 'px !important'); //.css() doesn't work...?
+                    if (!$('#notify--1').length) $('body').attr('style', 'padding-top: ' + $('.topbar').height() + 'px !important'); //.css() doesn't work...?
                 });
             }
 
@@ -309,6 +309,7 @@
                 //https://github.com/soscripted/sox/issues/112
                 //http://meta.stackexchange.com/a/123256/260841
                 var textarea = $('textarea[id^="wmd-input"]');
+
                 function rejectKeyboardUndoRedo(e) {
                     if (e.ctrlKey && (e.which == 90 || e.which == 89)) {
                         e.stopPropagation();
@@ -351,7 +352,7 @@
                 if (!editCommentField.length) return; //https://github.com/soscripted/sox/issues/246
 
                 function toLocaleSentenceCase(str) {
-                  return str.substr(0, 1).toLocaleUpperCase() + str.substr(1);
+                    return str.substr(0, 1).toLocaleUpperCase() + str.substr(1);
                 }
                 $('#reasons').remove(); //remove the div containing everything, we're going to add/remove stuff now:
                 if (/\/edit/.test(window.location.href) || $('[class^="inline-editor"]').length || $('.edit-comment').length) {
@@ -683,7 +684,7 @@
             }
             $('#qinfo').after('<div id="feed"></div>');
 
-            if(sox.location.on('/questions') || $('.question-summary').length) {
+            if (sox.location.on('/questions') || $('.question-summary').length) {
                 $.ajax({
                     type: 'get',
                     url: 'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20json%20where%20url%3D"http%3A%2F%2Fstackexchange.com%2Fhot-questions-for-mobile"&format=json',
@@ -698,9 +699,9 @@
                         } else {
                             $('.question-summary').each(function() {
                                 var id = $(this).attr('id').split('-')[2];
-                                if(results.filter(function(d) {
-                                    return d.question_id == id;
-                                }).length) {
+                                if (results.filter(function(d) {
+                                        return d.question_id == id;
+                                    }).length) {
                                     $(this).find('.summary h3').prepend('<div title="this question is a hot network question!" class="sox-hot" style="font-size:x-large;float:none;display:inline"><i class="fa fa-free-code-camp"></i></div>');
                                 }
                             });
@@ -848,14 +849,13 @@
                             $vote.find('.message-dismissable').css({
                                 position: "fixed"
                             });
-                        }
-                        else {
+                        } else {
                             $vote.find('.message-dismissable').css({
                                 position: "absolute",
                                 "white-space": "nowrap"
-                            })
+                            });
                         }
-                    })
+                    });
                 });
             }
         },
@@ -1115,7 +1115,7 @@
                         var text,
                             questionStatus = $(d).find('.question-status:last');
                         if (questionStatus.length) {
-                            if(questionStatus.text().indexOf('migrated from')) {
+                            if (questionStatus.text().indexOf('migrated from')) {
                                 text = 'migrated from ' + questionStatus.find('h2 a').text();
                             }
                         } else {
@@ -1158,6 +1158,7 @@
 
                 });
             }
+
             function loopAndAddTooltip() {
                 $('.question, .answer').each(function() {
                     if ($(this).find('.post-signature').length > 1) {
@@ -1508,10 +1509,10 @@ Toggle SBS?</div></li>';
                     //https://github.com/soscripted/sox/issues/205 -- check link's location is to same site, eg if on SU, don't allow on M.SU
                     //http://stackoverflow.com/a/4815665/3541881
                     if (url &&
-                            $('<a>').prop('href', url).prop('hostname') == location.hostname &&
-                            url.indexOf('#comment') == -1 &&
-                            getIdFromUrl(url) && //getIdFromUrl(url) makes sure it won't fail later on
-                            !$(this).parent().find('.expand-post-sox').length) {
+                        $('<a>').prop('href', url).prop('hostname') == location.hostname &&
+                        url.indexOf('#comment') == -1 &&
+                        getIdFromUrl(url) && //getIdFromUrl(url) makes sure it won't fail later on
+                        !$(this).parent().find('.expand-post-sox').length) {
                         $(this).css('color', '#0033ff');
                         $(this).before('<a class="expander-arrow-small-hide expand-post-sox"></a>');
                     }
@@ -2447,32 +2448,32 @@ Toggle SBS?</div></li>';
             // https://github.com/soscripted/sox/issues/118#issuecomment-266225764 by @IStoleThePies
 
             $(document).on('mouseenter', '.mine .message', function() {
-                //Remove excess spacing to the left of the button (by emptying .meta, which has "&nbsp" in it), and set the button color to the background color
-                $(this).find('.meta').empty().css({
-                    "background-color": $(this).parent().css("background-color"),
-                    "padding-right": "1px"
-                }).show().append(replySpan);
-                //The "padding-right: 1px" is to avoid some weird bug I can't figure out how to fix
-            }).on('mouseleave', '.mine .message', function() {
-                $(this).find('.meta').hide().find('.newreply').remove();
-            })
+                    //Remove excess spacing to the left of the button (by emptying .meta, which has "&nbsp" in it), and set the button color to the background color
+                    $(this).find('.meta').empty().css({
+                        "background-color": $(this).parent().css("background-color"),
+                        "padding-right": "1px"
+                    }).show().append(replySpan);
+                    //The "padding-right: 1px" is to avoid some weird bug I can't figure out how to fix
+                }).on('mouseleave', '.mine .message', function() {
+                    $(this).find('.meta').hide().find('.newreply').remove();
+                })
 
-            //Do the same thing if you hover over the timestamp
-            .on('mouseenter', '.mine .timestamp', function() {
-                $(this).next().find('.meta').empty().css({
-                    "background-color": $(this).parent().css("background-color"),
-                    "padding-right": "1px"
-                }).show().append(replySpan);
-            }).on('mouseleave', '.mine .timestamp', function() {
-                $(this).next().find('.meta').hide().find('.newreply').remove();
-            })
+                //Do the same thing if you hover over the timestamp
+                .on('mouseenter', '.mine .timestamp', function() {
+                    $(this).next().find('.meta').empty().css({
+                        "background-color": $(this).parent().css("background-color"),
+                        "padding-right": "1px"
+                    }).show().append(replySpan);
+                }).on('mouseleave', '.mine .timestamp', function() {
+                    $(this).next().find('.meta').hide().find('.newreply').remove();
+                })
 
-            .on('click', '.newreply.added-by-sox', function(e) {
-                var $message = $(e.target).closest('.message'),
-                    id = $message.attr('id').split('-')[1],
-                    rest = $('#input').focus().val().replace(/^:([0-9]+)\s+/, '');
-                $('#input').val(':' + id + ' ' + rest).focus();
-            });
+                .on('click', '.newreply.added-by-sox', function(e) {
+                    var $message = $(e.target).closest('.message'),
+                        id = $message.attr('id').split('-')[1],
+                        rest = $('#input').focus().val().replace(/^:([0-9]+)\s+/, '');
+                    $('#input').val(':' + id + ' ' + rest).focus();
+                });
 
             var replySpan = $('<span/>', {
                 class: 'newreply added-by-sox',
@@ -2604,19 +2605,20 @@ Toggle SBS?</div></li>';
                     $(this).find('.sox-copyCodeButton').hide();
                 });
             }
+            
             addButton();
             $(document).on('sox-new-review-post-appeared', addButton);
 
             $(document).on('click', '.sox-copyCodeButton', function() {
-            	try {
-                    if(!$('.sox-copyCodeTextarea').length) $('body').append('<textarea class="sox-copyCodeTextarea">');
-                	$('.sox-copyCodeTextarea').val($(this).parents('pre').text());
-                	$('.sox-copyCodeTextarea').select();
+                try {
+                    if (!$('.sox-copyCodeTextarea').length) $('body').append('<textarea class="sox-copyCodeTextarea">');
+                    $('.sox-copyCodeTextarea').val($(this).parents('pre').text());
+                    $('.sox-copyCodeTextarea').select();
                     document.execCommand('copy');
                     $(this).effect("highlight", {
                         color: 'white'
                     }, 3000);
-                } catch(e) {
+                } catch (e) {
                     sox.info('Browser doesn\'t support execComand for copyCode feature');
                 }
             });
@@ -2627,7 +2629,7 @@ Toggle SBS?</div></li>';
 
             function addBar() {
                 var currentUrl = location.href.split('/'),
-                    sliced = currentUrl.slice(0, currentUrl.length-1).join('/'),
+                    sliced = currentUrl.slice(0, currentUrl.length - 1).join('/'),
                     urlToGet;
 
                 if ($('.reviewable-post').length) {
@@ -2638,7 +2640,7 @@ Toggle SBS?</div></li>';
 
                 $.get(urlToGet, function(d) {
                     var count = +$(d).find('.review-stats-count-current-user').first().text().trim(),
-                        width = (count/20)*100;
+                        width = (count / 20) * 100;
                     if ($('#sox-daily-review-count').length) {
                         $('#sox-daily-review-count').find('#badge-progress-bar').css('width', width);
                         $('#sox-daily-review-count').find('#badge-progress-count').text(count);
