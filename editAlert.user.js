@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Edit notification
 // @namespace    https://github.com/soscripted/sox
-// @version      0.0.27
+// @version      0.0.28
 // @description  Notifications on changes to posts on the SE network
 // @author       ᔕᖺᘎᕊ (stackexchange.com/users/4337810/)
 // @match        *://*.stackoverflow.com/*

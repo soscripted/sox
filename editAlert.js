@@ -502,6 +502,7 @@
                         }
 
                         detailsWeKnow.originalPostId = currentPostId;
+                        detailsWeKnow.postType = undefined;
 
                         addNotification(detailsWeKnow, function(r) {
                             if (r.addedNotification) { //now it can only check at the earliest 15 mins later
@@ -567,7 +568,8 @@
                             'newCommentsCount': differentCommentIds.length,
                             'originalPostId': currentPostId,
                             'title': title,
-                            'creationDate': data.items[0].creation_date
+                            'creationDate': data.items[0].creation_date,
+                            'postType': undefined
                         }, function(r) {
                             if (r.addedNotification) { //now it can only check at the earliest 15 mins later
                                 console.log('updating lastCheckedTime for comment', o);
