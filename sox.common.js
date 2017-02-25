@@ -324,7 +324,7 @@
             if (sox.site.type == sox.site.types.chat) {
                 return Chat.RoomUsers.current().name;
             } else {
-                var $uname = $('body > div.topbar > div > div.topbar-links > a > div.gravatar-wrapper-24');
+                var $uname = sox.NEW_TOPBAR ? $('body > header > div > div.-actions > a > div.gravatar-wrapper-24') : $('body > div.topbar > div > div.topbar-links > a > div.gravatar-wrapper-24');
                 return ($uname.length ? $uname.attr('title') : false);
             }
         },

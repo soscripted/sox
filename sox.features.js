@@ -249,7 +249,7 @@
             var name = sox.user.name;
             var $span = $('<span/>', {
                 class: 'reputation links-container',
-                style: 'color: white;',
+                style: sox.NEW_TOPBAR ? 'color: black;' : 'color: white;',
                 title: name,
                 text: name
             });
@@ -793,6 +793,7 @@
             // Description: For making the vote buttons stick to the screen as you scroll through a post
             //https://github.com/shu8/SE_OptionalFeatures/pull/14:
             //https://github.com/shu8/Stack-Overflow-Optional-Features/issues/28: Thanks @SnoringFrog for fixing this!
+            //https://github.com/soscripted/sox/issues/258#issuecomment-281814124: Thanks @Sir-Cumference for also fixing this!
 
             stickcells();
             $(document).on('sox-new-review-post-appeared', stickcells);
@@ -816,23 +817,21 @@
                         $vote = $voteCell.find('.vote'),
                         vcOfset = $voteCell.offset(),
                         scrollTop = $(window).scrollTop(),
-                        realHeight, votePos, endPos, addFixed = true;
+                        realHeight, endPos;
 
                     if (sox.location.on('/review/suggested-edits/')) $vote.css('padding-top', '35px');
 
-                    if ($vote.children().last().length && $vote.length && $voteCell.next().length) { //These values strangely alternate between existing and not existing. This if statement insures we only get their values when they exist, so no errors.
-                        if ($vote.get(0).getBoundingClientRect().top < 0) addFixed = false;
+                    if ($vote.children().last().length && $vote.length && $voteCell.next().length) { //These values strangely alternate between existing and not existing. This if statement ensures we only get their values when they exist, so no errors.
                         realHeight = $vote.children(':not(:hidden, .message-dismissable)').last().offset().top + $vote.children(':not(:hidden, .message-dismissable)').last().height() - $vote.offset().top; //Get the original height; the difference between the last child and the first child's position
-                        votePos = $vote.offset().top;
                         endPos = $voteCell.next().offset().top + $voteCell.next().height() - 51; //I think a bit above the end of the post (where the "edit", "delete", etc. buttons lie) is a good place to stop the stickiness.
                     }
 
                     if (realHeight + vcOfset.top < endPos - 25 && vcOfset.top - scrollTop - offset <= 0) { //Left condition is to get rid of a sticky zone on extremely short posts. Right condition is for scrolling down into the sticky zone from outside.
-                        if (addFixed && (endPos - realHeight > votePos || endPos - scrollTop - realHeight - offset >= 0)) { //Left condition marks the bottom limit for the sticky zone. Right condition is for scrolling up into the sticky zone from outisde.
-                                $vote.css({
-                                    position: 'fixed',
-                                    top: offset
-                                });
+                        if (endPos - realHeight > scrollTop + offset + 25 || endPos - scrollTop - realHeight - offset >= 0) { //Left condition marks the bottom limit for the sticky zone. Right condition is for scrolling up into the sticky zone from outisde.
+                            $vote.css({
+                                position: 'fixed',
+                                top: offset
+                            });
                         } else {
                             //Stop stickiness when we've scrolled down past the sticky zone.
                             $vote.css({
@@ -843,6 +842,20 @@
                     } else {
                         $vote.removeAttr('style');
                     }
+
+                    sox.helpers.observe($vote, function() { //Fix dismissable message boxes, like "Please consider adding a comment if you think this post can be improved." when downvoting
+                        if ($vote.css("position") == "fixed") {
+                            $vote.find('.message-dismissable').css({
+                                position: "fixed"
+                            });
+                        }
+                        else {
+                            $vote.find('.message-dismissable').css({
+                                position: "absolute",
+                                "white-space": "nowrap"
+                            })
+                        }
+                    })
                 });
             }
         },
@@ -2581,7 +2594,9 @@ Toggle SBS?</div></li>';
 
             //button uses CSS mainly from http://stackoverflow.com/a/30810322/3541881
             function addButton() {
-                $('pre').prepend('<i class="fa fa-clipboard sox-copyCodeButton" style="display:none;"></i>');
+                //https://github.com/soscripted/sox/issues/218#issuecomment-281148327 reason for selector:
+                //http://stackoverflow.com/a/11061657/3541881
+                $('pre:not(:has(.sox-copyCodeButton))').prepend('<i class="fa fa-clipboard sox-copyCodeButton" style="display:none;"></i>');
 
                 $('pre').hover(function() {
                     $(this).find('.sox-copyCodeButton').show();
