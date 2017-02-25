@@ -87,7 +87,7 @@
             } else { //newAnswers; sitename, title, newLink, newScore
                 text = details.newAnswerCount === 1 ? 'new answer' : 'new answers';
             }
-            time = details.creationDate * 1000;
+            time = new Date(details.creationDate * 1000);
         } else if (details.score && details.newState) { //stateChange; sitename, title, score, newState
             text = 'state change'; //'This question is now ' + details.newState;
         } else if (details.editComment || details.newTags) {
@@ -100,10 +100,10 @@
             } else { //edit; sitename, title, link, editComment, score
                 text = 'edited'; //'This question has been edited (' + details.editComment + ')';
             }
-            time = details.editDate * 1000;
+            time = new Date(details.editDate * 1000);
         } else if (details.commentBody && details.commentsLink && details.newCommentsCount > 0) {
             text = (details.newCommentsCount === 1 ? 'new comment' : 'new comments'); // + ' (' + (details.commentBody.length > 100 ? $('<div>').html(details.commentBody.substr(0, 100)).text() + '...' : $('<div>').html(details.commentBody.substr(0, 100)).text()) + ')'; //div creation is to unescape string for eg. quotes
-            time = detail.creationDate * 1000;
+            time = new Date(details.creationDate * 1000);
         }
 
         if (text) {
