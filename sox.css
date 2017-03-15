@@ -93,7 +93,7 @@
 }
 
 .sox-settings-button:not(.-link) {
-  height: 24px !important;
+    height: 24px !important;
 }
 
 .sox-settings-button:hover {
@@ -109,7 +109,7 @@
     color: #858c93;
 }
 
-.sox-feature-info {
+.sox-feature-info, .sox-feature-settings {
     background-color: whitesmoke;
     border-radius: 9px;
     margin-left: 20px;
@@ -118,11 +118,18 @@
     line-height: 1.5;
 }
 
-.sox-feature .fa-info {
-    margin-left: 10px;
-    font-size: 15px;
+.sox-feature .fa-info, .sox-feature .fa-wrench {
+    font-size: 12px;
+    padding: 0 5px;
 }
 
+.sox-feature .fa-info {
+    float: right;
+  }
+  
+.sox-feature-settings-save {
+
+}
 
 /* -------- sox specific features' CSS ------- */
 
@@ -363,9 +370,11 @@ li.fixedTopbar-siteLink {
     float: left !important;
 }
 
-.post-form.sbs-on { /*https://github.com/soscripted/sox/issues/247*/
+.post-form.sbs-on {
+    /*https://github.com/soscripted/sox/issues/247*/
     width: 1335px;
 }
+
 
 /*linkedPostsInline for the displayed post text; https://github.com/shu8/Stack-Overflow-Optional-Features/issues/48 */
 
@@ -376,6 +385,7 @@ li.fixedTopbar-siteLink {
     width: 630px;
     padding: 10px;
 }
+
 
 /*enhancedEditor (enhanced_editor folder)*/
 
@@ -497,6 +507,7 @@ hr.or:after {
     background: black;
 }
 
+
 /*downvotedPostsEditAlert -- for the button and dropdown*/
 
 #downvotedPostsEditAlertButton {
@@ -565,6 +576,7 @@ hr.or:after {
     margin-bottom: 5px;
 }
 
+
 /*titleEditDiff -- for the toggle button*/
 
 .sox-better-title-toggle {
@@ -572,6 +584,7 @@ hr.or:after {
     margin-right: 10px;
     cursor: pointer;
 }
+
 
 /*sox-copyCode -- for the button and textarea (completely hide it)*/
 
@@ -594,6 +607,7 @@ hr.or:after {
     background: transparent;
     overflow: hidden;
 }
+
 
 /*openLinksInNewTab -- for the external link sign*/
 

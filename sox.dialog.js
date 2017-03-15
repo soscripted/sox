@@ -76,25 +76,29 @@
 
                 if (featureSettings) {
                     var $settingsDiv = $('<div/>', {
-                            id: 'soxSettingsPanel-' + name,
+                            id: 'feature-settings-' + name,
+                            class: 'sox-feature-settings',
                             style: 'display: none; margin-top: 5px;'
                         }),
-                        $expanderArrow = $('<a/>', {
-                            'class': 'expander-arrow-small-hide show-sox-settings-panel',
-                            style: 'margin-left: 5px',
+                        $settingsToggle = $('<i/>', {
+                            'class': 'fa fa-wrench',
+
                             click: function(e) {
                                 e.preventDefault(); //don't uncheck the checkbox
-                                if ($(this).hasClass('expander-arrow-small-hide')) {
-                                    $(this).parent().find('#soxSettingsPanel-' + name).fadeIn();
-                                    $(this).removeClass('expander-arrow-small-hide').addClass('expander-arrow-small-show');
-                                } else if ($(this).hasClass('expander-arrow-small-show')) {
-                                    $(this).parent().find('#soxSettingsPanel-' + name).fadeOut();
-                                    $(this).removeClass('expander-arrow-small-show').addClass('expander-arrow-small-hide');
+
+                                var $settingsPanel = $('#feature-settings-' + name);
+
+                                if ($settingsPanel.is(":visible")) {
+                                    $settingsPanel.fadeOut();
+                                } else {
+                                    $settingsPanel.fadeIn();
                                 }
+
                             }
                         });
 
                     var optionalSettings = GM_getValue("SOX-" + name + "-settings", -1);
+
                     for (var i = 0; i < featureSettings.length; i++) {
                         var currentSetting = featureSettings[i];
                         $settingsDiv
@@ -108,10 +112,12 @@
                             }))
                             .append('<br>');
                     }
-                    var $saveSpan = $('<span/>', {
+
+                    var $saveFeatureSettings = $('<a/>', {
                         id: 'saveSettings-' + name,
-                        style: 'cursor: pointer',
-                        text: 'save',
+                        class: 'sox-feature-settings-save',
+                        // style: 'cursor: pointer',
+                        text: 'Save Settings',
                         click: function(e) {
                             e.preventDefault(); //don't uncheck the checkbox
                             var settingsToSave = {};
@@ -121,8 +127,18 @@
                             GM_setValue('SOX-' + name + '-settings', JSON.stringify(settingsToSave));
                         }
                     });
-                    $settingsDiv.append($saveSpan);
-                    $soxSettingsDialogFeatures.find('input#' + name).parent().append($expanderArrow).append($settingsDiv);
+
+                    $settingsDiv.append($saveFeatureSettings);
+
+                    var $feature = $soxSettingsDialogFeatures.find('input#' + name).parent();
+                    $feature.append($settingsToggle);
+
+                    if ($div.has('i.fa-info').length) {
+                        $info.after($settingsDiv);
+                    } else {
+                        $feature.append($settingsDiv);
+                    }
+
                 }
             }
 

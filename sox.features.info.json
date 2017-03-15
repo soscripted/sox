@@ -189,7 +189,7 @@
             "exclude": "*://chat.*.com/*,SE1.0"
         }, {
             "name": "editReasonTooltip",
-            "desc": "Add a tooltip to posts showing the last revision's comment on the word 'edited' in 'edited [date] at [time]'",
+            "desc": "Add a tooltip to posts showing the last revision's comment'",
             "extended_description": "When a post is edited, the editor is displayed underneath the post. This feature will show what the last revision's comment was as a tooltip when you hover over 'edited' underneath a post in 'edited [date] at [time]'",
             "meta": "http://meta.stackexchange.com/questions/2315/show-reason-for-edit-without-clicking-through-to-diff",
             "match": "*://*/questions*,*://*/review*",
