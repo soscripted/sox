@@ -1,6 +1,6 @@
 [![Join the chat at https://gitter.im/soscripted/sox](https://badges.gitter.im/soscripted/sox.svg)](https://gitter.im/soscripted/sox?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-###SOX v2.0.3 DEV
+### SOX v2.0.25 DEV
 
 Stack Overflow Extras (*SOX*) is a project that stemmed from the [Stack Overflow Optional Features (SOOF)](https://github.com/shu8/Stack-Overflow-Optional-Features) project.
 
@@ -8,7 +8,7 @@ The SOX userscript adds a bunch of **optional** features to all sites in the Sta
 
 Note: This project has no relation to Stack Overflow or Stack Exchange; it is simply a userscript that enhances the sites!
 
-##Installation & Requirements
+## Installation & Requirements
 
 1. Install [Greasemonkey](http://www.greasespot.net/) (for Firefox) or [Tampermonkey](http://tampermonkey.net/) (for Chrome or Safari). These are userscript managers that *must* be installed in order for this to work, as the script relies on certain `GM_*` functions in order to save your settings!
 2. Install the script. Clicking on 'install' below will make your userscript manager prompt you automatically to install it.
@@ -20,14 +20,14 @@ Note: This project has no relation to Stack Overflow or Stack Exchange; it is si
 
 ![newdialog](https://cloud.githubusercontent.com/assets/12533449/14296194/c732b1b2-fb2d-11e5-9563-1e34b12eada9.png)
 
-##What features are included?
+## What features are included?
 
 A full list of all the features is available on the SOX wiki page [here](https://github.com/soscripted/sox/wiki/Features).
 
-##Bugs and Feature Requests
+## Bugs and Feature Requests
 
 Please post bugs and feature requests as issues on [Github](https://github.com/soscripted/sox), where we can track them easily and push updates quickly. Please **do not** post them as answers on Stack Apps -- they are much harder to manage!
 
-##Changes
+## Changes
 
 Please see the change log [at Stack Apps](http://stackapps.com/a/6358).
