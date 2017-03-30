@@ -59,7 +59,7 @@
                 return result;
             }
 
-            var $links = $('.comment a, .deleted-answer-info a, .employee-name a, .started a, .user-details a').filter('a[href^="/users/"]');
+            var $links = $('.comment a, .deleted-answer-info a, .employee-name a, .user-details a').filter('a[href^="/users/"]');
             var ids = [];
 
             $links.each(function() {
@@ -2598,17 +2598,25 @@ Toggle SBS?</div></li>';
 
         copyCode: function() {
             // Description: Add a button to code in posts to let you copy it
+            // Modifications by @Sir-Cumference <https://github.com/soscripted/sox/issues/218#issuecomment-290251056>
 
             //button uses CSS mainly from http://stackoverflow.com/a/30810322/3541881
             function addButton() {
                 //https://github.com/soscripted/sox/issues/218#issuecomment-281148327 reason for selector:
                 //http://stackoverflow.com/a/11061657/3541881
-                $('pre:not(:has(.sox-copyCodeButton))').prepend('<i class="fa fa-clipboard sox-copyCodeButton" style="display:none;"></i>');
+
+                $('pre:not(:has(.sox-copyCodeButton))').before('<i class="fa fa-clipboard sox-copyCodeButton" style="display:none; background-color:#eff0f1; margin-left: -15px;"></i>');
 
                 $('pre').hover(function() {
-                    $(this).find('.sox-copyCodeButton').show();
+                    $(this).prev('.sox-copyCodeButton').show();
                 }, function() {
-                    $(this).find('.sox-copyCodeButton').hide();
+                    $(this).prev('.sox-copyCodeButton').hide();
+                });
+
+                $('.sox-copyCodeButton').hover(function() {
+                    $(this).show();
+                }, function() {
+                    $(this).hide();
                 });
             }
 
@@ -2618,7 +2626,7 @@ Toggle SBS?</div></li>';
             $(document).on('click', '.sox-copyCodeButton', function() {
                 try {
                     if (!$('.sox-copyCodeTextarea').length) $('body').append('<textarea class="sox-copyCodeTextarea">');
-                    $('.sox-copyCodeTextarea').val($(this).parents('pre').text());
+                    $('.sox-copyCodeTextarea').val($(this).next('pre').text());
                     $('.sox-copyCodeTextarea').select();
                     document.execCommand('copy');
                     $(this).effect("highlight", {
