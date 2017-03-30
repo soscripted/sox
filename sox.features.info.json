@@ -450,6 +450,12 @@
                 "type": "textarea",
                 "desc": "Links to open in new tab (comma-separated match patterns)"
             }]
+        }, {
+            "name": "showQuestionStateInSuggestedEditReviewQueue",
+            "desc": "Show question's state in the suggested edit review queue",
+            "meta": "",
+            "match": "*://*/review*",
+            "exclude": ""
         }]
     }
 }

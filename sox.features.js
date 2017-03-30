@@ -782,7 +782,7 @@
                     $that.find('.summary .tags a').each(function() {
                         if ($(this).text().indexOf('status-') > -1) { //if it's a mod tag
                             $(this).addClass('moderator-tag'); //add appropiate class
-                        } else if ($(this).text().match(/(discussion|feature-request|support|bug)/)) { //if it's a required tag
+                        } else if ($(this).text().match(/\b(discussion|feature-request|support|bug)\b/)) { //if it's a required tag
                             $(this).addClass('required-tag'); //add appropiate class
                         }
                     });
@@ -897,44 +897,50 @@
         metaChatBlogStackExchangeButton: function() {
             // Description: For adding buttons next to sites under the StackExchange button that lead to that site's meta and chat
             // NOTE: this feature used to have a 'blog' button as well, but it wasn't very useful so was removed
-
-            var link, chatLink;
+            // Modifications by @Sir-Cumference <https://github.com/soscripted/sox/issues/267>
 
             $(document).on('mouseenter', '#your-communities-section > ul > li > a', function() {
-                var href = $(this).attr('href');
-                chatLink = 'http://chat.stackexchange.com?tab=site&host=' + (sox.location.matchWithPattern("*://stackexchange.com") ? href.substr(7) : href.substr(2));
+                var link, chatLink, href = $(this).attr('href').split('://').pop(); //Get rid of http:// or https:// from url
+                chatLink = 'https://chat.stackexchange.com?tab=site&host=' + href.split('/').shift();
 
                 if (href.indexOf('stackapps') > -1) {
-                    link = undefined;
-                } else if (href.indexOf('area51') > -1 && href.indexOf('discuss.area51') === -1) {
-                    link = 'http://discuss.area51.stackexchange.com/';
-                } else if (href.indexOf('meta.stackexchange.com') > -1) {
-                    link = undefined;
-                    chatLink = 'http://chat.meta.stackexchange.com';
-                } else if (href.indexOf('meta') > -1 || href.indexOf('discuss.area51') > -1) {
-                    link = undefined;
-                    chatLink = undefined;
+
+                } else if (href.indexOf('area51') > -1) {
+                    if (href.indexOf('discuss.area51') === -1) {
+                        link = 'https://discuss.area51.stackexchange.com/';
+                    }
+                    else {
+                        link = 'https://area51.stackexchange.com/';
+                    }
+                    chatLink = 'https://chat.stackexchange.com?tab=site&host=area51.stackexchange.com';
+                } else if (href === "meta.stackexchange.com") {
+                    chatLink = 'https://chat.meta.stackexchange.com';
+                } else if (href.indexOf('meta') > -1) {
+                    link = 'https://' + href.split('meta.').pop().split('discuss.').pop();
+                    chatLink = 'https://chat.stackexchange.com?tab=site&host=' + href.split('meta.').shift() + href.split('meta.').pop().split('/').shift(); //We don't need "meta." in the chat links
+                } else if (href.indexOf('.stackexchange.com') > -1 || href.indexOf('.stackoverflow.com') > -1) {
+                    link = 'https://' + href.split('.').shift() + '.meta' + href.split(href.split('.').shift()).pop();
                 } else {
-                    link = 'http://meta.' + href.substr(2, href.length - 1);
+                    link = 'https://meta.' + href;
                 }
 
-                if (href.indexOf('stackoverflow.com') > -1 && href.indexOf('meta') === -1 && !href.match(/(pt|ru|es)\.stackoverflow/i)) {
-                    chatLink = 'http://chat.stackoverflow.com?tab=site';
+                if (href.indexOf('stackoverflow.com') > -1 && !href.match(/(pt|ru|es|ja)\.stackoverflow/i)) { //Added Japanese
+                    chatLink = 'http://chat.stackoverflow.com';
                 }
 
-                if (link || chatLink) { //only hide rep if we're actually going to add anything
-                    $(this).find('.rep-score').stop(true).delay(135).fadeOut(20);
-                    $(this).prepend('<div class="related-links" style="float: right; display: none;">' +
-                        (link ?
-                            (link.indexOf('discuss.area51') > -1 ? '<a href="' + link + '">discuss</a>' : '<a href="' + link + '">meta</a>') :
-                            '') +
-                        (chatLink ? '<a href="' + chatLink + '">chat</a>' : '') +
-                        '</div>');
-                    $(this).find('.related-links').delay(135).css('opacity', 0).animate({
-                        opacity: 1,
-                        width: 'toggle'
-                    }, 200);
-                }
+                //All sites have either a chat link or meta link
+                $(this).find('.rep-score').stop(true).delay(135).fadeOut(20);
+                $(this).prepend('<div class="related-links" style="float: right; display: none;">' +
+                    (link ?
+                        (link.indexOf('discuss.area51') > -1 ? '<a href="' + link + '">discuss</a>' : (href.indexOf('meta') > -1 || href.indexOf('discuss.area51') > -1 ? '<a href="' + link + '">main</a>' : '<a href="' + link + '">meta</a>')) :
+                        '') +
+                    (chatLink ? '<a href="' + chatLink + '">chat</a>' : '') +
+                    '</div>');
+                $(this).find('.related-links').delay(135).css('opacity', 0).animate({
+                    opacity: 1,
+                    width: 'toggle'
+                }, 200);
+
             }).on('mouseleave', '#your-communities-section > ul > li > a', function() {
                 $(this).find('.rep-score').stop(true).fadeIn(110);
                 $(this).find('.related-links').remove();
@@ -2605,7 +2611,7 @@ Toggle SBS?</div></li>';
                     $(this).find('.sox-copyCodeButton').hide();
                 });
             }
-            
+
             addButton();
             $(document).on('sox-new-review-post-appeared', addButton);
 
@@ -2671,6 +2677,29 @@ Toggle SBS?</div></li>';
                         $(this).prop('target', '_blank');
                     }
                 }
+            });
+        },
+
+        showQuestionStateInSuggestedEditReviewQueue: function() {
+            $(document).on('sox-new-review-post-appeared', function() {
+                if ($('#sox-showQuestionStateInSuggestedEditReviewQueue-checked').length) return; //already checked
+                var postId = $('.summary h2 a').attr('href').split('/')[2];
+
+                sox.helpers.getFromAPI('questions', postId, sox.site.currentApiParameter, function(data) {
+                    $('body').append($('<div/>', {
+                        'id': 'sox-showQuestionStateInSuggestedEditReviewQueue-checked',
+                        'style': 'display: none'
+                    }));
+                    if (data.closed_reason) {
+                        if (data.closed_reason == 'duplicate') {
+                            $anchor.after("&nbsp;<span class='standOutDupeCloseMigrated-duplicate'>&nbsp;duplicate&nbsp;</span></a>");
+                        } else if (data.closed_details.on_hold === true) { //on-hold
+                            $anchor.after('&nbsp;<span class="standOutDupeCloseMigrated-onhold">&nbsp;on hold&nbsp;</span>');
+                        } else if (data.closed_details.on_hold === false && data.closed_reason == 'off-topic') { //closed
+                            $anchor.after('&nbsp;<span class="standOutDupeCloseMigrated-closed">&nbsp;closed&nbsp;</span>');
+                        }
+                    }
+                }, 'creation&filter=!-MOiNm40B3fle5H6oLVI3nx6UQo(vNstn');
             });
         }
     };
