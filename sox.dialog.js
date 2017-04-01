@@ -3,7 +3,7 @@
 
     sox.dialog = {
         init: function(options) {
-            if (!$('.topbar').length) return;
+            if (!$('.topbar, .so-header').length) return;
             sox.debug('initializing SOX dialog');
 
             var version = options.version,
