@@ -126,6 +126,7 @@
                                 settingsToSave[$(this).attr('id')] = ($(this).is(':checkbox') ? $(this).is(':checked') : $(this).val());
                             });
                             GM_setValue('SOX-' + name + '-settings', JSON.stringify(settingsToSave));
+                            sox.settings.writeToConsole(true);
                         }
                     });
 
@@ -201,7 +202,7 @@
 
             $soxSettingsSave.on('click', function() {
                 var settings = [];
-                $soxSettingsDialogFeatures.find('input[type=checkbox]:checked').each(function() {
+                $soxSettingsDialogFeatures.find('input[type=checkbox]:checked').not('.featureSetting').each(function() { //NOT the per-feature featureSetting checkboxes, because they are saved in THEIR OWN setting object!
                     var x = $(this).closest('.modal-content').attr('id') + '-' + $(this).attr('id');
                     settings.push(x); //Add the function's ID (also the checkbox's ID) to the array
                 });

@@ -345,7 +345,7 @@
                 console.log('Been more than 15 (or 10) minutes since checking post. Doing API request for', o);
                 if (currentOptions.indexOf('newAnswers') !== -1 || currentOptions.indexOf('stateChange') !== -1) { //newAnswers || stateChange
                     //do API request to /questions or /answers
-                    fromAPI('http://api.stackexchange.com/2.2/' + currentType + 's/' + currentPostId + '?site=' + currentSitename + '&filter=' + (currentType == 'question' ? apiQuestionFilter : apiAnswerFilter), throttled, function(data) {
+                    fromAPI('https://api.stackexchange.com/2.2/' + currentType + 's/' + currentPostId + '?site=' + currentSitename + '&filter=' + (currentType == 'question' ? apiQuestionFilter : apiAnswerFilter), throttled, function(data) {
                         console.log('data retrieved from API:', data);
                         if (!data) { //throttle
                             console.log('Erorr: throttled');
@@ -364,11 +364,9 @@
                             differentAnswerIds = [];
 
                         if (newAnswerIds.length && lastCheckedAnswerIds) { //if there are new answers, and there were old answers
-                            console.log('newAnswerIds:', newAnswerIds);
                             differentAnswerIds = newAnswerIds.filter(function(i) {
                                 return lastCheckedAnswerIds.indexOf(i) === -1;
                             });
-                            console.log('lastCheckedAnswerIds', lastCheckedAnswerIds);
                         }
 
                         console.log('newAnswerIds:', newAnswerIds);
@@ -449,7 +447,7 @@
                 }
                 if (currentOptions.indexOf('edit') !== -1 || currentOptions.indexOf('retag') !== -1) { //edit || retag
                     //do API request to posts/id/revisions
-                    fromAPI('http://api.stackexchange.com/2.2/posts/' + currentPostId + '/revisions?site=' + currentSitename + '&filter=' + apiRevisionFilter, throttled, function(data) {
+                    fromAPI('https://api.stackexchange.com/2.2/posts/' + currentPostId + '/revisions?site=' + currentSitename + '&filter=' + apiRevisionFilter, throttled, function(data) {
                         console.log('data retrieved from API:', data);
                         if (!data) { //throttle
                             console.log('Erorr: throttled');
@@ -476,7 +474,7 @@
                                 if (retag) {
                                     detailsWeKnow.sitename = currentSitename;
                                     detailsWeKnow.title = data.items[itemIndex].title;
-                                    detailsWeKnow.link = 'http://' + currentSiteUrl + '/' + data.items[itemIndex].post_type[0] + '/' + data.items[itemIndex].post_id; //data.items[itemIndex].post_type[0] => 'question'/'answer'->'q'/'a
+                                    detailsWeKnow.link = 'https://' + currentSiteUrl + '/' + data.items[itemIndex].post_type[0] + '/' + data.items[itemIndex].post_id; //data.items[itemIndex].post_type[0] => 'question'/'answer'->'q'/'a
                                     detailsWeKnow.newTags = data.items[itemIndex].tags;
                                     detailsWeKnow.title = data.items[itemIndex].title || data.items[data.items.length - 1].title;
                                 }
@@ -484,7 +482,7 @@
                                 if (edit && !retag) { //if retag wasn't selected, then don't add notification if retag occured
                                     detailsWeKnow.sitename = currentSitename;
                                     detailsWeKnow.title = data.items[itemIndex].title;
-                                    detailsWeKnow.link = 'http://' + currentSiteUrl + '/' + data.items[itemIndex].post_type[0] + '/' + data.items[itemIndex].post_id; //data.items[itemIndex].post_type[0] => 'question'/'answer'->'q'/'a
+                                    detailsWeKnow.link = 'https://' + currentSiteUrl + '/' + data.items[itemIndex].post_type[0] + '/' + data.items[itemIndex].post_id; //data.items[itemIndex].post_type[0] => 'question'/'answer'->'q'/'a
                                     detailsWeKnow.editComment = data.items[itemIndex].comment;
                                     detailsWeKnow.title = data.items[itemIndex].title || data.items[data.items.length - 1].title;
                                 }
@@ -492,7 +490,7 @@
                                 if (edit && retag) {
                                     detailsWeKnow.sitename = currentSitename;
                                     detailsWeKnow.title = data.items[itemIndex].title;
-                                    detailsWeKnow.link = 'http://' + currentSiteUrl + '/' + data.items[itemIndex].post_type[0] + '/' + data.items[itemIndex].post_id; //data.items[0].post_type[0] => 'question'/'answer'->'q'/'a
+                                    detailsWeKnow.link = 'https://' + currentSiteUrl + '/' + data.items[itemIndex].post_type[0] + '/' + data.items[itemIndex].post_id; //data.items[0].post_type[0] => 'question'/'answer'->'q'/'a
                                     detailsWeKnow.editComment = data.items[itemIndex].comment;
                                     detailsWeKnow.newTags = data.items[itemIndex].tags;
                                     detailsWeKnow.title = data.items[itemIndex].title || data.items[data.items.length - 1].title;
@@ -502,7 +500,7 @@
                         }
 
                         detailsWeKnow.originalPostId = currentPostId;
-                        detailsWeKnow.postType = undefined;
+                        detailsWeKnow.postType = currentType;
 
                         addNotification(detailsWeKnow, function(r) {
                             if (r.addedNotification) { //now it can only check at the earliest 15 mins later
@@ -541,7 +539,7 @@
 
             if (new Date().getTime() >= lastCheckedTime + 900000) { //15 mins = 900000
                 console.log('Been more than 15 (or 10) minutes since checking comments. Doing API request for', o);
-                fromAPI('http://api.stackexchange.com/2.2/posts/' + currentPostId + '/comments?filter=' + commentsFilter + '&site=' + currentSitename, throttled, function(data) {
+                fromAPI('https://api.stackexchange.com/2.2/posts/' + currentPostId + '/comments?filter=' + commentsFilter + '&site=' + currentSitename, throttled, function(data) {
                     console.log('data retrieved from API:', data);
                     if (!data) { //throttle
                         console.log('Erorr: throttled');
@@ -564,7 +562,7 @@
                             'sitename': currentSitename,
                             'postId': currentPostId,
                             'commentBody': (data.items.length && 'body' in data.items[0] ? data.items[0].body : undefined),
-                            'commentsLink': (data.items.length && 'post_type' in data.items[0] ? 'http://' + currentSiteUrl + '/' + data.items[0].post_type[0] + '/' + currentPostId + '#comments-' + currentPostId : undefined),
+                            'commentsLink': (data.items.length && 'post_type' in data.items[0] ? 'https://' + currentSiteUrl + '/' + data.items[0].post_type[0] + '/' + currentPostId + '#comments-' + currentPostId : undefined),
                             'newCommentsCount': differentCommentIds.length,
                             'originalPostId': currentPostId,
                             'title': title,

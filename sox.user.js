@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Stack Overflow Extras (SOX)
 // @namespace    https://github.com/soscripted/sox
-// @version      2.0.27
+// @version      2.0.28
 // @description  Extra optional features for Stack Overflow and Stack Exchange sites
 // @contributor  ᴉʞuǝ (stackoverflow.com/users/1454538/)
 // @contributor  ᔕᖺᘎᕊ (stackexchange.com/users/4337810/)
@@ -108,7 +108,7 @@
                     featureId = settings[i].split('-')[1];
 
                 if (!(category in featureInfo.categories)) { //if we ever rename a category
-                    sox.loginfo('Deleting feature "' + settings[i] + '"');
+                    sox.loginfo('Deleting feature "' + settings[i] + '" (category rename?)');
                     settings.splice(i, 1);
                     sox.settings.save(settings);
                     continue;
@@ -120,7 +120,7 @@
                     runFeature = true,
                     sites,
                     pattern;
-                sox.debug(feature);
+
                 try {
                     //NOTE: there is no else if() because it is possible to have both match and exclude patterns..
                     //which could have minor exceptions making it neccessary to check both
@@ -157,7 +157,7 @@
                     }
                 } catch (err) {
                     if (!sox.features[featureId] || !feature) { //remove deprecated/'corrupt' feature IDs from saved settings
-                        sox.loginfo('Deleting feature "' + settings[i] + '"');
+                        sox.loginfo('Deleting feature "' + settings[i] + '" (feature not found)');
                         settings.splice(i, 1);
                         sox.settings.save(settings);
                         $('#sox-settings-dialog-features').find('#' + settings[i].split('-')[1]).parent().parent().remove();

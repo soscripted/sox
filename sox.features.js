@@ -925,7 +925,7 @@
                 }
 
                 if (href.indexOf('stackoverflow.com') > -1 && !href.match(/(pt|ru|es|ja)\.stackoverflow/i)) { //Added Japanese
-                    chatLink = 'http://chat.stackoverflow.com';
+                    chatLink = 'https://chat.stackoverflow.com';
                 }
 
                 //All sites have either a chat link or meta link
@@ -1117,7 +1117,7 @@
                 } else if (text.substr(text.length - 10) == '[migrated]') {
                     $anchor.text(text.substr(0, text.length - 10)); //remove [migrated]
                     $question.attr('data-sox-question-state', 'migrated'); //used for hideCertainQuestions feature compatability
-                    $.get("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20html%20where%20url%3D%22" + encodeURIComponent('http://' + location.hostname + '/questions/' + id) + "%22&diagnostics=true", function(d) {
+                    $.get("https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20html%20where%20url%3D%22" + encodeURIComponent('https://' + location.hostname + '/questions/' + id) + "%22&diagnostics=true", function(d) {
                         var text,
                             questionStatus = $(d).find('.question-status:last');
                         if (questionStatus.length) {
@@ -1342,7 +1342,7 @@ Toggle SBS?</div></li>';
 
                     if (!link) return;
 
-                    var sitename = link.split('com/')[0].replace('http://', '') + 'com';
+                    var sitename = link.split('com/')[0].replace(/https?\:\/\//, '') + 'com';
 
                     //the ||'s are for fixing https://github.com/soscripted/sox/issues/242:
                     if (type == 'comment' || link.indexOf('posts/comments/') > -1) {
@@ -1956,7 +1956,7 @@ Toggle SBS?</div></li>';
                                 title = d.items[0].title;
                                 notifications[data.data.id] = {
                                     'sitename': sitename,
-                                    'url': 'http://' + sitename + '.stackexchange.com/' + (d.items[0].post_type == 'question' ? 'q/' : 'a/') + data.data.id,
+                                    'url': 'https://' + sitename + '.stackexchange.com/' + (d.items[0].post_type == 'question' ? 'q/' : 'a/') + data.data.id,
                                     'title': title,
                                     'editor': d.items[0].last_editor.display_name,
                                     'editor_link': d.items[0].last_editor.link,
@@ -1964,7 +1964,7 @@ Toggle SBS?</div></li>';
                                     'type': d.items[0].post_type
                                 };
                                 GM_setValue('downvotedPostsEditAlert-notifications', JSON.stringify(notifications));
-                                addEditNotification('http://' + sitename + '.stackexchange.com/' + (d.items[0].post_type == 'question' ? 'q/' : 'a/') + data.data.id, title + ' [LIVE]', sitename, data.data.id, true, d.items[0].last_editor.display_name, d.items[0].last_editor.link, d.items[0].last_edit_date, d.items[0].post_type, postsToCheck);
+                                addEditNotification('https://' + sitename + '.stackexchange.com/' + (d.items[0].post_type == 'question' ? 'q/' : 'a/') + data.data.id, title + ' [LIVE]', sitename, data.data.id, true, d.items[0].last_editor.display_name, d.items[0].last_editor.link, d.items[0].last_edit_date, d.items[0].post_type, postsToCheck);
                                 sox.debug('downvotedPostsEditAlert: adding notification from live');
                             }, 'activity&filter=!-*f(6qkz8Rkb');
                         }
@@ -2033,7 +2033,7 @@ Toggle SBS?</div></li>';
                 $(document).on('click', '.chatEasyAccess b', function() {
                     var $that = $(this);
                     $.ajax({
-                        url: 'http://chat.stackexchange.com/rooms/setuseraccess/' + location.href.split('/')[4],
+                        url: 'https://chat.stackexchange.com/rooms/setuseraccess/' + location.href.split('/')[4],
                         type: 'post',
                         data: {
                             'fkey': fkey().fkey,
