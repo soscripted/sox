@@ -1079,7 +1079,7 @@
             function addCSS() {
                 $('.vote-down-off, .vote-down-on, .vote-up-off, .vote-up-on, .star-off, .star-on').addClass('sox-better-css');
                 $('head').append('<link rel="stylesheet" href="https://rawgit.com/shu8/SE-Answers_scripts/master/coolMaterialDesignCss.css" type="text/css" />');
-                $('#hlogo').css('-webkit-transform', 'translate3d(0,0,0)'); //Thanks to @IStoleThePies: https://github.com/soscripted/sox/issues/79#issuecomment-267868040
+                $('#hmenus').css('-webkit-transform', 'translateZ(0)'); //Thanks to @Sir-Cumference: https://github.com/soscripted/sox/issues/79#issuecomment-289639532
             }
             addCSS();
             $(document).on('sox-new-review-post-appeared', addCSS);
