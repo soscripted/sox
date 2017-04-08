@@ -265,6 +265,7 @@
                 }
             }, function() {
                 $('.topbar-icon').not('#soxSettingsButton').hover(function(e) {
+                    var $button = $(this);
                     if ($('#soxSettingsButton').hasClass('topbar-icon-on')) {
                         $soxSettingsDialog.hide();
                         $('#soxSettingsButton').removeClass('topbar-icon-on');
@@ -272,6 +273,9 @@
                         if (which != 'site') { //site-switcher dropdown is slightly different
                             $('.' + which + '-dialog').not('#sox-settings-dialog, #metaNewQuestionAlertDialog, #downvotedPostsEditAlertDialog').show();
                             $(this).addClass('topbar-icon-on');
+                            //repeated clicks are INTENDED, hacky fix for https://github.com/soscripted/sox/issues/272
+                            $button[0].click();
+                            $button[0].click();
                         } else {
                             if ($(this).css('top') != '34px') {
                                 $('.siteSwitcher-dialog').css('top', '34px').css('left', '0px');
