@@ -16,11 +16,10 @@
 
         moveBounty: function() {
             // Description: For moving bounty to the top
+            // Thanks to @Sir-Cumference for modifications <https://github.com/soscripted/sox/issues/282#issuecomment-303811102>
 
-            if ($('.bounty-notification').length) {
-                $('.bounty-notification').insertAfter('.question .fw');
-                $('.question .bounty-notification .votecell').remove();
-            }
+            $('.bounty-notification').insertAfter('.question .fw'); //$('.bounty-notification').length condition isn't necessary; this line will run only if the element exists
+            $('[id="bounty-link bounty"]').closest('tr').insertAfter('.question .fw');
         },
 
         dragBounty: function() {
@@ -84,7 +83,7 @@
                         isEmployee = data.items[i].is_employee;
 
                     if (isEmployee) {
-                        $links.filter('a[href^="/users/' + userId + '/"]').append('<i class="fa fa-stack-overflow" title="employee" style="padding: 0 5px"></i>');
+                        $links.filter('a[href^="/users/' + userId + '/"]').after('<i class="fa fa-stack-overflow" title="employee" style="padding: 0 5px"></i>');
                     }
                 }
             });
@@ -258,15 +257,11 @@
 
         colorAnswerer: function() {
             // Description: For highlighting the names of answerers on comments
+            // Thanks to @Sir-Cumference for modifications <https://github.com/soscripted/sox/issues/283#issuecomment-303481871>
 
             function colour() {
                 $('.answercell').each(function(i, obj) {
-                    var x = $(this).find('.user-details a').text();
-                    $('.answer .comment-user').each(function() {
-                        if ($(this).text() == x) {
-                            $(this).css('background-color', 'orange');
-                        }
-                    });
+                    $(this).parent().next().find('.comment-user:contains("' + $(this).find('.user-details a').last().text() + '")').css({'background-color': '#f9e2b6', 'padding': '1px 5px'}); //Find the comments on each post that contain the answerer's name. Also, .last() is necessary, or else it will use the name of someone who edits the answer.
                 });
             }
 
@@ -1518,7 +1513,7 @@ Toggle SBS?</div></li>';
                         $('<a>').prop('href', url).prop('hostname') == location.hostname &&
                         url.indexOf('#comment') == -1 &&
                         getIdFromUrl(url) && //getIdFromUrl(url) makes sure it won't fail later on
-                        !$(this).parent().find('.expand-post-sox').length) {
+                        !$(this).prev().is('.expand-post-sox')) {
                         $(this).css('color', '#0033ff');
                         $(this).before('<a class="expander-arrow-small-hide expand-post-sox"></a>');
                     }
@@ -2132,8 +2127,8 @@ Toggle SBS?</div></li>';
                 var $editor = $('.review-more-instructions ul:eq(1) li'),
                     editorName = $editor.find('a').text(),
                     editorLink = $editor.find('a').attr('href'),
-                    editorApproved = $editor.text().match(/([0-9]+)/g)[0], //`+` matches 'one or more' to make sure it works on multi-digit numbers!
-                    editorRejected = $editor.text().match(/([0-9]+)/g)[1];
+                    editorApproved = $editor.clone().find('a').remove().end().text().match(/([0-9]+)/g)[0], //`+` matches 'one or more' to make sure it works on multi-digit numbers!
+                    editorRejected = $editor.clone().find('a').remove().end().text().match(/([0-9]+)/g)[1]; //https://stackoverflow.com/q/11347779/3541881 for fixing https://github.com/soscripted/sox/issues/279
                 info[editorName] = {
                     'link': editorLink,
                     'approved': editorApproved,

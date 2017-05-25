@@ -227,7 +227,7 @@
                     e.preventDefault();
                     return false;
                 }
-                if (e.which == 76 && e.ctrlKey) { //ctrl+l (links)
+                if (e.which == 76 && e.ctrlKey && e.altKey) { //ctrl+alt+l (links) <https://github.com/soscripted/sox/issues/278>
                     $('#enhancedEditor-insertLinkDialog').show(500);
                     e.stopPropagation();
                     e.preventDefault();
