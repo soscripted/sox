@@ -254,6 +254,12 @@
             "match": "",
             "exclude": "*://chat.*.com/*"
         }, {
+            "name": "hideJustHotMetaPosts",
+            "desc": "Hide just the 'Hot Meta Posts' sections in the Community Bulletin",
+            "meta": "",
+            "match": "",
+            "exclude": "*://chat.*.com/*"
+        }, {
             "name": "hideHireMe",
             "desc": "Hide the Looking for a Job module",
             "meta": "",

@@ -787,9 +787,8 @@
 
         stickyVoteButtons: function() {
             // Description: For making the vote buttons stick to the screen as you scroll through a post
-            //https://github.com/shu8/SE_OptionalFeatures/pull/14:
-            //https://github.com/shu8/Stack-Overflow-Optional-Features/issues/28: Thanks @SnoringFrog for fixing this!
-            //https://github.com/soscripted/sox/issues/258#issuecomment-281814124: Thanks @Sir-Cumference for also fixing this!
+            // https://github.com/shu8/SE_OptionalFeatures/pull/14:
+            // https://github.com/shu8/Stack-Overflow-Optional-Features/issues/28: Thanks @SnoringFrog for fixing this!
 
             stickcells();
             $(document).on('sox-new-review-post-appeared', stickcells);
@@ -800,14 +799,16 @@
 
             function stickcells() {
                 var $votecells = $('.votecell');
-                $votecells.css('min-width', '46px');
 
                 $votecells.each(function() {
-                    var $topbar = $('.topbar'),
+                    var $topbar = ($('.so-header').length) ? $('.so-header') : $('.topbar'),
                         topbarHeight = $topbar.outerHeight(),
-                        offset = (sox.location.on('/review') ? 60 : 10);
+                        offset = $(".review-bar").outerHeight();
 
-                    if ($topbar.css('position') == 'fixed') offset += topbarHeight;
+                    if ($topbar.css('position') == 'fixed' && !sox.location.on('/review'))
+                        offset += topbarHeight;
+                    else
+                        offset += 5; //For some reason I have to add the bottom margin of ".review-bar"
 
                     var $voteCell = $(this),
                         $vote = $voteCell.find('.vote'),
@@ -815,42 +816,35 @@
                         scrollTop = $(window).scrollTop(),
                         realHeight, endPos;
 
-                    if (sox.location.on('/review/suggested-edits/')) $vote.css('padding-top', '35px');
+                    $voteCell.css('min-width', Math.floor($vote.width()));
 
-                    if ($vote.children().last().length && $vote.length && $voteCell.next().length) { //These values strangely alternate between existing and not existing. This if statement ensures we only get their values when they exist, so no errors.
+                    if ($vote.length && $vote.children().last().length && $voteCell.next().length) { //These values strangely alternate between existing and not existing. This if statement insures we only get their values when they exist, so no errors.
                         realHeight = $vote.children(':not(:hidden, .message-dismissable)').last().offset().top + $vote.children(':not(:hidden, .message-dismissable)').last().height() - $vote.offset().top; //Get the original height; the difference between the last child and the first child's position
                         endPos = $voteCell.next().offset().top + $voteCell.next().height() - 51; //I think a bit above the end of the post (where the "edit", "delete", etc. buttons lie) is a good place to stop the stickiness.
                     }
 
-                    if (realHeight + vcOfset.top < endPos - 25 && vcOfset.top - scrollTop - offset <= 0) { //Left condition is to get rid of a sticky zone on extremely short posts. Right condition is for scrolling down into the sticky zone from outside.
-                        if (endPos - realHeight > scrollTop + offset + 25 || endPos - scrollTop - realHeight - offset >= 0) { //Left condition marks the bottom limit for the sticky zone. Right condition is for scrolling up into the sticky zone from outisde.
+                    $voteCell.on('DOMNodeInserted', function() { //Fix dismissable message boxes, like "Please consider adding a comment if you think this post can be improved." when downvoting
+                        $vote.find('.message-dismissable').css({
+                            position: "absolute",
+                            "white-space": "nowrap"
+                        });
+                    });
+
+                    if (vcOfset.top + realHeight < endPos - 25 && vcOfset.top < scrollTop + offset) { //Left condition is to get rid of a sticky zone on extremely short posts. Right condition allows stickiness unless we're above the post.
+                        if (scrollTop + offset + realHeight < endPos) { //Allow stickiness unless we've scrolled down past the post.
                             $vote.css({
                                 position: 'fixed',
                                 top: offset
                             });
                         } else {
-                            //Stop stickiness when we've scrolled down past the sticky zone.
                             $vote.css({
                                 position: 'absolute',
                                 top: endPos - realHeight //Leave the button at its bottommost position
                             });
                         }
                     } else {
-                        $vote.removeAttr('style');
+                        $vote.removeAttr('style'); //Remove any stickiness
                     }
-
-                    sox.helpers.observe($vote, function() { //Fix dismissable message boxes, like "Please consider adding a comment if you think this post can be improved." when downvoting
-                        if ($vote.css("position") == "fixed") {
-                            $vote.find('.message-dismissable').css({
-                                position: "fixed"
-                            });
-                        } else {
-                            $vote.find('.message-dismissable').css({
-                                position: "absolute",
-                                "white-space": "nowrap"
-                            });
-                        }
-                    });
                 });
             }
         },
@@ -1557,6 +1551,17 @@ Toggle SBS?</div></li>';
             // Description: Hides the Community Bulletin module from the sidebar
 
             $('#sidebar .community-bulletin').remove();
+        },
+
+        hideJustHotMetaPosts: function() {
+            // Description: Hide just the 'Hot Meta Posts' sections in the Community Bulletin
+
+            var $hotMetaPostsHeader = $('#sidebar .community-bulletin .related').find('div:contains("Hot Meta Posts")');
+            if($hotMetaPostsHeader.length) {
+                $hotMetaPostsHeader.next().remove();
+                $hotMetaPostsHeader.next().remove();
+                $hotMetaPostsHeader.remove();
+            }
         },
 
         hideChatSidebar: function() {
