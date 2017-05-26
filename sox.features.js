@@ -674,7 +674,7 @@
                     $('#feed').html('<p>One of the 100 hot network questions!</p>');
 
                     //display:block to fix https://github.com/soscripted/sox/issues/243:
-                    $('#question-header').css('display', 'block').prepend('<div title="this is a hot network question!" class="sox-hot"><i class="fa fa-free-code-camp"></i><div>');
+                    $('#question-header').css('display', 'block').prepend('<div title="this is a hot network question!" ' + (sox.location.on('english.stackexchange.com') ? 'style="padding:13px"' : '') + ' class="sox-hot"><i class="fa fa-free-code-camp"></i><div>');
                 }
             }
             $('#qinfo').after('<div id="feed"></div>');
@@ -889,23 +889,16 @@
             // Modifications by @Sir-Cumference <https://github.com/soscripted/sox/issues/267>
 
             $(document).on('mouseenter', '#your-communities-section > ul > li > a', function() {
-                var link, chatLink, href = $(this).attr('href').split('://').pop(); //Get rid of http:// or https:// from url
-                chatLink = 'https://chat.stackexchange.com?tab=site&host=' + href.split('/').shift();
+                var href = $(this).attr('href').split('://').pop(), //Get rid of http:// or https:// from url
+                    link,
+                    chatLink = 'https://chat.stackexchange.com?tab=site&host=' + href.split('/').shift();
 
                 if (href.indexOf('stackapps') > -1) {
 
-                } else if (href.indexOf('area51') > -1) {
-                    if (href.indexOf('discuss.area51') === -1) {
-                        link = 'https://discuss.area51.stackexchange.com/';
-                    }
-                    else {
-                        link = 'https://area51.stackexchange.com/';
-                    }
-                    chatLink = 'https://chat.stackexchange.com?tab=site&host=area51.stackexchange.com';
                 } else if (href === "meta.stackexchange.com") {
                     chatLink = 'https://chat.meta.stackexchange.com';
                 } else if (href.indexOf('meta') > -1) {
-                    link = 'https://' + href.split('meta.').pop().split('discuss.').pop();
+                    link = 'https://' + href.split('meta.').shift() + href.split('meta.').pop();
                     chatLink = 'https://chat.stackexchange.com?tab=site&host=' + href.split('meta.').shift() + href.split('meta.').pop().split('/').shift(); //We don't need "meta." in the chat links
                 } else if (href.indexOf('.stackexchange.com') > -1 || href.indexOf('.stackoverflow.com') > -1) {
                     link = 'https://' + href.split('.').shift() + '.meta' + href.split(href.split('.').shift()).pop();
@@ -913,7 +906,7 @@
                     link = 'https://meta.' + href;
                 }
 
-                if (href.indexOf('stackoverflow.com') > -1 && !href.match(/(pt|ru|es|ja)\.stackoverflow/i)) { //Added Japanese
+                if (href.indexOf('stackoverflow.com') > -1 && !href.match(/(pt|ru|es|ja|.meta)/i)) {
                     chatLink = 'https://chat.stackoverflow.com';
                 }
 
@@ -921,7 +914,7 @@
                 $(this).find('.rep-score').stop(true).delay(135).fadeOut(20);
                 $(this).prepend('<div class="related-links" style="float: right; display: none;">' +
                     (link ?
-                        (link.indexOf('discuss.area51') > -1 ? '<a href="' + link + '">discuss</a>' : (href.indexOf('meta') > -1 || href.indexOf('discuss.area51') > -1 ? '<a href="' + link + '">main</a>' : '<a href="' + link + '">meta</a>')) :
+                        (link.indexOf('area51.meta') > -1 ? '<a href="' + link + '">discuss</a>' : (href.indexOf('meta') > -1 ? '<a href="' + link + '">main</a>' : '<a href="' + link + '">meta</a>')) :
                         '') +
                     (chatLink ? '<a href="' + chatLink + '">chat</a>' : '') +
                     '</div>');
@@ -1506,6 +1499,7 @@ Toggle SBS?</div></li>';
                     if (url &&
                         $('<a>').prop('href', url).prop('hostname') == location.hostname &&
                         url.indexOf('#comment') == -1 &&
+                        url.indexOf('/edit') == -1 && //https://github.com/soscripted/sox/issues/281
                         getIdFromUrl(url) && //getIdFromUrl(url) makes sure it won't fail later on
                         !$(this).prev().is('.expand-post-sox')) {
                         $(this).css('color', '#0033ff');
