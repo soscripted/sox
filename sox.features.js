@@ -496,7 +496,7 @@
                 var link = $('.share-tip input').val(),
                     title = $('meta[name="twitter:title"]').attr('content').replace(/\[(.*?)\]/g, '($1)'); //https://github.com/soscripted/sox/issues/226
 
-                if (link.indexOf(title) != -1) return; //don't do anything if the function's already done its thing
+                if (link.match(title)) return; //don't do anything if the function's already done its thing
                 $('.share-tip input').val('[' + title + '](' + link + ')');
                 $('.share-tip input').select();
                 document.execCommand('copy'); //https://github.com/soscripted/sox/issues/177
@@ -1552,8 +1552,7 @@ Toggle SBS?</div></li>';
 
             var $hotMetaPostsHeader = $('#sidebar .community-bulletin .related').find('div:contains("Hot Meta Posts")');
             if($hotMetaPostsHeader.length) {
-                $hotMetaPostsHeader.next().remove();
-                $hotMetaPostsHeader.next().remove();
+                $hotMetaPostsHeader.nextAll().remove();
                 $hotMetaPostsHeader.remove();
             }
         },
