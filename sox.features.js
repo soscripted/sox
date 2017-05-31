@@ -2269,7 +2269,7 @@ Toggle SBS?</div></li>';
                                 "<div style='color: #848d95; font-size: 12.5px; padding-top: 38px'><i class='fa fa-clock-o'></i>&nbsp;<time class='timeago sox-last-seen' datetime='" +
                                 lastSeenDate.toISOString() + "' title='" + //datetime
                                 lastSeenDate.toJSON().replace('T', ' ').replace('.000', '') + "'>" + //title, https://github.com/soscripted/sox/issues/204 hacky but short way '.000' always works because SE doesn't do such precise times
-                                lastSeenDate.toLocaleString() + "</time>, " + userDetailsFromAPI[id].type + "</div>" //contents of tag
+                                lastSeenDate.toLocaleString() + "</time>" + type //contents of tag
                             );
                         }
                     }
