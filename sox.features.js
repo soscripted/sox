@@ -78,12 +78,12 @@
             $.ajax({
                 url: url
             }).success(function(data) {
-                for (var i = 0, len = data.items.length; i < len; i++) {
+                for (var i = 0; i < data.items.length; i++) {
                     var userId = data.items[i].user_id,
                         isEmployee = data.items[i].is_employee;
 
                     if (isEmployee) {
-                        $links.filter('a[href^="/users/' + userId + '/"]').after('<i class="fa fa-stack-overflow" title="employee" style="padding: 0 5px"></i>');
+                        $links.filter('a[href^="/users/' + userId + '/"]').after('<span class="fa fa-stack-overflow" title="employee" style="padding: 0 5px; color: ' + $('.mod-flair').css('color') + '"></span>');
                     }
                 }
             });
