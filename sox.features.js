@@ -2261,11 +2261,15 @@ Toggle SBS?</div></li>';
                         sox.debug('quickAuthorInfo addLastSeen(): userdetailscurrent id', userDetailsFromAPI[id]);
                         if (userDetailsFromAPI[id] && !$(this).find('.sox-last-seen').length) {
                             var lastSeenDate = new Date(userDetailsFromAPI[id].last_seen);
+                            var type = '';
+                            if (userDetailsFromAPI[id].type === 'unregistered') {
+                                type = ' (unregistered)';
+                            }
                             $(this).find('.post-signature').last().append(
                                 "<i class='fa fa-clock-o'></i>&nbsp;<time class='timeago sox-last-seen' datetime='" +
                                 lastSeenDate.toISOString() + "' title='" + //datetime
                                 lastSeenDate.toJSON().replace('T', ' ').replace('.000', '') + "'>" + //title, https://github.com/soscripted/sox/issues/204 hacky but short way '.000' always works because SE doesn't do such precise times
-                                lastSeenDate.toLocaleString() + "</time>, " + userDetailsFromAPI[id].type //contents of tag
+                                lastSeenDate.toLocaleString() + "</time>" + type //contents of tag
                             );
                         }
                     }
