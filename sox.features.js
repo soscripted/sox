@@ -1341,7 +1341,10 @@ Toggle SBS?</div></li>';
                         return;
                     }
 
+                    sox.debug('addAuthorNameToInboxNotifications: ', $node, id, apiurl);
+
                     $.getJSON(apiurl, function(json) {
+                        sox.debug('addAuthorNameToInboxNotifications JSON returned from API', json);
                         if (json.items.length) {
                             var author = (type === 'edit suggested' || link.indexOf('/suggested-edits/') > -1 ? json.items[0].proposing_user.display_name : json.items[0].owner.display_name),
                                 $author = $('<span/>', {
