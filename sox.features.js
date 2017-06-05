@@ -16,7 +16,6 @@
 
         moveBounty: function() {
             // Description: For moving bounty to the top
-            // Thanks to @Sir-Cumference for modifications <https://github.com/soscripted/sox/issues/282#issuecomment-303811102>
 
             $('.bounty-notification').insertAfter('.question .fw'); //$('.bounty-notification').length condition isn't necessary; this line will run only if the element exists
             $('[id="bounty-link bounty"]').closest('tr').insertAfter('.question .fw');
@@ -115,7 +114,6 @@
 
         fixedTopbar: function(settings) {
             // Description: For making the topbar fixed (always stay at top of screen)
-            // Written by @IStoleThePies (https://github.com/soscripted/sox/issues/152#issuecomment-267463392) to fix lots of bugs and compatability issues
             // Modified by shu8
 
             //Add class to page for topbar, calculated for every page for different sites.
@@ -257,7 +255,6 @@
 
         colorAnswerer: function() {
             // Description: For highlighting the names of answerers on comments
-            // Thanks to @Sir-Cumference for modifications <https://github.com/soscripted/sox/issues/283#issuecomment-303481871>
 
             function colour() {
                 $('.answercell').each(function(i, obj) {
@@ -705,6 +702,58 @@
                 });
             }
         },
+        
+        localTimestamps: function(settings) {
+            // Description: Grays out votes AND vote count
+
+            $("span.relativetime:contains(at)").each(updateTS);
+            $("span.comment-date>span:contains(at)").each(updateTS);
+
+            function updateTS() {
+                var utcTimestamp = $(this).attr("title"),
+                    matches = utcTimestamp.match(/^([\d]{4})-([\d]{2})-([\d]{2}) ([\d]{2}):([\d]{2}):([\d]{2}) ?(?:Z|UTC|GMT(?:[+\-]00:?00))$/),
+                    monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+                if (!matches)
+                    return;
+
+                var date = new Date(
+                    Date.UTC(
+                        parseInt(matches[1], 10),
+                        parseInt(matches[2], 10) - 1,
+                        parseInt(matches[3], 10),
+                        parseInt(matches[4], 10),
+                        parseInt(matches[5], 10),
+                        parseInt(matches[6], 10)
+                    )
+                );
+
+                var month = monthNames[date.getMonth()],
+                    hour = date.getHours(),
+                    minute = (date.getMinutes() < 10 ? '0' : '') + date.getMinutes(),
+                    year = ((date.getFullYear() - 2000) < 10 ? '0' : '') + (date.getFullYear() - 2000),
+                    dayTime = "";
+
+                if (settings.twelveHours) {
+                    dayTime = "am";
+
+                    if (date.getHours() >= 12) {
+                        dayTime = "pm";
+                        hour -= 12;
+                    }
+
+                    if (hour === 0)
+                        hour += 12;
+                }
+
+                var newTimestamp = (new Date()).getFullYear() == date.getFullYear() ? month + " " + date.getDate() + " at " + hour + ":" + minute + dayTime : month + " " + date.getDate() + " '" + year + " at " + hour + ":" + minute + dayTime;
+
+                $(this).attr("title", newTimestamp);
+
+                if($(this).text().search(/(?:min|sec)s? ago/) == -1)
+                    $(this).text(newTimestamp);
+            }
+        },
 
         autoShowCommentImages: function() {
             // Description: For auto-inlining any links to imgur images in comments
@@ -886,7 +935,6 @@
         metaChatBlogStackExchangeButton: function() {
             // Description: For adding buttons next to sites under the StackExchange button that lead to that site's meta and chat
             // NOTE: this feature used to have a 'blog' button as well, but it wasn't very useful so was removed
-            // Modifications by @Sir-Cumference <https://github.com/soscripted/sox/issues/267>
 
             $(document).on('mouseenter', '#your-communities-section > ul > li > a', function() {
                 var href = $(this).attr('href').split('://').pop(), //Get rid of http:// or https:// from url
@@ -970,7 +1018,6 @@
                     }
                 });
 
-            //'$('#metaNewQuestionAlertButton').position().left' from @IStoleThePies: https://github.com/soscripted/sox/issues/120#issuecomment-267857625:
             $('#soxSettingsButton').after($diamond);
             $dialog.css('left', $('#metaNewQuestionAlertButton').position().left).append($header).append($content.append($questions)).prependTo('.js-topbar-dialog-corral');
 
@@ -1061,7 +1108,7 @@
             function addCSS() {
                 $('.vote-down-off, .vote-down-on, .vote-up-off, .vote-up-on, .star-off, .star-on').addClass('sox-better-css');
                 $('head').append('<link rel="stylesheet" href="https://rawgit.com/shu8/SE-Answers_scripts/master/coolMaterialDesignCss.css" type="text/css" />');
-                $('#hmenus').css('-webkit-transform', 'translateZ(0)'); //Thanks to @Sir-Cumference: https://github.com/soscripted/sox/issues/79#issuecomment-289639532
+                $('#hmenus').css('-webkit-transform', 'translateZ(0)');
             }
             addCSS();
             $(document).on('sox-new-review-post-appeared', addCSS);
@@ -1675,7 +1722,6 @@ Toggle SBS?</div></li>';
             if ($('#metaNewQuestionAlertDialog').length) $dialog.css('left', '297px');
             $button.append($count).append($icon).appendTo('div.network-items');
 
-            //'$('#downvotedPostsEditAlertButton').position().left' from @IStoleThePies: https://github.com/soscripted/sox/issues/120#issuecomment-267857625:
             $dialog.css('left', $('#downvotedPostsEditAlertButton').position().left).append($header).append($content.append($posts)).prependTo('.js-topbar-dialog-corral');
 
             $('#downvotedPostsEditAlertButton').hover(function() { //open on hover, just like the normal dropdowns
@@ -2451,7 +2497,6 @@ Toggle SBS?</div></li>';
         replyToOwnChatMessages: function() {
             // Description: Adds a reply button to your own chat messages so you can reply to your own messages easier and quicker
             // I use $(document).on instead of .each, since using .each wouldn't apply to messages loaded via "Load more messages" and "Load to my last message"
-            // https://github.com/soscripted/sox/issues/118#issuecomment-266225764 by @IStoleThePies
 
             $(document).on('mouseenter', '.mine .message', function() {
                     //Remove excess spacing to the left of the button (by emptying .meta, which has "&nbsp" in it), and set the button color to the background color
@@ -2598,7 +2643,6 @@ Toggle SBS?</div></li>';
 
         copyCode: function() {
             // Description: Add a button to code in posts to let you copy it
-            // Modifications by @Sir-Cumference <https://github.com/soscripted/sox/issues/218#issuecomment-290251056>
 
             //button uses CSS mainly from http://stackoverflow.com/a/30810322/3541881
             function addButton() {
