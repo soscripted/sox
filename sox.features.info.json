@@ -66,6 +66,18 @@
             "match": "",
             "exclude": "SE1.0"
         }, {
+            "name": "localTimestamps",
+            "desc": "Convert timestamps to your local time",
+            "extended_description": "Displays timestamps based on your timezone. You can also display time in 12-hour format by checking the option.",
+            "meta": "",
+            "match": "",
+            "exclude": "SE1.0",
+            "settings": [{
+                "id": "twelveHours",
+                "type": "checkbox",
+                "desc": "Use 12-hour format?"
+            }]
+         }, {
             "name": "markEmployees",
             "desc": "Add the SO logo after employee names to make them stand out",
             "meta": "http://meta.stackexchange.com/questions/246678/should-se-staff-have-a-special-character-in-their-user-name",
