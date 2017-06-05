@@ -706,8 +706,7 @@
         localTimestamps: function(settings) {
             // Description: Grays out votes AND vote count
 
-            $("span.relativetime:contains(at)").each(updateTS);
-            $("span.comment-date>span:contains(at)").each(updateTS);
+            $("span.relativetime:contains(at), span.relativetime-clean:contains(at)").each(updateTS);
 
             function updateTS() {
                 var utcTimestamp = $(this).attr("title"),
@@ -748,10 +747,7 @@
 
                 var newTimestamp = (new Date()).getFullYear() == date.getFullYear() ? month + " " + date.getDate() + " at " + hour + ":" + minute + dayTime : month + " " + date.getDate() + " '" + year + " at " + hour + ":" + minute + dayTime;
 
-                $(this).attr("title", newTimestamp);
-
-                if($(this).text().search(/(?:min|sec)s? ago/) == -1)
-                    $(this).text(newTimestamp);
+                $(this).attr("title", newTimestamp).text(newTimestamp);
             }
         },
 
