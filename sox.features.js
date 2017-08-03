@@ -258,7 +258,7 @@
 
             function colour() {
                 $('.answercell').each(function(i, obj) {
-                    $(this).parent().next().find('.comment-user:contains("' + $(this).find('.user-details a').last().text() + '")').css({'background-color': '#f9e2b6', 'padding': '1px 5px'}); //Find the comments on each post that contain the answerer's name. Also, .last() is necessary, or else it will use the name of someone who edits the answer.
+                    $(this).parent().next().find('.comment-user:contains("' + $.trim($(this).find('.user-details').last().clone().children('.-flair').remove().end().text()) + '")').css({'background-color': '#f9e2b6', 'padding': '1px 5px'}); //Find the comments on each post that contain the answerer's name. Also, .last() is necessary, or else it will use the name of someone who edits the answer.
                 });
             }
 
