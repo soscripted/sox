@@ -394,6 +394,13 @@
             "match": "*://*/questions*,*://*/review*",
             "exclude": "SE1.0"
         }, {
+            "name": "shareLinksPrivacy",
+            "desc": "Remove your user ID from the 'share' link",
+            "extended_description": "When you click 'share' under a post, this displays a referral link, which incorporates your user ID. This option strips your user ID from the displayed link, preventing inadvertent privacy leaks when disseminating the link via copy-paste. The social-media sharing buttons are unaffected, since the lack of privacy is obvious.",
+            "meta": "https://meta.stackexchange.com/questions/74274/privacy-leak-in-permalink",
+            "match": "*://*/questions*,*://*/review*",
+            "exclude": "SE1.0"
+        }, {
             "name": "shareLinksMarkdown",
             "desc": "Change 'share' link to format of [post-name](url)",
             "extended_description": "When you click 'share' under a post, this will convert the URL given to a markdown-friendly version, with the post name as the link text. This feature also automatically copies the converted string to your clipboard",
