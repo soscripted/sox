@@ -382,8 +382,16 @@ li.fixedTopbar-siteLink {
     background-color: aliceblue;
     border-radius: 20px;
     overflow-wrap: break-word;
-    width: 630px;
+    width: auto;
     padding: 10px;
+    -webkit-box-shadow: inset 1px 1px 4px 1px rgba(0,0,0,0.5);
+       -moz-box-shadow: inset 1px 1px 4px 1px rgba(0,0,0,0.5);
+            box-shadow: inset 1px 1px 4px 1px rgba(0,0,0,0.5);
+    
+}
+.linkedPostsInline-loaded-body-sox .post-text {
+    width: auto;
+    font-size: 90%;
 }
 
 

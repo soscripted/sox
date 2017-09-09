@@ -1567,8 +1567,7 @@ Toggle SBS?</div></li>';
                         url.indexOf('/edit') == -1 && //https://github.com/soscripted/sox/issues/281
                         getIdFromUrl(url) && //getIdFromUrl(url) makes sure it won't fail later on
                         !$(this).prev().is('.expand-post-sox')) {
-                        $(this).css('color', '#0033ff');
-                        $(this).before('<a class="expander-arrow-small-hide expand-post-sox"></a>');
+                        $(this).before('<a class="expander-arrow-small-hide expand-post-sox" style="border-bottom:0"></a>');
                     }
                 });
             }
@@ -2330,7 +2329,7 @@ Toggle SBS?</div></li>';
                                 type = ' (unregistered)';
                             }
                             $(this).find('.user-info').last().append(
-                                "<div style='color: #848d95; font-size: 12.5px; padding-top: 38px'><i class='fa fa-clock-o'></i>&nbsp;<time class='timeago sox-last-seen' datetime='" +
+                                "<div style='color: #848d95; font-size: 11px; padding-top: 38px'><i class='fa fa-clock-o'></i>&nbsp;<time class='timeago sox-last-seen' datetime='" +
                                 lastSeenDate.toISOString() + "' title='" + //datetime
                                 lastSeenDate.toJSON().replace('T', ' ').replace('.000', '') + "'>" + //title, https://github.com/soscripted/sox/issues/204 hacky but short way '.000' always works because SE doesn't do such precise times
                                 lastSeenDate.toLocaleString() + "</time>" + type //contents of tag
