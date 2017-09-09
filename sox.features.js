@@ -486,6 +486,25 @@
             });
         },
 
+        shareLinksPrivacy: function() {
+            // Description: Remove your user ID from the 'share' link
+
+            sox.helpers.observe('.share-tip', function() {
+                const toRemove = ' (includes your user id)';
+                var popup = $('.share-tip');
+                var origHtml = popup.html();
+                if (origHtml.indexOf(toRemove) == -1) return; //don't do anything if the function's already done its thing
+                popup.html(function () {
+                    return origHtml.replace(toRemove, '');
+                });
+                
+                var inputBox = $('.share-tip input'),
+                    origLink = inputBox.val();
+                inputBox.val(origLink.match(/.+\/(q|a)\/[0-9]+/g));
+                inputBox.select();
+            });
+        },
+
         shareLinksMarkdown: function() {
             // Description: For changing the 'share' button link to the format [name](link)
 
