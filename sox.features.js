@@ -497,7 +497,7 @@
                 popup.html(function () {
                     return origHtml.replace(toRemove, '');
                 });
-                
+
                 var inputBox = $('.share-tip input'),
                     origLink = inputBox.val();
                 inputBox.val(origLink.match(/.+\/(q|a)\/[0-9]+/g));
@@ -510,7 +510,7 @@
 
             sox.helpers.observe('.share-tip', function() {
                 var link = $('.share-tip input').val(),
-                    title = $('meta[name="twitter:title"]').attr('content').replace(/\[(.*?)\]/g, '($1)'); //https://github.com/soscripted/sox/issues/226
+                    title = $('meta[name="twitter:title"]').attr('content').replace(/\[(.*?)\]/g, '\[$1\]'); //https://github.com/soscripted/sox/issues/226, https://github.com/soscripted/sox/issues/292
 
                 if (link.indexOf(title) !== -1) return; //don't do anything if the function's already done its thing
                 $('.share-tip input').val('[' + title + '](' + link + ')');
@@ -721,7 +721,7 @@
                 });
             }
         },
-        
+
         localTimestamps: function(settings) {
             // Description: Grays out votes AND vote count
 
@@ -1223,7 +1223,7 @@
             $(document).on('sox-new-review-post-appeared', loopAndAddTooltip);
         },
 
-        addSBSBtn: function() {
+        addSBSBtn: function(settings) {
             // Description: For adding a button to the editor toolbar to toggle side-by-side editing
             // Thanks szego (@https://github.com/szego) for completely rewriting this! https://github.com/shu8/SE-Answers_scripts/pull/2
 
@@ -1319,6 +1319,10 @@ Toggle SBS?</div></li>';
                     jNode.next().on('click', function() {
                         startSBS(toAppend);
                     });
+
+                    if (settings.sbsByDefault) {
+                        startSBS(toAppend);
+                    }
 
                     //add click listeners for "Save Edits" and "cancel" buttons
                     // - also gets added to the "Post New Question" and "Post New Answer" button as an innocuous (I think) side effect
@@ -1688,9 +1692,9 @@ Toggle SBS?</div></li>';
                 }, 'creation?pagesize=1', false);
             }
 
-            function sendWebSocket(siteCodes, sitename, questionId) {
-                sox.debug('downvotedPostsEditAlert: sending websocket message: ' + siteCodes[sitename] + "-question-" + questionId);
-                w.send(siteCodes[sitename] + "-question-" + questionId);
+            function sendWebSocket(websocketSiteCodes, sitename, questionId) {
+                sox.debug('downvotedPostsEditAlert: sending websocket message: ' + websocketSiteCodes[sitename] + "-question-" + questionId);
+                w.send(websocketSiteCodes[sitename] + "-question-" + questionId);
             }
 
             var $dialog = $('<div/>', {
@@ -2062,7 +2066,7 @@ Toggle SBS?</div></li>';
                     sox.debug(w);
                     sox.debug(w.readyState);
                     if (w.readyState === 1) {
-                        sendWebSocket(siteCodes, o.sitename, o.questionId);
+                        sendWebSocket(websocketSiteCodes, o.sitename, o.questionId);
                     } else {
                         w.onopen = function() {
                             sox.debug('websocket opened');
@@ -2735,15 +2739,17 @@ Toggle SBS?</div></li>';
 
         openLinksInNewTab: function(settings) {
             settings = settings.linksToOpenInNewTab.replace(' ', '').split(',');
-            $('.post-text a').each(function() {
-                var href = $(this).attr('href');
-                for (var i = 0; i < settings.length; i++) {
-                    if (sox.location.matchWithPattern(settings[i], href)) {
-                        $(this).prepend('<i class="fa fa-external-link openLinksInNewTab-externalLink"></i>');
-                        $(this).prop('target', '_blank');
+            if (settings.length) { //https://github.com/soscripted/sox/issues/300
+                $('.post-text a').each(function() {
+                    var href = $(this).attr('href');
+                    for (var i = 0; i < settings.length; i++) {
+                        if (sox.location.matchWithPattern(settings[i], href)) {
+                            $(this).prepend('<i class="fa fa-external-link openLinksInNewTab-externalLink"></i>');
+                            $(this).prop('target', '_blank');
+                        }
                     }
-                }
-            });
+                });
+            }
         },
 
         showQuestionStateInSuggestedEditReviewQueue: function() {

@@ -191,7 +191,12 @@
             "extended_description": "An 'SBS' button is added to the right of the markdown editor toolbar. Clicking it will make the markdown and the preview appear side-by-side",
             "meta": "http://meta.stackexchange.com/questions/253112/the-discourse-layout-for-side-by-side-markdown-preview",
             "match": "",
-            "exclude": "*://chat.*.com/*,SE1.0"
+            "exclude": "*://chat.*.com/*,SE1.0",
+            "settings": [{
+                "id": "sbsByDefault",
+                "type": "checkbox",
+                "desc": "Automatically enable SBS on all posts?"
+            }]
         }, {
             "name": "editComment",
             "desc": "Pre-defined edit comment options (checkboxes)",
