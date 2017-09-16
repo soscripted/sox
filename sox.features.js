@@ -1038,7 +1038,7 @@
                 $('.so-header .secondary-nav .-list').prepend($('<li/>').addClass('-item').append($diamond));
                 $('.js-topbar-dialog-corral').append($dialog);
                 $diamond.css({
-                    'background-image': 'url(//cdn.sstatic.net/img/share-sprite-new.svg?v=78be252218f3',
+                    'background-image': 'url(//cdn.sstatic.net/img/share-sprite-new.svg?v=78be252218f3)',
                     'background-position': '-218px -76px'
                 }).addClass('-link');
                 $dialog.addClass('new-topbar').css({
