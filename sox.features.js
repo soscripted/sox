@@ -1033,8 +1033,24 @@
                     }
                 });
 
-            $('#soxSettingsButton').after($diamond);
-            $dialog.css('left', $('#metaNewQuestionAlertButton').position().left).append($header).append($content.append($questions)).prependTo('.js-topbar-dialog-corral');
+            $dialog.append($header).append($content.append($questions));
+            if (sox.NEW_TOPBAR) {
+                $('.so-header .secondary-nav .-list').prepend($('<li/>').addClass('-item').append($diamond));
+                $('.js-topbar-dialog-corral').append($dialog);
+                $diamond.css({
+                    'background-image': 'url(//cdn.sstatic.net/img/share-sprite-new.svg?v=78be252218f3',
+                    'background-position': '-218px -76px'
+                }).addClass('-link');
+                $dialog.addClass('new-topbar').css({
+                    'width': '377px',
+                    'right': '205px',
+                    'left': 'auto',
+                    'top': '57px',
+                });
+            } else {
+                $('#soxSettingsButton').after($diamond);
+                $dialog.css('left', $('#metaNewQuestionAlertButton').position().left).prependTo('.js-topbar-dialog-corral');
+            }
 
             $('#metaNewQuestionAlertButton').hover(function() { //open on hover, just like the normal dropdowns
                 if ($('.topbar-icon').not('#metaNewQuestionAlertButton').hasClass('topbar-icon-on')) {
