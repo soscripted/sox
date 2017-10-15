@@ -1,6 +1,3 @@
-/*jshint multistr: true, loopfunc: true, esversion: 6*/
-/*global GM_getValue, GM_setValue, fkey*/
-
 (function(sox, $, undefined) {
     'use strict';
 
@@ -118,8 +115,14 @@
 
             //Add class to page for topbar, calculated for every page for different sites.
             //If the Area 51 popup closes or doesn't exist, $('#notify-table').height() = 0
-            var paddingToAdd = ($('#notify-table').length ? $('#notify-table').height() : '') + $('.topbar').height() + 'px';
-            GM_addStyle('.fixed-topbar-sox { padding-top: ' + paddingToAdd + ' !important}');
+
+            var $topbar = $('.top-bar').length ? $('.top-bar') : $('.topbar');
+            var paddingToAdd = ($('#notify-table').length ? $('#notify-table').height() : '') + $topbar.height() + 'px';
+
+            if ($('.topbar').length) {
+                GM_addStyle('.fixed-topbar-sox { padding-top: ' + paddingToAdd + ' !important}');
+                $topbar.css('margin-top', '-' + paddingToAdd);
+            }
 
             function adjust() { //http://stackoverflow.com/a/31408076/3541881 genius! :)
                 setTimeout(function() {
@@ -129,14 +132,14 @@
                         id = window.location.hash.match(/^#comment(\d+)_/)[1];
                         sox.debug('fixedtopbar comment in hash and getBoundingClientRect', $('#comment-' + id)[0], $('#comment-' + id)[0].getBoundingClientRect());
                         if ($('#comment-' + id)[0].getBoundingClientRect().top < 30) {
-                            window.scrollBy(0, -34);
+                            window.scrollBy(0, -paddingToAdd);
                             sox.debug('fixedtopbar adjusting');
                         }
                     } else {
                         id = window.location.hash.match(/^#(\d+)/)[1];
                         sox.debug('fixedtopbar answer in hash and getBoundingClientRect', $('#answer-' + id)[0], $('#answer-' + id)[0].getBoundingClientRect());
                         if ($('#answer-' + id)[0].getBoundingClientRect().top < 30) {
-                            window.scrollBy(0, -34);
+                            window.scrollBy(0, -paddingToAdd);
                             sox.debug('fixedtopbar adjusting');
                         }
                     }
@@ -144,7 +147,7 @@
             }
 
             if (sox.site.type == 'chat') { //For some reason, chats don't need any modification to the body
-                $('.topbar').css({
+                $topbar.css({
                     'position': 'fixed',
                     'z-index': '900'
                 });
@@ -158,16 +161,15 @@
                 if (sox.location.on('askubuntu.com')) {
                     if (!settings.enableOnAskUbuntu) return; //Disable on Ask Ubuntu if user said so
                     $('#custom-header').remove();
-                    $('.topbar').css('width', '100%');
+                    $topbar.css('width', '100%');
                     $('.topbar-wrapper').css('width', '1060px');
                 }
 
                 $('body').addClass('fixed-topbar-sox');
 
-                $('.topbar').css({
+                $topbar.css({
                     'position': 'fixed',
-                    'z-index': '900',
-                    'margin-top': '-34px'
+                    'z-index': '900'
                 });
 
                 //Area 51 popup:
@@ -183,7 +185,7 @@
                 if (typeof MathJax !== "undefined") MathJax.Hub.Queue(adjust);
 
                 sox.helpers.observe('#notify-container,#notify--1', function() { //Area51: https://github.com/soscripted/sox/issues/152#issuecomment-267885889
-                    if (!$('#notify--1').length) $('body').attr('style', 'padding-top: ' + $('.topbar').height() + 'px !important'); //.css() doesn't work...?
+                    if (!$('#notify--1').length) $('body').attr('style', 'padding-top: ' + $topbar.height() + 'px !important'); //.css() doesn't work...?
                 });
             }
 
@@ -723,7 +725,7 @@
         },
 
         localTimestamps: function(settings) {
-            // Description: Grays out votes AND vote count
+            // Description: Gets local timestamp
 
             $("span.relativetime:contains(at), span.relativetime-clean:contains(at)").each(updateTS);
 
@@ -865,7 +867,7 @@
                 var $votecells = $('.votecell');
 
                 $votecells.each(function() {
-                    var $topbar = ($('.so-header').length) ? $('.so-header') : $('.topbar'),
+                    var $topbar = ($('.so-header').length) ? $('.so-header') : ($('.top-bar').length ? $('.top-bar') : $('.topbar')),
                         topbarHeight = $topbar.outerHeight(),
                         offset = $(".review-bar").outerHeight();
 
