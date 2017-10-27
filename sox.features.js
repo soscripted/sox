@@ -115,13 +115,12 @@
 
             //Add class to page for topbar, calculated for every page for different sites.
             //If the Area 51 popup closes or doesn't exist, $('#notify-table').height() = 0
-
             var $topbar = $('.top-bar').length ? $('.top-bar') : $('.topbar');
-            var paddingToAdd = ($('#notify-table').length ? $('#notify-table').height() : '') + $topbar.height() + 'px';
+            var paddingToAdd = $('#notify-table').height() + $topbar.height();
 
             if ($('.topbar').length) {
-                GM_addStyle('.fixed-topbar-sox { padding-top: ' + paddingToAdd + ' !important}');
-                $topbar.css('margin-top', '-' + paddingToAdd);
+                GM_addStyle('.fixed-topbar-sox { padding-top: ' + paddingToAdd + 'px !important}');
+                $topbar.css('margin-top', -$topbar.height() + 'px');
             }
 
             function adjust() { //http://stackoverflow.com/a/31408076/3541881 genius! :)
@@ -149,18 +148,19 @@
             if (sox.site.type == 'chat') { //For some reason, chats don't need any modification to the body
                 $topbar.css({
                     'position': 'fixed',
-                    'z-index': '900'
+                    'z-index': '900',
+                    'margin-top': 0
                 });
 
                 //https://github.com/soscripted/sox/issues/221
-                $('.notification').css('margin-top', paddingToAdd);
+                $('.notification').css('margin-top', paddingToAdd + 'px');
                 sox.helpers.observe('.notification', function() {
-                    $('.notification').css('margin-top', paddingToAdd);
+                    $('.notification').css('margin-top', paddingToAdd + 'px');
                 });
             } else {
                 if (sox.location.on('askubuntu.com')) {
                     if (!settings.enableOnAskUbuntu) return; //Disable on Ask Ubuntu if user said so
-                    $('#custom-header').remove();
+                    $('#custom-header').css('visibility', 'hidden'); //Preserves spacing, unlike .remove()
                     $topbar.css('width', '100%');
                     $('.topbar-wrapper').css('width', '1060px');
                 }
@@ -176,7 +176,7 @@
                 $('#notify-table').css({
                     'position': 'fixed',
                     'z-index': '900',
-                    'margin-top': '-65px'
+                    'margin-top': -paddingToAdd + 'px'
                 });
 
                 //https://github.com/soscripted/sox/issues/74
@@ -187,16 +187,18 @@
                 sox.helpers.observe('#notify-container,#notify--1', function() { //Area51: https://github.com/soscripted/sox/issues/152#issuecomment-267885889
                     if (!$('#notify--1').length) $('body').attr('style', 'padding-top: ' + $topbar.height() + 'px !important'); //.css() doesn't work...?
                 });
-            }
 
-            if (sox.location.on('/review/')) { //https://github.com/soscripted/sox/issues/180
-                sox.helpers.observe('.review-bar', function() {
-                    if ($('.review-bar').css('position') === 'fixed') {
-                        $('.review-bar').addClass('fixed-topbar-sox');
-                    } else {
-                        $('.review-bar').removeClass('fixed-topbar-sox');
-                    }
-                });
+                //Placing the following in this if statement should hopefully prevent a fixed review bar in Ask Ubuntu. However I can't test this on Stack Overflow's or Ask Ubuntu's review:
+                if (sox.location.on('/review/')) { //https://github.com/soscripted/sox/issues/180
+                    sox.helpers.observe('.review-bar', function() {
+                        if ($('.review-bar').css('position') === 'fixed') {
+                            $('.review-bar').addClass('fixed-topbar-sox');
+                            $('.review-bar').css('margin-top', paddingToAdd + 'px');
+                        } else {
+                            $('.review-bar').removeClass('fixed-topbar-sox');
+                        }
+                    });
+                }
             }
         },
 
@@ -868,13 +870,7 @@
 
                 $votecells.each(function() {
                     var $topbar = ($('.so-header').length) ? $('.so-header') : ($('.top-bar').length ? $('.top-bar') : $('.topbar')),
-                        topbarHeight = $topbar.outerHeight(),
-                        offset = $(".review-bar").outerHeight();
-
-                    if ($topbar.css('position') == 'fixed' && !sox.location.on('/review'))
-                        offset += topbarHeight;
-                    else
-                        offset += 5; //For some reason I have to add the bottom margin of ".review-bar"
+                        offset = $(".review-bar").outerHeight() + $topbar.outerHeight();
 
                     var $voteCell = $(this),
                         $vote = $voteCell.find('.vote'),
