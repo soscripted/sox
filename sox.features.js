@@ -878,7 +878,7 @@
                         vcOfset = $voteCell.offset(),
                         scrollTop = $(window).scrollTop(),
                         endPos;
-                    
+
                     $voteCell.css('min-width', Math.floor($vote.width()));
 
                     if ($vote.length) //This value strangely alternates between existing and not existing. This if statement ensures we only get its value when it exists, so no errors.
@@ -896,12 +896,13 @@
                             $vote.css({
                                 position: 'fixed',
                                 top: offset,
-                                left:  $voteCell.offset().left - $(window).scrollLeft() //Prevent the buttons from moving horizontally if we scroll left/right
+                                left: $voteCell.offset().left - $(window).scrollLeft() //Prevent the buttons from moving horizontally if we scroll left/right
                             });
                         } else {
                             $vote.css({
                                 position: 'absolute',
-                                top: endPos - $vote.outerHeight() - topbarHeight //Leave the button at its bottommost position
+                                top: endPos - $vote.outerHeight() - topbarHeight, //Leave the button at its bottommost position
+                                left: $voteCell.offset().left //Prevents weird bug if you scroll to the end while scrolling horizontally
                             });
                         }
                     } else {
