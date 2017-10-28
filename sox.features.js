@@ -878,6 +878,8 @@
                         vcOfset = $voteCell.offset(),
                         scrollTop = $(window).scrollTop(),
                         endPos;
+                    
+                    $voteCell.css('min-width', Math.floor($vote.width()));
 
                     if ($vote.length) //This value strangely alternates between existing and not existing. This if statement ensures we only get its value when it exists, so no errors.
                         endPos = $voteCell.next().find('.fw').offset().top; //I think a bit above the end of the post (where the "edit", "delete", etc. buttons lie) is a good place to stop the stickiness.
