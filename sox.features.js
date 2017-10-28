@@ -869,21 +869,18 @@
                 var $votecells = $('.votecell');
 
                 $votecells.each(function() {
-                    var $topbar = ($('.so-header').length) ? $('.so-header') : ($('.top-bar').length ? $('.top-bar') : $('.topbar')),
-                        offset = $(".review-bar").outerHeight() + $topbar.outerHeight();
+                    var $topbar = $('.top-bar').length ? $('.top-bar') : $('.topbar'),
+                        topbarHeight = (sox.location.on('askubuntu.com') ? 13 + ($topbar.css('position') == 'fixed' ? 0 : $topbar.outerHeight()) : 0) + $topbar.outerHeight(), //Ask Ubuntu needs an extra shift for some reason
+                        offset = $('.review-bar').outerHeight() + ($topbar.css('position') == 'fixed' ? topbarHeight : 0);
 
                     var $voteCell = $(this),
                         $vote = $voteCell.find('.vote'),
                         vcOfset = $voteCell.offset(),
                         scrollTop = $(window).scrollTop(),
-                        realHeight, endPos;
+                        endPos;
 
-                    $voteCell.css('min-width', Math.floor($vote.width()));
-
-                    if ($vote.length && $vote.children().last().length && $voteCell.next().length) { //These values strangely alternate between existing and not existing. This if statement insures we only get their values when they exist, so no errors.
-                        realHeight = $vote.children(':not(:hidden, .message-dismissable)').last().offset().top + $vote.children(':not(:hidden, .message-dismissable)').last().height() - $vote.offset().top; //Get the original height; the difference between the last child and the first child's position
-                        endPos = $voteCell.next().offset().top + $voteCell.next().height() - 51; //I think a bit above the end of the post (where the "edit", "delete", etc. buttons lie) is a good place to stop the stickiness.
-                    }
+                    if ($vote.length) //This value strangely alternates between existing and not existing. This if statement ensures we only get its value when it exists, so no errors.
+                        endPos = $voteCell.next().find('.fw').offset().top; //I think a bit above the end of the post (where the "edit", "delete", etc. buttons lie) is a good place to stop the stickiness.
 
                     $voteCell.on('DOMNodeInserted', function() { //Fix dismissable message boxes, like "Please consider adding a comment if you think this post can be improved." when downvoting
                         $vote.find('.message-dismissable').css({
@@ -892,16 +889,17 @@
                         });
                     });
 
-                    if (vcOfset.top + realHeight < endPos - 25 && vcOfset.top < scrollTop + offset) { //Left condition is to get rid of a sticky zone on extremely short posts. Right condition allows stickiness unless we're above the post.
-                        if (scrollTop + offset + realHeight < endPos) { //Allow stickiness unless we've scrolled down past the post.
+                    if (vcOfset.top + $vote.outerHeight() < endPos - 50 && vcOfset.top < scrollTop + offset) { //Left condition is to get rid of a sticky zone on extremely short posts. Right condition allows stickiness unless we're above the post.
+                        if (scrollTop + offset + $vote.outerHeight() < endPos) { //Allow stickiness unless we've scrolled down past the post.
                             $vote.css({
                                 position: 'fixed',
-                                top: offset
+                                top: offset,
+                                left:  $voteCell.offset().left - $(window).scrollLeft() //Prevent the buttons from moving horizontally if we scroll left/right
                             });
                         } else {
                             $vote.css({
                                 position: 'absolute',
-                                top: endPos - realHeight //Leave the button at its bottommost position
+                                top: endPos - $vote.outerHeight() - topbarHeight //Leave the button at its bottommost position
                             });
                         }
                     } else {
