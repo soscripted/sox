@@ -16,7 +16,7 @@
         }, {
             "name": "answerTagsSearch",
             "desc": "Show tags for the question an answer belongs to on search pages (for better context)",
-            "extended_description": "By default, any search results thar are answers do not show its question's tags. This feature adds the question's tags underneath the result.",
+            "extended_description": "By default, any search results that are answers do not show its question's tags. This feature adds the question's tags underneath the result.",
             "meta": "http://meta.stackexchange.com/questions/197874/include-tags-in-answers-entries-on-search-results",
             "match": "*://*.com/search*",
             "exclude": "SE1.0"
@@ -68,7 +68,7 @@
         }, {
             "name": "localTimestamps",
             "desc": "Convert timestamps to your local time",
-            "extended_description": "Displays timestamps based on your timezone. You can also display time in 12-hour format by checking the option.",
+            "extended_description": "Displays timestamps based on your time zone. You can also display time in 12-hour format by checking the option.",
             "meta": "",
             "match": "",
             "exclude": "SE1.0",
@@ -85,7 +85,7 @@
             "exclude": "*://chat.*.com/*,SE1.0"
         }, {
             "name": "metaChatBlogStackExchangeButton",
-            "desc": "Show meta and chat buttons on hover of a site under the StackExchange button",
+            "desc": "Show meta and chat buttons on hover of a site under the site switcher button",
             "meta": "http://meta.stackexchange.com/questions/256183/show-the-meta-chat-and-blog-in-the-top-bar-for-other-sites-on-hover",
             "match": "",
             "exclude": ""
@@ -111,7 +111,7 @@
         }, {
             "name": "standOutDupeCloseMigrated",
             "desc": "Add highlighted tags to closed/on hold/duplicate/migrated questions on question lists",
-            "extended_description": "Adds a coloured box at the end of a title (that replaces the standard [duplicate], etc...) in question lists to more easily tell what the state of a question is",
+            "extended_description": "Adds a coloured box at the end of a title (that replaces the standard [duplicate], etc.) in question lists to more easily tell what the state of a question is",
             "meta": "http://meta.stackexchange.com/questions/257021/proposal-to-make-duplicate-closed-and-migrated-in-the-title-more-obvious",
             "match": "",
             "exclude": "*://chat.*.com/*,SE1.0"
@@ -206,7 +206,7 @@
             "exclude": "*://chat.*.com/*,SE1.0"
         }, {
             "name": "editReasonTooltip",
-            "desc": "Add a tooltip to posts showing the last revision's comment'",
+            "desc": "Add a tooltip to posts showing the last revision's comment",
             "extended_description": "When a post is edited, the editor is displayed underneath the post. This feature will show what the last revision's comment was as a tooltip when you hover over 'edited' underneath a post in 'edited [date] at [time]'",
             "meta": "http://meta.stackexchange.com/questions/2315/show-reason-for-edit-without-clicking-through-to-diff",
             "match": "*://*/questions*,*://*/review*",
