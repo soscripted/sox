@@ -115,7 +115,7 @@
 
             //Add class to page for topbar, calculated for every page for different sites.
             //If the Area 51 popup closes or doesn't exist, $('#notify-table').height() = 0
-            var $topbar = $('.top-bar').length ? $('.top-bar') : $('.topbar');
+            var $topbar = sox.NEW_TOPBAR ? $('.top-bar') : $('.topbar');
             var paddingToAdd = $('#notify-table').height() + $topbar.height();
 
             if ($('.topbar').length) {
@@ -250,7 +250,7 @@
             var name = sox.user.name;
             var $span = $('<span/>', {
                 class: 'reputation links-container',
-                style: sox.NEW_TOPBAR ? 'color: black;' : 'color: white;',
+                style: $('.top-bar').css('background-color') == 'rgb(250, 250, 251)' ? 'color: #535a60; padding-right: 12px; font-size: 13px;' : 'color: white; padding-right: 12px; font-size: 13px;',
                 title: name,
                 text: name
             });
@@ -869,7 +869,7 @@
                 var $votecells = $('.votecell');
 
                 $votecells.each(function() {
-                    var $topbar = $('.top-bar').length ? $('.top-bar') : $('.topbar'),
+                    var $topbar = sox.NEW_TOPBAR ? $('.top-bar') : $('.topbar'),
                         topbarHeight = (sox.location.on('askubuntu.com') ? 13 + ($topbar.css('position') == 'fixed' ? 0 : $topbar.outerHeight()) : 0) + $topbar.outerHeight(), //Ask Ubuntu needs an extra shift for some reason
                         offset = $('.review-bar').outerHeight() + ($topbar.css('position') == 'fixed' ? topbarHeight : 0);
 
@@ -891,7 +891,7 @@
                         });
                     });
 
-                    if (vcOfset.top + $vote.outerHeight() < endPos - 50 && vcOfset.top < scrollTop + offset) { //Left condition is to get rid of a sticky zone on extremely short posts. Right condition allows stickiness unless we're above the post.
+                    if (vcOfset.top + 1.5 * $vote.outerHeight() < endPos && vcOfset.top < scrollTop + offset) { //Left condition is to get rid of a sticky zone on extremely short posts. Right condition allows stickiness unless we're above the post.
                         if (scrollTop + offset + $vote.outerHeight() < endPos) { //Allow stickiness unless we've scrolled down past the post.
                             $vote.css({
                                 position: 'fixed',
@@ -1430,8 +1430,7 @@ Toggle SBS?</div></li>';
                             var author = (type === 'edit suggested' || link.indexOf('/suggested-edits/') > -1 ? json.items[0].proposing_user.display_name : json.items[0].owner.display_name),
                                 $author = $('<span/>', {
                                     class: 'author',
-                                    style: 'padding-left: 5px;',
-                                    text: $('<div>').html(author).text() //https://github.com/soscripted/sox/issues/233
+                                    text: " by " + $('<div>').html(author).text() //https://github.com/soscripted/sox/issues/233
                                 });
 
                             var $header = $node.find('.item-header'),
@@ -2643,7 +2642,7 @@ Toggle SBS?</div></li>';
                                width: " + percentHelpful + "%;\
                            }");
 
-                $("#flag-stat-info-table").before("<h3 id='sox-flagPercentHelpful' title='pending, aged away and disputed flags are not counted'><span id='percent'>" + percentHelpful + "%</span> helpful</h3>");
+                $("#flag-stat-info-table").before("<h3 id='sox-flagPercentHelpful' title='only helpful and declined flags are counted'><span id='percent'>" + percentHelpful + "%</span> helpful</h3>");
                 $("#sox-flagPercentHelpful span#percent").css("color", percentColor);
 
                 $("#sox-flagPercentHelpful").after("<div id='sox-flagPercentProgressBar'></div>");
@@ -2682,7 +2681,7 @@ Toggle SBS?</div></li>';
                 //https://github.com/soscripted/sox/issues/218#issuecomment-281148327 reason for selector:
                 //http://stackoverflow.com/a/11061657/3541881
 
-                $('pre:not(:has(.sox-copyCodeButton))').before('<i class="fa fa-clipboard sox-copyCodeButton" style="display:none; background-color:#eff0f1; margin-left: -15px;"></i>');
+                $('pre:not(:has(.sox-copyCodeButton))').before('<i class="fa fa-clipboard sox-copyCodeButton" style="display: none; position: relative; background-color: #eff0f1; margin-left: -15px"></i>'); //relative position prevents code from being in front of button
 
                 $('pre').hover(function() {
                     $(this).prev('.sox-copyCodeButton').show();
