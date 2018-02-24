@@ -13,7 +13,7 @@ Note: This project has no relation to Stack Overflow or Stack Exchange; it is si
 1. Install [Greasemonkey](http://www.greasespot.net/) (for Firefox) or [Tampermonkey](http://tampermonkey.net/) (for Chrome or Safari). These are userscript managers that *must* be installed in order for this to work, as the script relies on certain `GM_*` functions in order to save your settings!
 2. Install the script. Clicking on 'install' below will make your userscript manager prompt you automatically to install it.
 
-    - Official Version: <kbd>[install](https://github.com/soscripted/sox/raw/v2.0.2/sox.user.js)</kbd>. <kbd>[view source](https://github.com/soscripted/sox/blob/v2.0.2/sox.user.js)</kbd>
+    - Official Version: <kbd>[install](https://github.com/soscripted/sox/raw/v2.1.0/sox.user.js)</kbd>. <kbd>[view source](https://github.com/soscripted/sox/blob/v2.1.0/sox.user.js)</kbd>
     - Development Version: <kbd>[install](https://github.com/soscripted/sox/raw/dev/sox.user.js)</kbd>. <kbd>[view source](https://github.com/soscripted/sox/blob/dev/sox.user.js)</kbd>
 
 3. Go to any site in the Stack Exchange Network (eg. [Super User](http://superuser.com/) or [Stack Overflow](http://stackoverflow.com/)). You will automatically be asked to choose and save your settings. A toggle button (gears icon) will be added to your topbar where you can change these later on:
