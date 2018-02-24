@@ -3,7 +3,7 @@
 
     sox.dialog = {
         init: function(options) {
-            if (!$('.topbar, .so-header').length) return;
+            if (!$('.top-bar').length) return;
             sox.debug('initializing SOX dialog');
 
             var version = options.version,
@@ -348,7 +348,8 @@
             // add dialog to corral and sox button to topbar
             $soxSettingsButton.append($icon);
             if (sox.NEW_TOPBAR) {
-                $('.so-header .secondary-nav .-list').prepend($('<li/>').addClass('-item').append($soxSettingsButton));
+                console.log('asd');
+                $('.secondary-nav .-list').prepend($('<li/>').addClass('-item').append($soxSettingsButton));
                 $soxSettingsDialog.addClass('new-topbar');
             } else {
                 $soxSettingsButton.appendTo('div.network-items');

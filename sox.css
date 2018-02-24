@@ -9,9 +9,9 @@
 }
 
 #sox-settings-dialog.new-topbar {
-    right: 170px;
+    right: 192px;
     left: inherit !important;
-    top: 57px;
+    top: 50px;
     min-height: calc(100vh - 75px);
 }
 
@@ -126,7 +126,7 @@
 .sox-feature .fa-info {
     float: right;
   }
-  
+
 .sox-feature-settings-save {
 
 }
@@ -334,15 +334,22 @@ li.fixedTopbar-siteLink {
 
 .edit-comment-p1.sbs-on {
     float: left !important;
+    clear: both;
 }
 
 .edit-comment-p2.sbs-on {
     float: left !important;
     margin-left: 10px !important;
+    clear: both;
 }
 
 .post-editor.sbs-on {
     width: 1360px !important;
+    //width: 1060px !important;
+}
+
+.sbs-on-left-side {
+  width: 660px;
 }
 
 .wmd-button-bar.sbs-on {
@@ -354,6 +361,7 @@ li.fixedTopbar-siteLink {
 }
 
 .wmd-preview.sbs-on {
+    width: 685px;
     clear: none !important;
     float: right !important;
 }
@@ -387,7 +395,7 @@ li.fixedTopbar-siteLink {
     -webkit-box-shadow: inset 1px 1px 4px 1px rgba(0,0,0,0.5);
        -moz-box-shadow: inset 1px 1px 4px 1px rgba(0,0,0,0.5);
             box-shadow: inset 1px 1px 4px 1px rgba(0,0,0,0.5);
-    
+
 }
 .linkedPostsInline-loaded-body-sox .post-text {
     width: auto;

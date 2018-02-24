@@ -10,7 +10,7 @@
         debugging: GM_getValue('SOX-debug', false)
     };
 
-    sox.NEW_TOPBAR = !!$('.top-bar').length;
+    sox.NEW_TOPBAR = location.href.indexOf('area51') === -1;
 
     sox.debug = function() {
         if (!sox.info.debugging) return;

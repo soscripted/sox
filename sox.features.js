@@ -352,7 +352,7 @@
                 }
                 $('#reasons').remove(); //remove the div containing everything, we're going to add/remove stuff now:
                 if (/\/edit/.test(window.location.href) || $('[class^="inline-editor"]').length || $('.edit-comment').length) {
-                    $('.form-submit').before('<div id="reasons" style="float:left;"></div>');
+                    $('.form-submit').before('<div id="reasons" style="float:left;clear:both"></div>');
 
                     $.each(JSON.parse(GM_getValue('editReasons')), function(i, obj) {
                         $('#reasons').append('<label><input type="checkbox" value="' + this[1] + '"</input>' + this[0] + '</label>&nbsp;');
@@ -1255,6 +1255,7 @@
                 draftsaved.toggleClass('sbs-on');
                 draftdiscarded.toggleClass('sbs-on');
                 posteditor.toggleClass('sbs-on');
+                posteditor.find('.wmd-container').parent().toggleClass('sbs-on-left-side');
                 wmdinput.parent().toggleClass('sbs-on'); //wmdinput.parent() has class wmd-container
                 wmdpreview.toggleClass('sbs-on');
                 if (sox.location.on('/edit-tag-wiki/')) $('#post-form').toggleClass('sbs-on'); //https://github.com/soscripted/sox/issues/247
