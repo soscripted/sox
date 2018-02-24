@@ -3,9 +3,16 @@
 #sox-settings-dialog {
     top: 34px;
     left: 230px;
-    min-height: calc(100vh - 100px);
+    min-height: calc(100vh - 90px);
     width: 550px;
     display: none;
+}
+
+#sox-settings-dialog.new-topbar {
+    right: 192px;
+    left: inherit !important;
+    top: 50px;
+    min-height: calc(100vh - 75px);
 }
 
 #sox-settings-dialog .modal-content {
@@ -27,9 +34,14 @@
     min-height: 0;
 }
 
-#sox-settings-dialog #search-container .fa-search {
+#sox-settings-dialog:not(.new-topbar) #search-container .fa-search {
     position: relative;
     left: -475px;
+}
+
+#sox-settings-dialog.new-topbar #search-container .fa-search {
+    position: relative;
+    left: -465px;
 }
 
 #sox-settings-dialog #search-container #search {
@@ -45,6 +57,7 @@
 
 #sox-settings-dialog-features .modal-content div {
     margin-bottom: 3px;
+    padding: 1px;
 }
 
 #sox-settings-dialog-features .modal-content label>input {
@@ -61,9 +74,13 @@
     float: right;
 }
 
-#sox-settings-dialog-reset, #sox-settings-dialog-report, #sox-settings-dialog-debugging {
+#sox-settings-dialog-actions .action {
     float: right;
     padding: 14px;
+}
+
+#sox-settings-dialog-actions #sox-settings-dialog-access-token {
+    transform: scaleX(-1);
 }
 
 .sox-settings-button {
@@ -71,9 +88,12 @@
     padding-top: 10px;
     font-size: 14px;
     color: #858c93;
-    height: 24px !important;
     min-width: 34px;
     cursor: pointer;
+}
+
+.sox-settings-button:not(.-link) {
+    height: 24px !important;
 }
 
 .sox-settings-button:hover {
@@ -89,7 +109,7 @@
     color: #858c93;
 }
 
-.sox-feature-info {
+.sox-feature-info, .sox-feature-settings {
     background-color: whitesmoke;
     border-radius: 9px;
     margin-left: 20px;
@@ -98,11 +118,18 @@
     line-height: 1.5;
 }
 
-.sox-feature .fa-info {
-    margin-left: 10px;
-    font-size: 15px;
+.sox-feature .fa-info, .sox-feature .fa-wrench {
+    font-size: 12px;
+    padding: 0 5px;
 }
 
+.sox-feature .fa-info {
+    float: right;
+  }
+
+.sox-feature-settings-save {
+
+}
 
 /* -------- sox specific features' CSS ------- */
 
@@ -153,6 +180,7 @@
     padding: 2px;
     border-radius: 4px;
     font-size: 12px;
+    display: inline-block;
 }
 
 .standOutDupeCloseMigrated-duplicate {
@@ -201,13 +229,10 @@
 /*addHotText for the 'this question is hot' banner */
 
 .sox-hot {
-    float: right;
-    -ms-transform: rotate(30deg);
-    -webkit-transform: rotate(30deg);
-    transform: rotate(30deg);
+    float: left;
     font-size: xx-large;
     color: red;
-    margin-top: 20px;
+    margin-right: 8px;
 }
 
 
@@ -309,15 +334,22 @@ li.fixedTopbar-siteLink {
 
 .edit-comment-p1.sbs-on {
     float: left !important;
+    clear: both;
 }
 
 .edit-comment-p2.sbs-on {
     float: left !important;
     margin-left: 10px !important;
+    clear: both;
 }
 
 .post-editor.sbs-on {
     width: 1360px !important;
+    //width: 1060px !important;
+}
+
+.sbs-on-left-side {
+  width: 660px;
 }
 
 .wmd-button-bar.sbs-on {
@@ -329,6 +361,7 @@ li.fixedTopbar-siteLink {
 }
 
 .wmd-preview.sbs-on {
+    width: 685px;
     clear: none !important;
     float: right !important;
 }
@@ -345,13 +378,28 @@ li.fixedTopbar-siteLink {
     float: left !important;
 }
 
+.post-form.sbs-on {
+    /*https://github.com/soscripted/sox/issues/247*/
+    width: 1335px;
+}
+
 
 /*linkedPostsInline for the displayed post text; https://github.com/shu8/Stack-Overflow-Optional-Features/issues/48 */
 
-.linkedPostsInline-loaded-body-shub .post-text {
+.linkedPostsInline-loaded-body-sox {
+    background-color: aliceblue;
+    border-radius: 20px;
     overflow-wrap: break-word;
-    width: 630px;
+    width: auto;
     padding: 10px;
+    -webkit-box-shadow: inset 1px 1px 4px 1px rgba(0,0,0,0.5);
+       -moz-box-shadow: inset 1px 1px 4px 1px rgba(0,0,0,0.5);
+            box-shadow: inset 1px 1px 4px 1px rgba(0,0,0,0.5);
+
+}
+.linkedPostsInline-loaded-body-sox .post-text {
+    width: auto;
+    font-size: 90%;
 }
 
 
@@ -476,16 +524,6 @@ hr.or:after {
 }
 
 
-/*quickAuthorInfo -- for changing the style of the comments table*/
-
-.comments.quickAuthorInfoEnabled {
-    border-top: none !important;
-}
-
-.comments.quickAuthorInfoEnabled>table:nth-child(1)>tbody:nth-child(1)>tr:nth-child(1)>td:nth-child(2)>div:nth-child(1) {
-    opacity: 0.8 !important;
-}
-
 /*downvotedPostsEditAlert -- for the button and dropdown*/
 
 #downvotedPostsEditAlertButton {
@@ -502,6 +540,18 @@ hr.or:after {
     color: #999;
 }
 
+.downvotedPostsEditAlertButtonCount {
+    background-color: red;
+    width: 22px;
+    margin-left: 4px;
+    border-radius: 10px;
+    color: white;
+    font-weight: bold;
+    position: absolute;
+    font-size: 20px;
+    top: 8px;
+}
+
 #downvotedPostsEditAlertDialog {
     top: 34px;
     left: 264px;
@@ -514,11 +564,13 @@ hr.or:after {
     -webkit-text-stroke-width: 3px;
 }
 
+
 /*commentReplies -- for the reply buttons*/
 
 .soxReplyLink {
     cursor: pointer;
 }
+
 
 /*flagPercentageBar -- for the percentage bar itself*/
 
@@ -529,11 +581,53 @@ hr.or:after {
     margin: 6px 10px 10px 0;
     padding: 0px;
 }
+
 #sox-flagPercentProgressBar:after {
     content: '';
     display: block;
     height: 100%;
 }
+
 #sox-flagPercentHelpful {
     margin-bottom: 5px;
+}
+
+
+/*titleEditDiff -- for the toggle button*/
+
+.sox-better-title-toggle {
+    float: left;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+
+/*sox-copyCode -- for the button and textarea (completely hide it)*/
+
+.sox-copyCodeButton {
+    float: right;
+    position: sticky;
+    top: 0;
+}
+
+.sox-copyCodeTextarea {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 1px;
+    width: 1px;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    box-shadow: none;
+    background: transparent;
+    overflow: hidden;
+}
+
+
+/*openLinksInNewTab -- for the external link sign*/
+
+.openLinksInNewTab-externalLink {
+    display: inline !important;
+    padding-right: 3px;
 }

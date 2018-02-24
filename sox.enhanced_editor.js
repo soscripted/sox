@@ -3,27 +3,31 @@
     'use strict';
 
     sox.enhancedEditor = {
-        startFeature: function() {
-            sox.helpers.observe('li[id^="wmd-redo-button"], textarea[id^="wmd-input"]', function() {
-                $('textarea[id^="wmd-input"].processed').each(function() {
-                    sox.enhancedEditor.init($(this).attr('id'));
-                });
+        initLoop: function() {
+            $('textarea[id^="wmd-input"].processed').each(function() {
+                sox.enhancedEditor.init($(this).attr('id'));
+            });
 
-                $('.edit-post').click(function() {
-                    var $that = $(this);
-                    sox.helpers.observe('#wmd-redo-button-' + $that.attr('href').split('/')[2], function() {
-                        sox.enhancedEditor.init($that.parents('table').find('.inline-editor textarea.processed').attr('id'));
-                    });
+            $('.edit-post').click(function() {
+                var $that = $(this);
+                sox.helpers.observe('#wmd-redo-button-' + $that.attr('href').split('/')[2], function() {
+                    sox.enhancedEditor.init($that.parents('table').find('.inline-editor textarea.processed').attr('id'));
                 });
             });
         },
 
+        startFeature: function() {
+            $(document).on('sox-edit-window', sox.enhancedEditor.initLoop);
+            sox.enhancedEditor.initLoop();
+        },
+
         init: function(wmd) {
             var s = '#' + wmd; //s is the selector we pass onto each function so the action is applied to the correct textarea (and not, for example the 'add answer' textarea *and* the 'edit' textarea!)
-            if ($(s).parents('.question, .answer, #post-form').find('.enhancedEditor-toolbar').length) return;
+            if ($(s).parents('.wmd-container').find('.enhancedEditor-toolbar').length) return;
             sox.enhancedEditor.startInsertLink(s);
             sox.enhancedEditor.betterTabKey(s);
             sox.enhancedEditor.keyboardShortcuts(s);
+            $('.wmd-button-bar').css('margin-top', '0'); //https://github.com/soscripted/sox/issues/203
 
             $(s).before("<span class='enhancedEditor-toolbar' id='enhancedEditor|" + s + "'>&nbsp;<span id='findReplace'>Find & Replace</span> | <span id='autoCorrect'>Auto correct</span></span>");
 
@@ -223,7 +227,7 @@
                     e.preventDefault();
                     return false;
                 }
-                if (e.which == 76 && e.ctrlKey) { //ctrl+l (links)
+                if (e.which == 76 && e.ctrlKey && e.altKey) { //ctrl+alt+l (links) <https://github.com/soscripted/sox/issues/278>
                     $('#enhancedEditor-insertLinkDialog').show(500);
                     e.stopPropagation();
                     e.preventDefault();

@@ -3,6 +3,7 @@
 
     sox.dialog = {
         init: function(options) {
+            if (!$('.top-bar').length) return;
             sox.debug('initializing SOX dialog');
 
             var version = options.version,
@@ -17,6 +18,7 @@
                 $soxSettingsSave = $soxSettingsDialog.find('#sox-settings-dialog-save'),
                 $soxSettingsReset = $soxSettingsDialog.find('#sox-settings-dialog-reset'),
                 $soxSettingsDebugging = $soxSettingsDialog.find('#sox-settings-dialog-debugging'),
+                $soxSettingsNewAccessTokenButton = $soxSettingsDialog.find('#sox-settings-dialog-access-token'),
                 $soxSettingsToggleAccessTokensDiv = $soxSettingsDialog.find('#sox-settings-dialog-access-tokens'),
                 $soxSettingsAccessTokensToggle = $soxSettingsToggleAccessTokensDiv.find('#toggle-access-token-links'),
                 $soxSettingsToggle = $soxSettingsDialog.find('#sox-settings-dialog-check-toggle'),
@@ -75,23 +77,28 @@
 
                 if (featureSettings) {
                     var $settingsDiv = $('<div/>', {
-                            id: 'soxSettingsPanel-' + name,
+                            id: 'feature-settings-' + name,
+                            class: 'sox-feature-settings',
                             style: 'display: none; margin-top: 5px;'
                         }),
-                        $expanderArrow = $('<a/>', {
-                            'class': 'expander-arrow-small-hide show-sox-settings-panel',
-                            style: 'margin-left: 5px',
+                        $settingsToggle = $('<i/>', {
+                            'class': 'fa fa-wrench',
+
                             click: function(e) {
                                 e.preventDefault(); //don't uncheck the checkbox
-                                if ($(this).hasClass('expander-arrow-small-hide')) {
-                                    $(this).parent().find('#soxSettingsPanel-' + name).fadeIn();
-                                    $(this).removeClass('expander-arrow-small-hide').addClass('expander-arrow-small-show');
-                                } else if ($(this).hasClass('expander-arrow-small-show')) {
-                                    $(this).parent().find('#soxSettingsPanel-' + name).fadeOut();
-                                    $(this).removeClass('expander-arrow-small-show').addClass('expander-arrow-small-hide');
+
+                                var $settingsPanel = $('#feature-settings-' + name);
+
+                                if ($settingsPanel.is(":visible")) {
+                                    $settingsPanel.fadeOut();
+                                } else {
+                                    $settingsPanel.fadeIn();
                                 }
+
                             }
                         });
+
+                    var optionalSettings = GM_getValue("SOX-" + name + "-settings", -1);
 
                     for (var i = 0; i < featureSettings.length; i++) {
                         var currentSetting = featureSettings[i];
@@ -101,25 +108,39 @@
                             .append(sox.helpers.newElement(currentSetting.type, { //use newElement helper so the type can be things like 'checkbox' or 'radio'
                                 id: currentSetting.id,
                                 'class': 'featureSetting',
-                                value: (GM_getValue("SOX-" + name + "-settings", -1) == -1 ? '' : JSON.parse(GM_getValue("SOX-" + name + "-settings"))[currentSetting.id])
+                                'checked': (currentSetting.type === 'checkbox' ? JSON.parse(optionalSettings)[currentSetting.id] : false),
+                                value: (optionalSettings === -1 ? '' : JSON.parse(optionalSettings)[currentSetting.id])
                             }))
                             .append('<br>');
                     }
-                    var $saveSpan = $('<span/>', {
+
+                    var $saveFeatureSettings = $('<a/>', {
                         id: 'saveSettings-' + name,
-                        style: 'cursor: pointer',
-                        text: 'save',
+                        class: 'sox-feature-settings-save',
+                        // style: 'cursor: pointer',
+                        text: 'Save Settings',
                         click: function(e) {
                             e.preventDefault(); //don't uncheck the checkbox
                             var settingsToSave = {};
                             $(this).parent().find('.featureSetting').each(function() {
-                                settingsToSave[$(this).attr('id')] = $(this).is(':checked') || $(this).val();
+                                settingsToSave[$(this).attr('id')] = ($(this).is(':checkbox') ? $(this).is(':checked') : $(this).val());
                             });
                             GM_setValue('SOX-' + name + '-settings', JSON.stringify(settingsToSave));
+                            sox.settings.writeToConsole(true);
                         }
                     });
-                    $settingsDiv.append($saveSpan);
-                    $soxSettingsDialogFeatures.find('input#' + name).parent().append($expanderArrow).append($settingsDiv);
+
+                    $settingsDiv.append($saveFeatureSettings);
+
+                    var $feature = $soxSettingsDialogFeatures.find('input#' + name).parent();
+                    $feature.append($settingsToggle);
+
+                    if ($div.has('i.fa-info').length) {
+                        $info.after($settingsDiv);
+                    } else {
+                        $feature.append($settingsDiv);
+                    }
+
                 }
             }
 
@@ -130,7 +151,7 @@
                 $soxSettingsDialogVersion.text('');
             }
 
-            if(sox.info.debugging) $soxSettingsDebugging.text('Disable debugging');
+            if (sox.info.debugging) $soxSettingsDebugging.text('Disable debugging');
 
             // wire up event handlers
             $soxSettingsClose.on('click', function() {
@@ -138,7 +159,7 @@
             });
 
             $soxSettingsReset.on('click', function() {
-                if(confirm('Are you sure you want to reset SOX?')) {
+                if (confirm('Are you sure you want to reset SOX?')) {
                     sox.settings.reset();
                     location.reload(); // reload page to reflect changed settings
                 }
@@ -146,7 +167,7 @@
 
             $soxSettingsDebugging.on('click', function() {
                 var currentState = sox.info.debugging;
-                if(typeof currentState === 'undefined') {
+                if (typeof currentState === 'undefined') {
                     GM_setValue('SOX-debug', true);
                     $soxSettingsDebugging.text('Disable debugging');
                 } else {
@@ -154,6 +175,11 @@
                     $soxSettingsDebugging.text(currentState ? 'Enable debugging' : 'Disable debugging');
                 }
                 location.reload();
+            });
+
+            $soxSettingsNewAccessTokenButton.on('click', function() {
+                window.open('https://stackexchange.com/oauth/dialog?client_id=7138&scope=no_expiry&redirect_uri=http://soscripted.github.io/sox/');
+                sox.loginfo('To get a new access token, please go to the following URL', 'https://stackexchange.com/oauth/dialog?client_id=7138&scope=no_expiry&redirect_uri=http://soscripted.github.io/sox/');
             });
 
             $soxSettingsToggle.on('click', function() {
@@ -176,7 +202,7 @@
 
             $soxSettingsSave.on('click', function() {
                 var settings = [];
-                $soxSettingsDialogFeatures.find('input[type=checkbox]:checked').each(function() {
+                $soxSettingsDialogFeatures.find('input[type=checkbox]:checked').not('.featureSetting').each(function() { //NOT the per-feature featureSetting checkboxes, because they are saved in THEIR OWN setting object!
                     var x = $(this).closest('.modal-content').attr('id') + '-' + $(this).attr('id');
                     settings.push(x); //Add the function's ID (also the checkbox's ID) to the array
                 });
@@ -196,7 +222,7 @@
                             $(this).show();
                         }
 
-                        if ($features.find('label:visible').length === 0 && $features.find('label[style*="display: inline"]').length === 0) {
+                        if ($features.find('.sox-feature:visible').length === 0 && $features.find('.sox-feature[style*="display: block"]').length === 0) {
                             $features.hide().prev().hide();
                         } else {
                             $features.show().prev().show();
@@ -211,10 +237,10 @@
             // create sox settings button
             var $soxSettingsButton = $('<a/>', {
                     id: 'soxSettingsButton',
-                    class: 'topbar-icon yes-hover sox-settings-button',
+                    class: 'sox-settings-button ' + (sox.NEW_TOPBAR ? '-link' : 'topbar-icon yes-hover sox-settings-button'),
                     title: 'Change SOX settings',
                     href: '#',
-                    'style': 'color: #858c93; background-image: none; height: 24px;', //https://github.com/soscripted/sox/issues/142
+                    'style': (sox.NEW_TOPBAR ? '' : 'color: #858c93; height: 24px; ') + 'background-image: none;', //https://github.com/soscripted/sox/issues/142
                     click: function(e) {
                         e.preventDefault();
                         $('#sox-settings-dialog').toggle();
@@ -233,12 +259,13 @@
             $soxSettingsButton.hover(function() { //https://github.com/soscripted/sox/issues/44, open on hover, just like the normal dropdowns
                 if ($('.topbar-icon').not('#soxSettingsButton').hasClass('topbar-icon-on')) {
                     $('.topbar-dialog').hide();
-                    $('.topbar-icon').removeClass('topbar-icon-on').removeClass('icon-site-switcher-on');
+                    $('.topbar-icon-on').removeClass('topbar-icon-on').removeClass('icon-site-switcher-on');
                     $(this).addClass('topbar-icon-on');
                     $soxSettingsDialog.show();
                 }
             }, function() {
                 $('.topbar-icon').not('#soxSettingsButton').hover(function(e) {
+                    var $button = $(this);
                     if ($('#soxSettingsButton').hasClass('topbar-icon-on')) {
                         $soxSettingsDialog.hide();
                         $('#soxSettingsButton').removeClass('topbar-icon-on');
@@ -246,6 +273,9 @@
                         if (which != 'site') { //site-switcher dropdown is slightly different
                             $('.' + which + '-dialog').not('#sox-settings-dialog, #metaNewQuestionAlertDialog, #downvotedPostsEditAlertDialog').show();
                             $(this).addClass('topbar-icon-on');
+                            //repeated clicks are INTENDED, hacky fix for https://github.com/soscripted/sox/issues/272
+                            $button[0].click();
+                            $button[0].click();
                         } else {
                             if ($(this).css('top') != '34px') {
                                 $('.siteSwitcher-dialog').css('top', '34px').css('left', '0px');
@@ -273,7 +303,7 @@
             $(document).click(function(e) { //close dialog if clicked outside it
                 var $target = $(e.target),
                     isToggle = $target.is('#soxSettingsButton, #sox-settings-dialog'),
-                    isChild = $target.parents('#soxSettingsButton, #sox-settings-dialog').is("#soxSettingsButton, #sox-settings-dialog");
+                    isChild = $target.parents('#soxSettingsButton, #sox-settings-dialog').is('#soxSettingsButton, #sox-settings-dialog');
 
                 if (!isToggle && !isChild) {
                     $soxSettingsDialog.hide();
@@ -282,7 +312,7 @@
             });
 
             //close dialog if one of the links on the topbar is clicked
-            $('.topbar-icon').not('.sox-settings-button').click(function() {
+            $('.topbar-icon, .-link').not('.sox-settings-button').click(function() {
                 $soxSettingsDialog.hide();
                 $soxSettingsButton.removeClass('topbar-icon-on');
             });
@@ -316,10 +346,20 @@
             }
 
             // add dialog to corral and sox button to topbar
-            $soxSettingsButton.append($icon).appendTo('div.network-items');
+            $soxSettingsButton.append($icon);
+            if (sox.NEW_TOPBAR) {
+                console.log('asd');
+                $('.secondary-nav .-list').prepend($('<li/>').addClass('-item').append($soxSettingsButton));
+                $soxSettingsDialog.addClass('new-topbar');
+            } else {
+                $soxSettingsButton.appendTo('div.network-items');
+                $soxSettingsDialog.css('left', $('#soxSettingsButton').position().left);
+            }
 
             //'$('#soxSettingsButton').position().left' from @IStoleThePies: https://github.com/soscripted/sox/issues/120#issuecomment-267857625:
-            $('.js-topbar-dialog-corral').append($soxSettingsDialog.css('left', $('#soxSettingsButton').position().left));
+            //only add dialog if button was added successfully
+
+            if ($('#soxSettingsButton').length) $('.js-topbar-dialog-corral').append($soxSettingsDialog);
         }
     };
 

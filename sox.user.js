@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Stack Overflow Extras (SOX)
 // @namespace    https://github.com/soscripted/sox
-// @version      2.0.2
+// @version      2.1.0
 // @description  Extra optional features for Stack Overflow and Stack Exchange sites
 // @contributor  ᴉʞuǝ (stackoverflow.com/users/1454538/)
 // @contributor  ᔕᖺᘎᕊ (stackexchange.com/users/4337810/)
@@ -56,7 +56,7 @@
             try {
                 sox.github.init(sox.info.version, sox.info.handler);
             } catch (e) {
-                throw('SOX: There was an error while attempting to initialize the sox.github.js file, please report this on GitHub.\n' + e);
+                throw ('SOX: There was an error while attempting to initialize the sox.github.js file, please report this on GitHub.\n' + e);
             } finally {
                 return;
             }
@@ -69,13 +69,13 @@
                 GM_setValue('SOX-accessToken', access_token);
                 alert('Access token successfully saved! You can close this window :)');
             } catch (e) {
-                throw('SOX: There was an error saving your access token');
+                throw ('SOX: There was an error saving your access token');
             } finally {
                 return;
             }
         }
 
-        if(sox.info.debugging) {
+        if (sox.info.debugging) {
             sox.debug('DEBUGGING SOX VERSION ' + sox.info.version);
             sox.debug('----------------saved variables---------------------');
             sox.settings.writeToConsole(true); //true => hide access token
@@ -85,7 +85,7 @@
         GM_addStyle(GM_getResourceText('css'));
         $('<link/>', {
             rel: 'stylesheet',
-            href: 'https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css'
+            href: 'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'
         }).appendTo('head');
 
         var settings = sox.settings.load(), //returns undefined if not set
@@ -105,14 +105,22 @@
             // execute features
             for (var i = 0; i < settings.length; ++i) {
                 var category = settings[i].split('-')[0],
-                    featureId = settings[i].split('-')[1],
-                    feature = featureInfo.categories[category].filter(function(obj) {
+                    featureId = settings[i].split('-')[1];
+
+                if (!(category in featureInfo.categories)) { //if we ever rename a category
+                    sox.loginfo('Deleting feature "' + settings[i] + '" (category rename?)');
+                    settings.splice(i, 1);
+                    sox.settings.save(settings);
+                    continue;
+                }
+
+                var feature = featureInfo.categories[category].filter(function(obj) {
                         return obj.name == featureId;
                     })[0],
                     runFeature = true,
                     sites,
                     pattern;
-                sox.debug(category, featureId, feature);
+
                 try {
                     //NOTE: there is no else if() because it is possible to have both match and exclude patterns..
                     //which could have minor exceptions making it neccessary to check both
@@ -149,7 +157,7 @@
                     }
                 } catch (err) {
                     if (!sox.features[featureId] || !feature) { //remove deprecated/'corrupt' feature IDs from saved settings
-                        sox.loginfo('Deleting feature "' + settings[i] + '"');
+                        sox.loginfo('Deleting feature "' + settings[i] + '" (feature not found)');
                         settings.splice(i, 1);
                         sox.settings.save(settings);
                         $('#sox-settings-dialog-features').find('#' + settings[i].split('-')[1]).parent().parent().remove();
@@ -157,10 +165,26 @@
                         $('#sox-settings-dialog-features').find('#' + settings[i].split('-')[1]).parent().css('color', 'red').attr('title', 'There was an error loading this feature. Please raise an issue on GitHub.');
                         sox.error('There was an error loading the feature "' + settings[i] + '". Please raise an issue on GitHub, and copy the following error log:\n' + err);
                     }
-                    i++;
                 }
             }
         }
+
+
+        //custom events....
+        sox.helpers.observe('.new_comment', function() { //custom event that triggers when a new comment appears/show more comments clicked; avoids lots of the same mutationobserver
+            $(document).trigger('sox-new-comment');
+            sox.debug('sox-new-comment event triggered');
+        });
+
+        sox.helpers.observe('li[id^="wmd-redo-button"], textarea[id^="wmd-input"]', function(target) {
+            $(document).trigger('sox-edit-window', [target]);
+            sox.debug('sox-edit-window event triggered');
+        });
+
+        sox.helpers.observe('.reviewable-post, .review-content', function(target) {
+            $(document).trigger('sox-new-review-post-appeared', [target]);
+            sox.debug('sox-new-review-post-appeared event triggered');
+        });
 
         if (GM_getValue('SOX-accessToken', -1) == -1) { //set access token
             //This was originally a series of IIFEs appended to the head which used the SE API JS SDK but
@@ -169,9 +193,9 @@
             //and detects that page and saves it automatically.
             //this seems to be a much cleaner and easier-to-debug method!
 
-            window.open('https://stackexchange.com/oauth/dialog?client_id=7138&redirect_uri=http://soscripted.github.io/sox/');
-            alert('To complete the SOX installation please follow the instructions in the window that has been opened for you to receive your access token.');
-            sox.warn('Please go to the following URL to get your access token for certain SOX features', 'https://stackexchange.com/oauth/dialog?client_id=7138&redirect_uri=http://soscripted.github.io/sox/');
+            window.open('https://stackexchange.com/oauth/dialog?client_id=7138&scope=no_expiry&redirect_uri=http://soscripted.github.io/sox/');
+            alert('To complete the SOX installation please follow the instructions in the window that has been opened for you to receive your access token');
+            sox.warn('Please go to the following URL to get your access token for certain SOX features', 'https://stackexchange.com/oauth/dialog?client_id=7138&scope=no_expiry&redirect_uri=http://soscripted.github.io/sox/');
         }
     }
     sox.ready(init);
