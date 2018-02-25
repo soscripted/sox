@@ -569,6 +569,7 @@ hr.or:after {
 
 .soxReplyLink {
     cursor: pointer;
+    float: right;
 }
 
 
