@@ -882,7 +882,7 @@
                     $voteCell.css('min-width', Math.floor($vote.width()));
 
                     if ($vote.length) //This value strangely alternates between existing and not existing. This if statement ensures we only get its value when it exists, so no errors.
-                        endPos = $voteCell.next().find('.fw').offset().top; //I think a bit above the end of the post (where the "edit", "delete", etc. buttons lie) is a good place to stop the stickiness.
+                        endPos = $voteCell.next().find('.fw, .fw-wrap').offset().top; //I think a bit above the end of the post (where the "edit", "delete", etc. buttons lie) is a good place to stop the stickiness.
 
                     $voteCell.on('DOMNodeInserted', function() { //Fix dismissable message boxes, like "Please consider adding a comment if you think this post can be improved." when downvoting
                         $vote.find('.message-dismissable').css({
@@ -892,6 +892,7 @@
                     });
 
                     if (vcOfset.top + 1.5 * $vote.outerHeight() < endPos && vcOfset.top < scrollTop + offset) { //Left condition is to get rid of a sticky zone on extremely short posts. Right condition allows stickiness unless we're above the post.
+                        $vote.parent().css('margin-right', '15px');
                         if (scrollTop + offset + $vote.outerHeight() < endPos) { //Allow stickiness unless we've scrolled down past the post.
                             $vote.css({
                                 position: 'fixed',
@@ -907,6 +908,7 @@
                         }
                     } else {
                         $vote.removeAttr('style'); //Remove any stickiness
+                        $vote.parent().removeAttr('style'); //Remove any stickiness
                     }
                 });
             }
