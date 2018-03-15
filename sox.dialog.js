@@ -349,7 +349,7 @@
             $soxSettingsButton.append($icon);
             if (sox.NEW_TOPBAR) {
                 console.log('asd');
-                $('.my-profile').next('.secondary-nav').find('.-list').prepend($('<li/>').addClass('-item').append($soxSettingsButton)); //https://github.com/soscripted/sox/issues/310
+                $('.-actions .secondary-nav .-list').prepend($('<li/>').addClass('-item').append($soxSettingsButton)); //https://github.com/soscripted/sox/issues/310
                 $soxSettingsDialog.addClass('new-topbar');
             } else {
                 $soxSettingsButton.appendTo('div.network-items');
