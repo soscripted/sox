@@ -353,20 +353,14 @@
             "match": "*://*/questions*,*://*/review*",
             "exclude": "SE1.0"
         }, {
-            "name": "grayOutVotes",
-            "desc": "Gray out deleted vote buttons",
-            "meta": "http://meta.stackexchange.com/a/174806/260841",
-            "match": "*://*/questions*",
-            "exclude": "SE1.0"
-        },  {
             "name": "stickyVoteButtons",
             "desc": "Make vote buttons next to posts sticky whilst scrolling on that post",
             "meta": "http://meta.stackexchange.com/a/35047/260841",
             "match": "*://*/questions*,*://*/review*",
             "exclude": "SE1.0"
         }, {
-            "name": "disableOwnPostVoteButtons",
-            "desc": "Disable vote buttons on your own posts",
+            "name": "disableVoteButtons",
+            "desc": "Disable vote buttons on posts you cannot vote on",
             "meta": "",
             "match": "*://*/questions*",
             "exclude": "SE1.0"

@@ -348,7 +348,6 @@
             // add dialog to corral and sox button to topbar
             $soxSettingsButton.append($icon);
             if (sox.NEW_TOPBAR) {
-                console.log('asd');
                 $('.-actions .secondary-nav .-list').prepend($('<li/>').addClass('-item').append($soxSettingsButton)); //https://github.com/soscripted/sox/issues/310
                 $soxSettingsDialog.addClass('new-topbar');
             } else {
