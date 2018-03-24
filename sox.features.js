@@ -578,7 +578,7 @@
                     if (!$(this).find('.soxReplyLink').length) { //if the link doesn't already exist
                         if ($('.topbar-links a span:eq(0)').text() != $(this).find('.comment-text a.comment-user').text()) { //make sure the link is not added to your own comments
                             $(this).find('.comment-text').css('overflow-x', 'hidden');
-                            $(this).find('.comment-text').append('<span class="soxReplyLink" title="reply to this user" style="margin-left: -7px">&crarr;</span>');
+                            $(this).find('.comment-text .comment-body').append('<span class="soxReplyLink" title="reply to this user" style="margin-left: -7px">&crarr;</span>');
                         }
                     }
                 });
