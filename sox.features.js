@@ -999,7 +999,7 @@
                 apiLink = 'https://api.stackexchange.com/2.2/questions?pagesize=5&order=desc&sort=activity&site=' + metaName,
                 $dialog = $('<div/>', {
                     id: 'metaNewQuestionAlertDialog',
-                    'class': 'topbar-dialog achievements-dialog dno'
+                    'class': 'topbar-dialog dno new-topbar'
                 }),
                 $header = $('<div/>', {
                     'class': 'header'
@@ -1016,57 +1016,25 @@
                 $diamond = $('<a/>', {
                     id: 'metaNewQuestionAlertButton',
                     href: '#',
-                    'class': 'topbar-icon yes-hover metaNewQuestionAlert-diamondOff',
+                    'class': '-link metaNewQuestionAlert-diamondOff',
                     title: 'Moderator inbox (recent meta questions)',
                     click: function(e) {
                         e.preventDefault();
                         $diamond.toggleClass('topbar-icon-on');
                         $dialog.toggle();
                     }
+                }).css({
+                    'background-image': 'url(//cdn.sstatic.net/img/share-sprite-new.svg?v=78be252218f3)'
                 });
 
             $dialog.append($header).append($content.append($questions));
             if (sox.NEW_TOPBAR) {
-                $('.so-header .secondary-nav .-list').prepend($('<li/>').addClass('-item').append($diamond));
-                $('.js-topbar-dialog-corral').append($dialog);
-                $diamond.css({
-                    'background-image': 'url(//cdn.sstatic.net/img/share-sprite-new.svg?v=78be252218f3)',
-                    'background-position': '-218px -76px'
-                }).addClass('-link');
-                $dialog.addClass('new-topbar').css({
-                    'width': '377px',
-                    'right': '205px',
-                    'left': 'auto',
-                    'top': '57px',
-                });
+                $('.-actions .secondary-nav .-list').prepend($('<li/>').addClass('-item').append($diamond));
             } else {
-                $('#soxSettingsButton').after($diamond);
-                $dialog.css('left', $('#metaNewQuestionAlertButton').position().left).prependTo('.js-topbar-dialog-corral');
+                $diamond.appendTo('div.network-items');
+                $dialog.css('left', $('#metaNewQuestionAlertButton').position().left);
             }
-
-            $('#metaNewQuestionAlertButton').hover(function() { //open on hover, just like the normal dropdowns
-                if ($('.topbar-icon').not('#metaNewQuestionAlertButton').hasClass('topbar-icon-on')) {
-                    $('.topbar-dialog').hide();
-                    $('.topbar-icon').removeClass('topbar-icon-on').removeClass('icon-site-switcher-on');
-                    $(this).addClass('topbar-icon-on');
-                    $('#metaNewQuestionAlertDialog').show();
-                }
-            }, function() {
-                $('.topbar-icon').not('#metaNewQuestionAlertButton').hover(function() {
-                    if ($('#metaNewQuestionAlertButton').hasClass('topbar-icon-on')) {
-                        $('#metaNewQuestionAlertDialog').hide();
-                        $('#metaNewQuestionAlertButton').removeClass('topbar-icon-on');
-                        var which = $(this).attr('class').match(/js[\w-]*\b/)[0].split('-')[1];
-                        if (which != 'site') { //site-switcher dropdown is slightly different
-                            $('.' + which + '-dialog').not('#sox-settings-dialog, #metaNewQuestionAlertDialog, #downvotedPostsEditAlertDialog').show();
-                            $(this).addClass('topbar-icon-on');
-                        } else {
-                            $('.siteSwitcher-dialog').show();
-                            $(this).addClass('topbar-icon-on').addClass('icon-site-switcher-on'); //icon-site-switcher-on is special to the site-switcher dropdown (StackExchange button)
-                        }
-                    }
-                });
-            });
+            if ($('#metaNewQuestionAlertButton').length) $('.js-topbar-dialog-corral').append($dialog);
 
             $(document).mouseup(function(e) {
                 if (!$dialog.is(e.target) &&
@@ -1707,7 +1675,7 @@ Toggle SBS?</div></li>';
 
             var $dialog = $('<div/>', {
                     id: 'downvotedPostsEditAlertDialog',
-                    'class': 'topbar-dialog achievements-dialog dno'
+                    'class': 'topbar-dialog dno new-topbar'
                 }),
                 $header = $('<div/>', {
                     'class': 'header'
@@ -1723,18 +1691,14 @@ Toggle SBS?</div></li>';
                 }),
                 $button = $('<a/>', {
                     id: 'downvotedPostsEditAlertButton',
-                    class: 'topbar-icon yes-hover downvotedPostsEditAlert-buttonOff',
+                    class: '-link downvotedPostsEditAlert-buttonOff',
                     title: 'Watched posts that have been edited',
-                    'style': 'color: #858c93; background-image: none; height: 24px;',
+                    'style': 'color: #858c93; background-image: none;',
                     href: '#',
                     click: function(e) {
                         e.preventDefault();
-                        $('#downvotedPostsEditAlertDialog').toggle();
-                        if ($('#downvotedPostsEditAlertDialog').is(':visible')) {
-                            $(this).addClass('topbar-icon-on');
-                        } else {
-                            $(this).removeClass('topbar-icon-on');
-                        }
+                        $button.toggleClass('topbar-icon-on');
+                        $dialog.toggle();
                     }
                 }),
                 $icon = $('<i/>', {
@@ -1746,33 +1710,16 @@ Toggle SBS?</div></li>';
                 });
 
             if ($('#metaNewQuestionAlertDialog').length) $dialog.css('left', '297px');
-            $button.append($count).append($icon).appendTo('div.network-items');
 
-            $dialog.css('left', $('#downvotedPostsEditAlertButton').position().left).append($header).append($content.append($posts)).prependTo('.js-topbar-dialog-corral');
+            $button.append($count).append($icon);
 
-            $('#downvotedPostsEditAlertButton').hover(function() { //open on hover, just like the normal dropdowns
-                if ($('.topbar-icon').not('#downvotedPostsEditAlertButton').hasClass('topbar-icon-on')) {
-                    $('.topbar-dialog').hide();
-                    $('.topbar-icon').removeClass('topbar-icon-on').removeClass('icon-site-switcher-on');
-                    $(this).addClass('topbar-icon-on');
-                    $('#downvotedPostsEditAlertDialog').show();
-                }
-            }, function() {
-                $('.topbar-icon').not('#downvotedPostsEditAlertButton').hover(function() {
-                    if ($('#downvotedPostsEditAlertButton').hasClass('topbar-icon-on')) {
-                        $('#downvotedPostsEditAlertDialog').hide();
-                        $('#downvotedPostsEditAlertButton').removeClass('topbar-icon-on');
-                        var which = $(this).attr('class').match(/js[\w-]*\b/)[0].split('-')[1];
-                        if (which != 'site') { //site-switcher dropdown is slightly different
-                            $('.' + which + '-dialog').not('#sox-settings-dialog, #metaNewQuestionAlertDialog, #downvotedPostsEditAlertDialog').show();
-                            $(this).addClass('topbar-icon-on');
-                        } else {
-                            $('.siteSwitcher-dialog').show();
-                            $(this).addClass('topbar-icon-on').addClass('icon-site-switcher-on'); //icon-site-switcher-on is special to the site-switcher dropdown (StackExchange button)
-                        }
-                    }
-                });
-            });
+            if (sox.NEW_TOPBAR) {
+                $('.-actions .secondary-nav .-list').prepend($('<li/>').addClass('-item').append($button));
+            } else {
+                $button.appendTo('div.network-items');
+                $dialog.css('left', $('#downvotedPostsEditAlertButton').position().left);
+            }
+            if ($('#downvotedPostsEditAlertButton').length) $('.js-topbar-dialog-corral').append($dialog);
 
             $(document).click(function(e) { //close dialog if clicked outside it
                 var $target = $(e.target),
@@ -1785,7 +1732,6 @@ Toggle SBS?</div></li>';
                     $count.text('');
                 }
             });
-
 
             var websocketSiteCodes = {
                 "3dprinting": "640",

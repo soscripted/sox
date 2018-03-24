@@ -208,16 +208,16 @@
 }
 
 .metaNewQuestionAlert-diamondOn {
-    background-position: -218px -86px;
+    background-position: -218px -78px;
 }
 
 .metaNewQuestionAlert-diamondOff {
-    background-position: -138px -86px;
+    background-position: -138px -78px;
 }
 
 #metaNewQuestionAlertDialog {
-    top: 34px;
-    left: 264px;
+    top: 50px;
+    right: 264px;
     width: 377px;
 }
 
@@ -528,10 +528,8 @@ hr.or:after {
 
 #downvotedPostsEditAlertButton {
     background-image: none;
-    padding-top: 10px;
     font-size: 14px;
     color: #858c93;
-    height: 24px !important;
     min-width: 34px;
     cursor: pointer;
 }
