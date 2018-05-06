@@ -253,7 +253,10 @@
 
             function colour() {
                 $('.answercell').each(function(i, obj) {
-                    $(this).parent().next().find('.comment-user:contains("' + $.trim($(this).find('.user-details').last().clone().children('.-flair').remove().end().text()) + '")').css({'background-color': '#f9e2b6', 'padding': '1px 5px'}); //Find the comments on each post that contain the answerer's name. Also, .last() is necessary, or else it will use the name of someone who edits the answer.
+                    $(this).parent().next().find('.comment-user:contains("' + $.trim($(this).find('.user-details').last().clone().children('.-flair').remove().end().text()) + '")').css({
+                        'background-color': '#f9e2b6',
+                        'padding': '1px 5px'
+                    }); //Find the comments on each post that contain the answerer's name. Also, .last() is necessary, or else it will use the name of someone who edits the answer.
                 });
             }
 
@@ -489,7 +492,7 @@
                 var popup = $('.share-tip');
                 var origHtml = popup.html();
                 if (origHtml.indexOf(toRemove) == -1) return; //don't do anything if the function's already done its thing
-                popup.html(function () {
+                popup.html(function() {
                     return origHtml.replace(toRemove, '');
                 });
 
@@ -1595,7 +1598,7 @@ Toggle SBS?</div></li>';
             // Description: Hide just the 'Hot Meta Posts' sections in the Community Bulletin
 
             var $hotMetaPostsHeader = $('#sidebar .community-bulletin .related').find('div:contains("Hot Meta Posts")');
-            if($hotMetaPostsHeader.length) {
+            if ($hotMetaPostsHeader.length) {
                 $hotMetaPostsHeader.nextAll().remove();
                 $hotMetaPostsHeader.remove();
             }
@@ -2433,8 +2436,8 @@ Toggle SBS?</div></li>';
 
             var div = $('<div/>', {
                 id: 'loggedInReminder',
-                style: 'position: fixed; right: 0; bottom: 50px; background-color: rgba(200, 200, 200, 1); width: 200px; height: 35px; text-align: center; padding: 3px; color: red;',
-                html: 'You are not logged in. You should <a href="/users/login">log in</a> to continue enjoying SE.'
+                style: 'position: fixed; right: 0; bottom: 50px; background-color: rgba(200, 200, 200, 1); width: 200px; text-align: center; padding: 5px; color: black; font-weight:bold',
+                html: 'SOX: You are not logged in. You should <a href="/users/login">log in</a> to continue enjoying SE.'
             });
 
             function checkAndAddReminder() {
@@ -2483,15 +2486,15 @@ Toggle SBS?</div></li>';
                     var $timeSpan = $(this).find('.user-action-time:first span:last'),
                         lastEditedTime = new Date($timeSpan.attr('title')),
                         timeDifference = new Date() - lastEditedTime;
-                    if (timeDifference/1000/60 > 5) { //divide by 1000 to get seconds, divide by 60 to get minutes
+                    if (timeDifference / 1000 / 60 > 5) { //divide by 1000 to get seconds, divide by 60 to get minutes
                         $(this).find('.votecell .vote a[class*="vote"]')
-                        .not('[id*="vote-accept"]')
-                        .removeClass('sox-better-css')
-                        .css({
-                            'cursor': 'default',
-                            'opacity': '0.5',
-                            'pointer-events': 'none' //disables the anchor tag (jQuery off() doesn't work)
-                        });
+                            .not('[id*="vote-accept"]')
+                            .removeClass('sox-better-css')
+                            .css({
+                                'cursor': 'default',
+                                'opacity': '0.5',
+                                'pointer-events': 'none' //disables the anchor tag (jQuery off() doesn't work)
+                            });
                         $(this).find('.vote').attr('title', 'You cannot change your vote on posts that were last edited more than 5 minutes ago.');
                     }
                 }

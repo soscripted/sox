@@ -200,7 +200,7 @@
         }, {
             "name": "editComment",
             "desc": "Pre-defined edit comment options (checkboxes)",
-            "extended_description": "Adds checkboxes to add canned messages for edit revisions when editing. You can make your own canned responses by clicking the 'Edit Reasons' button that is added to the Help dropdown menu in the topbar",
+            "extended_description": "Adds checkboxes to add canned messages for edit revisions when editing. You can make *your own* canned responses by clicking the 'Edit Reasons' button that is added to the Help dropdown menu in the topbar",
             "meta": "http://meta.stackexchange.com/questions/190461/improve-the-editing-flow-with-predefined-options-for-edit-summary",
             "match": "",
             "exclude": "*://chat.*.com/*,SE1.0"

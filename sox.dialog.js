@@ -3,7 +3,10 @@
 
     sox.dialog = {
         init: function(options) {
-            if (!$('.top-bar').length) return;
+
+            if (!$('.top-bar').length) {
+                return;
+            }
             sox.debug('initializing SOX dialog');
 
             var version = options.version,
@@ -304,7 +307,7 @@
             // add dialog to corral and sox button to topbar
             $soxSettingsButton.append($icon);
             if (sox.NEW_TOPBAR) {
-                $('.-actions .secondary-nav .-list').prepend($('<li/>').addClass('-item').append($soxSettingsButton)); //https://github.com/soscripted/sox/issues/310
+                $('.top-bar .-container .-secondary .-item:eq(1)').after($('<li/>').addClass('-item').append($soxSettingsButton)); //https://github.com/soscripted/sox/issues/310
                 $soxSettingsDialog.addClass('new-topbar');
             } else {
                 $soxSettingsButton.appendTo('div.network-items');

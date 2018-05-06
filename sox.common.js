@@ -129,7 +129,7 @@
                         sox.error('SOX Error: BACKOFF: ' + d.backoff);
                     } else if (d.error_id == 502) {
                         sox.error('THROTTLE VIOLATION', d);
-                    } else if (d.error_id == 403)  {
+                    } else if (d.error_id == 403) {
                         sox.warn('Access token invalid! Opening window to get new one');
                         window.open('https://stackexchange.com/oauth/dialog?client_id=7138&scope=no_expiry&redirect_uri=http://soscripted.github.io/sox/');
                         alert('Your access token is no longer valid. A window has been opened to request a new one.');
@@ -324,7 +324,7 @@
             if (sox.site.type == sox.site.types.chat) {
                 return Chat.RoomUsers.current().name;
             } else {
-                var $uname = sox.NEW_TOPBAR ? $('body > header > div > div.-actions > a > div.gravatar-wrapper-24') : $('body > div.topbar > div > div.topbar-links > a > div.gravatar-wrapper-24');
+                var $uname = sox.NEW_TOPBAR ? $('.top-bar div.gravatar-wrapper-24') : $('body > div.topbar > div > div.topbar-links > a > div.gravatar-wrapper-24');
                 return ($uname.length ? $uname.attr('title') : false);
             }
         },
