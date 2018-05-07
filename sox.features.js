@@ -1032,11 +1032,11 @@
 
             $dialog.append($header).append($content.append($questions));
             if (sox.NEW_TOPBAR) {
-                $('.-actions .secondary-nav .-list').prepend($('<li/>').addClass('-item').append($diamond));
+                $('.top-bar .-container .-secondary .-item:eq(1)').after($('<li/>').addClass('-item').append($diamond));
             } else {
                 $diamond.appendTo('div.network-items');
-                $dialog.css('left', $('#metaNewQuestionAlertButton').position().left);
             }
+            $dialog.css('top', $('.top-bar').height());
             if ($('#metaNewQuestionAlertButton').length) $('.js-topbar-dialog-corral').append($dialog);
 
             $(document).mouseup(function(e) {
@@ -1712,16 +1712,15 @@ Toggle SBS?</div></li>';
                     'style': 'display:none'
                 });
 
-            if ($('#metaNewQuestionAlertDialog').length) $dialog.css('left', '297px');
-
             $button.append($count).append($icon);
 
             if (sox.NEW_TOPBAR) {
-                $('.-actions .secondary-nav .-list').prepend($('<li/>').addClass('-item').append($button));
+                $('.top-bar .-container .-secondary .-item:eq(1)').after($('<li/>').addClass('-item').append($button));
             } else {
                 $button.appendTo('div.network-items');
                 $dialog.css('left', $('#downvotedPostsEditAlertButton').position().left);
             }
+            $dialog.css('top', $('.top-bar').height());
             if ($('#downvotedPostsEditAlertButton').length) $('.js-topbar-dialog-corral').append($dialog);
 
             $(document).click(function(e) { //close dialog if clicked outside it
@@ -1993,6 +1992,7 @@ Toggle SBS?</div></li>';
                 addEditNotification(o.url, o.title, o.sitename, i, false, o.editor, o.editor_link, o.edit_date, o.type, postsToCheck);
             });
 
+            console.log(postsToCheck);
             if (!$.isEmptyObject(postsToCheck)) {
                 sox.debug(postsToCheck);
                 $.each(postsToCheck, function(i, o) {
@@ -2031,6 +2031,8 @@ Toggle SBS?</div></li>';
                         };
                     }
                 });
+            } else {
+                $dialog.text('empty');
             }
         },
 

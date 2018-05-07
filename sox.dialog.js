@@ -309,6 +309,7 @@
             if (sox.NEW_TOPBAR) {
                 $('.top-bar .-container .-secondary .-item:eq(1)').after($('<li/>').addClass('-item').append($soxSettingsButton)); //https://github.com/soscripted/sox/issues/310
                 $soxSettingsDialog.addClass('new-topbar');
+                $soxSettingsDialog.css('top', $('.top-bar').height());
             } else {
                 $soxSettingsButton.appendTo('div.network-items');
                 $soxSettingsDialog.css('left', $('#soxSettingsButton').position().left);

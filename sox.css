@@ -2,16 +2,13 @@
 
 #sox-settings-dialog {
     top: 34px;
-    left: 230px;
+    right: 208px;
     min-height: calc(100vh - 90px);
     width: 550px;
     display: none;
 }
 
 #sox-settings-dialog.new-topbar {
-    right: 192px;
-    left: inherit !important;
-    top: 50px;
     min-height: calc(100vh - 75px);
 }
 
@@ -208,16 +205,16 @@
 }
 
 .metaNewQuestionAlert-diamondOn {
-    background-position: -218px -78px;
+    background-position: -218px -82px;
 }
 
 .metaNewQuestionAlert-diamondOff {
-    background-position: -138px -78px;
+    background-position: -138px -82px;
 }
 
 #metaNewQuestionAlertDialog {
     top: 50px;
-    right: 264px;
+    right: 242px;
     width: 377px;
 }
 
@@ -551,8 +548,7 @@ hr.or:after {
 }
 
 #downvotedPostsEditAlertDialog {
-    top: 34px;
-    left: 264px;
+    right: 273px;
     width: 377px;
     display: none;
 }
