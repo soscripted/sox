@@ -218,9 +218,9 @@
             "match": "*://*/questions*,*://*/review*",
             "exclude": "SE1.0"
         }, {
-            "name": "enhancedEditor",
-            "desc": "Add more features to the markdown editor",
-            "extended_description": "Adds find/replace, changes the TAB key behaviour, adds DuckDuckGo integration, and basic auto-correct features.",
+            "name": "findAndReplace",
+            "desc": "Add a find & replace feature to the markdown editor",
+            "extended_description": "",
             "meta": "",
             "match": "*://*/questions*,*://*/review*",
             "exclude": "SE1.0"
@@ -472,6 +472,7 @@
         }, {
             "name": "openLinksInNewTab",
             "desc": "Open any links to the specified sites in a new tab by default",
+            "extended_description": "You need to set the sites yourself by clicking the button next to this feature",
             "meta": "",
             "match": "*://*/questions*",
             "exclude": "",
@@ -482,7 +483,7 @@
             }]
         }, {
             "name": "showQuestionStateInSuggestedEditReviewQueue",
-            "desc": "Show question's state in the suggested edit review queue",
+            "desc": "Show question's current state in the suggested edit review queue",
             "meta": "",
             "match": "*://*/review*",
             "exclude": ""

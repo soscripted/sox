@@ -1616,13 +1616,6 @@ Toggle SBS?</div></li>';
             $('#sidebar #newsletter-ad').parent().remove();
         },
 
-        enhancedEditor: function() {
-            // Description: Add a bunch of features to the standard markdown editor (autocorrect, find+replace, Ace editor, and more!)
-
-            sox.enhancedEditor.startFeature();
-
-        },
-
         downvotedPostsEditAlert: function() {
             // Description: Adds a notification to the inbox if a question you downvoted and watched is edited
 
@@ -2730,7 +2723,12 @@ Toggle SBS?</div></li>';
         },
 
         openLinksInNewTab: function(settings) {
-            settings = settings.linksToOpenInNewTab.replace(' ', '').split(',');
+            // Description: Open any links to the specified sites in a new tab by default
+
+            settings = settings.linksToOpenInNewTab;
+            if (!settings) return;
+
+            settings = settings.replace(' ', '').split(',');
             if (settings.length) { //https://github.com/soscripted/sox/issues/300
                 $('.post-text a').each(function() {
                     var href = $(this).attr('href');
@@ -2745,6 +2743,8 @@ Toggle SBS?</div></li>';
         },
 
         showQuestionStateInSuggestedEditReviewQueue: function() {
+            // Description: Show question's current state in the suggested edit review queue (duplicate, off-topic, etc.)
+
             $(document).on('sox-new-review-post-appeared', function() {
                 if ($('#sox-showQuestionStateInSuggestedEditReviewQueue-checked').length) return; //already checked
                 var postId = $('.summary h2 a').attr('href').split('/')[2];
@@ -2768,6 +2768,8 @@ Toggle SBS?</div></li>';
         },
 
         addTimelineAndRevisionLinks: function() {
+            // Description: Add timeline and revision links to the bottom of each post for quick access to them
+
             $('.question, .answer').each(function() {
                 $(this).find('.post-menu').append($('<a/>', {
                     'href': '//' + sox.site.url + '/posts/' + sox.site.href.split('/')[4] + '/revisions',
@@ -2777,6 +2779,62 @@ Toggle SBS?</div></li>';
                     'text': 'timeline'
                 }));
             });
+        },
+
+        findAndReplace: function() { //Salvaged from old 'enhanced editor' feature
+            // Description: adds a 'find and replace' option to the markdown editor
+
+            function startLoop() {
+                $('textarea[id^="wmd-input"].processed').each(function() {
+                    main($(this).attr('id'));
+                });
+
+                $('.edit-post').click(function() {
+                    var $that = $(this);
+                    sox.helpers.observe('#wmd-redo-button-' + $that.attr('href').split('/')[2], function() {
+                        main($that.parents('table').find('.inline-editor textarea.processed').attr('id'));
+                    });
+                });
+            }
+
+            function main(wmd) {
+                var s = '#' + wmd; //s is the selector we pass onto each function so the action is applied to the correct textarea (and not, for example the 'add answer' textarea *and* the 'edit' textarea!)
+                if ($(s).parents('.wmd-container').find('#findReplace').length) return;
+
+                $('.wmd-button-bar').css('margin-top', '0'); //https://github.com/soscripted/sox/issues/203
+
+                $(s).before("<div class='findReplaceToolbar'><span id='findReplace'>Find & Replace</span></div>");
+
+                $(document).on('click', '#findReplace', function(e) {
+                    if ($('.findReplaceInputs').length) {
+                        $('.findReplaceInputs').remove();
+                    } else {
+                        $(this).parent().append("<div class='findReplaceInputs'><input id='find' type='text' placeholder='Find'><input id='modifier' type='text' placeholder='Modifier'><input id='replace' type='text' placeholder='Replace with'><input id='replaceGo' type='button' value='Go'></div>");
+                    }
+                    $(document).on('click', '.findReplaceToolbar #replaceGo', function() {
+                        var regex = new RegExp($('.findReplaceToolbar #find').val(), $('.findReplaceToolbar #modifier').val());
+                        var oldval = $(this).parent().parent().parent().find('textarea').val();
+                        var newval = oldval.replace(regex, $('.findReplaceToolbar #replace').val());
+                        $(this).parent().parent().parent().find('textarea').val(newval);
+
+                        var Stack = (typeof StackExchange === "undefined" ? window.eval('StackExchange') : StackExchange);
+                        if (Stack.MarkdownEditor) Stack.MarkdownEditor.refreshAllPreviews();
+                    });
+                    e.preventDefault();
+                    e.stopPropagation();
+                });
+
+                $(s).keydown(function(e) {
+                    if (e.which == 70 && e.ctrlKey) { //ctrl+f (find+replace)
+                        $('#findReplace').trigger('click');
+                        e.stopPropagation();
+                        e.preventDefault();
+                        return false;
+                    }
+                });
+            }
+            $(document).on('sox-edit-window', startLoop);
+            startLoop();
         }
     };
 })(window.sox = window.sox || {}, jQuery);
