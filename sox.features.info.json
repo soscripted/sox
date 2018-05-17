@@ -249,7 +249,7 @@
             "desc": "Add a notification to your inbox when a question you downvote is edited",
             "meta": "http://meta.stackexchange.com/q/165962/260841",
             "match": "",
-            "exclude": ""
+            "exclude": "SE1.0"
         }],
         "Flags": [{
             "name": "flagOutcomeTime",

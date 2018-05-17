@@ -970,7 +970,7 @@
 
                 //All sites have either a chat link or meta link
                 $(this).find('.rep-score').stop(true).delay(135).fadeOut(20);
-                $(this).prepend('<div class="related-links" style="float: right; display: none;">' +
+                $(this).append('<div class="related-links" style="float: right; display: none;">' +
                     (link ?
                         (link.indexOf('area51.meta') > -1 ? '<a href="' + link + '">discuss</a>' : (href.indexOf('meta') > -1 ? '<a href="' + link + '">main</a>' : '<a href="' + link + '">meta</a>')) :
                         '') +

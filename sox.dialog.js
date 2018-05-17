@@ -306,14 +306,17 @@
 
             // add dialog to corral and sox button to topbar
             $soxSettingsButton.append($icon);
-            if (sox.NEW_TOPBAR) {
-                $('.top-bar .-container .-secondary .-item:eq(1)').after($('<li/>').addClass('-item').append($soxSettingsButton)); //https://github.com/soscripted/sox/issues/310
-                $soxSettingsDialog.addClass('new-topbar');
-                $soxSettingsDialog.css('top', $('.top-bar').height());
-            } else {
-                $soxSettingsButton.appendTo('div.network-items');
-                $soxSettingsDialog.css('left', $('#soxSettingsButton').position().left);
+            $('.top-bar .-container .-secondary .-item:eq(1)').after($('<li/>').addClass('-item').append($soxSettingsButton)); //https://github.com/soscripted/sox/issues/310
+            if (sox.site.href.indexOf('area51.meta') !== -1) { //area 51 discussions is different
+                $soxSettingsButton.parent().css({
+                    'top': '7px',
+                    'left': '9px'
+                });
             }
+            $soxSettingsDialog.addClass('new-topbar');
+            $soxSettingsDialog.css('top', $('.top-bar').height());
+
+
 
             //'$('#soxSettingsButton').position().left' from @IStoleThePies: https://github.com/soscripted/sox/issues/120#issuecomment-267857625:
             //only add dialog if button was added successfully
