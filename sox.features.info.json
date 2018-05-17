@@ -133,6 +133,12 @@
             "meta": "http://meta.stackexchange.com/questions/249808/add-a-way-to-reveal-all-spoiler-blocks-in-a-post-at-once",
             "match": "*://*/questions*",
             "exclude": "SE1.0"
+        }, {
+            "name": "addTimelineAndRevisionLinks",
+            "desc": "Add timeline and revision links to the bottom of each post for quick access to them",
+            "meta": "",
+            "match": "*://*/questions*,*://*/review*",
+            "exclude": ""
         }],
         "Comments": [{
             "name": "autoShowCommentImages",

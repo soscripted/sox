@@ -2765,6 +2765,18 @@ Toggle SBS?</div></li>';
                     }
                 }, 'creation&filter=!-MOiNm40B3fle5H6oLVI3nx6UQo(vNstn');
             });
+        },
+
+        addTimelineAndRevisionLinks: function() {
+            $('.question, .answer').each(function() {
+                $(this).find('.post-menu').append($('<a/>', {
+                    'href': '//' + sox.site.url + '/posts/' + sox.site.href.split('/')[4] + '/revisions',
+                    'text': 'revisions'
+                })).append($('<a/>', {
+                    'href': '//' + sox.site.url + '/posts/' + sox.site.href.split('/')[4] + '/timeline',
+                    'text': 'timeline'
+                }));
+            });
         }
     };
 })(window.sox = window.sox || {}, jQuery);
