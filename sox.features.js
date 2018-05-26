@@ -369,9 +369,9 @@
                     $('#reasons input[type="checkbox"]').change(function() {
                         if (this.checked) { //Add it to the summary
                             if (!editCommentField.val()) {
-                                editCommentField.val(toLocaleSentenceCase($(this).val()).replace(/on$/g, ''));
+                                editCommentField.val(toLocaleSentenceCase($(this).val()));
                             } else {
-                                editCommentField.val(editCommentField.val() + '; ' + $(this).val().replace(/on$/g, ''));
+                                editCommentField.val(editCommentField.val() + '; ' + $(this).val());
                             }
                             var newEditComment = editCommentField.val(); //Remove the last space and last semicolon
                             editCommentField.val(newEditComment).focus();
