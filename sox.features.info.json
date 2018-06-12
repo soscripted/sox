@@ -98,7 +98,7 @@
         }, {
             "name": "scrollToTop",
             "desc": "Add Scroll To Top button",
-            "extended_description": "This feature adds a 'scroll to top' button at the bottom left of your screen that will jump to the top of the page when clicked",
+            "extended_description": "This feature adds an up arrow at the bottom-right of your screen, that will jump to the top of the page when clicked",
             "meta": "",
             "match": "",
             "exclude": "*://chat.*.com/*"
