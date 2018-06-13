@@ -28,6 +28,10 @@ A full list of all the features is available on the SOX wiki page [here](https:/
 
 Please post bugs and feature requests as issues on [Github](https://github.com/soscripted/sox), where we can track them easily and push updates quickly. Please **do not** post them as answers on Stack Apps -- they are much harder to manage!
 
+## Contribute
+
+Pull requests to add new features or improve the existing ones, etc. are welcome! Please head to the [Contributing](https://github.com/soscripted/sox/wiki/Contributing) wiki page to get started.
+
 ## Changes
 
 Please see the change log [at Stack Apps](http://stackapps.com/a/6358).
