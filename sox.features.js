@@ -768,15 +768,17 @@
             }
         },
 
+        // Description: For auto-inlining any links to imgur images in comments
         autoShowCommentImages: function() {
-            // Description: For auto-inlining any links to imgur images in comments
-
             function showImages() {
                 $('.comment .comment-text .comment-copy a').each(function() {
-                    if ($(this).attr('href') && ($(this).attr('href').indexOf('i.imgur.com') != -1 || $(this).attr('href').indexOf('i.stack.imgur.com') != -1)) { //https://github.com/soscripted/sox/issues/219
-                        var src = $(this).attr('href');
-                        if (!$(this).parent().find('img[src="' + src + '"]').length) {
-                            $(this).parent().append('<br><img src="' + src + '" style="max-width:100%">'); //add image to end of comments, but keep link in same position
+                    var href = this.getAttribute('href'), parent = this.parentNode;
+                    
+                    if(href && (/i(\.stack)?\.imgur\.com/.test(href))) {
+                        if (!parent.querySelectorAll('img[src="' + href + '"]').length) {
+                            //add image to end of comments, but keep link in same position
+                            parent.innerHTML += '<br><a href="' + href + '"><img src="' + href + '" style="max-width:100%"></a>';
+                            parent.removeChild(this);
                         }
                     }
                 });
