@@ -98,7 +98,7 @@
         }, {
             "name": "scrollToTop",
             "desc": "Add Scroll To Top button",
-            "extended_description": "This feature adds a 'scroll to top' button at the bottom left of your screen that will jump to the top of the page when clicked",
+            "extended_description": "This feature adds an up arrow at the bottom-right of your screen, that will jump to the top of the page when clicked",
             "meta": "",
             "match": "",
             "exclude": "*://chat.*.com/*"
@@ -133,6 +133,12 @@
             "meta": "http://meta.stackexchange.com/questions/249808/add-a-way-to-reveal-all-spoiler-blocks-in-a-post-at-once",
             "match": "*://*/questions*",
             "exclude": "SE1.0"
+        }, {
+            "name": "addTimelineAndRevisionLinks",
+            "desc": "Add timeline and revision links to the bottom of each post for quick access to them",
+            "meta": "",
+            "match": "*://*/questions*,*://*/review*",
+            "exclude": ""
         }],
         "Comments": [{
             "name": "autoShowCommentImages",
@@ -200,7 +206,7 @@
         }, {
             "name": "editComment",
             "desc": "Pre-defined edit comment options (checkboxes)",
-            "extended_description": "Adds checkboxes to add canned messages for edit revisions when editing. You can make your own canned responses by clicking the 'Edit Reasons' button that is added to the Help dropdown menu in the topbar",
+            "extended_description": "Adds checkboxes to add canned messages for edit revisions when editing. You can make *your own* canned responses by clicking the 'Edit Reasons' button that is added to the Help dropdown menu in the topbar",
             "meta": "http://meta.stackexchange.com/questions/190461/improve-the-editing-flow-with-predefined-options-for-edit-summary",
             "match": "",
             "exclude": "*://chat.*.com/*,SE1.0"
@@ -212,9 +218,9 @@
             "match": "*://*/questions*,*://*/review*",
             "exclude": "SE1.0"
         }, {
-            "name": "enhancedEditor",
-            "desc": "Add more features to the markdown editor",
-            "extended_description": "Adds find/replace, changes the TAB key behaviour, adds DuckDuckGo integration, and basic auto-correct features.",
+            "name": "findAndReplace",
+            "desc": "Add a find & replace feature to the markdown editor",
+            "extended_description": "",
             "meta": "",
             "match": "*://*/questions*,*://*/review*",
             "exclude": "SE1.0"
@@ -243,7 +249,7 @@
             "desc": "Add a notification to your inbox when a question you downvote is edited",
             "meta": "http://meta.stackexchange.com/q/165962/260841",
             "match": "",
-            "exclude": ""
+            "exclude": "SE1.0"
         }],
         "Flags": [{
             "name": "flagOutcomeTime",
@@ -353,20 +359,14 @@
             "match": "*://*/questions*,*://*/review*",
             "exclude": "SE1.0"
         }, {
-            "name": "grayOutVotes",
-            "desc": "Gray out deleted vote buttons",
-            "meta": "http://meta.stackexchange.com/a/174806/260841",
-            "match": "*://*/questions*",
-            "exclude": "SE1.0"
-        },  {
             "name": "stickyVoteButtons",
             "desc": "Make vote buttons next to posts sticky whilst scrolling on that post",
             "meta": "http://meta.stackexchange.com/a/35047/260841",
             "match": "*://*/questions*,*://*/review*",
             "exclude": "SE1.0"
         }, {
-            "name": "disableOwnPostVoteButtons",
-            "desc": "Disable vote buttons on your own posts",
+            "name": "disableVoteButtons",
+            "desc": "Disable vote buttons on posts you cannot vote on",
             "meta": "",
             "match": "*://*/questions*",
             "exclude": "SE1.0"
@@ -472,6 +472,7 @@
         }, {
             "name": "openLinksInNewTab",
             "desc": "Open any links to the specified sites in a new tab by default",
+            "extended_description": "You need to set the sites yourself by clicking the button next to this feature",
             "meta": "",
             "match": "*://*/questions*",
             "exclude": "",
@@ -482,7 +483,7 @@
             }]
         }, {
             "name": "showQuestionStateInSuggestedEditReviewQueue",
-            "desc": "Show question's state in the suggested edit review queue",
+            "desc": "Show question's current state in the suggested edit review queue",
             "meta": "",
             "match": "*://*/review*",
             "exclude": ""

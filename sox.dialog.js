@@ -3,7 +3,10 @@
 
     sox.dialog = {
         init: function(options) {
-            if (!$('.top-bar').length) return;
+
+            if (!$('.top-bar').length) {
+                return;
+            }
             sox.debug('initializing SOX dialog');
 
             var version = options.version,
@@ -255,50 +258,6 @@
                     class: 'fa fa-cogs'
                 });
 
-            //open dialog on hover if another dialog is already open
-            $soxSettingsButton.hover(function() { //https://github.com/soscripted/sox/issues/44, open on hover, just like the normal dropdowns
-                if ($('.topbar-icon').not('#soxSettingsButton').hasClass('topbar-icon-on')) {
-                    $('.topbar-dialog').hide();
-                    $('.topbar-icon-on').removeClass('topbar-icon-on').removeClass('icon-site-switcher-on');
-                    $(this).addClass('topbar-icon-on');
-                    $soxSettingsDialog.show();
-                }
-            }, function() {
-                $('.topbar-icon').not('#soxSettingsButton').hover(function(e) {
-                    var $button = $(this);
-                    if ($('#soxSettingsButton').hasClass('topbar-icon-on')) {
-                        $soxSettingsDialog.hide();
-                        $('#soxSettingsButton').removeClass('topbar-icon-on');
-                        var which = $(this).attr('class').match(/js[\w-]*\b/)[0].split('-')[1];
-                        if (which != 'site') { //site-switcher dropdown is slightly different
-                            $('.' + which + '-dialog').not('#sox-settings-dialog, #metaNewQuestionAlertDialog, #downvotedPostsEditAlertDialog').show();
-                            $(this).addClass('topbar-icon-on');
-                            //repeated clicks are INTENDED, hacky fix for https://github.com/soscripted/sox/issues/272
-                            $button[0].click();
-                            $button[0].click();
-                        } else {
-                            if ($(this).css('top') != '34px') {
-                                $('.siteSwitcher-dialog').css('top', '34px').css('left', '0px');
-                            }
-                            $('.siteSwitcher-dialog').show();
-                            $(this).addClass('topbar-icon-on').addClass('icon-site-switcher-on'); //icon-site-switcher-on is special to the site-switcher dropdown (StackExchange button)
-                        }
-                    } else {
-                        if (!$(e.toElement).is('.icon-site-switcher')) {
-                            if ($('.siteSwitcher-dialog').is(':visible')) {
-                                $('.siteSwitcher-dialog').hide();
-                            }
-                        }
-                    }
-                }, function(e) {
-                    if ($(e.toElement).is('.topbar-icon')) { //only hide the StackExchange dialog if the un-hover is onto another topbar dialog button
-                        if ($('.siteSwitcher-dialog').is(':visible')) {
-                            $('.siteSwitcher-dialog').hide();
-                        }
-                    }
-                });
-            });
-
             //close dialog if clicked outside it
             $(document).click(function(e) { //close dialog if clicked outside it
                 var $target = $(e.target),
@@ -347,14 +306,17 @@
 
             // add dialog to corral and sox button to topbar
             $soxSettingsButton.append($icon);
-            if (sox.NEW_TOPBAR) {
-                console.log('asd');
-                $('.secondary-nav .-list').prepend($('<li/>').addClass('-item').append($soxSettingsButton));
-                $soxSettingsDialog.addClass('new-topbar');
-            } else {
-                $soxSettingsButton.appendTo('div.network-items');
-                $soxSettingsDialog.css('left', $('#soxSettingsButton').position().left);
+            $('.top-bar .-container .-secondary .-item:eq(1)').after($('<li/>').addClass('-item').append($soxSettingsButton)); //https://github.com/soscripted/sox/issues/310
+            if (sox.site.href.indexOf('area51.meta') !== -1) { //area 51 discussions is different
+                $soxSettingsButton.parent().css({
+                    'top': '7px',
+                    'left': '9px'
+                });
             }
+            $soxSettingsDialog.addClass('new-topbar');
+            $soxSettingsDialog.css('top', $('.top-bar').height());
+
+
 
             //'$('#soxSettingsButton').position().left' from @IStoleThePies: https://github.com/soscripted/sox/issues/120#issuecomment-267857625:
             //only add dialog if button was added successfully

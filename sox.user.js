@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Stack Overflow Extras (SOX)
 // @namespace    https://github.com/soscripted/sox
-// @version      2.1.0
+// @version      2.2.0
 // @description  Extra optional features for Stack Overflow and Stack Exchange sites
 // @contributor  ᴉʞuǝ (stackoverflow.com/users/1454538/)
 // @contributor  ᔕᖺᘎᕊ (stackexchange.com/users/4337810/)
@@ -92,6 +92,7 @@
             featureInfo = JSON.parse(GM_getResourceText('featuresJSON'));
 
         try {
+            sox.debug('init', sox, sox.dialog);
             sox.dialog.init({
                 version: sox.info.version,
                 features: featureInfo,
@@ -193,8 +194,8 @@
             //and detects that page and saves it automatically.
             //this seems to be a much cleaner and easier-to-debug method!
 
-            window.open('https://stackexchange.com/oauth/dialog?client_id=7138&scope=no_expiry&redirect_uri=http://soscripted.github.io/sox/');
-            alert('To complete the SOX installation please follow the instructions in the window that has been opened for you to receive your access token');
+            var askUserToAuthorise = window.confirm('To complete the SOX installation, you need to get an access token! Please press "OK" to continue and follow the instructions in the window that opens.');
+            if (askUserToAuthorise) window.open('https://stackexchange.com/oauth/dialog?client_id=7138&scope=no_expiry&redirect_uri=http://soscripted.github.io/sox/');
             sox.warn('Please go to the following URL to get your access token for certain SOX features', 'https://stackexchange.com/oauth/dialog?client_id=7138&scope=no_expiry&redirect_uri=http://soscripted.github.io/sox/');
         }
     }

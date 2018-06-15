@@ -2,15 +2,6 @@
     'use strict';
 
     sox.features = { //SOX functions must go in here
-
-        grayOutVotes: function() {
-            // Description: Grays out votes AND vote count
-
-            if ($('.deleted-answer').length) {
-                $('.deleted-answer .vote-down-off, .deleted-answer .vote-up-off, .deleted-answer .vote-count-post').css('opacity', '0.5');
-            }
-        },
-
         moveBounty: function() {
             // Description: For moving bounty to the top
 
@@ -262,7 +253,10 @@
 
             function colour() {
                 $('.answercell').each(function(i, obj) {
-                    $(this).parent().next().find('.comment-user:contains("' + $.trim($(this).find('.user-details').last().clone().children('.-flair').remove().end().text()) + '")').css({'background-color': '#f9e2b6', 'padding': '1px 5px'}); //Find the comments on each post that contain the answerer's name. Also, .last() is necessary, or else it will use the name of someone who edits the answer.
+                    $(this).parent().next().find('.comment-user:contains("' + $.trim($(this).find('.user-details').last().clone().children('.-flair').remove().end().text()) + '")').css({
+                        'background-color': '#f9e2b6',
+                        'padding': '1px 5px'
+                    }); //Find the comments on each post that contain the answerer's name. Also, .last() is necessary, or else it will use the name of someone who edits the answer.
                 });
             }
 
@@ -375,9 +369,9 @@
                     $('#reasons input[type="checkbox"]').change(function() {
                         if (this.checked) { //Add it to the summary
                             if (!editCommentField.val()) {
-                                editCommentField.val(toLocaleSentenceCase($(this).val()).replace(/on$/g, ''));
+                                editCommentField.val(toLocaleSentenceCase($(this).val()));
                             } else {
-                                editCommentField.val(editCommentField.val() + '; ' + $(this).val().replace(/on$/g, ''));
+                                editCommentField.val(editCommentField.val() + '; ' + $(this).val());
                             }
                             var newEditComment = editCommentField.val(); //Remove the last space and last semicolon
                             editCommentField.val(newEditComment).focus();
@@ -498,7 +492,7 @@
                 var popup = $('.share-tip');
                 var origHtml = popup.html();
                 if (origHtml.indexOf(toRemove) == -1) return; //don't do anything if the function's already done its thing
-                popup.html(function () {
+                popup.html(function() {
                     return origHtml.replace(toRemove, '');
                 });
 
@@ -587,7 +581,7 @@
                     if (!$(this).find('.soxReplyLink').length) { //if the link doesn't already exist
                         if ($('.topbar-links a span:eq(0)').text() != $(this).find('.comment-text a.comment-user').text()) { //make sure the link is not added to your own comments
                             $(this).find('.comment-text').css('overflow-x', 'hidden');
-                            $(this).append('<span class="soxReplyLink" title="reply to this user" style="margin-left: -7px">&crarr;</span>');
+                            $(this).find('.comment-text .comment-body').append('<span class="soxReplyLink" title="reply to this user" style="margin-left: -7px">&crarr;</span>');
                         }
                     }
                 });
@@ -595,7 +589,7 @@
 
             $(document).on('click', 'span.soxReplyLink', function() {
                 var parentDiv = $(this).parent().parent().parent().parent();
-                var textToAdd = '@' + $(this).parent().find('.comment-text a.comment-user').text().replace(/\s/g, '').replace(/♦/, ''); //eg. @USERNAME
+                var textToAdd = '@' + $(this).parent().find('a.comment-user').text().replace(/\s/g, '').replace(/♦/, ''); //eg. @USERNAME
                 if (!parentDiv.find('textarea').length) parentDiv.next('div').find('a.js-add-link')[0].click(); //show the textarea, http://stackoverflow.com/a/10559680/
 
                 var $textarea = parentDiv.find('textarea');
@@ -774,15 +768,19 @@
             }
         },
 
-        autoShowCommentImages: function() {
+        autoShowCommentImages: function() { 
             // Description: For auto-inlining any links to imgur images in comments
-
+    
             function showImages() {
                 $('.comment .comment-text .comment-copy a').each(function() {
-                    if ($(this).attr('href') && ($(this).attr('href').indexOf('i.imgur.com') != -1 || $(this).attr('href').indexOf('i.stack.imgur.com') != -1)) { //https://github.com/soscripted/sox/issues/219
-                        var src = $(this).attr('href');
-                        if (!$(this).parent().find('img[src="' + src + '"]').length) {
-                            $(this).parent().append('<br><img src="' + src + '" style="max-width:100%">'); //add image to end of comments, but keep link in same position
+                    var href = this.getAttribute('href'),
+                        parent = this.parentNode;
+                    
+                    if (href && (/i(\.stack)?\.imgur\.com/.test(href))) {
+                        if (!parent.querySelectorAll('img[src="' + href + '"]').length) {
+                            //add image to end of comments, but keep link in same position
+                            parent.innerHTML += '<br><a href="' + href + '"><img src="' + href + '" style="max-width:100%"></a>';
+                            parent.removeChild(this);
                         }
                     }
                 });
@@ -882,7 +880,7 @@
                     $voteCell.css('min-width', Math.floor($vote.width()));
 
                     if ($vote.length) //This value strangely alternates between existing and not existing. This if statement ensures we only get its value when it exists, so no errors.
-                        endPos = $voteCell.next().find('.fw').offset().top; //I think a bit above the end of the post (where the "edit", "delete", etc. buttons lie) is a good place to stop the stickiness.
+                        endPos = $voteCell.next().find('.fw, .fw-wrap').offset().top; //I think a bit above the end of the post (where the "edit", "delete", etc. buttons lie) is a good place to stop the stickiness.
 
                     $voteCell.on('DOMNodeInserted', function() { //Fix dismissable message boxes, like "Please consider adding a comment if you think this post can be improved." when downvoting
                         $vote.find('.message-dismissable').css({
@@ -892,6 +890,7 @@
                     });
 
                     if (vcOfset.top + 1.5 * $vote.outerHeight() < endPos && vcOfset.top < scrollTop + offset) { //Left condition is to get rid of a sticky zone on extremely short posts. Right condition allows stickiness unless we're above the post.
+                        $vote.parent().css('margin-right', '15px');
                         if (scrollTop + offset + $vote.outerHeight() < endPos) { //Allow stickiness unless we've scrolled down past the post.
                             $vote.css({
                                 position: 'fixed',
@@ -907,6 +906,7 @@
                         }
                     } else {
                         $vote.removeAttr('style'); //Remove any stickiness
+                        $vote.parent().removeAttr('style'); //Remove any stickiness
                     }
                 });
             }
@@ -974,7 +974,7 @@
 
                 //All sites have either a chat link or meta link
                 $(this).find('.rep-score').stop(true).delay(135).fadeOut(20);
-                $(this).prepend('<div class="related-links" style="float: right; display: none;">' +
+                $(this).append('<div class="related-links" style="float: right; display: none;">' +
                     (link ?
                         (link.indexOf('area51.meta') > -1 ? '<a href="' + link + '">discuss</a>' : (href.indexOf('meta') > -1 ? '<a href="' + link + '">main</a>' : '<a href="' + link + '">meta</a>')) :
                         '') +
@@ -1006,7 +1006,7 @@
                 apiLink = 'https://api.stackexchange.com/2.2/questions?pagesize=5&order=desc&sort=activity&site=' + metaName,
                 $dialog = $('<div/>', {
                     id: 'metaNewQuestionAlertDialog',
-                    'class': 'topbar-dialog achievements-dialog dno'
+                    'class': 'topbar-dialog dno new-topbar'
                 }),
                 $header = $('<div/>', {
                     'class': 'header'
@@ -1023,57 +1023,25 @@
                 $diamond = $('<a/>', {
                     id: 'metaNewQuestionAlertButton',
                     href: '#',
-                    'class': 'topbar-icon yes-hover metaNewQuestionAlert-diamondOff',
+                    'class': '-link metaNewQuestionAlert-diamondOff',
                     title: 'Moderator inbox (recent meta questions)',
                     click: function(e) {
                         e.preventDefault();
                         $diamond.toggleClass('topbar-icon-on');
                         $dialog.toggle();
                     }
+                }).css({
+                    'background-image': 'url(//cdn.sstatic.net/img/share-sprite-new.svg?v=78be252218f3)'
                 });
 
             $dialog.append($header).append($content.append($questions));
             if (sox.NEW_TOPBAR) {
-                $('.so-header .secondary-nav .-list').prepend($('<li/>').addClass('-item').append($diamond));
-                $('.js-topbar-dialog-corral').append($dialog);
-                $diamond.css({
-                    'background-image': 'url(//cdn.sstatic.net/img/share-sprite-new.svg?v=78be252218f3)',
-                    'background-position': '-218px -76px'
-                }).addClass('-link');
-                $dialog.addClass('new-topbar').css({
-                    'width': '377px',
-                    'right': '205px',
-                    'left': 'auto',
-                    'top': '57px',
-                });
+                $('.top-bar .-container .-secondary .-item:eq(1)').after($('<li/>').addClass('-item').append($diamond));
             } else {
-                $('#soxSettingsButton').after($diamond);
-                $dialog.css('left', $('#metaNewQuestionAlertButton').position().left).prependTo('.js-topbar-dialog-corral');
+                $diamond.appendTo('div.network-items');
             }
-
-            $('#metaNewQuestionAlertButton').hover(function() { //open on hover, just like the normal dropdowns
-                if ($('.topbar-icon').not('#metaNewQuestionAlertButton').hasClass('topbar-icon-on')) {
-                    $('.topbar-dialog').hide();
-                    $('.topbar-icon').removeClass('topbar-icon-on').removeClass('icon-site-switcher-on');
-                    $(this).addClass('topbar-icon-on');
-                    $('#metaNewQuestionAlertDialog').show();
-                }
-            }, function() {
-                $('.topbar-icon').not('#metaNewQuestionAlertButton').hover(function() {
-                    if ($('#metaNewQuestionAlertButton').hasClass('topbar-icon-on')) {
-                        $('#metaNewQuestionAlertDialog').hide();
-                        $('#metaNewQuestionAlertButton').removeClass('topbar-icon-on');
-                        var which = $(this).attr('class').match(/js[\w-]*\b/)[0].split('-')[1];
-                        if (which != 'site') { //site-switcher dropdown is slightly different
-                            $('.' + which + '-dialog').not('#sox-settings-dialog, #metaNewQuestionAlertDialog, #downvotedPostsEditAlertDialog').show();
-                            $(this).addClass('topbar-icon-on');
-                        } else {
-                            $('.siteSwitcher-dialog').show();
-                            $(this).addClass('topbar-icon-on').addClass('icon-site-switcher-on'); //icon-site-switcher-on is special to the site-switcher dropdown (StackExchange button)
-                        }
-                    }
-                });
-            });
+            $dialog.css('top', $('.top-bar').height());
+            if ($('#metaNewQuestionAlertButton').length) $('.js-topbar-dialog-corral').append($dialog);
 
             $(document).mouseup(function(e) {
                 if (!$dialog.is(e.target) &&
@@ -1634,7 +1602,7 @@ Toggle SBS?</div></li>';
             // Description: Hide just the 'Hot Meta Posts' sections in the Community Bulletin
 
             var $hotMetaPostsHeader = $('#sidebar .community-bulletin .related').find('div:contains("Hot Meta Posts")');
-            if($hotMetaPostsHeader.length) {
+            if ($hotMetaPostsHeader.length) {
                 $hotMetaPostsHeader.nextAll().remove();
                 $hotMetaPostsHeader.remove();
             }
@@ -1650,13 +1618,6 @@ Toggle SBS?</div></li>';
             // Description: Hides the "Love This Site?"" module from the sidebar
 
             $('#sidebar #newsletter-ad').parent().remove();
-        },
-
-        enhancedEditor: function() {
-            // Description: Add a bunch of features to the standard markdown editor (autocorrect, find+replace, Ace editor, and more!)
-
-            sox.enhancedEditor.startFeature();
-
         },
 
         downvotedPostsEditAlert: function() {
@@ -1714,7 +1675,7 @@ Toggle SBS?</div></li>';
 
             var $dialog = $('<div/>', {
                     id: 'downvotedPostsEditAlertDialog',
-                    'class': 'topbar-dialog achievements-dialog dno'
+                    'class': 'topbar-dialog dno new-topbar'
                 }),
                 $header = $('<div/>', {
                     'class': 'header'
@@ -1730,18 +1691,14 @@ Toggle SBS?</div></li>';
                 }),
                 $button = $('<a/>', {
                     id: 'downvotedPostsEditAlertButton',
-                    class: 'topbar-icon yes-hover downvotedPostsEditAlert-buttonOff',
+                    class: '-link downvotedPostsEditAlert-buttonOff',
                     title: 'Watched posts that have been edited',
-                    'style': 'color: #858c93; background-image: none; height: 24px;',
+                    'style': 'color: #858c93; background-image: none;',
                     href: '#',
                     click: function(e) {
                         e.preventDefault();
-                        $('#downvotedPostsEditAlertDialog').toggle();
-                        if ($('#downvotedPostsEditAlertDialog').is(':visible')) {
-                            $(this).addClass('topbar-icon-on');
-                        } else {
-                            $(this).removeClass('topbar-icon-on');
-                        }
+                        $button.toggleClass('topbar-icon-on');
+                        $dialog.toggle();
                     }
                 }),
                 $icon = $('<i/>', {
@@ -1752,34 +1709,16 @@ Toggle SBS?</div></li>';
                     'style': 'display:none'
                 });
 
-            if ($('#metaNewQuestionAlertDialog').length) $dialog.css('left', '297px');
-            $button.append($count).append($icon).appendTo('div.network-items');
+            $button.append($count).append($icon);
 
-            $dialog.css('left', $('#downvotedPostsEditAlertButton').position().left).append($header).append($content.append($posts)).prependTo('.js-topbar-dialog-corral');
-
-            $('#downvotedPostsEditAlertButton').hover(function() { //open on hover, just like the normal dropdowns
-                if ($('.topbar-icon').not('#downvotedPostsEditAlertButton').hasClass('topbar-icon-on')) {
-                    $('.topbar-dialog').hide();
-                    $('.topbar-icon').removeClass('topbar-icon-on').removeClass('icon-site-switcher-on');
-                    $(this).addClass('topbar-icon-on');
-                    $('#downvotedPostsEditAlertDialog').show();
-                }
-            }, function() {
-                $('.topbar-icon').not('#downvotedPostsEditAlertButton').hover(function() {
-                    if ($('#downvotedPostsEditAlertButton').hasClass('topbar-icon-on')) {
-                        $('#downvotedPostsEditAlertDialog').hide();
-                        $('#downvotedPostsEditAlertButton').removeClass('topbar-icon-on');
-                        var which = $(this).attr('class').match(/js[\w-]*\b/)[0].split('-')[1];
-                        if (which != 'site') { //site-switcher dropdown is slightly different
-                            $('.' + which + '-dialog').not('#sox-settings-dialog, #metaNewQuestionAlertDialog, #downvotedPostsEditAlertDialog').show();
-                            $(this).addClass('topbar-icon-on');
-                        } else {
-                            $('.siteSwitcher-dialog').show();
-                            $(this).addClass('topbar-icon-on').addClass('icon-site-switcher-on'); //icon-site-switcher-on is special to the site-switcher dropdown (StackExchange button)
-                        }
-                    }
-                });
-            });
+            if (sox.NEW_TOPBAR) {
+                $('.top-bar .-container .-secondary .-item:eq(1)').after($('<li/>').addClass('-item').append($button));
+            } else {
+                $button.appendTo('div.network-items');
+                $dialog.css('left', $('#downvotedPostsEditAlertButton').position().left);
+            }
+            $dialog.css('top', $('.top-bar').height());
+            if ($('#downvotedPostsEditAlertButton').length) $('.js-topbar-dialog-corral').append($dialog);
 
             $(document).click(function(e) { //close dialog if clicked outside it
                 var $target = $(e.target),
@@ -1792,7 +1731,6 @@ Toggle SBS?</div></li>';
                     $count.text('');
                 }
             });
-
 
             var websocketSiteCodes = {
                 "3dprinting": "640",
@@ -2051,6 +1989,7 @@ Toggle SBS?</div></li>';
                 addEditNotification(o.url, o.title, o.sitename, i, false, o.editor, o.editor_link, o.edit_date, o.type, postsToCheck);
             });
 
+            console.log(postsToCheck);
             if (!$.isEmptyObject(postsToCheck)) {
                 sox.debug(postsToCheck);
                 $.each(postsToCheck, function(i, o) {
@@ -2089,6 +2028,8 @@ Toggle SBS?</div></li>';
                         };
                     }
                 });
+            } else {
+                $dialog.text('empty');
             }
         },
 
@@ -2494,8 +2435,8 @@ Toggle SBS?</div></li>';
 
             var div = $('<div/>', {
                 id: 'loggedInReminder',
-                style: 'position: fixed; right: 0; bottom: 50px; background-color: rgba(200, 200, 200, 1); width: 200px; height: 35px; text-align: center; padding: 3px; color: red;',
-                html: 'You are not logged in. You should <a href="/users/login">log in</a> to continue enjoying SE.'
+                style: 'position: fixed; right: 0; bottom: 50px; background-color: rgba(200, 200, 200, 1); width: 200px; text-align: center; padding: 5px; color: black; font-weight:bold',
+                html: 'SOX: You are not logged in. You should <a href="/users/login">log in</a> to continue enjoying SE.'
             });
 
             function checkAndAddReminder() {
@@ -2509,9 +2450,20 @@ Toggle SBS?</div></li>';
             setInterval(checkAndAddReminder, 300000); //5 mins
         },
 
-        disableOwnPostVoteButtons: function() {
-            // Description: disables vote buttons on your own posts
+        disableVoteButtons: function() {
+            // Description: disables vote buttons on posts you cannot vote on
+            // https://github.com/soscripted/sox/issues/309
 
+            //Grays out votes, vote count for deleted posts
+            if ($('.deleted-answer').length) {
+                $('.deleted-answer .vote-down-off, .deleted-answer .vote-up-off, .deleted-answer .vote-count-post').css({
+                    'cursor': 'default',
+                    'opacity': '0.5',
+                    'pointer-events': 'none' //disables the anchor tag (jQuery off() doesn't work)
+                });
+            }
+
+            //Grays out votes on own posts
             $('.answer, .question')
                 .find('.user-details:last a')
                 .filter('a[href*=' + sox.user.id + ']')
@@ -2524,7 +2476,29 @@ Toggle SBS?</div></li>';
                     'opacity': '0.5',
                     'pointer-events': 'none' //disables the anchor tag (jQuery off() doesn't work)
                 })
-                .attr('title', 'You cannot vote on your own posts.');
+                .parent().attr('title', 'You cannot vote on your own posts.'); //.parent() is to add the title to the .vote div
+
+            //Grays out votes on posts which haven't been edited in the last 5 minutes
+            $('.answer, .question').not('.owner').each(function() {
+                if ($(this).find('.post-signature').length === 2) { //if there's only 1, that's the post owner, no edits have been made yet!
+                    if (!$(this).find('.vote-up-on, .vote-down-on').length) return; //if they haven't voted, no point checking
+                    var $timeSpan = $(this).find('.user-action-time:first span:last'),
+                        lastEditedTime = new Date($timeSpan.attr('title')),
+                        timeDifference = new Date() - lastEditedTime;
+                    if (timeDifference / 1000 / 60 > 5) { //divide by 1000 to get seconds, divide by 60 to get minutes
+                        $(this).find('.votecell .vote a[class*="vote"]')
+                            .not('[id*="vote-accept"]')
+                            .removeClass('sox-better-css')
+                            .css({
+                                'cursor': 'default',
+                                'opacity': '0.5',
+                                'pointer-events': 'none' //disables the anchor tag (jQuery off() doesn't work)
+                            });
+                        $(this).find('.vote').attr('title', 'You cannot change your vote on posts that were last edited more than 5 minutes ago.');
+                    }
+                }
+            });
+
         },
 
         replyToOwnChatMessages: function() {
@@ -2753,7 +2727,12 @@ Toggle SBS?</div></li>';
         },
 
         openLinksInNewTab: function(settings) {
-            settings = settings.linksToOpenInNewTab.replace(' ', '').split(',');
+            // Description: Open any links to the specified sites in a new tab by default
+
+            settings = settings.linksToOpenInNewTab;
+            if (!settings) return;
+
+            settings = settings.replace(' ', '').split(',');
             if (settings.length) { //https://github.com/soscripted/sox/issues/300
                 $('.post-text a').each(function() {
                     var href = $(this).attr('href');
@@ -2768,6 +2747,8 @@ Toggle SBS?</div></li>';
         },
 
         showQuestionStateInSuggestedEditReviewQueue: function() {
+            // Description: Show question's current state in the suggested edit review queue (duplicate, off-topic, etc.)
+
             $(document).on('sox-new-review-post-appeared', function() {
                 if ($('#sox-showQuestionStateInSuggestedEditReviewQueue-checked').length) return; //already checked
                 var postId = $('.summary h2 a').attr('href').split('/')[2];
@@ -2788,6 +2769,76 @@ Toggle SBS?</div></li>';
                     }
                 }, 'creation&filter=!-MOiNm40B3fle5H6oLVI3nx6UQo(vNstn');
             });
+        },
+
+        addTimelineAndRevisionLinks: function() {
+            // Description: Add timeline and revision links to the bottom of each post for quick access to them
+
+            $('.question, .answer').each(function() {
+                $(this).find('.post-menu').append($('<a/>', {
+                    'href': '//' + sox.site.url + '/posts/' + sox.site.href.split('/')[4] + '/revisions',
+                    'text': 'revisions'
+                })).append($('<a/>', {
+                    'href': '//' + sox.site.url + '/posts/' + sox.site.href.split('/')[4] + '/timeline',
+                    'text': 'timeline'
+                }));
+            });
+        },
+
+        findAndReplace: function() { //Salvaged from old 'enhanced editor' feature
+            // Description: adds a 'find and replace' option to the markdown editor
+
+            function startLoop() {
+                $('textarea[id^="wmd-input"].processed').each(function() {
+                    main($(this).attr('id'));
+                });
+
+                $('.edit-post').click(function() {
+                    var $that = $(this);
+                    sox.helpers.observe('#wmd-redo-button-' + $that.attr('href').split('/')[2], function() {
+                        main($that.parents('table').find('.inline-editor textarea.processed').attr('id'));
+                    });
+                });
+            }
+
+            function main(wmd) {
+                var s = '#' + wmd; //s is the selector we pass onto each function so the action is applied to the correct textarea (and not, for example the 'add answer' textarea *and* the 'edit' textarea!)
+                if ($(s).parents('.wmd-container').find('#findReplace').length) return;
+
+                $('.wmd-button-bar').css('margin-top', '0'); //https://github.com/soscripted/sox/issues/203
+
+                $(s).before("<div class='findReplaceToolbar'><span id='findReplace'>Find & Replace</span></div>");
+
+                $(document).on('click', '#findReplace', function(e) {
+                    if ($('.findReplaceInputs').length) {
+                        $('.findReplaceInputs').remove();
+                    } else {
+                        $(this).parent().append("<div class='findReplaceInputs'><input id='find' type='text' placeholder='Find'><input id='modifier' type='text' placeholder='Modifier'><input id='replace' type='text' placeholder='Replace with'><input id='replaceGo' type='button' value='Go'></div>");
+                    }
+                    $(document).on('click', '.findReplaceToolbar #replaceGo', function() {
+                        var regex = new RegExp($('.findReplaceToolbar #find').val(), $('.findReplaceToolbar #modifier').val());
+                        var oldval = $(this).parent().parent().parent().find('textarea').val();
+                        var newval = oldval.replace(regex, $('.findReplaceToolbar #replace').val());
+                        $(this).parent().parent().parent().find('textarea').val(newval);
+
+                        var Stack = (typeof StackExchange === "undefined" ? window.eval('StackExchange') : StackExchange);
+                        if (Stack.MarkdownEditor) Stack.MarkdownEditor.refreshAllPreviews();
+                    });
+                    e.preventDefault();
+                    e.stopPropagation();
+                });
+
+                $(s).keydown(function(e) {
+                    if (e.which == 70 && e.ctrlKey) { //ctrl+f (find+replace)
+                        $('#findReplace').trigger('click');
+                        e.stopPropagation();
+                        e.preventDefault();
+                        return false;
+                    }
+                });
+            }
+            $(document).on('sox-edit-window', startLoop);
+            startLoop();
         }
     };
 })(window.sox = window.sox || {}, jQuery);

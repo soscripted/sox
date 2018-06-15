@@ -2,16 +2,13 @@
 
 #sox-settings-dialog {
     top: 34px;
-    left: 230px;
+    right: 208px;
     min-height: calc(100vh - 90px);
     width: 550px;
     display: none;
 }
 
 #sox-settings-dialog.new-topbar {
-    right: 192px;
-    left: inherit !important;
-    top: 50px;
     min-height: calc(100vh - 75px);
 }
 
@@ -208,16 +205,16 @@
 }
 
 .metaNewQuestionAlert-diamondOn {
-    background-position: -218px -86px;
+    background-position: -218px -82px;
 }
 
 .metaNewQuestionAlert-diamondOff {
-    background-position: -138px -86px;
+    background-position: -138px -82px;
 }
 
 #metaNewQuestionAlertDialog {
-    top: 34px;
-    left: 264px;
+    top: 50px;
+    right: 242px;
     width: 377px;
 }
 
@@ -403,64 +400,8 @@ li.fixedTopbar-siteLink {
 }
 
 
-/*enhancedEditor (enhanced_editor folder)*/
-
-.enhancedEditor-centered {
-    width: 40%;
-    z-index: 1001;
-    top: 190px;
-    left: 615.5px;
-    display: inline-block;
-    margin-top: -95.5px;
-    margin-left: -216px;
-    overflow: auto;
-    height: 70%;
-}
-
-.ownURL, .ownImage {
-    border-radius: 5px;
-    width: 70%;
-    padding: 5px;
-}
-
-.go {
-    padding: 5px;
-    border-radius: 5px;
-    color: black;
-    background-color: lightgreen;
-}
-
-.DDG-go {
-    float: right;
-}
-
-hr.or {
-    border: 0;
-    border-top: 1px solid whitesmoke;
-    text-align: center;
-}
-
-hr.or:after {
-    content: "or...";
-    display: inline-block;
-    position: relative;
-    top: -0.7em;
-    font-size: 1.1em;
-    padding: 0.2em;
-    background: whitesmoke;
-}
-
-.DDG-container {
-    background-color: whitesmoke;
-    border-radius: 10px;
-    padding: 2%;
-}
-
-.DDG-credit {
-    font-size: 0.8em;
-}
-
-.enhancedEditor-toolbar {
+/*findAndReplace*/
+.findReplaceToolbar {
     display: block;
     background-color: transparent;
     padding: 0 12px;
@@ -469,35 +410,19 @@ hr.or:after {
     border-top: 0;
 }
 
-.enhancedEditor-toolbar>span {
+#findReplace {
     cursor: pointer;
 }
 
-.enhancedEditor-toolbar>span+span {
-    margin-left: 2px;
-}
-
-.enhancedEditor-closeDialog {
-    float: left;
-    margin-right: 10px;
-    font-size: 1.2em;
-    cursor: pointer;
-}
-
-.enhancedEditor-toolbar.findReplace>input[type='text'] {
+.findReplaceToolbar.findReplace>input[type='text'] {
     height: 10px;
     width: 25%;
 }
 
-.enhancedEditor-toolbar.findReplace>input[type='button'] {
+.findReplaceToolbar.findReplace>input[type='button'] {
     width: 10%;
     height: 100%;
 }
-
-.enhancedEditor-asLinkContainer {
-    display: block;
-}
-
 
 /*chatEasyAccess - for the links (b elements)*/
 
@@ -528,10 +453,8 @@ hr.or:after {
 
 #downvotedPostsEditAlertButton {
     background-image: none;
-    padding-top: 10px;
     font-size: 14px;
     color: #858c93;
-    height: 24px !important;
     min-width: 34px;
     cursor: pointer;
 }
@@ -553,8 +476,7 @@ hr.or:after {
 }
 
 #downvotedPostsEditAlertDialog {
-    top: 34px;
-    left: 264px;
+    right: 273px;
     width: 377px;
     display: none;
 }
@@ -569,6 +491,7 @@ hr.or:after {
 
 .soxReplyLink {
     cursor: pointer;
+    float: right;
 }
 
 
