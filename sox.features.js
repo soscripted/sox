@@ -265,8 +265,9 @@
         },
 
 
-        // Description: For adding buttons to the markdown toolbar to surround selected test with KBD or convert selection into a markdown list
         kbdAndBullets: function() {
+            // Description: For adding buttons to the markdown toolbar to surround selected test with KBD or convert selection into a markdown list
+
             function addBullets($node) {
                 var list = '- ' + $node.getSelection().text.split('\n').join('\n- ');
                 $node.replaceSelectedText(list);
@@ -289,7 +290,7 @@
                 StackExchange.MarkdownEditor.refreshAllPreviews();
             }
 
-            function getTextarea(button){
+            function getTextarea(button) {
                 // li -> ul -> #wmd-button-bar -> .wmd-container
                 return button.parentNode.parentNode.parentNode.querySelector("textarea");
             }
@@ -308,18 +309,20 @@
             loopAndAddHandlers();
 
             document.addEventListener('keydown', function(event) {
-                var kC = event.keyCode, target = event.target;
+                var kC = event.keyCode,
+                    target = event.target;
 
-                if(target && /^wmd-input/.test(target.id) && event.altKey){
-                    if(kC === 76) addBullets($(target)); // l
-                    else if(kC === 75) addKbd($(target)); // k
+                if (target && /^wmd-input/.test(target.id) && event.altKey) {
+                    if (kC === 76) addBullets($(target)); // l
+                    else if (kC === 75) addKbd($(target)); // k
                 }
             });
 
             $(document).on('click', '#wmd-kbd-button, #wmd-bullet-button', function(event) {
-                var id = this.id, textarea = $(getTextarea(this));
+                var id = this.id,
+                    textarea = $(getTextarea(this));
 
-                if(id === "wmd-kbd-button") addKbd(textarea);
+                if (id === "wmd-kbd-button") addKbd(textarea);
                 else addBullets(textarea);
             });
         },
@@ -758,14 +761,14 @@
             }
         },
 
-        autoShowCommentImages: function() { 
+        autoShowCommentImages: function() {
             // Description: For auto-inlining any links to imgur images in comments
-    
+
             function showImages() {
                 $('.comment .comment-text .comment-copy a').each(function() {
                     var href = this.getAttribute('href'),
                         parent = this.parentNode;
-                    
+
                     if (href && (/i(\.stack)?\.imgur\.com/.test(href))) {
                         if (!parent.querySelectorAll('img[src="' + href + '"]').length) {
                             //add image to end of comments, but keep link in same position
@@ -2469,25 +2472,22 @@
 
             //Grays out votes on posts which haven't been edited in the last 5 minutes
             $('.answer, .question').not('.owner').each(function() {
-                if ($(this).find('.post-signature').length === 2) { //if there's only 1, that's the post owner, no edits have been made yet!
-                    if (!$(this).find('.vote-up-on, .vote-down-on').length) return; //if they haven't voted, no point checking
-                    var $timeSpan = $(this).find('.user-action-time:first span:last'),
-                        lastEditedTime = new Date($timeSpan.attr('title')),
-                        timeDifference = new Date() - lastEditedTime;
-                    if (timeDifference / 1000 / 60 > 5) { //divide by 1000 to get seconds, divide by 60 to get minutes
-                        $(this).find('.votecell .vote a[class*="vote"]')
-                            .not('[id*="vote-accept"]')
-                            .removeClass('sox-better-css')
-                            .css({
-                                'cursor': 'default',
-                                'opacity': '0.5',
-                                'pointer-events': 'none' //disables the anchor tag (jQuery off() doesn't work)
-                            });
-                        $(this).find('.vote').attr('title', 'You cannot change your vote on posts that were last edited more than 5 minutes ago.');
-                    }
+                if (!$(this).find('.vote-up-on, .vote-down-on').length) return; //if they haven't voted, no point checking
+                var $timeSpan = $(this).find('.user-action-time:first span:last'),
+                    lastEditedTime = new Date($timeSpan.attr('title')),
+                    timeDifference = new Date() - lastEditedTime;
+                if (timeDifference / 1000 / 60 > 5) { //divide by 1000 to get seconds, divide by 60 to get minutes
+                    $(this).find('.votecell .vote a[class*="vote"]')
+                        .not('[id*="vote-accept"]')
+                        .removeClass('sox-better-css')
+                        .css({
+                            'cursor': 'default',
+                            'opacity': '0.5',
+                            'pointer-events': 'none' //disables the anchor tag (jQuery off() doesn't work)
+                        });
+                    $(this).find('.vote').attr('title', 'SOX: You cannot change your vote on posts that were last edited more than 5 minutes ago.');
                 }
             });
-
         },
 
         replyToOwnChatMessages: function() {
