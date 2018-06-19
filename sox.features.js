@@ -264,12 +264,13 @@
             $(document).on('sox-new-comment', colour);
         },
 
-        kbdAndBullets: function() {
-            // Description: For adding buttons to the markdown toolbar to surround selected test with KBD or convert selection into a markdown list
 
+        // Description: For adding buttons to the markdown toolbar to surround selected test with KBD or convert selection into a markdown list
+        kbdAndBullets: function() {
             function addBullets($node) {
                 var list = '- ' + $node.getSelection().text.split('\n').join('\n- ');
                 $node.replaceSelectedText(list);
+                StackExchange.MarkdownEditor.refreshAllPreviews();
             }
 
             function addKbd($node) {
@@ -277,60 +278,49 @@
                 var surroundedText = $node.getSelection(),
                     trimmed = surroundedText.text.trim();
 
-                if ($node.getSelection().text !== '') { //https://github.com/soscripted/sox/issues/240
-                    //https://github.com/soscripted/sox/issues/189:
+                if ($node.getSelection().text !== '') {
+                    //https://github.com/soscripted/sox/issues/240
+                    //https://github.com/soscripted/sox/issues/189
                     //if no trimming occured, then we have to add another space
                     $node.replaceSelectedText(trimmed);
                     $node.insertText(' ', surroundedText.end + (trimmed == surroundedText.text ? 6 : 5), 'collapseToEnd'); //add a space after the `</kbd>`
                 }
+
+                StackExchange.MarkdownEditor.refreshAllPreviews();
+            }
+
+            function getTextarea(button){
+                // li -> ul -> #wmd-button-bar -> .wmd-container
+                return button.parentNode.parentNode.parentNode.querySelector("textarea");
             }
 
             function loopAndAddHandlers() {
-                var kbdBtn = '<li class="wmd-button" title="surround selected text with <kbd> tags" style="left: 400px;"><span id="wmd-kbd-button" style="background-image: none;">kbd</span></li>';
-                var listBtn = '<li class="wmd-button" title="add dashes (\"-\") before every line to make a bulvar point list" style="left: 425px;"><span id="wmd-bullet-button" style="background-image:none;">&#x25cf;</span></li>';
+                var kbdBtn = '<li class="wmd-button" id="wmd-kbd-button" title="surround selected text with <kbd> tags"><span style="background-image:none;">kbd</span></li>',
+                    listBtn = '<li class="wmd-button" id="wmd-bullet-button" title="add dashes (\'-\') before every line to make a bullet list"><span style="background-image:none;">&#x25cf;</span></li>';
 
                 $('[id^="wmd-redo-button"]').each(function() {
-                    if (!$(this).parent().find('#wmd-kbd-button').length) $(this).after(kbdBtn);
+                    if (!$(this).parent().find('#wmd-kbd-button').length) $(this).after(kbdBtn + listBtn);
                 });
-                $('[id^="wmd-redo-button"]').each(function() {
-                    if (!$(this).parent().find('#wmd-bullet-button').length) $(this).after(listBtn);
-                });
-
-                //https://github.com/soscripted/sox/issues/112
-                //http://meta.stackexchange.com/a/123256/260841
-                var textarea = $('textarea[id^="wmd-input"]');
-
-                function rejectKeyboardUndoRedo(e) {
-                    if (e.ctrlKey && (e.which == 90 || e.which == 89)) {
-                        e.stopPropagation();
-                    }
-                }
-
-                if (textarea.length) { //https://github.com/soscripted/sox/issues/220
-                    textarea.parent()[0].addEventListener('keydown', rejectKeyboardUndoRedo, true);
-                    textarea.parent()[0].addEventListener('keypress', rejectKeyboardUndoRedo, true);
-                    textarea.parent()[0].addEventListener('keyup', rejectKeyboardUndoRedo, true);
-                }
             }
 
             $(document).on('sox-edit-window', loopAndAddHandlers);
 
             loopAndAddHandlers();
 
-            $('[id^="wmd-input"]').bind('keydown', 'alt+l', function() {
-                addBullets($(this).parents('div[id*="wmd-button-bar"]').parent().find('textarea'));
+            document.addEventListener('keydown', function(event) {
+                var kC = event.keyCode, target = event.target;
+
+                if(target && /^wmd-input/.test(target.id) && event.altKey){
+                    if(kC === 76) addBullets($(target)); // l
+                    else if(kC === 75) addKbd($(target)); // k
+                }
             });
 
-            $('[id^="wmd-input"]').bind('keydown', 'alt+k', function() {
-                addKbd($(this).parents('div[id*="wmd-button-bar"]').parent().find('textarea'));
-            });
+            $(document).on('click', '#wmd-kbd-button, #wmd-bullet-button', function(event) {
+                var id = this.id, textarea = $(getTextarea(this));
 
-            $(document).on('click', '#wmd-kbd-button', function() {
-                addKbd($(this).parents('div[id*="wmd-button-bar"]').parent().find('textarea'));
-            });
-
-            $(document).on('click', '#wmd-bullet-button', function() {
-                addBullets($(this).parents('div[id*="wmd-button-bar"]').parent().find('textarea'));
+                if(id === "wmd-kbd-button") addKbd(textarea);
+                else addBullets(textarea);
             });
         },
 
@@ -1295,8 +1285,7 @@
                     if (jNode.parent().find('.sox-sbs-toggle').length) return; //don't add again if already exists
 
                     var sbsBtn = '<li class="wmd-button sox-sbs-toggle" title="side-by-side-editing" style="left: 500px;width: 170px;"> \
-<div id="wmd-sbs-button' + toAppend + '" style="background-image: none;"> \
-Toggle SBS?</div></li>';
+<div id="wmd-sbs-button' + toAppend + '" style="background-image: none;">SBS</div></li>';
                     jNode.after(sbsBtn);
 
                     //add click listener to sbsBtn
