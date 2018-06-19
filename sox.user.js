@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Stack Overflow Extras (SOX)
 // @namespace    https://github.com/soscripted/sox
-// @version      2.2.2 DEV
+// @version      2.2.3 DEV
 // @description  Extra optional features for Stack Overflow and Stack Exchange sites
 // @contributor  ᴉʞuǝ (stackoverflow.com/users/1454538/)
 // @contributor  ᔕᖺᘎᕊ (stackexchange.com/users/4337810/)
@@ -24,14 +24,12 @@
 // @require      https://code.jquery.com/ui/1.11.4/jquery-ui.min.js
 // @require      https://api.stackexchange.com/js/2.0/all.js
 // @require      https://cdn.rawgit.com/timdown/rangyinputs/master/rangyinputs-jquery-src.js
-// @require      https://cdn.rawgit.com/jeresig/jquery.hotkeys/master/jquery.hotkeys.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery-timeago/1.5.3/jquery.timeago.min.js
 
 // @require      sox.common.js
 // @require      sox.github.js
 // @require      sox.dialog.js
 // @require      sox.features.js
-// @require      sox.enhanced_editor.js
 
 // @resource     css sox.css
 // @resource     dialog sox.dialog.html
