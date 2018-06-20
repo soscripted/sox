@@ -2450,9 +2450,10 @@ Toggle SBS?</div></li>';
             setInterval(checkAndAddReminder, 300000); //5 mins
         },
 
-        // Description: disables vote buttons on posts you cannot vote on
-        // https://github.com/soscripted/sox/issues/309
         disableVoteButtons: function() {
+            // Description: disables vote buttons on posts you cannot vote on
+            // https://github.com/soscripted/sox/issues/309
+            
             function setButtonCSS(button){
                 return button
                         .removeClass('sox-better-css')
