@@ -2450,50 +2450,44 @@ Toggle SBS?</div></li>';
             setInterval(checkAndAddReminder, 300000); //5 mins
         },
 
+        // Description: disables vote buttons on posts you cannot vote on
+        // https://github.com/soscripted/sox/issues/309
         disableVoteButtons: function() {
-            // Description: disables vote buttons on posts you cannot vote on
-            // https://github.com/soscripted/sox/issues/309
-
-            //Grays out votes, vote count for deleted posts
-            if ($('.deleted-answer').length) {
-                $('.deleted-answer .vote-down-off, .deleted-answer .vote-up-off, .deleted-answer .vote-count-post').css({
-                    'cursor': 'default',
-                    'opacity': '0.5',
-                    'pointer-events': 'none' //disables the anchor tag (jQuery off() doesn't work)
-                });
+            function setButtonCSS(button){
+                return button
+                        .removeClass('sox-better-css')
+                        .css({
+                            'cursor': 'default',
+                            'opacity': '0.5',
+                            'pointer-events': 'none' //disables the anchor tag (jQuery off() doesn't work)
+                        });
             }
+            
+            // Grays out votes, vote count for deleted posts
+            if ($('.deleted-answer').length) 
+                setButtonCSS($('.deleted-answer .vote-down-off, .deleted-answer .vote-up-off, .deleted-answer .vote-count-post'));            
 
             //Grays out votes on own posts
-            $('.answer, .question')
-                .find('.user-details:last a')
-                .filter('a[href*=' + sox.user.id + ']')
+            var ownPostBtn =  $('.answer, .question')
+                .find('.user-details:last a[href*=' + sox.user.id + ']')
                 .closest('.answer, .question')
-                .find('.votecell .vote a[class*="vote"]')
-                .not('[id*="vote-accept"]') //https://github.com/soscripted/sox/issues/165
-                .removeClass('sox-better-css')
-                .css({
-                    'cursor': 'default',
-                    'opacity': '0.5',
-                    'pointer-events': 'none' //disables the anchor tag (jQuery off() doesn't work)
-                })
+                // https://github.com/soscripted/sox/issues/165
+                .find('.votecell .vote a[class*="vote"]:not([id*="vote-accept"])');
+            
+            setButtonCSS(ownPostBtn)
                 .parent().attr('title', 'You cannot vote on your own posts.'); //.parent() is to add the title to the .vote div
 
             //Grays out votes on posts which haven't been edited in the last 5 minutes
             $('.answer, .question').not('.owner').each(function() {
                 if ($(this).find('.post-signature').length === 2) { //if there's only 1, that's the post owner, no edits have been made yet!
                     if (!$(this).find('.vote-up-on, .vote-down-on').length) return; //if they haven't voted, no point checking
+                    
                     var $timeSpan = $(this).find('.user-action-time:first span:last'),
                         lastEditedTime = new Date($timeSpan.attr('title')),
                         timeDifference = new Date() - lastEditedTime;
+                    
                     if (timeDifference / 1000 / 60 > 5) { //divide by 1000 to get seconds, divide by 60 to get minutes
-                        $(this).find('.votecell .vote a[class*="vote"]')
-                            .not('[id*="vote-accept"]')
-                            .removeClass('sox-better-css')
-                            .css({
-                                'cursor': 'default',
-                                'opacity': '0.5',
-                                'pointer-events': 'none' //disables the anchor tag (jQuery off() doesn't work)
-                            });
+                        setButtonCSS($(this).find('.votecell .vote a[class*="vote"]:not([id*="vote-accept"])'));
                         $(this).find('.vote').attr('title', 'You cannot change your vote on posts that were last edited more than 5 minutes ago.');
                     }
                 }
