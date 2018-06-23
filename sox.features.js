@@ -2443,51 +2443,121 @@
         },
 
         disableVoteButtons: function() {
-            // Description: disables vote buttons on posts you cannot vote on
-            // https://github.com/soscripted/sox/issues/309
+            var voteTimestampKey = "voteTimestamps", voteTimestamp,
+                VOTE_LOCK_TIME = 60 * 5 * 1000; // 5 minutes
 
-            //Grays out votes, vote count for deleted posts
-            if ($('.deleted-answer').length) {
-                $('.deleted-answer .vote-down-off, .deleted-answer .vote-up-off, .deleted-answer .vote-count-post').css({
-                    'cursor': 'default',
-                    'opacity': '0.5',
-                    'pointer-events': 'none' //disables the anchor tag (jQuery off() doesn't work)
-                });
+            // use lS since it is domain-specific, so we don't need to track different
+            // SE sites separately
+            function saveVoteTimestamp(){
+                console.trace();
+                console.dir(voteTimestamp);
+                localStorage.setItem(voteTimestampKey, JSON.stringify(voteTimestamp));
             }
 
-            //Grays out votes on own posts
-            $('.answer, .question')
-                .find('.user-details:last a')
-                .filter('a[href*=' + sox.user.id + ']')
-                .closest('.answer, .question')
-                .find('.votecell .vote a[class*="vote"]')
-                .not('[id*="vote-accept"]') //https://github.com/soscripted/sox/issues/165
-                .removeClass('sox-better-css')
-                .css({
-                    'cursor': 'default',
-                    'opacity': '0.5',
-                    'pointer-events': 'none' //disables the anchor tag (jQuery off() doesn't work)
-                })
-                .parent().attr('title', 'You cannot vote on your own posts.'); //.parent() is to add the title to the .vote div
+            function initializeVoteTimestamps(){
+                voteTimestamp = localStorage.getItem(voteTimestampKey);
 
-            //Grays out votes on posts which haven't been edited in the last 5 minutes
-            $('.answer, .question').not('.owner').each(function() {
-                if (!$(this).find('.vote-up-on, .vote-down-on').length) return; //if they haven't voted, no point checking
-                var $timeSpan = $(this).find('.user-action-time:first span:last'),
-                    lastEditedTime = new Date($timeSpan.attr('title')),
-                    timeDifference = new Date() - lastEditedTime;
-                if (timeDifference / 1000 / 60 > 5) { //divide by 1000 to get seconds, divide by 60 to get minutes
-                    $(this).find('.votecell .vote a[class*="vote"]')
-                        .not('[id*="vote-accept"]')
+                if(!voteTimestamp) {
+                    voteTimestamp = Object.create(null);
+                    saveVoteTimestamp();
+                }
+
+                voteTimestamp = JSON.parse(voteTimestamp);
+            }
+
+            function setButtonCSS(button){
+                return button
                         .removeClass('sox-better-css')
                         .css({
                             'cursor': 'default',
                             'opacity': '0.5',
                             'pointer-events': 'none' //disables the anchor tag (jQuery off() doesn't work)
                         });
-                    $(this).find('.vote').attr('title', 'SOX: You cannot change your vote on posts that were last edited more than 5 minutes ago.');
+            }
+
+            function onVoteTimeoutComplete(postID){
+                return function(){
+                    setButtonCSS($("#answer-" + postID + ", #question-" + postID).find('.votecell .vote a[class*="vote"]:not([id*="vote-accept"])'))
+                        .parent().attr('title', 'You last voted on this post on ' + new Date() + ". Your vote is now locked unless this post is edited.");
+
+                     removeVoteTimestamp(postID);
+                };
+            }
+
+            function removeVoteTimestamp(postID){
+                delete voteTimestamp[postID];
+                saveVoteTimestamp();
+            }
+
+            // lock all votes that are already voted on page load
+            // and whose postID is not in voteTimestamp
+            // as they had been voted on more than five minutes prior
+            function lockAllPrevotedPosts(){
+                var allOn = $(".vote-up-on, .vote-down-on");
+
+                $.each(allOn, function(index, voteBtn){
+                    var post = $(voteBtn).closest(".answer, .question"),
+                        postID = post[0].id.match(/\d+/)[0];
+
+                    if(!(postID in voteTimestamp))
+                        setButtonCSS(post.find('.votecell .vote a[class*="vote"]:not([id*="vote-accept"])'))
+                            .parent().attr('title', "You last voted on this post more than five minutes ago. Your vote is now locked unless this post is edited.");
+                });
+            }
+
+            // Grays out votes, vote count for deleted posts
+            if ($('.deleted-answer').length)
+                setButtonCSS($('.deleted-answer .vote-down-off, .deleted-answer .vote-up-off, .deleted-answer .vote-count-post'));
+
+            //Grays out votes on own posts
+            var ownPostBtn = $('.user-details:last a[href*=' + sox.user.id + ']')
+                .closest('.answer, .question')
+                // https://github.com/soscripted/sox/issues/165
+                .find('.votecell .vote a[class*="vote"]:not([id*="vote-accept"])');
+
+            setButtonCSS(ownPostBtn)
+                //.parent() is to add the title to the .vote div
+                .parent().attr('title', 'You cannot vote on your own posts.');
+
+            initializeVoteTimestamps();
+            console.dir(voteTimestamp);
+
+            // clicking on any vote button toggles the vote, or switches to a new vote
+            // + -> -, - ->  +, + -> none, - -> none
+            $(document).on("click", "[class^=\"vote-up\"], [class^=\"vote-down\"]", function(event){
+                var node = event.target, otherBtn,
+                    postID = node.parentNode.querySelector("input").value;
+
+                // if is upvote button
+                if(/up/.test(node.className)) otherBtn = node.nextElementSibling.nextElementSibling;
+                else otherBtn = node.previousElementSibling.previousElementSibling;
+
+                var isFirstVoteEnabled = /on/.test(node.className),
+                    isSecondVoteEnabled = /on/.test(otherBtn.className);
+
+                // user has removed their vote
+                if(!isFirstVoteEnabled && !isSecondVoteEnabled){
+                    clearTimeout(voteTimestamp[postID][1]);
+                    removeVoteTimestamp(postID);
+                    return;
                 }
+
+                // user has made a new vote
+                var timeout = setTimeout(onVoteTimeoutComplete(postID), VOTE_LOCK_TIME);
+                voteTimestamp[postID] = [Date.now(), timeout];
+                saveVoteTimestamp();
             });
+
+            // set timeout for existing votes. the timeout is detroyed on page reload/button click
+            var currentTime = Date.now(), timeout, timestamp;
+            for(var postID in voteTimestamp){
+                timestamp = voteTimestamp[postID][0];
+                timeout = setTimeout(onVoteTimeoutComplete(postID), VOTE_LOCK_TIME - (currentTime - timestamp));
+                voteTimestamp[postID] = [timestamp, timeout];
+                saveVoteTimestamp();
+            }
+
+            lockAllPrevotedPosts();
         },
 
         replyToOwnChatMessages: function() {
