@@ -250,6 +250,12 @@
             "meta": "http://meta.stackexchange.com/q/165962/260841",
             "match": "",
             "exclude": "SE1.0"
+        }, {
+            "name": "pasteImagesDirectly",
+            "desc": "Paste images directly into the post editor without the image dialog",
+            "meta": "",
+            "match": "*://*/questions*",
+            "exclude": ""
         }],
         "Flags": [{
             "name": "flagOutcomeTime",

@@ -2828,6 +2828,41 @@
             }
             $(document).on('sox-edit-window', startLoop);
             startLoop();
+        },
+
+        pasteImagesDirectly: function() {
+            // Description: paste images into textarea without using image dialog
+
+            $(document).on('paste', '.wmd-input', function(e) {
+                let clipboard = e.originalEvent.clipboardData;
+                if (!clipboard.items.length) return;
+                if (clipboard.items[0].type.indexOf('image') === -1) return;
+
+                let imageBlob = clipboard.items[0].getAsFile();
+
+                let r = new FileReader();
+                r.onload = function(image) {
+                    $.ajax({ //TODO: use stack imgur API?
+                        url: 'https://api.imgur.com/3/image',
+                        headers: {
+                            'Authorization': 'Client-ID e54d6bf725000d6'
+                        },
+                        type: 'POST',
+                        data: {
+                            'image': image.target.result.split(',')[1] //remove the 'data:...''
+                        },
+                        success: function(data) {
+                            let link = data.data.link;
+                            $(e.target).insertText('![image](' + link + ')', $(e.target).getSelection().start); //rangyinputs!
+                        },
+                        error: function(data) {
+                            sox.error(data);
+                            alert("Sorry, there was an error uploading the image to Imgur.");
+                        }
+                    });
+                }
+                r.readAsDataURL(imageBlob);
+            });
         }
     };
 })(window.sox = window.sox || {}, jQuery);
