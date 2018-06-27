@@ -888,13 +888,13 @@
                             $vote.css({
                                 position: 'fixed',
                                 top: offset,
-                                left: $voteCell.offset().left - $(window).scrollLeft() //Prevent the buttons from moving horizontally if we scroll left/right
+                                left: $('#left-sidebar').length ? '' : $voteCell.offset().left - $(window).scrollLeft() //Prevent the buttons from moving horizontally if we scroll left/right, https://github.com/soscripted/sox/issues/334
                             });
                         } else {
                             $vote.css({
                                 position: 'absolute',
                                 top: endPos - $vote.outerHeight() - topbarHeight, //Leave the button at its bottommost position
-                                left: $voteCell.offset().left //Prevents weird bug if you scroll to the end while scrolling horizontally
+                                left: $('#left-sidebar').length ? '' : $voteCell.offset().left //Prevents weird bug if you scroll to the end while scrolling horizontally, https://github.com/soscripted/sox/issues/334
                             });
                         }
                     } else {
