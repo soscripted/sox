@@ -264,12 +264,14 @@
             $(document).on('sox-new-comment', colour);
         },
 
+
         kbdAndBullets: function() {
             // Description: For adding buttons to the markdown toolbar to surround selected test with KBD or convert selection into a markdown list
 
             function addBullets($node) {
                 var list = '- ' + $node.getSelection().text.split('\n').join('\n- ');
                 $node.replaceSelectedText(list);
+                StackExchange.MarkdownEditor.refreshAllPreviews();
             }
 
             function addKbd($node) {
@@ -277,60 +279,51 @@
                 var surroundedText = $node.getSelection(),
                     trimmed = surroundedText.text.trim();
 
-                if ($node.getSelection().text !== '') { //https://github.com/soscripted/sox/issues/240
-                    //https://github.com/soscripted/sox/issues/189:
+                if ($node.getSelection().text !== '') {
+                    //https://github.com/soscripted/sox/issues/240
+                    //https://github.com/soscripted/sox/issues/189
                     //if no trimming occured, then we have to add another space
                     $node.replaceSelectedText(trimmed);
                     $node.insertText(' ', surroundedText.end + (trimmed == surroundedText.text ? 6 : 5), 'collapseToEnd'); //add a space after the `</kbd>`
                 }
+
+                StackExchange.MarkdownEditor.refreshAllPreviews();
+            }
+
+            function getTextarea(button) {
+                // li -> ul -> #wmd-button-bar -> .wmd-container
+                return button.parentNode.parentNode.parentNode.querySelector("textarea");
             }
 
             function loopAndAddHandlers() {
-                var kbdBtn = '<li class="wmd-button" title="surround selected text with <kbd> tags" style="left: 400px;"><span id="wmd-kbd-button" style="background-image: none;">kbd</span></li>';
-                var listBtn = '<li class="wmd-button" title="add dashes (\"-\") before every line to make a bulvar point list" style="left: 425px;"><span id="wmd-bullet-button" style="background-image:none;">&#x25cf;</span></li>';
+                var kbdBtn = '<li class="wmd-button" id="wmd-kbd-button" title="surround selected text with <kbd> tags"><span style="background-image:none;">kbd</span></li>',
+                    listBtn = '<li class="wmd-button" id="wmd-bullet-button" title="add dashes (\'-\') before every line to make a bullet list"><span style="background-image:none;">&#x25cf;</span></li>';
 
                 $('[id^="wmd-redo-button"]').each(function() {
-                    if (!$(this).parent().find('#wmd-kbd-button').length) $(this).after(kbdBtn);
+                    if (!$(this).parent().find('#wmd-kbd-button').length) $(this).after(kbdBtn + listBtn);
                 });
-                $('[id^="wmd-redo-button"]').each(function() {
-                    if (!$(this).parent().find('#wmd-bullet-button').length) $(this).after(listBtn);
-                });
-
-                //https://github.com/soscripted/sox/issues/112
-                //http://meta.stackexchange.com/a/123256/260841
-                var textarea = $('textarea[id^="wmd-input"]');
-
-                function rejectKeyboardUndoRedo(e) {
-                    if (e.ctrlKey && (e.which == 90 || e.which == 89)) {
-                        e.stopPropagation();
-                    }
-                }
-
-                if (textarea.length) { //https://github.com/soscripted/sox/issues/220
-                    textarea.parent()[0].addEventListener('keydown', rejectKeyboardUndoRedo, true);
-                    textarea.parent()[0].addEventListener('keypress', rejectKeyboardUndoRedo, true);
-                    textarea.parent()[0].addEventListener('keyup', rejectKeyboardUndoRedo, true);
-                }
             }
 
             $(document).on('sox-edit-window', loopAndAddHandlers);
 
             loopAndAddHandlers();
 
-            $('[id^="wmd-input"]').bind('keydown', 'alt+l', function() {
-                addBullets($(this).parents('div[id*="wmd-button-bar"]').parent().find('textarea'));
+            document.addEventListener('keydown', function(event) {
+                var kC = event.keyCode,
+                    target = event.target;
+
+                if (target && /^wmd-input/.test(target.id) && event.altKey) {
+                    if (kC === 76) addBullets($(target)); // l
+                    else if (kC === 75) addKbd($(target)); // k
+                }
             });
 
-            $('[id^="wmd-input"]').bind('keydown', 'alt+k', function() {
-                addKbd($(this).parents('div[id*="wmd-button-bar"]').parent().find('textarea'));
-            });
+            $(document).on('click', '#wmd-kbd-button, #wmd-bullet-button', function(event) {
+                var id = this.id,
+                    textarea = $(getTextarea(this));
 
-            $(document).on('click', '#wmd-kbd-button', function() {
-                addKbd($(this).parents('div[id*="wmd-button-bar"]').parent().find('textarea'));
-            });
-
-            $(document).on('click', '#wmd-bullet-button', function() {
-                addBullets($(this).parents('div[id*="wmd-button-bar"]').parent().find('textarea'));
+                if (id === "wmd-kbd-button") addKbd(textarea);
+                else addBullets(textarea);
             });
         },
 
@@ -775,7 +768,7 @@
                 $('.comment .comment-text .comment-copy a').each(function() {
                     var href = this.getAttribute('href'),
                         parent = this.parentNode;
-                    
+                  
                     if (href && (/i(\.stack)?\.imgur\.com/.test(href))) {
                         if (!parent.querySelectorAll('img[src="' + href + '"]').length) {
                             //add image to end of comments, but keep link in same position
@@ -895,13 +888,13 @@
                             $vote.css({
                                 position: 'fixed',
                                 top: offset,
-                                left: $voteCell.offset().left - $(window).scrollLeft() //Prevent the buttons from moving horizontally if we scroll left/right
+                                left: $('#left-sidebar').length ? '' : $voteCell.offset().left - $(window).scrollLeft() //Prevent the buttons from moving horizontally if we scroll left/right, https://github.com/soscripted/sox/issues/334
                             });
                         } else {
                             $vote.css({
                                 position: 'absolute',
                                 top: endPos - $vote.outerHeight() - topbarHeight, //Leave the button at its bottommost position
-                                left: $voteCell.offset().left //Prevents weird bug if you scroll to the end while scrolling horizontally
+                                left: $('#left-sidebar').length ? '' : $voteCell.offset().left //Prevents weird bug if you scroll to the end while scrolling horizontally, https://github.com/soscripted/sox/issues/334
                             });
                         }
                     } else {
@@ -1295,8 +1288,7 @@
                     if (jNode.parent().find('.sox-sbs-toggle').length) return; //don't add again if already exists
 
                     var sbsBtn = '<li class="wmd-button sox-sbs-toggle" title="side-by-side-editing" style="left: 500px;width: 170px;"> \
-<div id="wmd-sbs-button' + toAppend + '" style="background-image: none;"> \
-Toggle SBS?</div></li>';
+<div id="wmd-sbs-button' + toAppend + '" style="background-image: none;">SBS</div></li>';
                     jNode.after(sbsBtn);
 
                     //add click listener to sbsBtn
@@ -2451,49 +2443,32 @@ Toggle SBS?</div></li>';
         },
 
         disableVoteButtons: function() {
-            // Description: disables vote buttons on posts you cannot vote on
-            // https://github.com/soscripted/sox/issues/309
-            
-            function setButtonCSS(button){
-                return button
-                        .removeClass('sox-better-css')
-                        .css({
-                            'cursor': 'default',
-                            'opacity': '0.5',
-                            'pointer-events': 'none' //disables the anchor tag (jQuery off() doesn't work)
-                        });
+            // Description: disables vote buttons on your own or deleted posts, which you cannot vote on
+            // https://github.com/soscripted/sox/issues/309, https://github.com/soscripted/sox/issues/335
+
+            //Grays out votes, vote count for deleted posts
+            if ($('.deleted-answer').length) {
+                $('.deleted-answer .vote-down-off, .deleted-answer .vote-up-off, .deleted-answer .vote-count-post').css({
+                    'cursor': 'default',
+                    'opacity': '0.5',
+                    'pointer-events': 'none' //disables the anchor tag (jQuery off() doesn't work)
+                });
             }
-            
-            // Grays out votes, vote count for deleted posts
-            if ($('.deleted-answer').length) 
-                setButtonCSS($('.deleted-answer .vote-down-off, .deleted-answer .vote-up-off, .deleted-answer .vote-count-post'));            
 
             //Grays out votes on own posts
-            var ownPostBtn =  $('.answer, .question')
-                .find('.user-details:last a[href*=' + sox.user.id + ']')
+            $('.answer, .question')
+                .find('.user-details:last a')
+                .filter('a[href*=' + sox.user.id + ']')
                 .closest('.answer, .question')
-                // https://github.com/soscripted/sox/issues/165
-                .find('.votecell .vote a[class*="vote"]:not([id*="vote-accept"])');
-            
-            setButtonCSS(ownPostBtn)
+                .find('.votecell .vote a[class*="vote"]')
+                .not('[id*="vote-accept"]') //https://github.com/soscripted/sox/issues/165
+                .removeClass('sox-better-css')
+                .css({
+                    'cursor': 'default',
+                    'opacity': '0.5',
+                    'pointer-events': 'none' //disables the anchor tag (jQuery off() doesn't work)
+                })
                 .parent().attr('title', 'You cannot vote on your own posts.'); //.parent() is to add the title to the .vote div
-
-            //Grays out votes on posts which haven't been edited in the last 5 minutes
-            $('.answer, .question').not('.owner').each(function() {
-                if ($(this).find('.post-signature').length === 2) { //if there's only 1, that's the post owner, no edits have been made yet!
-                    if (!$(this).find('.vote-up-on, .vote-down-on').length) return; //if they haven't voted, no point checking
-                    
-                    var $timeSpan = $(this).find('.user-action-time:first span:last'),
-                        lastEditedTime = new Date($timeSpan.attr('title')),
-                        timeDifference = new Date() - lastEditedTime;
-                    
-                    if (timeDifference / 1000 / 60 > 5) { //divide by 1000 to get seconds, divide by 60 to get minutes
-                        setButtonCSS($(this).find('.votecell .vote a[class*="vote"]:not([id*="vote-accept"])'));
-                        $(this).find('.vote').attr('title', 'You cannot change your vote on posts that were last edited more than 5 minutes ago.');
-                    }
-                }
-            });
-
         },
 
         replyToOwnChatMessages: function() {
@@ -2834,6 +2809,72 @@ Toggle SBS?</div></li>';
             }
             $(document).on('sox-edit-window', startLoop);
             startLoop();
+        },
+
+        pasteImagesDirectly: function() {
+            // Description: paste images into textarea without using image dialog
+
+            $(document).on('paste', '.wmd-input', function(e) {
+                let clipboard = e.originalEvent.clipboardData;
+                if (!clipboard.items.length) return;
+                if (clipboard.items[0].type.indexOf('image') === -1) return;
+
+                let imageBlob = clipboard.items[0].getAsFile();
+
+                let r = new FileReader();
+                r.onload = function(image) {
+                    /*NOTE: the image can either be uploaded to SE's imgur account using the undocumented API,
+                    or using the normal imgur API. If the SE approach ever stops working, use the following instead:
+                    $.ajax({
++                        url: 'https://api.imgur.com/3/image',
++                        headers: {
++                            'Authorization': 'Client-ID e54d6bf725000d6' //this is @shu8's for SOX
++                        },
++                        type: 'POST',
++                        data: {
++                            'image': image.target.result.split(',')[1] //remove the 'data:...''
++                        },
++                        success: function(data) {
++                            let link = data.data.link;
++                            $(e.target).insertText('![image](' + link + ')', $(e.target).getSelection().start); //rangyinputs!
++                        },
++                        error: function(data) {
++                            sox.error(data);
++                            alert("Sorry, there was an error uploading the image to Imgur.");
++                        }
++                    });
+                    */
+                    $.ajax({
+                        url: 'https://meta.stackexchange.com/upload/image?https=true',
+                        type: 'POST',
+                        data: {
+                            'fkey': $('#fkey').val(),
+                            'source': 'computer',
+                            'filename': 'image.png',
+                            'upload-url': image.target.result.split(',')[1] //remove the 'data:...''
+                        },
+                        success: function(data) {
+                            /*NOTE: data === `<html>
+                                <head>
+                                <script>
+                                    window.parent.closeDialog("https://i.stack.imgur.com/blah.png");
+                                </script>
+                                </head>
+                                <body></body>
+                                </html>`
+                            */
+                            //NOTE: the following extracts the link from the response. it's messy, could probably be better!
+                            let link = JSON.stringify($($(data)[1]).html()).match(/(http.*?)"/)[1].replace("\\", "");
+                            $(e.target).insertText('![image](' + link + ')', $(e.target).getSelection().start); //rangyinputs!
+                        },
+                        error: function(data) {
+                            sox.error(data);
+                            alert("Sorry, there was an error uploading the image to Imgur.");
+                        }
+                    });
+                }
+                r.readAsDataURL(imageBlob);
+            });
         }
     };
 })(window.sox = window.sox || {}, jQuery);

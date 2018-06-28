@@ -250,6 +250,12 @@
             "meta": "http://meta.stackexchange.com/q/165962/260841",
             "match": "",
             "exclude": "SE1.0"
+        }, {
+            "name": "pasteImagesDirectly",
+            "desc": "Paste images directly into the post editor without the image dialog",
+            "meta": "",
+            "match": "*://*/questions*",
+            "exclude": ""
         }],
         "Flags": [{
             "name": "flagOutcomeTime",
@@ -366,7 +372,7 @@
             "exclude": "SE1.0"
         }, {
             "name": "disableVoteButtons",
-            "desc": "Disable vote buttons on posts you cannot vote on",
+            "desc": "Disable vote buttons on your own posts and deleted posts, which you cannot vote on",
             "meta": "",
             "match": "*://*/questions*",
             "exclude": "SE1.0"
