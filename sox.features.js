@@ -2443,8 +2443,8 @@
         },
 
         disableVoteButtons: function() {
-            // Description: disables vote buttons on posts you cannot vote on
-            // https://github.com/soscripted/sox/issues/309
+            // Description: disables vote buttons on your own or deleted posts, which you cannot vote on
+            // https://github.com/soscripted/sox/issues/309, https://github.com/soscripted/sox/issues/335
 
             //Grays out votes, vote count for deleted posts
             if ($('.deleted-answer').length) {
@@ -2469,25 +2469,6 @@
                     'pointer-events': 'none' //disables the anchor tag (jQuery off() doesn't work)
                 })
                 .parent().attr('title', 'You cannot vote on your own posts.'); //.parent() is to add the title to the .vote div
-
-            //Grays out votes on posts which haven't been edited in the last 5 minutes
-            $('.answer, .question').not('.owner').each(function() {
-                if (!$(this).find('.vote-up-on, .vote-down-on').length) return; //if they haven't voted, no point checking
-                var $timeSpan = $(this).find('.user-action-time:first span:last'),
-                    lastEditedTime = new Date($timeSpan.attr('title')),
-                    timeDifference = new Date() - lastEditedTime;
-                if (timeDifference / 1000 / 60 > 5) { //divide by 1000 to get seconds, divide by 60 to get minutes
-                    $(this).find('.votecell .vote a[class*="vote"]')
-                        .not('[id*="vote-accept"]')
-                        .removeClass('sox-better-css')
-                        .css({
-                            'cursor': 'default',
-                            'opacity': '0.5',
-                            'pointer-events': 'none' //disables the anchor tag (jQuery off() doesn't work)
-                        });
-                    $(this).find('.vote').attr('title', 'SOX: You cannot change your vote on posts that were last edited more than 5 minutes ago.');
-                }
-            });
         },
 
         replyToOwnChatMessages: function() {
@@ -2842,17 +2823,48 @@
 
                 let r = new FileReader();
                 r.onload = function(image) {
-                    $.ajax({ //TODO: use stack imgur API?
-                        url: 'https://api.imgur.com/3/image',
-                        headers: {
-                            'Authorization': 'Client-ID e54d6bf725000d6'
-                        },
+                    /*NOTE: the image can either be uploaded to SE's imgur account using the undocumented API,
+                    or using the normal imgur API. If the SE approach ever stops working, use the following instead:
+                    $.ajax({
++                        url: 'https://api.imgur.com/3/image',
++                        headers: {
++                            'Authorization': 'Client-ID e54d6bf725000d6' //this is @shu8's for SOX
++                        },
++                        type: 'POST',
++                        data: {
++                            'image': image.target.result.split(',')[1] //remove the 'data:...''
++                        },
++                        success: function(data) {
++                            let link = data.data.link;
++                            $(e.target).insertText('![image](' + link + ')', $(e.target).getSelection().start); //rangyinputs!
++                        },
++                        error: function(data) {
++                            sox.error(data);
++                            alert("Sorry, there was an error uploading the image to Imgur.");
++                        }
++                    });
+                    */
+                    $.ajax({
+                        url: 'https://meta.stackexchange.com/upload/image?https=true',
                         type: 'POST',
                         data: {
-                            'image': image.target.result.split(',')[1] //remove the 'data:...''
+                            'fkey': $('#fkey').val(),
+                            'source': 'computer',
+                            'filename': 'image.png',
+                            'upload-url': image.target.result.split(',')[1] //remove the 'data:...''
                         },
                         success: function(data) {
-                            let link = data.data.link;
+                            /*NOTE: data === `<html>
+                                <head>
+                                <script>
+                                    window.parent.closeDialog("https://i.stack.imgur.com/blah.png");
+                                </script>
+                                </head>
+                                <body></body>
+                                </html>`
+                            */
+                            //NOTE: the following extracts the link from the response. it's messy, could probably be better!
+                            let link = JSON.stringify($($(data)[1]).html()).match(/(http.*?)"/)[1].replace("\\", "");
                             $(e.target).insertText('![image](' + link + ')', $(e.target).getSelection().start); //rangyinputs!
                         },
                         error: function(data) {

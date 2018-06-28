@@ -372,7 +372,7 @@
             "exclude": "SE1.0"
         }, {
             "name": "disableVoteButtons",
-            "desc": "Disable vote buttons on posts you cannot vote on",
+            "desc": "Disable vote buttons on your own posts and deleted posts, which you cannot vote on",
             "meta": "",
             "match": "*://*/questions*",
             "exclude": "SE1.0"
