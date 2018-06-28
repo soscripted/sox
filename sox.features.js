@@ -761,14 +761,14 @@
             }
         },
 
-        autoShowCommentImages: function() {
+        autoShowCommentImages: function() { 
             // Description: For auto-inlining any links to imgur images in comments
-
+    
             function showImages() {
                 $('.comment .comment-text .comment-copy a').each(function() {
                     var href = this.getAttribute('href'),
                         parent = this.parentNode;
-
+                  
                     if (href && (/i(\.stack)?\.imgur\.com/.test(href))) {
                         if (!parent.querySelectorAll('img[src="' + href + '"]').length) {
                             //add image to end of comments, but keep link in same position
