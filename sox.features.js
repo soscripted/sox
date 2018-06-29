@@ -2814,12 +2814,22 @@
         pasteImagesDirectly: function() {
             // Description: paste images into textarea without using image dialog
 
-            $(document).on('paste', '.wmd-input', function(e) {
-                let clipboard = e.originalEvent.clipboardData;
-                if (!clipboard.items.length) return;
-                if (clipboard.items[0].type.indexOf('image') === -1) return;
+            document.addEventListener('paste', function(e) {
+                var node = e.target,
+                    isTextarea = node && node.tagName === "TEXTAREA",
+                    blob,
+                    clipboard = e.clipboardData || e.originalEvent.clipboardData,
+                    items = clipboard && clipboard.items;
 
-                let imageBlob = clipboard.items[0].getAsFile();
+                if(!isTextarea) return;
+
+                for(var i = 0, len = items && items.length; i < len; i++)
+                    if(/^image/.test(items[i].type)){
+                        blob = items[i].getAsFile();
+                        break;
+                    }
+
+                if(!blob) return;
 
                 let r = new FileReader();
                 r.onload = function(image) {
@@ -2848,7 +2858,7 @@
                         url: 'https://meta.stackexchange.com/upload/image?https=true',
                         type: 'POST',
                         data: {
-                            'fkey': $('#fkey').val(),
+                            'fkey': document.getElementById('fkey').value,
                             'source': 'computer',
                             'filename': 'image.png',
                             'upload-url': image.target.result.split(',')[1] //remove the 'data:...''
@@ -2865,7 +2875,7 @@
                             */
                             //NOTE: the following extracts the link from the response. it's messy, could probably be better!
                             let link = JSON.stringify($($(data)[1]).html()).match(/(http.*?)"/)[1].replace("\\", "");
-                            $(e.target).insertText('![image](' + link + ')', $(e.target).getSelection().start); //rangyinputs!
+                            $(node).insertText('![image](' + link + ')', $(node).getSelection().start); //rangyinputs!
                         },
                         error: function(data) {
                             sox.error(data);
@@ -2873,7 +2883,7 @@
                         }
                     });
                 }
-                r.readAsDataURL(imageBlob);
+                r.readAsDataURL(blob);
             });
         }
     };
