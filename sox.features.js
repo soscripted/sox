@@ -2818,6 +2818,7 @@
                 var node = e.target,
                     isTextarea = node && node.tagName === "TEXTAREA",
                     blob,
+                    reader = new FileReader(),
                     clipboard = e.clipboardData || e.originalEvent.clipboardData,
                     items = clipboard && clipboard.items;
 
@@ -2831,8 +2832,7 @@
 
                 if (!blob) return;
 
-                let r = new FileReader();
-                r.onload = function(image) {
+                reader.addEventListener("load", function(image) {
                     /*NOTE: the image can either be uploaded to SE's imgur account using the undocumented API, which can
                     break at any time, or using the normal imgur API. If the SE approach ever stops working,
                     use the following instead:
@@ -2856,7 +2856,7 @@
                     });
                     */
                     $.ajax({
-                        url: 'https://' + sox.site.url + '/upload/image?https=true',
+                        url: '/upload/image?https=true',
                         type: 'POST',
                         data: {
                             'fkey': sox.Stack.options.user.fkey,
@@ -2865,7 +2865,7 @@
                             'upload-url': image.target.result.split(',')[1] //remove the 'data:...''
                         },
                         success: function(data) {
-                            /*NOTE: data === `<html>
+                            /* data === `<html>
                                 <head>
                                 <script>
                                     window.parent.closeDialog("https://i.stack.imgur.com/blah.png");
@@ -2874,17 +2874,27 @@
                                 <body></body>
                                 </html>`
                             */
-                            //NOTE: the following extracts the link from the response. it's messy, could probably be better!
-                            let link = JSON.stringify($($(data)[1]).html()).match(/(http.*?)"/)[1].replace("\\", "");
-                            $(node).insertText('![image](' + link + ')', $(node).getSelection().start); //rangyinputs!
+
+                            // the URL is guaranteed to begin with HTTPS (StackExchange uses it by default)
+                            // and also to begin with i.stack
+                            // won't hardcode the rest of the URL to keep it future proof
+                            var link = data.match(/(https:\/\/i\.stack.*)\"/)[1],
+                                PLACEHOLDER = "enter image description here",
+                                nSS = node.selectionStart;
+
+                            $(node).insertText("![" + PLACEHOLDER + "](" + link + ")", nSS);
+                            // auto-select the placeholder
+                            node.selectionStart = nSS + 2; // 2 is for the "!["
+                            node.selectionEnd = node.selectionStart + PLACEHOLDER.length;
                         },
                         error: function(data) {
                             sox.error(data);
                             alert("SOX: Sorry, there was an error uploading the image to Imgur.");
                         }
                     });
-                }
-                r.readAsDataURL(blob);
+                });
+
+                reader.readAsDataURL(blob);
             });
         }
     };
