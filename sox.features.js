@@ -761,14 +761,14 @@
             }
         },
 
-        autoShowCommentImages: function() { 
+        autoShowCommentImages: function() {
             // Description: For auto-inlining any links to imgur images in comments
-    
+
             function showImages() {
                 $('.comment .comment-text .comment-copy a').each(function() {
                     var href = this.getAttribute('href'),
                         parent = this.parentNode;
-                  
+
                     if (href && (/i(\.stack)?\.imgur\.com/.test(href))) {
                         if (!parent.querySelectorAll('img[src="' + href + '"]').length) {
                             //add image to end of comments, but keep link in same position
@@ -2821,44 +2821,45 @@
                     clipboard = e.clipboardData || e.originalEvent.clipboardData,
                     items = clipboard && clipboard.items;
 
-                if(!isTextarea) return;
+                if (!isTextarea) return;
 
-                for(var i = 0, len = items && items.length; i < len; i++)
-                    if(/^image/.test(items[i].type)){
+                for (var i = 0, len = items && items.length; i < len; i++)
+                    if (/^image/.test(items[i].type)) {
                         blob = items[i].getAsFile();
                         break;
                     }
 
-                if(!blob) return;
+                if (!blob) return;
 
                 let r = new FileReader();
                 r.onload = function(image) {
-                    /*NOTE: the image can either be uploaded to SE's imgur account using the undocumented API,
-                    or using the normal imgur API. If the SE approach ever stops working, use the following instead:
+                    /*NOTE: the image can either be uploaded to SE's imgur account using the undocumented API, which can
+                    break at any time, or using the normal imgur API. If the SE approach ever stops working,
+                    use the following instead:
                     $.ajax({
-+                        url: 'https://api.imgur.com/3/image',
-+                        headers: {
-+                            'Authorization': 'Client-ID e54d6bf725000d6' //this is @shu8's for SOX
-+                        },
-+                        type: 'POST',
-+                        data: {
-+                            'image': image.target.result.split(',')[1] //remove the 'data:...''
-+                        },
-+                        success: function(data) {
-+                            let link = data.data.link;
-+                            $(e.target).insertText('![image](' + link + ')', $(e.target).getSelection().start); //rangyinputs!
-+                        },
-+                        error: function(data) {
-+                            sox.error(data);
-+                            alert("Sorry, there was an error uploading the image to Imgur.");
-+                        }
-+                    });
-                    */
-                    $.ajax({
-                        url: 'https://meta.stackexchange.com/upload/image?https=true',
+                        url: 'https://api.imgur.com/3/image',
+                        headers: {
+                            'Authorization': 'Client-ID e54d6bf725000d6' //this is @shu8's for SOX
+                        },
                         type: 'POST',
                         data: {
-                            'fkey': document.getElementById('fkey').value,
+                            'image': image.target.result.split(',')[1] //remove the 'data:...''
+                        },
+                        success: function(data) {
+                            let link = data.data.link;
+                            $(e.target).insertText('![image](' + link + ')', $(e.target).getSelection().start); //rangyinputs!
+                        },
+                        error: function(data) {
+                            sox.error(data);
+                            alert("Sorry, there was an error uploading the image to Imgur.");
+                        }
+                    });
+                    */
+                    $.ajax({
+                        url: 'https://' + sox.site.url + '/upload/image?https=true',
+                        type: 'POST',
+                        data: {
+                            'fkey': sox.Stack.options.user.fkey,
                             'source': 'computer',
                             'filename': 'image.png',
                             'upload-url': image.target.result.split(',')[1] //remove the 'data:...''
@@ -2879,7 +2880,7 @@
                         },
                         error: function(data) {
                             sox.error(data);
-                            alert("Sorry, there was an error uploading the image to Imgur.");
+                            alert("SOX: Sorry, there was an error uploading the image to Imgur.");
                         }
                     });
                 }

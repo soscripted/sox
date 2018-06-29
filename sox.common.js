@@ -253,8 +253,8 @@
         get icon() {
             return "favicon-" + $(".current-site a:not([href*='meta']) .site-icon").attr('class').split('favicon-')[1];
         },
-        url: location.hostname,
-        href: location.href
+        url: location.hostname, //e.g. "meta.stackexchange.com"
+        href: location.href //e.g. "https://meta.stackexchange.com/questions/blah/blah"
     };
 
     sox.location = {
