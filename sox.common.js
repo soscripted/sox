@@ -89,7 +89,7 @@
             return settings === undefined ? undefined : JSON.parse(settings);
         },
         save: function(settings) {
-            GM_setValue(SOX_SETTINGS, JSON.stringify(settings));
+            GM_setValue(SOX_SETTINGS, typeof settings === 'string' ? settings : JSON.stringify(settings)); //if importing, it will already be a string so don't stringify the string!
         },
         reset: function() {
             var keys = GM_listValues();

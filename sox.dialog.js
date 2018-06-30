@@ -27,8 +27,8 @@
                 $soxSettingsToggle = $soxSettingsDialog.find('#sox-settings-dialog-check-toggle'),
                 $soxSettingsClose = $soxSettingsDialog.find('#sox-settings-dialog-close'),
                 $searchBox = $soxSettingsDialog.find('#search'),
-                $searchReset = $soxSettingsDialog.find('#search-reset');
-
+                $importSettingsButton = $soxSettingsDialog.find('#sox-settings-import'),
+                $exportSettingsButton = $soxSettingsDialog.find('#sox-settings-export');
 
             function addCategory(name) {
                 var $div = $('<div/>', {
@@ -198,11 +198,6 @@
                 }
             });
 
-            $searchReset.on('click', function() {
-                $('.category, .features, #sox-settings-dialog label').fadeIn();
-                $searchBox.val('').focus();
-            });
-
             $soxSettingsSave.on('click', function() {
                 var settings = [];
                 $soxSettingsDialogFeatures.find('input[type=checkbox]:checked').not('.featureSetting').each(function() { //NOT the per-feature featureSetting checkboxes, because they are saved in THEIR OWN setting object!
@@ -212,6 +207,17 @@
 
                 sox.settings.save(settings);
                 location.reload(); // reload page to reflect changed settings
+            });
+
+            $importSettingsButton.on('click', function() {
+                var settingsToImport = window.prompt('Please paste the settings exactly as they were given to you');
+                if (!settingsToImport) return;
+                sox.settings.save(settingsToImport);
+                location.reload();
+            });
+
+            $exportSettingsButton.on('click', function() {
+                window.prompt('Your settings are below. Press Ctrl/Cmd + C to copy.', JSON.stringify(sox.settings.load()));
             });
 
             $searchBox.on('keyup keydown', function() { //search box

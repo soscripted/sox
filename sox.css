@@ -33,16 +33,16 @@
 
 #sox-settings-dialog:not(.new-topbar) #search-container .fa-search {
     position: relative;
-    left: -475px;
+    left: -485px;
 }
 
 #sox-settings-dialog.new-topbar #search-container .fa-search {
     position: relative;
-    left: -465px;
+    left: -485px;
 }
 
 #sox-settings-dialog #search-container #search {
-    width: 470px;
+    width: 490px;
     text-indent: 20px;
 }
 

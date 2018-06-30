@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Stack Overflow Extras (SOX)
 // @namespace    https://github.com/soscripted/sox
-// @version      2.2.6 DEV
+// @version      2.2.7 DEV
 // @description  Extra optional features for Stack Overflow and Stack Exchange sites
 // @contributor  ᴉʞuǝ (stackoverflow.com/users/1454538/)
 // @contributor  ᔕᖺᘎᕊ (stackexchange.com/users/4337810/)
@@ -83,7 +83,7 @@
         GM_addStyle(GM_getResourceText('css'));
         $('<link/>', {
             rel: 'stylesheet',
-            href: 'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'
+            href: 'https://use.fontawesome.com/releases/v5.1.0/css/all.css'
         }).appendTo('head');
 
         var settings = sox.settings.load(), //returns undefined if not set
