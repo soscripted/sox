@@ -849,7 +849,7 @@
             // https://github.com/shu8/SE_OptionalFeatures/pull/14:
             // https://github.com/shu8/Stack-Overflow-Optional-Features/issues/28: Thanks @SnoringFrog for fixing this!
 
-            $('.vote').css({
+            $('.votecell > .vote').css({ //.votecell is necessary; e.g., the number of votes of questions on the Questions list for a site uses the .vote class too
                 'position': '-webkit-sticky',
                 'position': 'sticky',
                 'top': parseInt($('.container').css('margin-top'), 10) + parseInt($('body').css('padding-top'), 10) //Seems like most sites use margin-top on the container, but Meta and SO use padding on the body
@@ -1636,7 +1636,7 @@
                     id: 'downvotedPostsEditAlertButton',
                     class: '-link downvotedPostsEditAlert-buttonOff',
                     title: 'Watched posts that have been edited',
-                    'style': 'color: #858c93; background-image: none;',
+                    'style': 'color: #9fa6ad; background-image: none;',
                     href: '#',
                     click: function(e) {
                         e.preventDefault();
