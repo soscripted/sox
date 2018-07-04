@@ -35,29 +35,31 @@
 
         markEmployees: function() {
             // Description: Adds an Stack Overflow logo next to users that *ARE* a Stack Overflow Employee
+            // Working: gets all the diamonds users on the page (as all SE employees have a diamond on the sites they participate)
+            // this significantly reduces the number of ids that need to be checked
+            // queries the remaining user_id's for is_employee status
+            // and adds a SO logo as required
 
-            function unique(list) {
-                //credit: GUFFA https://stackoverflow.com/questions/12551635/12551709#12551709
-                var result = [];
-                $.each(list, function(i, e) {
-                    if ($.inArray(e, result) == -1) result.push(e);
-                });
-                return result;
+            var flairs = document.querySelectorAll('.mod-flair'),
+                flair,
+                ids = [],
+                href,
+                id,
+                color = $('.mod-flair').css('color'),
+                insertionSpan = '<span class="fab fa-stack-overflow" title="employee" style="padding: 0 5px; color: ' + color + '"></span>';
+
+            for(var i = 0, len = flairs.length; i < len; i++){
+                flair = flairs[i];
+                href = (flair.previousElementSibling || flair.parentNode).getAttribute('href');
+                id = href.split('/')[2];
+
+                if(ids.indexOf(id) === -1) ids.push(id);
             }
 
-            var $links = $('.comment a, .deleted-answer-info a, .employee-name a, .user-details a').filter('a[href^="/users/"]');
-            var ids = [];
-
-            $links.each(function() {
-                var href = $(this).attr('href'),
-                    id = href.split('/')[2];
-                ids.push(id);
-            });
-
-            ids = unique(ids);
             sox.debug('markEmployees user IDs', ids);
 
-            var url = 'https://api.stackexchange.com/2.2/users/{ids}?pagesize=100&site={site}&key={key}&access_token={access_token}'
+            // filter ensures we only fetch as much data as we need (user_id and is_employee)
+            var url = 'https://api.stackexchange.com/2.2/users/{ids}?pagesize=100&site={site}&key={key}&access_token={access_token}&filter=!*MxJcsv91Tcz6yRH'
                 .replace('{ids}', ids.join(';'))
                 .replace('{site}', sox.site.currentApiParameter)
                 .replace('{key}', sox.info.apikey)
@@ -67,12 +69,22 @@
                 url: url
             }).success(function(data) {
                 sox.debug('markEmployees returned data', data);
-                for (var i = 0; i < data.items.length; i++) {
-                    var userId = data.items[i].user_id,
-                        isEmployee = data.items[i].is_employee;
+                var items = data.items,
+                    $allLinearLinks = $('.comment a, .deleted-answer-info a, .employee-name a'),
+                    userId,
+                    isEmployee;
+
+                for (var i = 0, len = items.length; i < len; i++) {
+                    userId = items[i].user_id;
+                    isEmployee = items[i].is_employee;
 
                     if (isEmployee) {
-                        $links.filter('a[href^="/users/' + userId + '/"]').after('<span class="fab fa-stack-overflow" title="employee" style="padding: 0 5px; color: ' + $('.mod-flair').css('color') + '"></span>');
+                        // complex code to ensure SO logo is on the left of the diamond throughout
+                        $('.user-details a[href^="/users/' + userId + '/"]').after(insertionSpan);
+
+                        $allLinearLinks.filter('a[href^="/users/' + userId + '/"]').each(function(i, e){
+                            $(e.children[0]).before(insertionSpan);
+                        });
                     }
                 }
             });
