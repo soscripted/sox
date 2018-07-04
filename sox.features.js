@@ -55,8 +55,9 @@
             });
 
             ids = unique(ids);
+            sox.debug('markEmployees user IDs', ids);
 
-            var url = 'https://api.stackexchange.com/2.2/users/{ids}?site={site}&key={key}&access_token={access_token}'
+            var url = 'https://api.stackexchange.com/2.2/users/{ids}?pagesize=100&site={site}&key={key}&access_token={access_token}'
                 .replace('{ids}', ids.join(';'))
                 .replace('{site}', sox.site.currentApiParameter)
                 .replace('{key}', sox.info.apikey)
@@ -65,6 +66,7 @@
             $.ajax({
                 url: url
             }).success(function(data) {
+                sox.debug('markEmployees returned data', data);
                 for (var i = 0; i < data.items.length; i++) {
                     var userId = data.items[i].user_id,
                         isEmployee = data.items[i].is_employee;
