@@ -84,7 +84,7 @@
     background-image: none !important;
     padding-top: 10px;
     font-size: 14px;
-    color: #858c93;
+    color: #9fa6ad;
     min-width: 34px;
     cursor: pointer;
 }
@@ -103,7 +103,7 @@
 
 .network-items .fa:before {
     /*https://github.com/soscripted/sox/pull/127*/
-    color: #858c93;
+    color: #9fa6ad;
 }
 
 .sox-feature-info, .sox-feature-settings {
@@ -454,7 +454,7 @@ li.fixedTopbar-siteLink {
 #downvotedPostsEditAlertButton {
     background-image: none;
     font-size: 14px;
-    color: #858c93;
+    color: #9fa6ad;
     min-width: 34px;
     cursor: pointer;
 }
