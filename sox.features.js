@@ -70,7 +70,7 @@
                         isEmployee = data.items[i].is_employee;
 
                     if (isEmployee) {
-                        $links.filter('a[href^="/users/' + userId + '/"]').after('<span class="fa fa-stack-overflow" title="employee" style="padding: 0 5px; color: ' + $('.mod-flair').css('color') + '"></span>');
+                        $links.filter('a[href^="/users/' + userId + '/"]').after('<span class="fab fa-stack-overflow" title="employee" style="padding: 0 5px; color: ' + $('.mod-flair').css('color') + '"></span>');
                     }
                 }
             });
@@ -678,10 +678,10 @@
 
             function addHotText() {
                 if (!$('.sox-hot').length) {
-                    $('#feed').html('<p>One of the 100 hot network questions!</p>');
+                    $('#feed').html('<p>SOX: One of the 100 hot network questions!</p>');
 
                     //display:block to fix https://github.com/soscripted/sox/issues/243:
-                    $('#question-header').css('display', 'block').prepend('<div title="this is a hot network question!" ' + (sox.location.on('english.stackexchange.com') ? 'style="padding:13px"' : '') + ' class="sox-hot"><i class="fa fa-free-code-camp"></i><div>');
+                    $('#question-header').css('display', 'block').prepend('<div title="SOX: this is a hot network question!" ' + (sox.location.on('english.stackexchange.com') ? 'style="padding:13px"' : '') + ' class="sox-hot"><i class="fab fa-free-code-camp"></i><div>');
                 }
             }
             $('#qinfo').after('<div id="feed"></div>');
@@ -704,7 +704,7 @@
                                 if (results.filter(function(d) {
                                         return d.question_id == id;
                                     }).length) {
-                                    $(this).find('.summary h3').prepend('<div title="this question is a hot network question!" class="sox-hot" style="font-size:x-large;float:none;display:inline"><i class="fa fa-free-code-camp"></i></div>');
+                                    $(this).find('.summary h3').prepend('<div title="SOX: this question is a hot network question!" class="sox-hot" style="font-size:x-large;float:none;display:inline"><i class="fab fa-free-code-camp"></i></div>');
                                 }
                             });
                         }
