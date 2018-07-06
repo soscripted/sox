@@ -944,8 +944,6 @@
             if ((sox.site.type != 'main' && sox.site.type != 'beta') || !$('.related-site').length) return;
 
             var NEWQUESTIONS = 'metaNewQuestionAlert-lastQuestions',
-                DIAMONDON = 'metaNewQuestionAlert-diamondOn',
-                DIAMONDOFF = 'metaNewQuestionAlert-diamondOff',
                 favicon = sox.site.icon,
                 metaName = 'meta.' + sox.site.currentApiParameter,
                 lastQuestions = {},
@@ -969,16 +967,24 @@
                 $diamond = $('<a/>', {
                     id: 'metaNewQuestionAlertButton',
                     href: '#',
-                    'class': '-link metaNewQuestionAlert-diamondOff',
+                    'class': '-link',
                     title: 'Moderator inbox (recent meta questions)',
                     click: function(e) {
                         e.preventDefault();
                         $diamond.toggleClass('topbar-icon-on');
                         $dialog.toggle();
                     }
-                }).css({
-                    'background-image': 'url(//cdn.sstatic.net/img/share-sprite-new.svg?v=78be252218f3)'
-                });
+                }).append($('<svg/>', { //Updated with the new mod diamond icon
+                    'aria-hidden': true,
+                    class: 'svg-icon',
+                    viewBox: "0 0 18 18",
+                    width: 18,
+                    height: 18
+                }).append($('<path/>', {
+                    d: "M8.4.78c.33-.43.87-.43 1.3 0l5.8 7.44c.33.43.33 1.13 0 1.56l-5.8 7.44c-.33.43-.87.43-1.2 0L2.6 9.78a1.34 1.34 0 0 1 0-0.156L8.478z"
+                })));
+
+            $diamond.html($diamond.html()); //Reloads the diamond icon, which is necessary when adding an SVG using jQuery.
 
             $dialog.append($header).append($content.append($questions));
             if (sox.NEW_TOPBAR) {
@@ -986,13 +992,14 @@
             } else {
                 $diamond.appendTo('div.network-items');
             }
+
             $dialog.css('top', $('.top-bar').height());
             if ($('#metaNewQuestionAlertButton').length) $('.js-topbar-dialog-corral').append($dialog);
 
             $(document).mouseup(function(e) {
                 if (!$dialog.is(e.target) &&
                     $dialog.has(e.target).length === 0 &&
-                    !$(e.target).is('#metaNewQuestionAlertButton')) {
+                    !$(e.target).is('#metaNewQuestionAlertButton, svg, path')) {
                     $dialog.hide();
                     $diamond.removeClass("topbar-icon-on");
                 }
@@ -1006,11 +1013,8 @@
 
             $.getJSON(apiLink, function(json) {
                 var latestQuestion = json.items[0].title;
-                if (latestQuestion == lastQuestions[metaName]) {
-                    //if you've already seen the stuff
-                    $diamond.removeClass(DIAMONDON).addClass(DIAMONDOFF);
-                } else {
-                    $diamond.removeClass(DIAMONDOFF).addClass(DIAMONDON);
+                if (latestQuestion != lastQuestions[metaName]) {
+                    $diamond.css('color','#0077cc');
 
                     for (var i = 0; i < json.items.length; i++) {
                         var title = json.items[i].title,
