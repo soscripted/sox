@@ -199,19 +199,6 @@
 
 /*metaNewQuestionAlert for the mod diamond and dialog */
 
-#metaNewQuestionAlertButton {
-    cursor: pointer;
-    width: 32px;
-}
-
-.metaNewQuestionAlert-diamondOn {
-    background-position: -218px -82px;
-}
-
-.metaNewQuestionAlert-diamondOff {
-    background-position: -138px -82px;
-}
-
 #metaNewQuestionAlertDialog {
     top: 50px;
     right: 242px;
