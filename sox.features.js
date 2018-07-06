@@ -253,12 +253,19 @@
         colorAnswerer: function() {
             // Description: For highlighting the names of answerers on comments
 
+            var CSS_TO_SET = {
+                'color': 'rgba(0, 50, 200, 1)',
+                'background-color': 'rgba(220, 220, 220, 1)',
+                'padding': '1px 5px'
+            };
+
             function colour() {
+                var answererID;
+                
                 $('.answercell').each(function(i, obj) {
-                    $(this).parent().next().find('.comment-user:contains("' + $.trim($(this).find('.user-details').last().clone().children('.-flair').remove().end().text()) + '")').css({
-                        'background-color': '#f9e2b6',
-                        'padding': '1px 5px'
-                    }); //Find the comments on each post that contain the answerer's name. Also, .last() is necessary, or else it will use the name of someone who edits the answer.
+                    answererID = +this.querySelector('.post-signature:nth-last-of-type(1) a[href^="/users"]').href.match(/\d+/)[0];
+
+                    $(this.nextElementSibling.querySelector('.comment-user[href^="/users/' + answererID + '"]')).css(CSS_TO_SET);
                 });
             }
 
