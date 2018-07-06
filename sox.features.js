@@ -5,8 +5,8 @@
         moveBounty: function() {
             // Description: For moving bounty to the top
 
-            $('.bounty-notification').insertAfter('.question .fw'); //$('.bounty-notification').length condition isn't necessary; this line will run only if the element exists
-            $('[id="bounty-link bounty"]').closest('tr').insertAfter('.question .fw');
+            $('.bounty-notification').insertAfter('.question .fw-wrap'); //$('.bounty-notification').length condition isn't necessary; this line will run only if the element exists
+            $('.bounty-link.bounty').closest('ul').insertAfter('.question .fw-wrap');
         },
 
         dragBounty: function() {
@@ -64,15 +64,16 @@
                 .replace('{access_token}', sox.settings.accessToken);
 
             $.ajax({
-                url: url
-            }).success(function(data) {
-                sox.debug('markEmployees returned data', data);
-                for (var i = 0; i < data.items.length; i++) {
-                    var userId = data.items[i].user_id,
-                        isEmployee = data.items[i].is_employee;
+                url: url,
+                success: function(data) {
+                    sox.debug('markEmployees returned data', data);
+                    for (var i = 0; i < data.items.length; i++) {
+                        var userId = data.items[i].user_id,
+                            isEmployee = data.items[i].is_employee;
 
-                    if (isEmployee) {
-                        $links.filter('a[href^="/users/' + userId + '/"]').after('<span class="fab fa-stack-overflow" title="employee" style="padding: 0 5px; color: ' + $('.mod-flair').css('color') + '"></span>');
+                        if (isEmployee) {
+                            $links.filter('a[href^="/users/' + userId + '/"]').after('<span class="fab fa-stack-overflow" title="employee" style="padding: 0 5px; color: ' + $('.mod-flair').css('color') + '"></span>');
+                        }
                     }
                 }
             });
@@ -84,14 +85,15 @@
             $('.js-show-link.comments-link').each(function() {
                 if (!$(this).parent().prev().find('.comment-text').length) return; //https://github.com/soscripted/sox/issues/196
 
-                var $this2 = $(this);
-                $('<tr><td></td><td>' + $this2.clone().wrap('<div>').parent().html() + '</td></tr>').insertBefore($(this).parent().closest('tr')).click(function() {
-                    $(this).hide();
+                var $btnToAdd = $(this).clone();
+                $btnToAdd.click(function() {
+                    $(this).remove();
                 });
 
-                var commentParent = ($(this).parents('.answer').length ? '.answer' : '.question');
+                $(this).parent().parent().prepend($btnToAdd);
+
                 $(this).click(function() {
-                    $(this).closest(commentParent).find('.js-show-link.comments-link').hide();
+                    $btnToAdd.remove();
                 });
             });
 
@@ -99,7 +101,6 @@
                 var commentParent = ($(this).parents('.answer').length ? '.answer' : '.question');
                 $(this).closest(commentParent).find('.js-show-link.comments-link').hide();
             });
-
         },
 
         fixedTopbar: function(settings) {
@@ -253,24 +254,19 @@
         colorAnswerer: function() {
             // Description: For highlighting the names of answerers on comments
 
-            var CSS_TO_SET = {
-                'color': 'rgba(0, 50, 200, 1)',
-                'background-color': 'rgba(220, 220, 220, 1)',
-                'padding': '1px 5px'
-            };
 
             function color() {
                 var answererID;
-                
+
                 $('.answercell').each(function(i, obj) {
                     answererID = +this.querySelector('.post-signature:nth-last-of-type(1) a[href^="/users"]').href.match(/\d+/)[0];
 
-                    $(this.nextElementSibling.querySelectorAll('.comment-user[href^="/users/' + answererID + '"]')).css(CSS_TO_SET);
+                    $(this.nextElementSibling.querySelectorAll('.comment-user[href^="/users/' + answererID + '"]')).addClass('sox-answerer');
                 });
             }
 
             color();
-            $(document).on('sox-new-comment', colour);
+            $(document).on('sox-new-comment', color);
         },
 
 
@@ -1021,17 +1017,17 @@
             $.getJSON(apiLink, function(json) {
                 var items = json.items,
                     latestQuestion = items[0].title;
-                
+
                 if (latestQuestion != lastQuestions[metaName]) {
-                    $diamond.css('color','#0077cc');
+                    $diamond.css('color', '#0077cc');
 
                     for (var i = 0, len = items.length; i < len; i++) {
                         var title = items[i].title,
                             link = items[i].link;
-                        
+
                         addQuestion(title, link);
                     }
-                    
+
                     lastQuestions[metaName] = latestQuestion;
 
                     $diamond.click(function() {

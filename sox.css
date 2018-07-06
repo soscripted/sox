@@ -541,3 +541,10 @@ li.fixedTopbar-siteLink {
     display: inline !important;
     padding-right: 3px;
 }
+
+/*colorAnswerer -- for the username*/
+.sox-answerer {
+    color: rgba(0, 50, 200, 1);
+    background-color: rgba(220, 220, 220, 1);
+    padding: 1px 5px;
+}
