@@ -954,7 +954,7 @@
                 favicon = sox.site.icon,
                 metaName = 'meta.' + sox.site.currentApiParameter,
                 lastQuestions = {},
-                apiLink = 'https://api.stackexchange.com/2.2/questions?pagesize=5&order=desc&sort=activity&site=' + metaName,
+                apiLink = 'https://api.stackexchange.com/2.2/questions?pagesize=5&filter=!BHMIbze0EQ*ved8LyoO6rNk25qGESy&order=desc&sort=activity&site=' + metaName,
                 $dialog = $('<div/>', {
                     id: 'metaNewQuestionAlertDialog',
                     'class': 'topbar-dialog dno new-topbar'
@@ -1019,17 +1019,19 @@
             }
 
             $.getJSON(apiLink, function(json) {
-                var latestQuestion = json.items[0].title;
+                var items = json.items,
+                    latestQuestion = items[0].title;
+                
                 if (latestQuestion != lastQuestions[metaName]) {
                     $diamond.css('color','#0077cc');
 
-                    for (var i = 0; i < json.items.length; i++) {
-                        var title = json.items[i].title,
-                            link = json.items[i].link;
-                        //author = json.items[i].owner.display_name;
+                    for (var i = 0, len = items.length; i < len; i++) {
+                        var title = items[i].title,
+                            link = items[i].link;
+                        
                         addQuestion(title, link);
-
                     }
+                    
                     lastQuestions[metaName] = latestQuestion;
 
                     $diamond.click(function() {
@@ -1039,18 +1041,18 @@
             });
 
             function addQuestion(title, link) {
-                var $li = $('<li/>');
-                var $link = $('<a/>', {
-                    href: link
-                });
-                var $icon = $('<div/>', {
-                    'class': 'site-icon favicon ' + favicon
-                });
-                var $message = $('<div/>', {
-                    'class': 'message-text'
-                }).append($('<h4/>', {
-                    html: title
-                }));
+                var $li = $('<li/>'),
+                    $link = $('<a/>', {
+                        href: link
+                    }),
+                    $icon = $('<div/>', {
+                        'class': 'site-icon favicon ' + favicon
+                    }),
+                    $message = $('<div/>', {
+                        'class': 'message-text'
+                    }).append($('<h4/>', {
+                        html: title
+                    }));
 
                 $link.append($icon).append($message).appendTo($li);
                 $questions.append($li);
@@ -1335,13 +1337,13 @@
                     //the ||'s are for fixing https://github.com/soscripted/sox/issues/242:
                     if (type == 'comment' || link.indexOf('posts/comments/') > -1) {
                         id = link.split('/')[5].split('?')[0];
-                        apiurl = 'https://api.stackexchange.com/2.2/comments/' + id + '?order=desc&sort=creation&site=' + sitename;
+                        apiurl = 'https://api.stackexchange.com/2.2/comments/' + id + '?filter=!SWJnaN4ZecdHc*iADu&order=desc&sort=creation&site=' + sitename;
                     } else if (type == 'answer' || link.indexOf('com/a/') > -1) {
                         id = link.split('/')[4].split('?')[0];
-                        apiurl = 'https://api.stackexchange.com/2.2/answers/' + id + '?order=desc&sort=creation&site=' + sitename;
+                        apiurl = 'https://api.stackexchange.com/2.2/answers/' + id + '?order=desc&filter=!1zSn*g7xPUIQr.yCmkAiu&sort=creation&site=' + sitename;
                     } else if (type == 'edit suggested' || link.indexOf('/suggested-edits/') > -1) {
                         id = link.split('/')[4];
-                        apiurl = 'https://api.stackexchange.com/2.2/suggested-edits/' + id + '?order=desc&sort=creation&site=' + sitename;
+                        apiurl = 'https://api.stackexchange.com/2.2/suggested-edits/' + id + '?order=desc&filter=!Sh2oL2BQQ2W(roUyy9&sort=creation&site=' + sitename;
                     } else {
                         sox.loginfo('SOX does not currently support get author information for type: ' + type);
                         return;
