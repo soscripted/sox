@@ -259,17 +259,17 @@
                 'padding': '1px 5px'
             };
 
-            function colour() {
+            function color() {
                 var answererID;
                 
                 $('.answercell').each(function(i, obj) {
                     answererID = +this.querySelector('.post-signature:nth-last-of-type(1) a[href^="/users"]').href.match(/\d+/)[0];
 
-                    $(this.nextElementSibling.querySelector('.comment-user[href^="/users/' + answererID + '"]')).css(CSS_TO_SET);
+                    $(this.nextElementSibling.querySelectorAll('.comment-user[href^="/users/' + answererID + '"]')).css(CSS_TO_SET);
                 });
             }
 
-            colour();
+            color();
             $(document).on('sox-new-comment', colour);
         },
 
