@@ -2122,31 +2122,6 @@
         linkedToFrom: function() {
             // Description: Add an arrow to linked posts in the sidebar to show whether they are linked to or linked from
 
-            /*var currentQuestionId = location.href.split('/')[4],
-                linkedQuestions = {},
-                keys = [];
-
-            $('.linked a.question-hyperlink').each(function() {
-                linkedQuestions[$(this).attr('href').split('/')[4]] = $(this);
-            });
-
-            keys = Object.keys(linkedQuestions);
-            console.log(currentQuestionId);
-            console.log(linkedQuestions);
-            console.log(keys);
-
-           sox.helpers.getFromAPI('posts', keys.join(';'), sox.site.currentApiParameter, function(d) {
-               console.log(d);
-               var items = d.items;
-               for (var i = 0; i < items.length; i++) {
-                   var $body = $(items[i].body);
-                   console.log($body);
-                   if ($body.find('a[href*="' + currentQuestionId + '"]').not('.spacer a').length) {
-                       $(linkedQuestions[items.post_id]).append('<i class="fa fa-chevron-left" title="Current question is linked from this question" style="color:black;margin-left:5px;"></i>');
-                   }
-               }
-           }, 'activity&filter=!LH22RNnZjCnsF)6E22pmFx');*/
-
             var currentId = location.href.split('/')[4];
             $('.linked .spacer a.question-hyperlink').each(function() {
                 var id = $(this).attr('href').split('/')[4];
@@ -2243,7 +2218,7 @@
                                 type = ' (unregistered)';
                             }
                             $(this).find('.user-info').last().append(
-                                "<div style='color: #848d95; font-size: 11px; padding-top: 38px'><i class='fa fa-clock-o'></i>&nbsp;<time class='timeago sox-last-seen' datetime='" +
+                                "<div style='color: #848d95; font-size: 11px; padding-top: 38px' title='last seen'><i class='fas fa-user-clock'></i>&nbsp;<time class='timeago sox-last-seen' datetime='" +
                                 lastSeenDate.toISOString() + "' title='" + //datetime
                                 lastSeenDate.toJSON().replace('T', ' ').replace('.000', '') + "'>" + //title, https://github.com/soscripted/sox/issues/204 hacky but short way '.000' always works because SE doesn't do such precise times
                                 lastSeenDate.toLocaleString() + "</time>" + type //contents of tag
