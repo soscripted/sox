@@ -230,12 +230,6 @@
                         } else {
                             $(this).show();
                         }
-
-                        if ($features.find('.sox-feature:visible').length === 0 && $features.find('.sox-feature[style*="display: block"]').length === 0) {
-                            $features.hide().prev().hide();
-                        } else {
-                            $features.show().prev().show();
-                        }
                     });
                 } else {
                     $('.category, .features, #sox-settings-dialog .sox-feature').fadeIn();

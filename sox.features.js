@@ -81,19 +81,22 @@
 
         copyCommentsLink: function() {
             // Description: Adds the 'show x more comments' link before the commnents
+            // Test on e.g. https://meta.stackexchange.com/questions/125439/
 
             $('.js-show-link.comments-link').each(function() {
                 if (!$(this).parent().prev().find('.comment-text').length) return; //https://github.com/soscripted/sox/issues/196
 
                 var $btnToAdd = $(this).clone();
-                $btnToAdd.click(function() {
-                    $(this).remove();
+
+                $btnToAdd.on('click', function(e) {
+                    e.preventDefault();
+                    $(this).hide();
                 });
 
                 $(this).parent().parent().prepend($btnToAdd);
 
                 $(this).click(function() {
-                    $btnToAdd.remove();
+                    $btnToAdd.hide();
                 });
             });
 
