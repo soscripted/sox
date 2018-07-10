@@ -7,7 +7,7 @@
         version: (typeof GM_info !== 'undefined' ? GM_info.script.version : 'unknown'),
         handler: (typeof GM_info !== 'undefined' ? GM_info.scriptHandler : 'unknown'),
         apikey: 'lL1S1jr2m*DRwOvXMPp26g((',
-        debugging: true//GM_getValue('SOX-debug', false)
+        debugging: GM_getValue('SOX-debug', false)
     };
 
     sox.NEW_TOPBAR = location.href.indexOf('area51') === -1;
