@@ -7,7 +7,7 @@
         version: (typeof GM_info !== 'undefined' ? GM_info.script.version : 'unknown'),
         handler: (typeof GM_info !== 'undefined' ? GM_info.scriptHandler : 'unknown'),
         apikey: 'lL1S1jr2m*DRwOvXMPp26g((',
-        debugging: GM_getValue('SOX-debug', false)
+        debugging: true//GM_getValue('SOX-debug', false)
     };
 
     sox.NEW_TOPBAR = location.href.indexOf('area51') === -1;
@@ -117,13 +117,30 @@
         }
     };
 
+    function throttle(fn, countMax, time){
+        var counter = 0;
+
+        setInterval(function(){ counter = 0; }, time);
+
+        return function(){
+            if(counter < countMax) {
+                counter++;
+                fn.apply(this, arguments);
+            }
+        };
+    }
+
     sox.helpers = {
-        getFromAPI: function(type, id, sitename, callback, sortby, asyncYesNo) {
+        getFromAPI: function(type, id, sitename, filter, callback, sortby) {
             sox.debug('Getting From API with URL: https://api.stackexchange.com/2.2/' + type + '/' + id + '?order=desc&sort=' + (sortby || 'creation') + '&site=' + sitename + '&key=' + sox.info.apikey + '&access_token=' + sox.settings.accessToken);
+
+            var filterQuery = filter ? "&filter=" + filter : "",
+                // optional for queries like /questions
+                idPath = id ? "/" + id : "";
+
             $.ajax({
                 type: 'get',
-                async: (typeof asyncYesNo === 'undefined' ? true : false),
-                url: 'https://api.stackexchange.com/2.2/' + type + '/' + id + '?order=desc&sort=' + (sortby || 'creation') + '&site=' + sitename + '&key=' + sox.info.apikey + '&access_token=' + sox.settings.accessToken,
+                url: 'https://api.stackexchange.com/2.2/' + type + idPath + '?order=desc&sort=' + (sortby || 'creation') + '&site=' + sitename + '&key=' + sox.info.apikey + '&access_token=' + sox.settings.accessToken + filterQuery,
                 success: function(d) {
                     if (d.backoff) {
                         sox.error('SOX Error: BACKOFF: ' + d.backoff);
@@ -144,16 +161,17 @@
         },
         observe: function(elements, callback, toObserve) {
             sox.debug('observe: ' + elements);
-            var observer = new MutationObserver(function(mutations, observer) {
+            var observer = new MutationObserver(throttle(function(mutations, observer) {
                 for (var i = 0; i < mutations.length; i++) {
-                    //sox.debug($(mutations[i].target));
+                    sox.debug($(mutations[i].target));
+
                     if ($(mutations[i].target).is(elements)) {
                         callback(mutations[i].target);
                         sox.debug('fire: target: ', mutations[i].target);
                         return;
                     }
                 }
-            });
+            }, 250));
 
             if (toObserve) {
                 for (var i = 0; i < toObserve.length; i++) { //could be multiple elements with querySelectorAll
@@ -199,6 +217,26 @@
             } else {
                 return false;
             }
+        },
+        getIDFromAnchor: function(anchor){
+            return anchor.href ? sox.helpers.getIDFromLink(anchor.href) : null;
+        },
+        getSiteNameFromAnchor: function(anchor){
+            return anchor.href ? sox.helpers.getSiteNameFromLink(anchor.href) : null;
+        },
+        // answer ID, question ID, user ID, comment ID ("posts/comments/ID" NOT "comment1545_5566")
+        getIDFromLink: function(link){
+            // test cases: https://regex101.com/r/6P9sDX/2
+            var idMatch = link.match(/\/(\d+)($|\/|\?)/);
+
+            return idMatch ? +idMatch[1] : null;
+        },
+        getSiteNameFromLink: function(link){
+            var siteRegex = /(([a-z\.]+)\.stackexchange|stackoverflow|superuser|serverfault|askubuntu|stackapps|mathoverflow|programmers|bitcoin)\.com/,
+                siteMatch = link.match(siteRegex);
+
+            // siteMatch[2] is for *.stackexchange.com sites
+            return siteMatch ? siteMatch[2] || siteMatch[1] : null;
         }
     };
 
@@ -210,6 +248,7 @@
             beta: 'beta'
         },
         id: (sox.exists('options.site.id') ? Stack.options.site.id : undefined),
+        currentApiParameter: sox.helpers.getSiteNameFromLink(location.href),
         get name() {
             if (Chat) {
                 return $('#footer-logo a').attr('title');
@@ -234,21 +273,6 @@
                     }
                 }
             }
-        },
-        apiParameter: function(siteName) {
-            if (commonInfo.apiParameters.hasOwnProperty(siteName)) {
-                return commonInfo.apiParameters[siteName];
-            } else if (sox.location.on('area51')) {
-                return 'area51';
-            }
-        },
-        metaApiParameter: function(siteName) {
-            if (Chat || this.apiParameter(siteName)) {
-                return 'meta.' + this.apiParameter(siteName);
-            }
-        },
-        get currentApiParameter() {
-            return this.apiParameter(this.name || (location.href.indexOf('stackapps.com/') > -1 ? "Stack Apps" : undefined));
         },
         get icon() {
             return "favicon-" + $(".current-site a:not([href*='meta']) .site-icon").attr('class').split('favicon-')[1];
