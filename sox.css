@@ -546,5 +546,5 @@ li.fixedTopbar-siteLink {
 .sox-answerer {
     color: rgba(0, 50, 200, 1);
     background-color: rgba(220, 220, 220, 1);
-    padding: 1px 5px;
+    padding: 1px 5px !important;
 }
