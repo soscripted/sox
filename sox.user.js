@@ -1,10 +1,12 @@
 // ==UserScript==
 // @name         Stack Overflow Extras (SOX)
 // @namespace    https://github.com/soscripted/sox
-// @version      2.2.17 DEV
+// @version      2.2.18 DEV
 // @description  Extra optional features for Stack Overflow and Stack Exchange sites
-// @contributor  ᴉʞuǝ (stackoverflow.com/users/1454538/)
-// @contributor  ᔕᖺᘎᕊ (stackexchange.com/users/4337810/)
+// @contributor  ᴉʞuǝ (stackoverflow.com/users/1454538/, https://github.com/mezmi)
+// @contributor  ᔕᖺᘎᕊ (stackexchange.com/users/4337810/, https://github.com/shu8)
+// @contributor  Sir-Cumference (https://github.com/Sir-Cumference)
+// @contributor  GaurangTandon (https://github.com/GaurangTandon)
 // @updateURL    https://rawgit.com/soscripted/sox/master/sox.user.js
 
 // @match        *://*.stackoverflow.com/*

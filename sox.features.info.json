@@ -6,7 +6,12 @@
             "extended_description": "If you receive a comment/answer/suggested edit notification, this feature will add the name of the author of the comment/answer/edit to the notification",
             "meta": "",
             "match": "",
-            "exclude": ""
+            "exclude": "",
+            "settings": [{
+                "id": "addNameBeforeMessageOrAtTop",
+                "type": "checkbox",
+                "desc": "Show name before contents (e.g. [name]: message) or at top (e.g. 'comment by [name]')?"
+            }]
         }, {
             "name": "alignBadgesByClass",
             "desc": "Align badges by their class on user profile pages",

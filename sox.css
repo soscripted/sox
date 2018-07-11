@@ -113,6 +113,7 @@
     padding: 8px;
     width: 90%;
     line-height: 1.5;
+    padding: 5px !important;
 }
 
 .sox-feature .fa-info, .sox-feature .fa-wrench {
@@ -552,4 +553,9 @@ li.fixedTopbar-siteLink {
 /*hotNetworkQuestionsFiltering -- for the questions to hide*/
 .sox-hot-network-question-filter-hide {
     display: none !important;
+}
+
+/*addAuthorNameToInboxNotifications -- for the author span*/
+.sox-notification-author {
+    color: #848d95;
 }

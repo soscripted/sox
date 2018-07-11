@@ -1359,11 +1359,12 @@
             });
         },
 
-        addAuthorNameToInboxNotifications: function() {
+        addAuthorNameToInboxNotifications: function(settings) {
             // Description: To add the author's name to inbox notifications
 
             function setAuthorName(node) {
-                var link = node.firstElementChild.href,
+                var prependToMessage = Object.keys(settings).length !== 0 ? settings.addNameBeforeMessageOrAtTop : false, //for https://github.com/soscripted/sox/issues/347
+                    link = node.firstElementChild.href,
                     id,
                     matches = {
                         comments: ["posts/comments", "!SWJnaN4ZecdHc*iADu"],
@@ -1404,20 +1405,24 @@
 
                     var author = (link.indexOf('/suggested-edits/') > -1 ? json.items[0].proposing_user.display_name : json.items[0].owner.display_name),
                         $author = $('<span/>', {
-                            class: 'author',
-                            text: " by " + temporaryDIV.html(author).text()
+                            class: 'sox-notification-author',
+                            text: (prependToMessage ? '' : ' by ') + temporaryDIV.html(author).text() + (prependToMessage ? ': ' : '') //https://github.com/soscripted/sox/issues/347
                         }),
                         $header = $(node.querySelector('.item-header')),
                         $type = $header.find('.item-type').clone(),
                         $creation = $header.find('.item-creation').clone();
 
-                    //fix conflict with soup fix mse207526 - https://github.com/vyznev/soup/blob/master/SOUP.user.js#L489
-                    $header.empty().append($type).append($author).append($creation);
+                    if (prependToMessage) {
+                        $(node).find('.item-summary').prepend($author);
+                    } else {
+                        //fix conflict with soup fix mse207526 - https://github.com/vyznev/soup/blob/master/SOUP.user.js#L489
+                        $header.empty().append($type).append($author).append($creation);
+                    }
                 });
             }
 
             var inboxClass = 'inbox-dialog',
-                PROCESSED_CLASS = "authorNameAdded",
+                PROCESSED_CLASS = "sox-authorNameAdded",
                 MAX_PROCESSED_AT_ONCE = 20;
 
             sox.helpers.observe("." + inboxClass, function(node) {

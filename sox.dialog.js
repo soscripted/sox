@@ -130,6 +130,7 @@
                             });
                             GM_setValue('SOX-' + name + '-settings', JSON.stringify(settingsToSave));
                             sox.settings.writeToConsole(true);
+                            alert('Saved!');
                         }
                     });
 
