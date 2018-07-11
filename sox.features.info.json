@@ -10,7 +10,7 @@
             "settings": [{
                 "id": "addNameBeforeMessageOrAtTop",
                 "type": "checkbox",
-                "desc": "Show name before contents (e.g. [name]: message) or at top (e.g. 'comment by [name]')?"
+                "desc": "Show name before contents (e.g. [name]: message) rather than at top (e.g. 'comment by [name]')?"
             }]
         }, {
             "name": "alignBadgesByClass",
