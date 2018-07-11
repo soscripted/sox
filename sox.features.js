@@ -144,7 +144,7 @@
             if (sox.site.type == 'chat') { //For some reason, chats don't need any modification to the body
                 $topbar.css({
                     'position': 'fixed',
-                    'z-index': '900',
+                    'z-index': '1050',
                     'margin-top': 0
                 });
 
@@ -165,13 +165,13 @@
 
                 $topbar.css({
                     'position': 'fixed',
-                    'z-index': '900'
+                    'z-index': '1050'
                 });
 
                 //Area 51 popup:
                 $('#notify-table').css({
                     'position': 'fixed',
-                    'z-index': '900',
+                    'z-index': '1050',
                     'margin-top': -paddingToAdd + 'px'
                 });
 
