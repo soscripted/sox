@@ -548,3 +548,8 @@ li.fixedTopbar-siteLink {
     background-color: rgba(220, 220, 220, 1);
     padding: 1px 5px !important;
 }
+
+/*hotNetworkQuestionsFiltering -- for the questions to hide*/
+.sox-hot-network-question-filter-hide {
+    display: none !important;
+}
