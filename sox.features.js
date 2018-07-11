@@ -1126,7 +1126,6 @@
                 $anchor.text(text.replace(noticeRegex, ""));
                 question.dataset[QUESTION_STATE_KEY] = noticeName;
 
-                console.log(noticeName);
                 switch (noticeName) {
                     case "duplicate":
                         sox.helpers.getFromAPI(queryType, id, sox.site.currentApiParameter, FILTER_QUESTION_CLOSURE_NOTICE, function(data) {
@@ -2003,7 +2002,6 @@
                 addEditNotification(o.url, o.title, o.sitename, i, false, o.editor, o.editor_link, o.edit_date, o.type, postsToCheck);
             });
 
-            console.log(postsToCheck);
             if (!$.isEmptyObject(postsToCheck)) {
                 sox.debug(postsToCheck);
                 $.each(postsToCheck, function(i, o) {
