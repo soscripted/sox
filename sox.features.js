@@ -623,8 +623,7 @@
                     questionID = sox.helpers.getIDFromLink(href);
 
                     // if it is a bare link is to a question on a SE site
-                    // indexOf is necessary in cases of both https:// and without it
-                    if (siteName && isQuestionLink.test(href) && this.innerText.replace(/https?:\/\//, "").replace(/www\./, "") === href) {
+                    if (questionID && siteName && isQuestionLink.test(href) && this.innerText.replace(/https?:\/\//, "").replace(/www\./, "") === href) {
                         sox.helpers.getFromAPI('questions', questionID, siteName, FILTER_QUESTION_TITLE, function(json) {
                             this.innerHTML = json.items[0].title;
                         }.bind(this));
