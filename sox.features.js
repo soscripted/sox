@@ -925,27 +925,24 @@
 
         metaChatBlogStackExchangeButton: function() {
             // Description: For adding buttons next to sites under the StackExchange button that lead to that site's meta and chat
-            // NOTE: this feature used to have a 'blog' button as well, but it wasn't very useful so was removed
 
             $(document).on('mouseenter', '#your-communities-section > ul > li > a', function() {
                 var href = this.href.replace(/https?:\/\//, ""),
                     link,
                     chatLink = 'https://chat.stackexchange.com?tab=site&host=' + href.replace(/\/.*/, "");
 
-                if (href.indexOf('stackapps') > -1) {
-
-                } else if (href === "meta.stackexchange.com") {
+                if (href === "meta.stackexchange.com/") { //Meta SE's chat link is a bit different
                     chatLink = 'https://chat.meta.stackexchange.com';
-                } else if (href.indexOf('meta') > -1) {
+                } else if (href.indexOf('meta') > -1) { //For the usual meta sites
                     link = 'https://' + href.split('meta.').shift() + href.split('meta.').pop();
                     chatLink = 'https://chat.stackexchange.com?tab=site&host=' + href.split('meta.').shift() + href.split('meta.').pop().split('/').shift(); //We don't need "meta." in the chat links
-                } else if (href.indexOf('.stackexchange.com') > -1 || href.indexOf('.stackoverflow.com') > -1) {
+                } else if (href.indexOf('.stackexchange.com') > -1 || href.indexOf('.stackoverflow.com') > -1) { //For the majority of SE sites, and other languages of SO
                     link = 'https://' + href.split('.').shift() + '.meta' + href.split(href.split('.').shift()).pop();
-                } else {
+                } else if (href.indexOf('stackapps') == -1) { //For sites that have unique URLs, e.g. serverfault.com (except StackApps, which has no meta)
                     link = 'https://meta.' + href;
                 }
 
-                if (href.indexOf('stackoverflow.com') > -1 && !href.match(/(pt|ru|es|ja|.meta)/i)) {
+                if (href.indexOf('stackoverflow.com') > -1 && !href.match(/(pt|ru|es|ja|.meta)/i)) { //English Stack Overflow has a unique chat link
                     chatLink = 'https://chat.stackoverflow.com';
                 }
 
@@ -953,7 +950,7 @@
                 $(this).find('.rep-score').stop(true).delay(135).fadeOut(20);
                 $(this).append('<div class="related-links" style="float: right; display: none;">' +
                     (link ?
-                        (link.indexOf('area51.meta') > -1 ? '<a href="' + link + '">discuss</a>' : (href.indexOf('meta') > -1 ? '<a href="' + link + '">main</a>' : '<a href="' + link + '">meta</a>')) :
+                        (href.indexOf('meta') > -1 ? '<a href="' + link + '">main</a>' : '<a href="' + link + '">meta</a>') :
                         '') +
                     (chatLink ? '<a href="' + chatLink + '">chat</a>' : '') +
                     '</div>');
