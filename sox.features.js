@@ -1126,6 +1126,7 @@
                 $anchor.text(text.replace(noticeRegex, ""));
                 question.dataset[QUESTION_STATE_KEY] = noticeName;
 
+                console.log(noticeName);
                 switch (noticeName) {
                     case "duplicate":
                         sox.helpers.getFromAPI(queryType, id, sox.site.currentApiParameter, FILTER_QUESTION_CLOSURE_NOTICE, function(data) {
@@ -1133,7 +1134,11 @@
                                 questionId = question.closed_details.original_questions[0].question_id;
 
                             //styling for https://github.com/soscripted/sox/issues/181
-                            $anchor.after("&nbsp;<a style='display: inline' href='https://" + sox.site.url + "/q/" + questionId + "'><span class='standOutDupeCloseMigrated-duplicate' title='click to visit duplicate'>&nbsp;duplicate&nbsp;</span></a>");
+
+                            //NOTE: the `data-searchsession` attribute is to workaround a weird line of code in SE *search* pages,
+                            //which changes the `href` of anchors in in `.result-link` containers to `data-searchsession`
+                            //See https://github.com/soscripted/sox/pull/348#issuecomment-404245056
+                            $anchor.after("&nbsp;<a data-searchsession='/questions/" + questionId + "' style='display: inline' href='https://" + sox.site.url + "/q/" + questionId + "'><span class='standOutDupeCloseMigrated-duplicate' title='click to visit duplicate'>&nbsp;duplicate&nbsp;</span></a>");
                         });
                         break;
                     case "closed":
@@ -2734,9 +2739,10 @@
                 if (document.getElementById(PROCESSED_ID)) return;
 
                 var $anchor = $('.summary h2 a'),
-                    postId = sox.helpers.getIDFromAnchor($anchor[0]);
+                    postId = sox.helpers.getIDFromAnchor($anchor[0]),
+                    QUESTION_STATE_FILTER = '!-MOiNm40B3fle5H6oLVI3nx6UQo(vNstn';
 
-                sox.helpers.getFromAPI('questions', postId, sox.site.currentApiParameter, '!-MOiNm40B3fle5H6oLVI3nx6UQo(vNstn', function(data) {
+                sox.helpers.getFromAPI('questions', postId, sox.site.currentApiParameter, QUESTION_STATE_FILTER, function(data) {
                     $('body').append($('<div/>', {
                         'id': PROCESSED_ID,
                         'style': 'display: none'
