@@ -307,21 +307,15 @@
 
             // add dialog to corral and sox button to topbar
             $soxSettingsButton.append($icon);
-            $('.top-bar .-container .-secondary .-item:eq(1)').after($('<li/>').addClass('-item').append($soxSettingsButton)); //https://github.com/soscripted/sox/issues/310
-            if (sox.site.href.indexOf('area51.meta') !== -1) { //area 51 discussions is different
-                $soxSettingsButton.parent().css({
-                    'top': '7px',
-                    'left': '9px'
-                });
-            }
+            $('.-secondary > .-item:not(:has(.my-profile)):eq(1)').before($('<li/>').addClass('-item').append($soxSettingsButton));
+
             $soxSettingsDialog.addClass('new-topbar');
-            $soxSettingsDialog.css('top', $('.top-bar').height());
+            $soxSettingsDialog.css({
+                'top': $('.top-bar').height(),
+                'right': $('.-container').outerWidth() - $('#soxSettingsButton').parent().position().left - $('#soxSettingsButton').outerWidth()
+            });
 
-
-
-            //'$('#soxSettingsButton').position().left' from @IStoleThePies: https://github.com/soscripted/sox/issues/120#issuecomment-267857625:
             //only add dialog if button was added successfully
-
             if ($('#soxSettingsButton').length) $('.js-topbar-dialog-corral').append($soxSettingsDialog);
         }
     };
