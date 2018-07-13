@@ -1016,12 +1016,16 @@
 
             $dialog.append($header).append($content.append($questions));
             if (sox.NEW_TOPBAR) {
-                $('.top-bar .-container .-secondary .-item:eq(1)').after($('<li/>').addClass('-item').append($diamond));
+                $('.-secondary > .-item:not(:has(.my-profile)):eq(1)').before($('<li/>').addClass('-item').append($diamond));
             } else {
                 $diamond.appendTo('div.network-items');
             }
 
-            $dialog.css('top', $('.top-bar').height());
+            $dialog.css({
+                'top': $('.top-bar').height(),
+                'right': $('.-container').outerWidth() - $('#metaNewQuestionAlertButton').parent().position().left - $('#metaNewQuestionAlertButton').outerWidth()
+            });
+
             if ($('#metaNewQuestionAlertButton').length) $('.js-topbar-dialog-corral').append($dialog);
 
             $(document).mouseup(function(e) {
