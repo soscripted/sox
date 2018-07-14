@@ -559,3 +559,20 @@ li.fixedTopbar-siteLink {
 .sox-notification-author {
     color: #848d95;
 }
+
+/*hotNetworkQuestionsFiltering -- for the tags icon and tags list shown after hovering over it*/
+
+.getQuestionTags {
+    margin-left: 5px;
+}
+
+.sox-hnq-question-tags-tooltip {
+    display: block;
+    margin-top: 5px;
+    margin-left: 5px;
+    background-color: #eeeefe;
+    border: 1px solid darkgrey;
+    font-size: 11px;
+    padding: 2px;
+    white-space: normal;
+}

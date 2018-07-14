@@ -2418,22 +2418,22 @@
                     }
                 }
 
-                $(this).append('<i class="fa fa-tags getQuestionTags"></i>');
+                $(this).after('<i class="fa fa-tags getQuestionTags" title="SOX: hover off to show this question\'s tags"></i>');
             });
 
             $('.getQuestionTags').hover(function(e) {
                 if (!this.dataset.tags) {
-                    var parentLink = this.parentNode,
-                        id = sox.helpers.getIDFromAnchor(parentLink),
-                        sitename = sox.helpers.getSiteNameFromAnchor(parentLink);
+                    var questionLink = this.previousSibling,
+                        id = sox.helpers.getIDFromAnchor(questionLink),
+                        sitename = sox.helpers.getSiteNameFromAnchor(questionLink);
 
                     sox.helpers.getFromAPI('questions', id, sitename, FILTER_QUESTION_TAGS, function(d) {
                         this.dataset.tags = d.items[0].tags.join(', ');
                     }.bind(this));
                 }
             }, function() {
-                if (!this.classList.contains('tooltip') && this.dataset.tags) {
-                    $(this).after('<span class="tooltip" style="display: block;margin-left: 5px;background-color: #eeeefe;border: 1px solid darkgrey;font-size: 11px;padding: 1px;">' + this.dataset.tags + '</span>');
+                if (!this.classList.contains('sox-hnq-question-tags-tooltip') && this.dataset.tags) {
+                    $(this).after('<span class="sox-hnq-question-tags-tooltip">' + this.dataset.tags + '</span>');
                     $(this).remove();
                 }
             });
