@@ -262,7 +262,7 @@
                 $('.answercell').each(function(i, obj) {
                     answererID = +this.querySelector('.post-signature:nth-last-of-type(1) a[href^="/users"]').href.match(/\d+/)[0];
 
-                    $(this.nextElementSibling.querySelectorAll('.comment-user[href^="/users/' + answererID + '"]')).addClass('sox-answerer');
+                    $(this.nextElementSibling.querySelectorAll('.comment-user[href^="/users/' + answererID + '/"]')).addClass('sox-answerer');
                 });
             }
 
