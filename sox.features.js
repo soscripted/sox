@@ -2435,8 +2435,10 @@
 
                         this.dataset.tags = PLACEHOLDER;
                     }
-                    else if(this.dataset.tags !== PLACEHOLDER){
+                    else if(typeof this.dataset.tags !== "undefined" && this.dataset.tags !== PLACEHOLDER){
                         insertTagsList(this);
+                    }else{
+                        insertTagsList(this, PLACEHOLDER);
                     }
                 });
 
