@@ -1006,8 +1006,7 @@
                     width: 18,
                     height: 18
                 }).append($('<path/>', {
-                    //NOTE: the original path used ended with `L8.478z`, which was provided by a moderator. It was removed to fix https://github.com/soscripted/sox/issues/352.
-                    d: "M8.4.78c.33-.43.87-.43 1.3 0l5.8 7.44c.33.43.33 1.13 0 1.56l-5.8 7.44c-.33.43-.87.43-1.2 0L2.6 9.78a1.34 1.34 0 0 1 0-0.156"
+                    d: "M8.4.78c.33-.43.87-.43 1.3 0l5.8 7.44c.33.43.33 1.13 0 1.56l-5.8 7.44c-.33.43-.87.43-1.2 0L2.6 9.78a1.34 1.34 0 0 1 0-0.156L8.4.78z"
                 })));
 
             $diamond.html($diamond.html()); //Reloads the diamond icon, which is necessary when adding an SVG using jQuery.
