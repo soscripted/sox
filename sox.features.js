@@ -274,26 +274,90 @@
         kbdAndBullets: function() {
             // Description: For adding buttons to the markdown toolbar to surround selected test with KBD or convert selection into a markdown list
 
-            function addBullets($node) {
-                var list = '- ' + $node.getSelection().text.split('\n').join('\n- ');
-                $node.replaceSelectedText(list);
+            function replaceSelectedText(node, newText){
+                var sS = node.selectionStart,
+                    sE = node.selectionEnd,
+                    val = node.value,
+                    valBefore = val.substring(0, sS),
+                    valMid = val.substring(sS, sE),
+                    valAfter = val.substring(sE);
+
+                // situation contrary to our expectation
+                if(sS === sE) {
+                    return;
+                }
+
+                node.value = valBefore + newText + valAfter;
+                node.selectionStart = node.selectionEnd = sS + newText.length;
+
                 StackExchange.MarkdownEditor.refreshAllPreviews();
+                node.focus();
             }
 
-            function addKbd($node) {
-                $node.surroundSelectedText("<kbd>", "</kbd>");
-                var surroundedText = $node.getSelection(),
-                    trimmed = surroundedText.text.trim();
+            function getSelection(node){
+                return node.value.substring(node.selectionStart, node.selectionEnd);
+            }
 
-                if ($node.getSelection().text !== '') {
-                    //https://github.com/soscripted/sox/issues/240
-                    //https://github.com/soscripted/sox/issues/189
-                    //if no trimming occured, then we have to add another space
-                    $node.replaceSelectedText(trimmed);
-                    $node.insertText(' ', surroundedText.end + (trimmed == surroundedText.text ? 6 : 5), 'collapseToEnd'); //add a space after the `</kbd>`
+            function surroundSelectedText(textarea, start, end){
+                // same wrapper code on either side (`$...$`)
+                if(typeof end === "undefined") end = start;
+
+                /*--- Expected behavior:
+                    When there is some text selected: (unwrap it if already wrapped)
+                    "]text["         --> "**]text[**"
+                    "**]text[**"     --> "]text["
+                    "]**text**["     --> "**]**text**[**"
+                    "**]**text**[**" --> "]**text**["
+                    When there is no text selected:
+                    "]["             --> "**placeholder text**"
+                    "**][**"         --> ""
+                    Note that `]` and `[` denote the selected text here.
+                */
+
+                var selS = textarea.selectionStart,
+                    selE = textarea.selectionEnd,
+                    value = textarea.value,
+                    valBefore = value.substring(0, selS),
+                    valMid = value.substring(selS, selE),
+                    valAfter = value.substring(selE),
+                    startLen = start.length,
+                    endLen = end.length,
+                    generatedWrapper,
+                    // handle trailing spaces
+                    trimmedSelection = valMid.match(/^(\s*)(\S?(?:.|\n|\r)*\S)(\s*)$/) || ["", "", "", ""],
+                    command = start + end;
+
+                // determine if text is currently wrapped
+                if(valBefore.endsWith(start) && valAfter.startsWith(end)){
+                    textarea.value = valBefore.substring(0, valBefore.length - startLen) + valMid + valAfter.substring(endLen);
+                    textarea.selectionStart = valBefore.length - startLen;
+                    textarea.selectionEnd = (valBefore + valMid).length - startLen;
+                    textarea.focus();
+                }else{
+                    valBefore += trimmedSelection[1];
+                    valAfter = trimmedSelection[3] + valAfter;
+                    valMid = trimmedSelection[2];
+
+                    generatedWrapper = start + valMid + end;
+
+                    textarea.value = valBefore + generatedWrapper + valAfter;
+                    textarea.selectionStart = valBefore.length + start.length;
+                    textarea.selectionEnd = (valBefore + generatedWrapper).length - end.length;
+                    textarea.focus();
                 }
 
                 StackExchange.MarkdownEditor.refreshAllPreviews();
+                node.focus();
+            }
+
+
+            function addBullets(node) {
+                var list = '- ' + getSelection(node).split('\n').join('\n- ');
+                replaceSelectedText(node, list);
+            }
+
+            function addKbd(node) {
+                surroundSelectedText(node, "<kbd>", "</kbd>");
             }
 
             function getTextarea(button) {
@@ -301,12 +365,15 @@
                 return button.parentNode.parentNode.parentNode.querySelector("textarea");
             }
 
-            function loopAndAddHandlers() {
-                var kbdBtn = '<li class="wmd-button" id="wmd-kbd-button" title="surround selected text with <kbd> tags"><span style="background-image:none;">kbd</span></li>',
-                    listBtn = '<li class="wmd-button" id="wmd-bullet-button" title="add dashes (\'-\') before every line to make a bullet list"><span style="background-image:none;">&#x25cf;</span></li>';
+            var kbdBtn = '<li class="wmd-button wmd-kbd-button" title="surround selected text with <kbd> tags"><span style="background-image:none;">kbd</span></li>',
+                listBtn = '<li class="wmd-button wmd-bullet-button" title="add dashes (\'-\') before every line to make a bullet list"><span style="background-image:none;">&#x25cf;</span></li>';
 
+            function loopAndAddHandlers() {
                 $('[id^="wmd-redo-button"]').each(function() {
-                    if (!$(this).parent().find('#wmd-kbd-button').length) $(this).after(kbdBtn + listBtn);
+                    if (!this.dataset.kbdAdded) {
+                        $(this).after(kbdBtn + listBtn);
+                        this.dataset.kbdAdded = true;
+                    }
                 });
             }
 
@@ -318,17 +385,16 @@
                 var kC = event.keyCode,
                     target = event.target;
 
-                if (target && /^wmd-input/.test(target.id) && event.altKey) {
-                    if (kC === 76) addBullets($(target)); // l
-                    else if (kC === 75) addKbd($(target)); // k
+                if (target && target.tagName === "TEXTAREA" && event.altKey) {
+                    if (kC === 76) addBullets(target); // l
+                    else if (kC === 75) addKbd(target); // k
                 }
             });
 
-            $(document).on('click', '#wmd-kbd-button, #wmd-bullet-button', function(event) {
-                var id = this.id,
-                    textarea = $(getTextarea(this));
+            $(document).on('click', '.wmd-kbd-button, .wmd-bullet-button', function(event) {
+                var textarea = getTextarea(this);
 
-                if (id === "wmd-kbd-button") addKbd(textarea);
+                if (this.classList.contains("wmd-kbd-button")) addKbd(textarea);
                 else addBullets(textarea);
             });
         },
