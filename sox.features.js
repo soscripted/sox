@@ -694,27 +694,24 @@
             $(document.getElementById('qinfo')).after('<div id="feed"></div>');
 
             if (sox.location.on('/questions') || $('.question-summary').length) {
-                $.ajax({
-                    type: 'get',
-                    url: 'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20json%20where%20url%3D"http%3A%2F%2Fstackexchange.com%2Fhot-questions-for-mobile"&format=json',
-                    success: function(d) {
-                        var results = d.query.results.json.json;
-                        if (sox.location.on('/questions/')) {
-                            $.each(results, function(i, o) {
-                                if (document.URL.indexOf(o.site + '/questions/' + o.question_id) > -1) {
-                                    addHotText();
-                                }
-                            });
-                        } else {
-                            $('.question-summary').each(function() {
-                                var id = $(this).attr('id').split('-')[2];
-                                if (results.filter(function(d) {
-                                        return d.question_id == id;
-                                    }).length) {
-                                    $(this).find('.summary h3').prepend('<div title="SOX: this question is a hot network question!" class="sox-hot" style="font-size:x-large;float:none;display:inline"><i class="fab fa-free-code-camp"></i></div>');
-                                }
-                            });
-                        }
+                let proxyUrl = 'https://cors-anywhere.herokuapp.com/', //CORS proxy
+                    hnqJSONUrl = 'https://stackexchange.com/hot-questions-for-mobile',
+                    requestUrl = proxyUrl + hnqJSONUrl;
+
+                $.get(requestUrl, function(results) {
+                    if (sox.location.on('/questions/')) {
+                        $.each(results, function(i, o) {
+                            if (document.URL.indexOf(o.site + '/questions/' + o.question_id) > -1) addHotText();
+                        });
+                    } else {
+                        $('.question-summary').each(function() {
+                            let id = $(this).attr('id').split('-')[2];
+                            if (results.filter(function(d) {
+                                    return d.question_id == id;
+                                }).length) {
+                                $(this).find('.summary h3').prepend('<div title="SOX: this question is a hot network question!" class="sox-hot" style="font-size:x-large;float:none;display:inline"><i class="fab fa-free-code-camp"></i></div>');
+                            }
+                        });
                     }
                 });
             }
@@ -1009,7 +1006,8 @@
                     width: 18,
                     height: 18
                 }).append($('<path/>', {
-                    d: "M8.4.78c.33-.43.87-.43 1.3 0l5.8 7.44c.33.43.33 1.13 0 1.56l-5.8 7.44c-.33.43-.87.43-1.2 0L2.6 9.78a1.34 1.34 0 0 1 0-0.156L8.478z"
+                    //NOTE: the original path used ended with `L8.478z`, which was provided by a moderator. It was removed to fix https://github.com/soscripted/sox/issues/352.
+                    d: "M8.4.78c.33-.43.87-.43 1.3 0l5.8 7.44c.33.43.33 1.13 0 1.56l-5.8 7.44c-.33.43-.87.43-1.2 0L2.6 9.78a1.34 1.34 0 0 1 0-0.156"
                 })));
 
             $diamond.html($diamond.html()); //Reloads the diamond icon, which is necessary when adding an SVG using jQuery.
@@ -2614,20 +2612,25 @@
         showMetaReviewCount: function() {
             // Description: Adds the total count of meta reviews on the main site on the /review page
 
-            $.get('https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20html%20where%20url%3D%22http%3A%2F%2Fmeta.' + location.hostname + '%2Freview%22&diagnostics=true', function(d) {
-                var $doc = $(d);
-                var total = 0;
+            let proxyUrl = 'https://cors-anywhere.herokuapp.com/', //CORS proxy
+                metaUrl = sox.Stack.options.site.childUrl,
+                requestUrl = proxyUrl + metaUrl + '/review';
+
+            $.get(requestUrl, function(d) {
+                let $doc = $(d),
+                    total = 0,
+                    $metaDashboardEl = $('.dashboard-item').last().find('.dashboard-count');
 
                 $doc.find('.dashboard-num').each(function() {
                     total += +$(this).text();
                 });
 
-                var $metaDashboardEl = $('.dashboard-item').last().find('.dashboard-count');
                 $metaDashboardEl.append($('<div/>', {
                     text: total,
                     'title': total,
                     'class': 'dashboard-num'
                 }));
+
                 $metaDashboardEl.append($('<div/>', {
                     text: (total == 1 ? 'post' : 'posts'),
                     'class': 'dashboard-unit'
