@@ -2389,7 +2389,8 @@
                 return new RegExp("\\b" + list.replace(",", "|").replace(" ", "") + "\\b", 'i');
             }
 
-            function insertTagsList(anchor){
+            function insertTagsList(anchor) {
+                if ($(anchor).parent().find('.sox-hnq-question-tags-tooltip').length) return;
                 $(anchor).after('<span class="sox-hnq-question-tags-tooltip">' + anchor.dataset.tags + '</span>');
             }
 
@@ -2397,6 +2398,11 @@
                 SITES_TO_BLOCK = settings.sitesToBlock,
                 TITLES_TO_HIDE = settings.titlesToHideRegex && settings.titlesToHideRegex.split(','),
                 FILTER_QUESTION_TAGS = "!)5IW-5Quf*cV5LToe(J0BjSBXW19";
+
+            $('#hot-network-questions h4').css('display', 'inline').after($('<span/>', {
+                'style': 'color:  grey; display: block; margin-bottom: 10px;',
+                'text': 'SOX: hover over titles to show tags'
+            }));
 
             $('#hot-network-questions li a').each(function() {
                 var i, word, site, title,
@@ -2426,29 +2432,23 @@
 
                 var PLACEHOLDER = "fetching tags...";
 
-                this.addEventListener("mouseenter", function(){
-                    if(!this.dataset.tags){
+                this.addEventListener("mouseenter", function() {
+                    if (!this.dataset.tags) {
                         sox.helpers.getFromAPI('questions', id, sitename, FILTER_QUESTION_TAGS, function(d) {
                             this.dataset.tags = d.items[0].tags.join(', ');
                             insertTagsList(this);
                         }.bind(this));
 
                         this.dataset.tags = PLACEHOLDER;
-                    }
-                    else if(typeof this.dataset.tags !== "undefined" && this.dataset.tags !== PLACEHOLDER){
+                    } else if (typeof this.dataset.tags !== "undefined" && this.dataset.tags !== PLACEHOLDER) {
                         insertTagsList(this);
-                    }else{
+                    } else {
                         insertTagsList(this, PLACEHOLDER);
                     }
                 });
-
-                this.addEventListener("mouseleave", function(){
-                    var nES;
-
-                    // sometimes there are two tag lists by mistake
-                    while((nES = this.nextElementSibling) && nES.tagName === "SPAN"){
-                        nES.parentNode.removeChild(nES);
-                    }
+                this.addEventListener("mouseleave", function() {
+                    let tooltip = this.parentNode.querySelector('.sox-hnq-question-tags-tooltip');
+                    if (tooltip) tooltip.remove();
                 });
             });
         },
