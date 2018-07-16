@@ -35,9 +35,9 @@
                     'You can now import and export your settings from the SOX dialog',
                     'Added feature to paste images directly into SE textareas without using the image dialog',
                     'The old topbar is no longer supported (affects Area 51 mainly)',
-                    '<a href="https://github.com/soscripted/sox/milestone/10">Various bug fixes</a>',
                     'The feature that lets you watch posts for edits is now available as a separate userscript',
-                    'Behind the scenes refactoring by @GaurangTandon'
+                    'Behind the scenes refactoring by @GaurangTandon',
+                    '<a href="https://github.com/soscripted/sox/milestone/10">Various bug fixes</a>',
                 ];
 
             function addCategory(name) {
