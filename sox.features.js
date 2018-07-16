@@ -274,7 +274,7 @@
         kbdAndBullets: function() {
             // Description: For adding buttons to the markdown toolbar to surround selected test with KBD or convert selection into a markdown list
 
-            function replaceSelectedText(node, newText){
+            function replaceSelectedText(node, newText) {
                 var sS = node.selectionStart,
                     sE = node.selectionEnd,
                     val = node.value,
@@ -283,7 +283,7 @@
                     valAfter = val.substring(sE);
 
                 // situation contrary to our expectation
-                if(sS === sE) {
+                if (sS === sE) {
                     return;
                 }
 
@@ -294,13 +294,13 @@
                 node.focus();
             }
 
-            function getSelection(node){
+            function getSelection(node) {
                 return node.value.substring(node.selectionStart, node.selectionEnd);
             }
 
-            function surroundSelectedText(textarea, start, end){
+            function surroundSelectedText(textarea, start, end) {
                 // same wrapper code on either side (`$...$`)
-                if(typeof end === "undefined") end = start;
+                if (typeof end === "undefined") end = start;
 
                 /*--- Expected behavior:
                     When there is some text selected: (unwrap it if already wrapped)
@@ -328,12 +328,12 @@
                     command = start + end;
 
                 // determine if text is currently wrapped
-                if(valBefore.endsWith(start) && valAfter.startsWith(end)){
+                if (valBefore.endsWith(start) && valAfter.startsWith(end)) {
                     textarea.value = valBefore.substring(0, valBefore.length - startLen) + valMid + valAfter.substring(endLen);
                     textarea.selectionStart = valBefore.length - startLen;
                     textarea.selectionEnd = (valBefore + valMid).length - startLen;
                     textarea.focus();
-                }else{
+                } else {
                     valBefore += trimmedSelection[1];
                     valAfter = trimmedSelection[3] + valAfter;
                     valMid = trimmedSelection[2];
@@ -1699,418 +1699,6 @@
             // Description: Hides the "Love This Site?"" module from the sidebar
 
             $('#sidebar #newsletter-ad').parent().remove();
-        },
-
-        downvotedPostsEditAlert: function() {
-            // Description: Adds a notification to the inbox if a question you downvoted and watched is edited
-
-            //GM_deleteValue('downvotedPostsEditAlert');
-            //GM_deleteValue('downvotedPostsEditAlert-notifications');
-
-            function addEditNotification(link, title, sitename, notificationPostId, unread, editor, editorLink, editTime, type, postsToCheck) {
-                sox.debug('downvotedPostsEditAlert addEditNotification editTime', editTime);
-                var id = link.split('/')[4];
-                sox.helpers.getFromAPI('posts', id + '/revisions', sitename, function(d) {
-                    var comment = d.items[0].comment;
-                    var $li = $('<li/>', {
-                        'class': 'question-close-notification' + (unread ? ' unread-item' : '')
-                    });
-                    var $link = $('<a/>', {
-                        href: link
-                    });
-                    var $icon = $('<div/>', {
-                        'class': 'site-icon favicon favicon-stackexchange'
-                    });
-                    var $message = $('<div/>', {
-                        'class': 'message-text'
-                    }).append($('<h4/>', {
-                        html: (type === 'question' ? 'Q: ' : 'A: ') + title + ' (edited by ' + editor + ' at ' + new Date(editTime * 1000).toLocaleString() + ') ' + (id in postsToCheck ? '<span title="watching is still active for this post" style="float:right"><i class="fa fa-eye"></i></span>' : ''),
-                        title: comment
-                    })).append($('<span/>', {
-                        'class': 'downvotedPostsEditAlert-delete',
-                        style: 'color:blue;border: 1px solid gray;',
-                        id: 'delete_' + sitename + '-' + notificationPostId,
-                        text: 'delete'
-                    }));
-
-                    //$('#downvotedPostsEditAlertButton').addClass(unread ? 'glow' : '');
-                    $link.append($icon).append($message).appendTo($li);
-                    if ($('#downvotedPostsEditAlertDialog #downvotedPostsEditAlertList').find('a[href*="' + link + '"]').length) {
-                        $('#downvotedPostsEditAlertDialog #downvotedPostsEditAlertList a[href*="' + link + '"]').parent().replaceWith($li);
-                    } else {
-                        $('#downvotedPostsEditAlertDialog #downvotedPostsEditAlertList').prepend($li);
-                    }
-                    var count = $('#downvotedPostsEditAlertList li.unread-item').length;
-                    if (count) {
-                        $('.downvotedPostsEditAlertButtonCount').text(count).show();
-                    } else {
-                        $('.downvotedPostsEditAlertButtonCount').hide();
-                    }
-                }, 'creation?pagesize=1', false);
-            }
-
-            function sendWebSocket(websocketSiteCodes, sitename, questionId) {
-                sox.debug('downvotedPostsEditAlert: sending websocket message: ' + websocketSiteCodes[sitename] + "-question-" + questionId);
-                w.send(websocketSiteCodes[sitename] + "-question-" + questionId);
-            }
-
-            var $dialog = $('<div/>', {
-                    id: 'downvotedPostsEditAlertDialog',
-                    'class': 'topbar-dialog dno new-topbar'
-                }),
-                $header = $('<div/>', {
-                    'class': 'header'
-                }).append($('<h3/>', {
-                    text: 'edited posts'
-                })),
-                $content = $('<div/>', {
-                    'class': 'modal-content'
-                }),
-                $posts = $('<ul/>', {
-                    id: 'downvotedPostsEditAlertList',
-                    'class': 'js-items items'
-                }),
-                $button = $('<a/>', {
-                    id: 'downvotedPostsEditAlertButton',
-                    class: '-link downvotedPostsEditAlert-buttonOff',
-                    title: 'Watched posts that have been edited',
-                    'style': 'color: #9fa6ad; background-image: none;',
-                    href: '#',
-                    click: function(e) {
-                        e.preventDefault();
-                        $button.toggleClass('topbar-icon-on');
-                        $dialog.toggle();
-                    }
-                }),
-                $icon = $('<i/>', {
-                    class: 'fa fa-edit'
-                }),
-                $count = $('<div/>', {
-                    'class': 'downvotedPostsEditAlertButtonCount',
-                    'style': 'display:none'
-                });
-
-            $button.append($count).append($icon);
-
-            if (sox.NEW_TOPBAR) {
-                $('.top-bar .-container .-secondary .-item:eq(1)').after($('<li/>').addClass('-item').append($button));
-            } else {
-                $button.appendTo('div.network-items');
-                $dialog.css('left', $('#downvotedPostsEditAlertButton').position().left);
-            }
-            $dialog.css('top', $('.top-bar').height());
-            if ($('#downvotedPostsEditAlertButton').length) $('.js-topbar-dialog-corral').append($dialog);
-
-            $(document).click(function(e) { //close dialog if clicked outside it
-                var $target = $(e.target),
-                    isToggle = $target.is('#downvotedPostsEditAlertButton, #downvotedPostsEditAlertDialog'),
-                    isChild = $target.parents('#downvotedPostsEditAlertButton, #downvotedPostsEditAlertDialog').is("#downvotedPostsEditAlertButton, #downvotedPostsEditAlertDialog");
-
-                if (!isToggle && !isChild) {
-                    $dialog.hide();
-                    $button.removeClass('topbar-icon-on glow');
-                    $count.text('');
-                }
-            });
-
-            var websocketSiteCodes = {
-                "3dprinting": "640",
-                "academia": "415",
-                "ham": "520",
-                "android": "139",
-                "anime": "477",
-                "arduino": "540",
-                "area51": "11",
-                "gaming": "41",
-                "ai": "658",
-                "crafts": "650",
-                "apple": "118",
-                "patents": "463",
-                "askubuntu": "89",
-                "astronomy": "514",
-                "aviation": "528",
-                "alcohol": "532",
-                "hermeneutics": "320",
-                "bicycles": "126",
-                "biology": "375",
-                "bitcoin": "308",
-                "blender": "502",
-                "boardgames": "147",
-                "buddhism": "565",
-                "chemistry": "431",
-                "chess": "435",
-                "chinese": "371",
-                "christianity": "304",
-                "civicrm": "605",
-                "codereview": "196",
-                "coffee": "597",
-                "cogsci": "391",
-                "communitybuilding": "571",
-                "scicomp": "363",
-                "computergraphics": "633",
-                "cs": "419",
-                "craftcms": "563",
-                "stats": "65",
-                "crypto": "281",
-                "datascience": "557",
-                "dba": "182",
-                "drupal": "220",
-                "earthscience": "553",
-                "ebooks": "530",
-                "economics": "591",
-                "electronics": "135",
-                "elementaryos": "621",
-                "emacs": "583",
-                "engineering": "595",
-                "english": "97",
-                "ell": "481",
-                "ethereum": "642",
-                "expatriates": "546",
-                "expressionengine": "471",
-                "freelancing": "500",
-                "french": "299",
-                "gamedev": "53",
-                "gardening": "269",
-                "genealogy": "467",
-                "gis": "79",
-                "german": "253",
-                "graphicdesign": "174",
-                "hardwarerecs": "635",
-                "health": "607",
-                "hinduism": "567",
-                "hsm": "587",
-                "history": "324",
-                "diy": "73",
-                "homebrew": "156",
-                "security": "162",
-                "islam": "455",
-                "italian": "524",
-                "japanese": "257",
-                "joomla": "555",
-                "korean": "654",
-                "languagelearning": "646",
-                "latin": "644",
-                "law": "617",
-                "bricks": "336",
-                "lifehacks": "593",
-                "linguistics": "312",
-                "magento": "479",
-                "martialarts": "403",
-                "mathematica": "387",
-                "matheducators": "548",
-                "math": "69",
-                "mathoverflow": "504",
-                "meta": "4",
-                "judaism": "248",
-                "monero": "656",
-                "mechanics": "224",
-                "movies": "367",
-                "musicfans": "601",
-                "music": "240",
-                "mythology": "615",
-                "networkengineering": "496",
-                "opendata": "498",
-                "opensource": "619",
-                "parenting": "228",
-                "money": "93",
-                "productivity": "277",
-                "pets": "518",
-                "philosophy": "265",
-                "photo": "61",
-                "fitness": "216",
-                "physics": "151",
-                "poker": "379",
-                "politics": "475",
-                "portuguese": "625",
-                "programmers": "131",
-                "codegolf": "200",
-                "pm": "208",
-                "puzzling": "559",
-                "quant": "204",
-                "raspberrypi": "447",
-                "retrocomputing": "648",
-                "reverseengineering": "489",
-                "robotics": "469",
-                "rpg": "122",
-                "russian": "451",
-                "salesforce": "459",
-                "scifi": "186",
-                "cooking": "49",
-                "serverfault": "2",
-                "sharepoint": "232",
-                "dsp": "295",
-                "skeptics": "212",
-                "sqa": "244",
-                "softwarerecs": "536",
-                "sound": "512",
-                "space": "508",
-                "spanish": "353",
-                "sports": "411",
-                "stackapps": "101",
-                "stackoverflow": "1",
-                "pt": "526",
-                "es": "637",
-                "ru": "609",
-                "startups": "573",
-                "superuser": "3",
-                "sustainability": "483",
-                "tex": "85",
-                "outdoors": "395",
-                "workplace": "423",
-                "cstheory": "114",
-                "tor": "516",
-                "travel": "273",
-                "tridion": "485",
-                "unix": "106",
-                "ux": "102",
-                "vi": "599",
-                "video": "170",
-                "webapps": "34",
-                "webmasters": "45",
-                "windowsphone": "427",
-                "woodworking": "603",
-                "wordpress": "110",
-                "worldbuilding": "579",
-                "writers": "166",
-                "rus": "613",
-                "ja": "581"
-            };
-
-            var postsToCheck = JSON.parse(GM_getValue('downvotedPostsEditAlert', '{}'));
-            var notifications = JSON.parse(GM_getValue('downvotedPostsEditAlert-notifications', '{}'));
-            sox.debug('downvotedPostsEditAlert posts to check', postsToCheck);
-            sox.debug('downvotedPostsEditAlert notifications', notifications);
-
-            $(document).on('click', '.downvotedPostsEditAlert-delete', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                sox.debug('downvotedPostsEditAlert: deleting notification from notifications object');
-                var base = $(this).attr('id').split('delete_')[1];
-                var sitename = base.split('-')[0];
-                var postId = base.split('-')[1];
-                delete notifications[+postId];
-                sox.debug('downvotedPostsEditAlert: new notifications object', notifications);
-                GM_setValue('downvotedPostsEditAlert-notifications', JSON.stringify(notifications));
-                $(this).parents('.question-close-notification').remove(); //hide the notification in the inbox dropdown
-            });
-
-            if (!sox.location.on('.com/tour') && !sox.location.on('area51.stackexchange.com')) { //https://github.com/soscripted/sox/issues/151
-                $('.post-menu').each(function() {
-                    var id;
-                    var $parent = $(this).parents('.question, .answer');
-                    if ($parent.length) {
-                        if ($parent.hasClass('question')) {
-                            id = +$parent.attr('data-questionid');
-                        } else {
-                            id = +$parent.attr('data-answerid');
-                        }
-                    }
-                    $(this).append("<span class='lsep'></span><a " + (id in postsToCheck ? "style='color:green; font-weight:bold'" : "") + "class='downvotedPostsEditAlert-watchPostForEdits'>notify on edit</a>");
-                });
-            }
-
-            $('.downvotedPostsEditAlert-watchPostForEdits').click(function() {
-                var questionId = document.URL.split('/')[4];
-                var postId = $(this).parents('.question, .answer').attr('data-answerid') || questionId;
-                var sitename = sox.site.currentApiParameter;
-                var posts = Object.keys(postsToCheck);
-                var index = posts.indexOf(postId);
-
-                if (index > -1) { //already exists, so remove it
-                    $(this).removeAttr('style');
-                    delete postsToCheck[posts[index]];
-                } else { //new watch item
-                    $(this).css({
-                        'color': 'green',
-                        'font-weight': 'bold'
-                    });
-                    postsToCheck[postId] = {
-                        'questionId': questionId,
-                        'addedDate': new Date().getTime(),
-                        'sitename': sitename
-                    };
-                }
-                GM_setValue('downvotedPostsEditAlert', JSON.stringify(postsToCheck));
-            });
-
-            //set up websockets
-            var w = new WebSocket("wss://qa.sockets.stackexchange.com/");
-            var posts = Object.keys(postsToCheck);
-            w.onmessage = function(e) {
-                var data = JSON.parse(e.data);
-                var sitename;
-                var title;
-                data.data = JSON.parse(data.data);
-                sox.debug('downvotedPostsEditAlert Received Data:', data.data);
-                if (data.data.a == 'post-edit' && posts.indexOf((data.data.id).toString()) > -1) {
-                    for (var c in websocketSiteCodes) {
-                        if (websocketSiteCodes[c] == data.action.split('-')[0]) {
-                            sitename = c;
-                            sox.helpers.getFromAPI('posts', data.data.id, sitename, function(d) {
-                                title = d.items[0].title;
-                                notifications[data.data.id] = {
-                                    'sitename': sitename,
-                                    'url': 'https://' + sitename + '.stackexchange.com/' + (d.items[0].post_type == 'question' ? 'q/' : 'a/') + data.data.id,
-                                    'title': title,
-                                    'editor': d.items[0].last_editor.display_name,
-                                    'editor_link': d.items[0].last_editor.link,
-                                    'edit_date': d.items[0].last_edit_date,
-                                    'type': d.items[0].post_type
-                                };
-                                GM_setValue('downvotedPostsEditAlert-notifications', JSON.stringify(notifications));
-                                addEditNotification('https://' + sitename + '.stackexchange.com/' + (d.items[0].post_type == 'question' ? 'q/' : 'a/') + data.data.id, title + ' [LIVE]', sitename, data.data.id, true, d.items[0].last_editor.display_name, d.items[0].last_editor.link, d.items[0].last_edit_date, d.items[0].post_type, postsToCheck);
-                                sox.debug('downvotedPostsEditAlert: adding notification from live');
-                            }, 'activity&filter=!-*f(6qkz8Rkb');
-                        }
-                    }
-                }
-            };
-
-            $.each(notifications, function(i, o) {
-                addEditNotification(o.url, o.title, o.sitename, i, false, o.editor, o.editor_link, o.edit_date, o.type, postsToCheck);
-            });
-
-            if (!$.isEmptyObject(postsToCheck)) {
-                sox.debug(postsToCheck);
-                $.each(postsToCheck, function(i, o) {
-                    sox.debug('downvotedPostsEditAlert: Last Checked Time: ' + o.lastCheckedTime);
-                    if (new Date().getTime() >= ((o.lastCheckedTime || 0) + 900000)) { //an hour: 3600000ms, 15 minutes: 900000ms, 1 minute: 60000ms
-                        sox.helpers.getFromAPI('posts', i, o.sitename, function(json) {
-                            sox.debug('downvotedPostsEditAlert json:', json);
-                            sox.debug('downvotedPostsEditAlert check:', json.items[0].last_edit_date + '>' + (o.lastCheckedTime || o.addedDate) / 1000);
-                            sox.debug('downvotedPostsEditAlert evaluation', json.items[0].last_edit_date > (o.lastCheckedTime || o.addedDate) / 1000);
-                            if (json.items[0].last_edit_date > (o.lastCheckedTime || o.addedDate) / 1000) {
-                                sox.debug('downvotedPostsEditAlert: adding notification from api');
-                                addEditNotification(json.items[0].link, json.items[0].title + ' [API]', json.items[0].link.split('/')[2].split('.')[0], i, true, json.items[0].last_editor.display_name, json.items[0].last_editor.link, json.items[0].last_edit_date, json.items[0].post_type, postsToCheck);
-                                notifications[i] = {
-                                    'sitename': json.items[0].link.split('/')[2].split('.')[0],
-                                    'url': json.items[0].link,
-                                    'title': json.items[0].title,
-                                    'editor': json.items[0].last_editor.display_name,
-                                    'editor_link': json.items[0].last_editor.link,
-                                    'edit_date': json.items[0].last_edit_date,
-                                    'type': json.items[0].post_type
-                                };
-                                GM_setValue('downvotedPostsEditAlert-notifications', JSON.stringify(notifications));
-                            }
-                        }, "activity&filter=!-*f(6qkz8Rkb", false); //false means async=false
-                        o.lastCheckedTime = new Date().getTime();
-                    }
-                    GM_setValue('downvotedPostsEditAlert', JSON.stringify(postsToCheck));
-                    sox.debug(w);
-                    sox.debug(w.readyState);
-                    if (w.readyState === 1) {
-                        sendWebSocket(websocketSiteCodes, o.sitename, o.questionId);
-                    } else {
-                        w.onopen = function() {
-                            sox.debug('websocket opened');
-                            sendWebSocket(websocketSiteCodes, o.sitename, o.questionId);
-                        };
-                    }
-                });
-            } else {
-                $dialog.text('empty');
-            }
         },
 
         chatEasyAccess: function() {

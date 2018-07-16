@@ -4,18 +4,18 @@
     sox.dialog = {
         init: function(options) {
 
-            if (!$('.top-bar').length) {
-                return;
-            }
+            if (!$('.top-bar').length) return;
+
             sox.debug('initializing SOX dialog');
 
             var version = options.version,
                 features = options.features,
-                settings = options.settings;
+                settings = options.settings,
+                lastVersionInstalled = options.lastVersionInstalled,
 
-            var html = GM_getResourceText('dialog');
+                html = GM_getResourceText('dialog'),
 
-            var $soxSettingsDialog = $(html),
+                $soxSettingsDialog = $(html),
                 $soxSettingsDialogFeatures = $soxSettingsDialog.find('#sox-settings-dialog-features'),
                 $soxSettingsDialogVersion = $soxSettingsDialog.find('#sox-settings-dialog-version'),
                 $soxSettingsSave = $soxSettingsDialog.find('#sox-settings-dialog-save'),
@@ -28,7 +28,17 @@
                 $soxSettingsClose = $soxSettingsDialog.find('#sox-settings-dialog-close'),
                 $searchBox = $soxSettingsDialog.find('#search'),
                 $importSettingsButton = $soxSettingsDialog.find('#sox-settings-import'),
-                $exportSettingsButton = $soxSettingsDialog.find('#sox-settings-export');
+                $exportSettingsButton = $soxSettingsDialog.find('#sox-settings-export'),
+
+                //array of HTML strings that will be displayed as `li` items if the user has installed a new version.
+                changes = ['Greasemonkey is no longer supported. Please use Tampermonkey',
+                    'You can now import and export your settings from the SOX dialog',
+                    'Added feature to paste images directly into SE textareas without using the image dialog',
+                    'The old topbar is no longer supported (affects Area 51 mainly)',
+                    '<a href="https://github.com/soscripted/sox/milestone/10">Various bug fixes</a>',
+                    'The feature that lets you watch posts for edits is now available as a separate userscript',
+                    'Behind the scenes refactoring by @GaurangTandon'
+                ];
 
             function addCategory(name) {
                 var $div = $('<div/>', {
@@ -81,12 +91,11 @@
                 if (featureSettings) {
                     var $settingsDiv = $('<div/>', {
                             id: 'feature-settings-' + name,
-                            class: 'sox-feature-settings',
+                            'class': 'sox-feature-settings',
                             style: 'display: none; margin-top: 5px;'
                         }),
                         $settingsToggle = $('<i/>', {
                             'class': 'fa fa-wrench',
-
                             click: function(e) {
                                 e.preventDefault(); //don't uncheck the checkbox
 
@@ -119,8 +128,7 @@
 
                     var $saveFeatureSettings = $('<a/>', {
                         id: 'saveSettings-' + name,
-                        class: 'sox-feature-settings-save',
-                        // style: 'cursor: pointer',
+                        'class': 'sox-feature-settings-save',
                         text: 'Save Settings',
                         click: function(e) {
                             e.preventDefault(); //don't uncheck the checkbox
@@ -153,6 +161,32 @@
                 $soxSettingsDialogVersion.text(' v' + (version ? version.toLowerCase() : ''));
             } else {
                 $soxSettingsDialogVersion.text('');
+            }
+
+            if (version !== lastVersionInstalled) {
+                var $newVersionDetailsContainer = $('<div/>', {
+                        'class': 'sox-new-version-details'
+                    }),
+                    $newVersionHeader = $('<div/>', {
+                        'class': 'header category',
+                        'html': '<h3>new in this version</h3>'
+                    }),
+                    $changes = $('<ul/>'),
+                    $newVersionInfoContainer;
+
+                for (var i = 0; i < changes.length; i++) {
+                    $changes.append($('<li/>', {
+                        'html': changes[i], //this array is defined near the top of the file
+                        'class': 'sox-new-version-item'
+                    }));
+                }
+
+                $newVersionInfoContainer = $('<div/>', {
+                    'class': 'modal-content',
+                    'html': $changes
+                });
+
+                $soxSettingsDialogFeatures.append($newVersionDetailsContainer.append($newVersionHeader).append($newVersionInfoContainer));
             }
 
             if (sox.info.debugging) $soxSettingsDebugging.text('Disable debugging');
@@ -224,6 +258,7 @@
             $searchBox.on('keyup keydown', function() { //search box
                 if ($(this).val() !== '') {
                     var t = $(this).val();
+                    $('.sox-new-version-details').hide();
                     $('#sox-settings-dialog .sox-feature').each(function() {
                         var $features = $(this).closest('.features');
                         if ($(this).find('label').text().toLowerCase().indexOf(t) == -1) {
@@ -233,7 +268,7 @@
                         }
                     });
                 } else {
-                    $('.category, .features, #sox-settings-dialog .sox-feature').fadeIn();
+                    $('.category, .features, #sox-settings-dialog .sox-feature, .sox-new-version-details').fadeIn();
                 }
             });
 

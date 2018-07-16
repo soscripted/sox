@@ -1,13 +1,15 @@
 (function(sox, $, undefined) {
     'use strict';
-    var SOX_SETTINGS = 'SOXSETTINGS';
-    var commonInfo = JSON.parse(GM_getResourceText('common'));
+    var SOX_SETTINGS = 'SOXSETTINGS',
+        commonInfo = JSON.parse(GM_getResourceText('common')),
+        lastVersionInstalled = GM_getValue('SOX-lastVersionInstalled');
 
     sox.info = {
         version: (typeof GM_info !== 'undefined' ? GM_info.script.version : 'unknown'),
         handler: (typeof GM_info !== 'undefined' ? GM_info.scriptHandler : 'unknown'),
         apikey: 'lL1S1jr2m*DRwOvXMPp26g((',
-        debugging: GM_getValue('SOX-debug', false)
+        debugging: GM_getValue('SOX-debug', false),
+        lastVersionInstalled: lastVersionInstalled
     };
 
     sox.NEW_TOPBAR = location.href.indexOf('area51') === -1;
@@ -117,13 +119,15 @@
         }
     };
 
-    function throttle(fn, countMax, time){
+    function throttle(fn, countMax, time) {
         var counter = 0;
 
-        setInterval(function(){ counter = 0; }, time);
+        setInterval(function() {
+            counter = 0;
+        }, time);
 
-        return function(){
-            if(counter < countMax) {
+        return function() {
+            if (counter < countMax) {
                 counter++;
                 fn.apply(this, arguments);
             }
@@ -218,20 +222,20 @@
                 return false;
             }
         },
-        getIDFromAnchor: function(anchor){
+        getIDFromAnchor: function(anchor) {
             return anchor.href ? sox.helpers.getIDFromLink(anchor.href) : null;
         },
-        getSiteNameFromAnchor: function(anchor){
+        getSiteNameFromAnchor: function(anchor) {
             return anchor.href ? sox.helpers.getSiteNameFromLink(anchor.href) : null;
         },
         // answer ID, question ID, user ID, comment ID ("posts/comments/ID" NOT "comment1545_5566")
-        getIDFromLink: function(link){
+        getIDFromLink: function(link) {
             // test cases: https://regex101.com/r/6P9sDX/2
             var idMatch = link.match(/\/(\d+)($|\/|\?)/);
 
             return idMatch ? +idMatch[1] : null;
         },
-        getSiteNameFromLink: function(link){
+        getSiteNameFromLink: function(link) {
             var siteRegex = /(([a-z\.]+)\.stackexchange|stackoverflow|superuser|serverfault|askubuntu|stackapps|mathoverflow|programmers|bitcoin)\.com/,
                 siteMatch = link.match(siteRegex);
 

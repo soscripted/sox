@@ -1,11 +1,11 @@
 // ==UserScript==
 // @name         Stack Overflow Extras (SOX)
 // @namespace    https://github.com/soscripted/sox
-// @version      2.2.25 DEV
+// @version      2.2.26 DEV
 // @description  Extra optional features for Stack Overflow and Stack Exchange sites
-// @contributor  ᴉʞuǝ (stackoverflow.com/users/1454538/, https://github.com/mezmi)
-// @contributor  ᔕᖺᘎᕊ (stackexchange.com/users/4337810/, https://github.com/shu8)
-// @contributor  Sir-Cumference (stackexchange.com/users/4119142/, https://github.com/Sir-Cumference)
+// @contributor  ᴉʞuǝ (https://stackoverflow.com/users/1454538/, https://github.com/mezmi)
+// @contributor  ᔕᖺᘎᕊ (https://stackexchange.com/users/4337810/, https://github.com/shu8)
+// @contributor  Sir-Cumference (https://stackexchange.com/users/4119142/, https://github.com/Sir-Cumference)
 // @contributor  GaurangTandon (https://github.com/GaurangTandon)
 // @updateURL    https://rawgit.com/soscripted/sox/master/sox.user.js
 
@@ -25,7 +25,6 @@
 // @require      https://code.jquery.com/jquery-3.3.1.min.js
 // @require      https://code.jquery.com/ui/1.12.1/jquery-ui.min.js
 // @require      https://api.stackexchange.com/js/2.0/all.js
-// @require      https://cdn.rawgit.com/timdown/rangyinputs/master/rangyinputs-jquery-src.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery-timeago/1.5.3/jquery.timeago.min.js
 
 // @require      sox.common.js
@@ -46,7 +45,6 @@
 // @grant        GM_addStyle
 // @grant        GM_info
 // ==/UserScript==
-//jQuery.noConflict();
 /*jshint loopfunc: true*/
 (function(sox, $, undefined) {
     'use strict';
@@ -96,7 +94,8 @@
             sox.dialog.init({
                 version: sox.info.version,
                 features: featureInfo,
-                settings: settings
+                settings: settings,
+                lastVersionInstalled: sox.info.lastVersionInstalled
             });
         } catch (e) {
             throw ('SOX: There was an error while attempting to initialize the SOX Settings Dialog, please report this on GitHub.\n' + e);

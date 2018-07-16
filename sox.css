@@ -54,7 +54,11 @@
 
 #sox-settings-dialog-features .modal-content div {
     margin-bottom: 3px;
-    padding: 1px;
+    padding: 2px;
+}
+
+#sox-settings-dialog-features .modal-content div:hover {
+    background-color: #f7f8f8;
 }
 
 #sox-settings-dialog-features .modal-content label>input {
@@ -78,6 +82,10 @@
 
 #sox-settings-dialog-actions #sox-settings-dialog-access-token {
     transform: scaleX(-1);
+}
+
+#sox-settings-dialog .sox-new-version-item {
+    padding: 5px;
 }
 
 .sox-settings-button {
