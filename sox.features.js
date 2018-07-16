@@ -2386,13 +2386,25 @@
                 return new RegExp("\\b" + list.replace(",", "|").replace(" ", "") + "\\b", 'i');
             }
 
+            function insertTagsList(anchor) {
+                if ($(anchor).parent().find('.sox-hnq-question-tags-tooltip').length) return;
+                $(anchor).after('<span class="sox-hnq-question-tags-tooltip">' + anchor.dataset.tags + '</span>');
+            }
+
             var WORDS_TO_BLOCK = settings.wordsToBlock,
                 SITES_TO_BLOCK = settings.sitesToBlock,
                 TITLES_TO_HIDE = settings.titlesToHideRegex && settings.titlesToHideRegex.split(','),
                 FILTER_QUESTION_TAGS = "!)5IW-5Quf*cV5LToe(J0BjSBXW19";
 
+            $('#hot-network-questions h4').css('display', 'inline').after($('<span/>', {
+                'style': 'color:  grey; display: block; margin-bottom: 10px;',
+                'text': 'SOX: hover over titles to show tags'
+            }));
+
             $('#hot-network-questions li a').each(function() {
-                var i, word, site, title;
+                var i, word, site, title,
+                    id = sox.helpers.getIDFromAnchor(this),
+                    sitename = sox.helpers.getSiteNameFromAnchor(this);
 
                 //NOTE: to hide questions, we use a class that has 'display: none !important'.
                 //This is to make sure questions that were previously hidden don't appear after the user clicks 'more hot questions',
@@ -2415,24 +2427,26 @@
                     }
                 }
 
-                $(this).after('<i class="fa fa-tags getQuestionTags" title="SOX: hover off to show this question\'s tags"></i>');
-            });
+                var PLACEHOLDER = "fetching tags...";
 
-            $('.getQuestionTags').hover(function(e) {
-                if (!this.dataset.tags) {
-                    var questionLink = this.previousSibling,
-                        id = sox.helpers.getIDFromAnchor(questionLink),
-                        sitename = sox.helpers.getSiteNameFromAnchor(questionLink);
+                this.addEventListener("mouseenter", function() {
+                    if (!this.dataset.tags) {
+                        sox.helpers.getFromAPI('questions', id, sitename, FILTER_QUESTION_TAGS, function(d) {
+                            this.dataset.tags = d.items[0].tags.join(', ');
+                            insertTagsList(this);
+                        }.bind(this));
 
-                    sox.helpers.getFromAPI('questions', id, sitename, FILTER_QUESTION_TAGS, function(d) {
-                        this.dataset.tags = d.items[0].tags.join(', ');
-                    }.bind(this));
-                }
-            }, function() {
-                if (!this.classList.contains('sox-hnq-question-tags-tooltip') && this.dataset.tags) {
-                    $(this).after('<span class="sox-hnq-question-tags-tooltip">' + this.dataset.tags + '</span>');
-                    $(this).remove();
-                }
+                        this.dataset.tags = PLACEHOLDER;
+                    } else if (typeof this.dataset.tags !== "undefined" && this.dataset.tags !== PLACEHOLDER) {
+                        insertTagsList(this);
+                    } else {
+                        insertTagsList(this, PLACEHOLDER);
+                    }
+                });
+                this.addEventListener("mouseleave", function() {
+                    let tooltip = this.parentNode.querySelector('.sox-hnq-question-tags-tooltip');
+                    if (tooltip) tooltip.remove();
+                });
             });
         },
 
