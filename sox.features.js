@@ -2589,6 +2589,12 @@
 
                 reader.readAsDataURL(blob);
             });
+        },
+
+        onlyShowCommentActionsOnHover: function() {
+            // Description: Only show the comment actions (flag/upvote) when hovering over a comment
+
+            $('.comment').addClass('sox-onlyShowCommentActionsOnHover');
         }
     };
 })(window.sox = window.sox || {}, jQuery);

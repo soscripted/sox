@@ -114,7 +114,8 @@
     color: #9fa6ad;
 }
 
-.sox-feature-info, .sox-feature-settings {
+.sox-feature-info,
+.sox-feature-settings {
     background-color: whitesmoke;
     border-radius: 9px;
     margin-left: 20px;
@@ -124,18 +125,17 @@
     padding: 5px !important;
 }
 
-.sox-feature .fa-info, .sox-feature .fa-wrench {
+.sox-feature .fa-info,
+.sox-feature .fa-wrench {
     font-size: 12px;
     padding: 0 5px;
 }
 
 .sox-feature .fa-info {
     float: right;
-  }
-
-.sox-feature-settings-save {
-
 }
+
+.sox-feature-settings-save {}
 
 /* -------- sox specific features' CSS ------- */
 
@@ -149,7 +149,6 @@
     text-align: center;
     cursor: pointer;
 }
-
 
 /*Main centered divs, SE-style:*/
 
@@ -165,7 +164,6 @@
     height: 90%;
 }
 
-
 /*Specifically for quickCommentShortcuts -- the div's too wide! https://github.com/shu8/Stack-Overflow-Optional-Features/issues/36*/
 
 #quickCommentShortcuts.sox-centered {
@@ -178,10 +176,12 @@
     overflow: auto;
 }
 
-
 /*standOutDupeCloseMigrated signs */
 
-.standOutDupeCloseMigrated-duplicate, .standOutDupeCloseMigrated-closed, .standOutDupeCloseMigrated-migrated, .standOutDupeCloseMigrated-onhold {
+.standOutDupeCloseMigrated-duplicate,
+.standOutDupeCloseMigrated-closed,
+.standOutDupeCloseMigrated-migrated,
+.standOutDupeCloseMigrated-onhold {
     color: #FFF;
     padding: 2px;
     border-radius: 4px;
@@ -205,7 +205,6 @@
     background: #808080;
 }
 
-
 /*metaNewQuestionAlert for the mod diamond and dialog */
 
 #metaNewQuestionAlertDialog {
@@ -218,7 +217,6 @@
     content: "No new meta questions at this time.";
 }
 
-
 /*addHotText for the 'this question is hot' banner */
 
 .sox-hot {
@@ -227,7 +225,6 @@
     color: red;
     margin-right: 8px;
 }
-
 
 /*quickCommentShortcutsMain: */
 
@@ -243,9 +240,7 @@
     overflow: auto;
 }
 
-
 /*fixedTopbar */
-
 
 /*Ubuntu CSS by @UnicornsAreVeryVeryYummy - http://stackapps.com/users/33746/unicorns-are-very-very-yummy */
 
@@ -285,7 +280,6 @@ li.fixedTopbar-siteLink {
     margin-left: -545px;
     z-index: 1000;
 }
-
 
 /*Side by Side Editing (SBS, addSBSBtn, startSBS): https://github.com/szego/SE-Answers_scripts/blob/side-by-side/editing-and-toggling/side-by-side-editing.user.js:*/
 
@@ -337,12 +331,11 @@ li.fixedTopbar-siteLink {
 }
 
 .post-editor.sbs-on {
-    width: 1360px !important;
-    //width: 1060px !important;
+    width: 1360px !important; //width: 1060px !important;
 }
 
 .sbs-on-left-side {
-  width: 660px;
+    width: 660px;
 }
 
 .wmd-button-bar.sbs-on {
@@ -376,7 +369,6 @@ li.fixedTopbar-siteLink {
     width: 1335px;
 }
 
-
 /*linkedPostsInline for the displayed post text; https://github.com/shu8/Stack-Overflow-Optional-Features/issues/48 */
 
 .linkedPostsInline-loaded-body-sox {
@@ -385,18 +377,18 @@ li.fixedTopbar-siteLink {
     overflow-wrap: break-word;
     width: auto;
     padding: 10px;
-    -webkit-box-shadow: inset 1px 1px 4px 1px rgba(0,0,0,0.5);
-       -moz-box-shadow: inset 1px 1px 4px 1px rgba(0,0,0,0.5);
-            box-shadow: inset 1px 1px 4px 1px rgba(0,0,0,0.5);
-
+    -webkit-box-shadow: inset 1px 1px 4px 1px rgba(0, 0, 0, 0.5);
+    -moz-box-shadow: inset 1px 1px 4px 1px rgba(0, 0, 0, 0.5);
+    box-shadow: inset 1px 1px 4px 1px rgba(0, 0, 0, 0.5);
 }
+
 .linkedPostsInline-loaded-body-sox .post-text {
     width: auto;
     font-size: 90%;
 }
 
-
 /*findAndReplace*/
+
 .findReplaceToolbar {
     display: block;
     background-color: transparent;
@@ -426,7 +418,6 @@ li.fixedTopbar-siteLink {
     cursor: pointer;
 }
 
-
 /*highlightQuestions -- for the tags*/
 
 .sox-tagged-interesting {
@@ -443,7 +434,6 @@ li.fixedTopbar-siteLink {
     height: 100%;
     background: black;
 }
-
 
 /*downvotedPostsEditAlert -- for the button and dropdown*/
 
@@ -482,14 +472,12 @@ li.fixedTopbar-siteLink {
     -webkit-text-stroke-width: 3px;
 }
 
-
 /*commentReplies -- for the reply buttons*/
 
 .soxReplyLink {
     cursor: pointer;
     float: right;
 }
-
 
 /*flagPercentageBar -- for the percentage bar itself*/
 
@@ -511,7 +499,6 @@ li.fixedTopbar-siteLink {
     margin-bottom: 5px;
 }
 
-
 /*titleEditDiff -- for the toggle button*/
 
 .sox-better-title-toggle {
@@ -519,7 +506,6 @@ li.fixedTopbar-siteLink {
     margin-right: 10px;
     cursor: pointer;
 }
-
 
 /*sox-copyCode -- for the button and textarea (completely hide it)*/
 
@@ -543,7 +529,6 @@ li.fixedTopbar-siteLink {
     overflow: hidden;
 }
 
-
 /*openLinksInNewTab -- for the external link sign*/
 
 .openLinksInNewTab-externalLink {
@@ -552,6 +537,7 @@ li.fixedTopbar-siteLink {
 }
 
 /*colorAnswerer -- for the username*/
+
 .sox-answerer {
     color: rgba(0, 50, 200, 1);
     background-color: rgba(220, 220, 220, 1);
@@ -559,16 +545,19 @@ li.fixedTopbar-siteLink {
 }
 
 /*hotNetworkQuestionsFiltering -- for the questions to hide*/
+
 .sox-hot-network-question-filter-hide {
     display: none !important;
 }
 
 /*addAuthorNameToInboxNotifications -- for the author span*/
+
 .sox-notification-author {
     color: #848d95;
 }
 
 /*hotNetworkQuestionsFiltering -- for the tags icon and tags list shown after hovering over it*/
+
 .getQuestionTags {
     margin-left: 5px;
 }
@@ -582,4 +571,12 @@ li.fixedTopbar-siteLink {
     font-size: 11px;
     padding: 2px;
     white-space: normal;
+}
+
+/* onlyShowCommentActionsOnHover -- the function just adds this CSS to avoid having to do it in JS*/
+/* thanks @Makyen <https://meta.stackexchange.com/questions/312794/312800#comment1024746_312794> */
+
+.sox-onlyShowCommentActionsOnHover:not(:hover) .comment-up-off,
+.sox-onlyShowCommentActionsOnHover:not(:hover) .comment-flag:not(.flag-on) {
+    visibility: hidden;
 }

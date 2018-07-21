@@ -164,6 +164,7 @@
             }
 
             if (version !== lastVersionInstalled) {
+                GM_setValue('SOX-lastVersionInstalled', version);
                 var $newVersionDetailsContainer = $('<div/>', {
                         'class': 'sox-new-version-details'
                     }),

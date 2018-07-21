@@ -195,6 +195,12 @@
             "meta": "http://meta.stackoverflow.com/q/296582/3541881",
             "match": "*://*/questions*,*://*/review*",
             "exclude": "SE1.0"
+        }, {
+            "name": "onlyShowCommentActionsOnHover",
+            "desc": "Only show the comment actions (flag/upvote) when hovering over a comment",
+            "meta": "https://meta.stackexchange.com/q/312794",
+            "match": "*://*/questions*,*://*/review*",
+            "exclude": ""
         }],
         "Editing": [{
             "name": "addSBSBtn",
