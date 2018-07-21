@@ -1078,11 +1078,8 @@
             $diamond.html($diamond.html()); //Reloads the diamond icon, which is necessary when adding an SVG using jQuery.
 
             $dialog.append($header).append($content.append($questions));
-            if (sox.NEW_TOPBAR) {
-                $('.-secondary > .-item:not(:has(.my-profile)):eq(1)').before($('<li/>').addClass('-item').append($diamond));
-            } else {
-                $diamond.appendTo('div.network-items');
-            }
+            $('.-secondary > .-item:not(:has(.my-profile)):eq(1)').before($('<li/>').addClass('-item').append($diamond));
+            
 
             $dialog.css({
                 'top': $('.top-bar').height(),

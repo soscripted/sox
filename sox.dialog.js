@@ -8,7 +8,7 @@
 
             sox.debug('initializing SOX dialog');
 
-            var version = options.version,
+            let version = options.version,
                 features = options.features,
                 settings = options.settings,
                 lastVersionInstalled = options.lastVersionInstalled,
@@ -41,7 +41,7 @@
                 ];
 
             function addCategory(name) {
-                var $div = $('<div/>', {
+                let $div = $('<div/>', {
                         'class': 'header category',
                         'id': 'header-for-' + name
                     }),
@@ -61,7 +61,7 @@
             }
 
             function addFeature(category, name, description, featureSettings, extendedDescription, metaLink) {
-                var $div = $('<div/>', {
+                let $div = $('<div/>', {
                         'class': 'sox-feature'
                     }),
                     $info = $('<i/>', {
@@ -89,7 +89,7 @@
                 $soxSettingsDialogFeatures.find('#' + category).append($div);
 
                 if (featureSettings) {
-                    var $settingsDiv = $('<div/>', {
+                    let $settingsDiv = $('<div/>', {
                             id: 'feature-settings-' + name,
                             'class': 'sox-feature-settings',
                             style: 'display: none; margin-top: 5px;'
@@ -99,7 +99,7 @@
                             click: function(e) {
                                 e.preventDefault(); //don't uncheck the checkbox
 
-                                var $settingsPanel = $('#feature-settings-' + name);
+                                let $settingsPanel = $('#feature-settings-' + name);
 
                                 if ($settingsPanel.is(":visible")) {
                                     $settingsPanel.fadeOut();
@@ -108,12 +108,11 @@
                                 }
 
                             }
-                        });
+                        }),
+                        optionalSettings = GM_getValue("SOX-" + name + "-settings", -1);
 
-                    var optionalSettings = GM_getValue("SOX-" + name + "-settings", -1);
-
-                    for (var i = 0; i < featureSettings.length; i++) {
-                        var currentSetting = featureSettings[i];
+                    for (let i = 0; i < featureSettings.length; i++) {
+                        let currentSetting = featureSettings[i];
                         $settingsDiv
                             .append(currentSetting.desc)
                             .append('<br>')
@@ -126,13 +125,12 @@
                             .append('<br>');
                     }
 
-                    var $saveFeatureSettings = $('<a/>', {
+                    let $saveFeatureSettings = $('<a/>', {
                         id: 'saveSettings-' + name,
-                        'class': 'sox-feature-settings-save',
                         text: 'Save Settings',
                         click: function(e) {
                             e.preventDefault(); //don't uncheck the checkbox
-                            var settingsToSave = {};
+                            let settingsToSave = {};
                             $(this).parent().find('.featureSetting').each(function() {
                                 settingsToSave[$(this).attr('id')] = ($(this).is(':checkbox') ? $(this).is(':checked') : $(this).val());
                             });
@@ -144,7 +142,7 @@
 
                     $settingsDiv.append($saveFeatureSettings);
 
-                    var $feature = $soxSettingsDialogFeatures.find('input#' + name).parent();
+                    let $feature = $soxSettingsDialogFeatures.find('input#' + name).parent();
                     $feature.append($settingsToggle);
 
                     if ($div.has('i.fa-info').length) {
@@ -165,7 +163,7 @@
 
             if (version !== lastVersionInstalled) {
                 GM_setValue('SOX-lastVersionInstalled', version);
-                var $newVersionDetailsContainer = $('<div/>', {
+                let $newVersionDetailsContainer = $('<div/>', {
                         'class': 'sox-new-version-details'
                     }),
                     $newVersionHeader = $('<div/>', {
@@ -175,7 +173,7 @@
                     $changes = $('<ul/>'),
                     $newVersionInfoContainer;
 
-                for (var i = 0; i < changes.length; i++) {
+                for (let i = 0; i < changes.length; i++) {
                     $changes.append($('<li/>', {
                         'html': changes[i], //this array is defined near the top of the file
                         'class': 'sox-new-version-item'
@@ -205,7 +203,7 @@
             });
 
             $soxSettingsDebugging.on('click', function() {
-                var currentState = sox.info.debugging;
+                let currentState = sox.info.debugging;
                 if (typeof currentState === 'undefined') {
                     GM_setValue('SOX-debug', true);
                     $soxSettingsDebugging.text('Disable debugging');
@@ -222,22 +220,22 @@
             });
 
             $soxSettingsToggle.on('click', function() {
-                var $icon = $(this).find('i'),
-                    checked = $icon.hasClass('fa-check-square-o') ? true : false;
+                let $icon = $(this).find('i'),
+                    checked = $icon.hasClass('fas');
 
                 if (checked) {
-                    $icon.removeClass('fa-check-square-o').addClass('fa-square-o');
-                    $soxSettingsDialogFeatures.find('input').prop('checked', false);
+                    $icon.removeClass('fas').addClass('far');
                 } else {
-                    $icon.removeClass('fa-square-o').addClass('fa-check-square-o');
-                    $soxSettingsDialogFeatures.find('input').prop('checked', true);
+                    $icon.removeClass('far').addClass('fas');
                 }
+
+                $soxSettingsDialogFeatures.find('input').prop('checked', !checked);
             });
 
             $soxSettingsSave.on('click', function() {
-                var settings = [];
+                let settings = [];
                 $soxSettingsDialogFeatures.find('input[type=checkbox]:checked').not('.featureSetting').each(function() { //NOT the per-feature featureSetting checkboxes, because they are saved in THEIR OWN setting object!
-                    var x = $(this).closest('.modal-content').attr('id') + '-' + $(this).attr('id');
+                    let x = $(this).closest('.modal-content').attr('id') + '-' + $(this).attr('id');
                     settings.push(x); //Add the function's ID (also the checkbox's ID) to the array
                 });
 
@@ -246,7 +244,7 @@
             });
 
             $importSettingsButton.on('click', function() {
-                var settingsToImport = window.prompt('Please paste the settings exactly as they were given to you');
+                let settingsToImport = window.prompt('Please paste the settings exactly as they were given to you');
                 if (!settingsToImport) return;
                 sox.settings.save(settingsToImport);
                 location.reload();
@@ -258,11 +256,11 @@
 
             $searchBox.on('keyup keydown', function() { //search box
                 if ($(this).val() !== '') {
-                    var t = $(this).val();
+                    let searchQuery = $(this).val();
                     $('.sox-new-version-details').hide();
                     $('#sox-settings-dialog .sox-feature').each(function() {
-                        var $features = $(this).closest('.features');
-                        if ($(this).find('label').text().toLowerCase().indexOf(t) == -1) {
+                        let $features = $(this).closest('.features');
+                        if ($(this).find('label').text().toLowerCase().indexOf(searchQuery) == -1) {
                             $(this).hide();
                         } else {
                             $(this).show();
@@ -275,9 +273,9 @@
 
 
             // create sox settings button
-            var $soxSettingsButton = $('<a/>', {
+            let $soxSettingsButton = $('<a/>', {
                     id: 'soxSettingsButton',
-                    class: 'sox-settings-button ' + (sox.NEW_TOPBAR ? '-link' : 'topbar-icon yes-hover sox-settings-button'),
+                    class: 'sox-settings-button -link',
                     title: 'Change SOX settings',
                     href: '#',
                     click: function(e) {
@@ -296,7 +294,7 @@
 
             //close dialog if clicked outside it
             $(document).click(function(e) { //close dialog if clicked outside it
-                var $target = $(e.target),
+                let $target = $(e.target),
                     isToggle = $target.is('#soxSettingsButton, #sox-settings-dialog'),
                     isChild = $target.parents('#soxSettingsButton, #sox-settings-dialog').is('#soxSettingsButton, #sox-settings-dialog');
 
@@ -314,10 +312,10 @@
 
             // load features into dialog
             sox.debug('injecting features into dialog');
-            for (var category in features.categories) {
+            for (let category in features.categories) {
                 addCategory(category);
-                for (var feature in features.categories[category]) {
-                    var currentFeature = features.categories[category][feature];
+                for (let feature in features.categories[category]) {
+                    let currentFeature = features.categories[category][feature];
                     addFeature(
                         category,
                         currentFeature.name,
@@ -330,7 +328,7 @@
             }
 
             if (settings) {
-                for (var i = 0; i < settings.length; ++i) {
+                for (let i = 0; i < settings.length; ++i) {
                     $soxSettingsDialogFeatures.find('#' + settings[i].split('-')[1]).prop('checked', true);
                 }
             } else {
@@ -344,7 +342,6 @@
             $soxSettingsButton.append($icon);
             $('.-secondary > .-item:not(:has(.my-profile)):eq(1)').before($('<li/>').addClass('-item').append($soxSettingsButton));
 
-            $soxSettingsDialog.addClass('new-topbar');
             $soxSettingsDialog.css({
                 'top': $('.top-bar').height(),
                 'right': $('.-container').outerWidth() - $('#soxSettingsButton').parent().position().left - $('#soxSettingsButton').outerWidth()
