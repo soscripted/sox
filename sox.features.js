@@ -2591,7 +2591,12 @@
         onlyShowCommentActionsOnHover: function() {
             // Description: Only show the comment actions (flag/upvote) when hovering over a comment
 
-            $('.comment').addClass('sox-onlyShowCommentActionsOnHover');
+            function addCSS() {
+                $('.comment').addClass('sox-onlyShowCommentActionsOnHover');
+            }
+            
+            $(document).on('sox-new-comment', addCSS);
+            addCSS();
         }
     };
 })(window.sox = window.sox || {}, jQuery);
