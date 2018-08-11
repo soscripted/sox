@@ -22,8 +22,6 @@
                 $soxSettingsReset = $soxSettingsDialog.find('#sox-settings-dialog-reset'),
                 $soxSettingsDebugging = $soxSettingsDialog.find('#sox-settings-dialog-debugging'),
                 $soxSettingsNewAccessTokenButton = $soxSettingsDialog.find('#sox-settings-dialog-access-token'),
-                $soxSettingsToggleAccessTokensDiv = $soxSettingsDialog.find('#sox-settings-dialog-access-tokens'),
-                $soxSettingsAccessTokensToggle = $soxSettingsToggleAccessTokensDiv.find('#toggle-access-token-links'),
                 $soxSettingsToggle = $soxSettingsDialog.find('#sox-settings-dialog-check-toggle'),
                 $soxSettingsClose = $soxSettingsDialog.find('#sox-settings-dialog-close'),
                 $searchBox = $soxSettingsDialog.find('#search'),
@@ -35,9 +33,10 @@
                     'You can now import and export your settings from the SOX dialog',
                     'Added feature to paste images directly into SE textareas without using the image dialog',
                     'The old topbar is no longer supported (affects Area 51 mainly)',
-                    'The feature that lets you watch posts for edits is now available as a separate userscript',
+                    'The feature that lets you watch posts for edits will soon be available as a separate userscript, and has been removed from SOX',
                     'Behind the scenes refactoring by @GaurangTandon',
-                    '<a href="https://github.com/soscripted/sox/milestone/10">Various bug fixes</a>',
+                    'The fixed topbar feature has been deprecated as it is natively supported now!',
+                    '<a href="https://github.com/soscripted/sox/milestone/10">Various bug fixes</a>',                    
                 ];
 
             function addCategory(name) {
