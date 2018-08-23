@@ -167,11 +167,23 @@
             sox.debug('observe: ' + elements);
             var observer = new MutationObserver(throttle(function(mutations, observer) {
                 for (var i = 0; i < mutations.length; i++) {
-                    sox.debug($(mutations[i].target));
+                    let mutation = mutations[i],
+                        target = mutation.target,
+                        addedNodes = mutation.addedNodes;
+                
+                    if (addedNodes) {
+                        for (let n = 0; n < addedNodes.length; n++) {                        
+                            if ($(addedNodes[n]).find(elements).length) {
+                                callback(target);
+                                sox.debug('fire: node: ', addedNodes[n]);
+                                return;
+                            }
+                        }
+                    }
 
-                    if ($(mutations[i].target).is(elements)) {
-                        callback(mutations[i].target);
-                        sox.debug('fire: target: ', mutations[i].target);
+                    if ($(target).is(elements)) { //TODO: maybe add OR to find subelements for childList events?
+                        callback(target);
+                        sox.debug('fire: target: ', target);
                         return;
                     }
                 }

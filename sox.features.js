@@ -2504,6 +2504,19 @@
             
             $(document).on('sox-new-comment', addCSS);
             addCSS();
+        },
+
+        showTagWikiLinkOnTagPopup: function() {
+            sox.helpers.observe('.tag-popup', function() {
+                let tagName = $('.tag-popup .float-right').attr('href').match("/feeds/tag/(.*)")[1], //extract from feed URL button
+                    wikiUrl = '//' + sox.site.url + '/tags/' + tagName + '/info';
+                
+                $('.tag-popup .mr8:last').after($('<span/>', {
+                    'class': 'sox-tag-popup-wiki-link',
+                    'html': '<a href="' + wikiUrl + '">wiki</a>',
+                    'title': 'view tag wiki (added by SOX)'
+                }));
+            });
         }
     };
 })(window.sox = window.sox || {}, jQuery);
