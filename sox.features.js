@@ -1954,13 +1954,15 @@
                 TITLES_TO_HIDE = settings.titlesToHideRegex && settings.titlesToHideRegex.split(','),
                 FILTER_QUESTION_TAGS = "!)5IW-5Quf*cV5LToe(J0BjSBXW19";
 
+            if (SITES_TO_BLOCK) SITES_TO_BLOCK = SITES_TO_BLOCK.split(',');
+
             $('#hot-network-questions h4').css('display', 'inline').after($('<span/>', {
                 'style': 'color:  grey; display: block; margin-bottom: 10px;',
                 'text': 'SOX: hover over titles to show tags'
             }));
 
             $('#hot-network-questions li a').each(function() {
-                var i, word, site, title,
+                var i,
                     id = sox.helpers.getIDFromAnchor(this),
                     sitename = sox.helpers.getSiteNameFromAnchor(this);
 
@@ -1973,11 +1975,16 @@
                 }
 
                 if (SITES_TO_BLOCK) {
-                    if (createRegex(SITES_TO_BLOCK).test(this.href)) $(this).parent().addClass('sox-hot-network-question-filter-hide');
+                    let href = this.href;
+                    for (let i = 0; i < SITES_TO_BLOCK.length; i++) {
+                        if (sox.location.matchWithPattern(SITES_TO_BLOCK[i], href)) {
+                            $(this).parent().addClass('sox-hot-network-question-filter-hide');
+                        }
+                    }
                 }
 
                 if (TITLES_TO_HIDE) {
-                    title = this.innerText;
+                    let title = this.innerText;
                     for (i = 0; i < TITLES_TO_HIDE.length; i++) {
                         if (title.match(new RegExp(TITLES_TO_HIDE[i]))) {
                             $(this).parent().hide();

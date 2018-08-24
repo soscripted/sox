@@ -109,6 +109,10 @@
     padding: 14px 0;
 }
 
+#sox-settings-dialog-features textarea.featureSetting {
+    min-width: 80%;
+}
+
 .network-items .fa:before {
     /*https://github.com/soscripted/sox/pull/127*/
     color: #9fa6ad;
