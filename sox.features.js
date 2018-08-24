@@ -551,7 +551,7 @@
             function addReplyLinks() {
                 $('.comment').each(function() {
                     if (!$(this).find('.soxReplyLink').length) { //if the link doesn't already exist
-                        if ($('.topbar-links a span:eq(0)').text() != $(this).find('.comment-text a.comment-user').text()) { //make sure the link is not added to your own comments
+                        if (sox.user.name !== $(this).find('.comment-text a.comment-user').text()) { //make sure the link is not added to your own comments
                             $(this).find('.comment-text').css('overflow-x', 'hidden');
                             $(this).find('.comment-text .comment-body').append('<span class="soxReplyLink" title="reply to this user" style="margin-left: -7px">&crarr;</span>');
                         }
@@ -560,9 +560,9 @@
             }
 
             $(document).on('click', 'span.soxReplyLink', function() {
-                var parentDiv = $(this).parent().parent().parent().parent();
+                var parentDiv = $(this).closest('.post-layout');
                 var textToAdd = '@' + $(this).parent().find('a.comment-user').text().replace(/\s/g, '').replace(/♦/, ''); //eg. @USERNAME
-                if (!parentDiv.find('textarea').length) parentDiv.next('div').find('a.js-add-link')[0].click(); //show the textarea, http://stackoverflow.com/a/10559680/
+                if (!parentDiv.find('textarea').length) parentDiv.find('a.js-add-link')[0].click(); //show the textarea, http://stackoverflow.com/a/10559680/
 
                 var $textarea = parentDiv.find('textarea');
                 if ($textarea.val().match(/@[^\s]+/)) { //if a ping has already been added
