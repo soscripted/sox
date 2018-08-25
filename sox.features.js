@@ -743,14 +743,14 @@
 
             function showImages() {
                 $('.comment .comment-text .comment-copy a').each(function() {
-                    var href = this.getAttribute('href'),
+                    let href = this.href,
                         parent = this.parentNode;
-
-                    if (href && (/i(\.stack)?\.imgur\.com/.test(href))) {
+                    
+                    if (parent && href && (/i(\.stack)?\.imgur\.com/.test(href))) {
                         if (!parent.querySelectorAll('img[src="' + href + '"]').length) {
-                            //add image to end of comments, but keep link in same position
-                            parent.innerHTML += '<br><a href="' + href + '"><img src="' + href + '" style="max-width:100%"></a>';
-                            parent.removeChild(this);
+                            //DO NOT USE innerHTML -- it *removes* the old DOM and inserts a new one (https://stackoverflow.com/a/23539150), meaning it won't work for multiple imgur links in the same comment
+                            //https://github.com/soscripted/sox/issues/360
+                            $(parent).append('<br><a href="' + href + '"><img class="sox-autoShowCommentImages-image" src="' + href + '" style="max-width:100%"></a>');
                         }
                     }
                 });
