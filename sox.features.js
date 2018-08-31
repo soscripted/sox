@@ -310,18 +310,18 @@
             // Description: For adding checkboxes when editing to add pre-defined edit reasons
 
             function addCheckboxes() {
-                var editCommentField = $('[id^="edit-comment"]');
-                if (!editCommentField.length) return; //https://github.com/soscripted/sox/issues/246
+                var $editCommentField = $('[id^="edit-comment"]');
+                if (!$editCommentField.length) return; //https://github.com/soscripted/sox/issues/246
 
                 function toLocaleSentenceCase(str) {
                     return str.substr(0, 1).toLocaleUpperCase() + str.substr(1);
                 }
                 $('#reasons').remove(); //remove the div containing everything, we're going to add/remove stuff now:
                 if (/\/edit/.test(window.location.href) || $('[class^="inline-editor"]').length || $('.edit-comment').length) {
-                    $('.form-submit').before('<div id="reasons" style="float:left;clear:both"></div>');
+                    $editCommentField.after('<div id="reasons" style="float:left;clear:both"></div>');
 
                     $.each(JSON.parse(GM_getValue('editReasons')), function(i, obj) {
-                        $('#reasons').append('<label><input type="checkbox" value="' + this[1] + '"</input>' + this[0] + '</label>&nbsp;');
+                        $('#reasons').append('<label class="sox-editComment-reason"><input type="checkbox" value="' + this[1] + '"</input>' + this[0] + '</label>&nbsp;');
                     });
 
                     $('#reasons input[type="checkbox"]').css('vertical-align', '-2px');
@@ -340,17 +340,17 @@
 
                     $('#reasons input[type="checkbox"]').change(function() {
                         if (this.checked) { //Add it to the summary
-                            if (!editCommentField.val()) {
-                                editCommentField.val(toLocaleSentenceCase($(this).val()));
+                            if (!$editCommentField.val()) {
+                                $editCommentField.val(toLocaleSentenceCase($(this).val()));
                             } else {
-                                editCommentField.val(editCommentField.val() + '; ' + $(this).val());
+                                $editCommentField.val($editCommentField.val() + '; ' + $(this).val());
                             }
-                            var newEditComment = editCommentField.val(); //Remove the last space and last semicolon
-                            editCommentField.val(newEditComment).focus();
+                            var newEditComment = $editCommentField.val(); //Remove the last space and last semicolon
+                            $editCommentField.val(newEditComment).focus();
                         } else if (!this.checked) { //Remove it from the summary
-                            editCommentField.val(toLocaleSentenceCase(editCommentField.val().replace(new RegExp(toLocaleSentenceCase($(this).val()) + ';? ?'), ''))); //for beginning values
-                            editCommentField.val(editCommentField.val().replace($(this).val() + '; ', '')); //for middle values
-                            editCommentField.val(editCommentField.val().replace(new RegExp(';? ?' + $(this).val()), '')); //for last value
+                            $editCommentField.val(toLocaleSentenceCase($editCommentField.val().replace(new RegExp(toLocaleSentenceCase($(this).val()) + ';? ?'), ''))); //for beginning values
+                            $editCommentField.val($editCommentField.val().replace($(this).val() + '; ', '')); //for middle values
+                            $editCommentField.val($editCommentField.val().replace(new RegExp(';? ?' + $(this).val()), '')); //for last value
                         }
                     });
                 }
@@ -1218,6 +1218,8 @@
                 if (wmdpreview.hasClass('sbs-on')) { //sbs was toggled on
                     $('#sidebar').addClass('sbs-on');
                     $('#content').addClass('sbs-on');
+                    $('.tag-editor').parent().parent().removeAttr('style'); //remove style from both div style='position:relative'
+                    $('.tag-editor').parent().parent().parent().removeAttr('style'); //remove style from both div style='position:relative'
 
                     if (toAppend.length > 0) { //current sbs toggle is for an edit
                         $('.votecell').addClass('sbs-on');
@@ -1250,13 +1252,15 @@
             function SBS(jNode) {
                 jNode = $(jNode);
                 if (jNode.is('textarea')) jNode = jNode.parent().find('[id^="wmd-redo-button"]');
+                if (jNode.is('.inline-editor, .wmd-button-bar')) jNode = jNode.find('[id^="wmd-redo-button"]');
                 if (!jNode.length) return;
+                console.log('jnode', jNode);
 
                 var itemid = jNode[0].id.replace(/^\D+/g, '');
                 var toAppend = (itemid.length > 0 ? '-' + itemid : ''); //helps select tags specific to the question/answer being
                 // edited (or new question/answer being written)
                 setTimeout(function() {
-                    if (jNode.parent().find('.sox-sbs-toggle').length) return; //don't add again if already exists
+                    if (jNode.closest('.post-editor').find('.sox-sbs-toggle').length) return; //don't add again if already exists
 
                     var sbsBtn = '<li class="wmd-button sox-sbs-toggle" title="side-by-side-editing" style="left: 500px;width: 170px;"> \
 <div id="wmd-sbs-button' + toAppend + '" style="background-image: none;">SBS</div></li>';
@@ -1301,6 +1305,8 @@
 
             //event listener for adding the sbs toggle button for posting new questions or answers
             $(document).on('sox-edit-window', function(e, target) {
+                if ($(target).is('.wmd-button-bar')) return; //don't want to catch extra mutation event for button bar
+                console.log('sox-edit-window', target);
                 SBS(target);
             });
 

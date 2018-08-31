@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Stack Overflow Extras (SOX)
 // @namespace    https://github.com/soscripted/sox
-// @version      2.2.36 DEV
+// @version      2.2.37 DEV
 // @description  Extra optional features for Stack Overflow and Stack Exchange sites
 // @contributor  ᴉʞuǝ (https://stackoverflow.com/users/1454538/, https://github.com/mezmi)
 // @contributor  ᔕᖺᘎᕊ (https://stackexchange.com/users/4337810/, https://github.com/shu8)
@@ -34,7 +34,7 @@
 
 // @resource     css sox.css
 // @resource     dialog sox.dialog.html
-// @resource     featuresJSON sox.features.info.json?v=1
+// @resource     featuresJSON sox.features.info.json
 // @resource     common sox.common.info.json
 
 // @grant        GM_setValue
@@ -176,7 +176,7 @@
             sox.debug('sox-new-comment event triggered');
         });
 
-        sox.helpers.observe('li[id^="wmd-redo-button"], textarea[id^="wmd-input"]', function(target) {
+        sox.helpers.observe('textarea[id^="wmd-input"]', function(target) {
             $(document).trigger('sox-edit-window', [target]);
             sox.debug('sox-edit-window event triggered');
         });

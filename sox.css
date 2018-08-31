@@ -589,3 +589,8 @@ li.fixedTopbar-siteLink {
     margin: 2px;
     border: 1px dotted black;
 }
+
+/* editComment -- for the checkboxes shown when editin */
+.sox-editComment-reason {
+    display: inline-block !important;
+}
