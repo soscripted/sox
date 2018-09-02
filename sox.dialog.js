@@ -36,6 +36,7 @@
                     'The feature that lets you watch posts for edits will soon be available as a separate userscript, and has been removed from SOX',
                     'Behind the scenes refactoring by @GaurangTandon',
                     'The fixed topbar feature has been deprecated as it is natively supported now!',
+                    'Added feature to only show comment flagging/upvote buttons on hover (like it used to be)',
                     '<a href="https://github.com/soscripted/sox/milestone/10">Various bug fixes</a>',                    
                 ];
 
