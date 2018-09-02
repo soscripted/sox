@@ -1,10 +1,12 @@
 // ==UserScript==
 // @name         Stack Overflow Extras (SOX)
 // @namespace    https://github.com/soscripted/sox
-// @version      2.2.0
+// @version      2.3.0
 // @description  Extra optional features for Stack Overflow and Stack Exchange sites
-// @contributor  ᴉʞuǝ (stackoverflow.com/users/1454538/)
-// @contributor  ᔕᖺᘎᕊ (stackexchange.com/users/4337810/)
+// @contributor  ᴉʞuǝ (https://stackoverflow.com/users/1454538/, https://github.com/mezmi)
+// @contributor  ᔕᖺᘎᕊ (https://stackexchange.com/users/4337810/, https://github.com/shu8)
+// @contributor  Sir-Cumference (https://stackexchange.com/users/4119142/, https://github.com/Sir-Cumference)
+// @contributor  GaurangTandon (https://github.com/GaurangTandon)
 // @updateURL    https://rawgit.com/soscripted/sox/master/sox.user.js
 
 // @match        *://*.stackoverflow.com/*
@@ -20,22 +22,19 @@
 // @exclude      *://data.stackexchange.com/*
 // @exclude      *://api.stackexchange.com/*
 
-// @require      https://code.jquery.com/jquery-2.1.4.min.js
-// @require      https://code.jquery.com/ui/1.11.4/jquery-ui.min.js
+// @require      https://code.jquery.com/jquery-3.3.1.min.js
+// @require      https://code.jquery.com/ui/1.12.1/jquery-ui.min.js
 // @require      https://api.stackexchange.com/js/2.0/all.js
-// @require      https://cdn.rawgit.com/timdown/rangyinputs/master/rangyinputs-jquery-src.js
-// @require      https://cdn.rawgit.com/jeresig/jquery.hotkeys/master/jquery.hotkeys.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery-timeago/1.5.3/jquery.timeago.min.js
 
 // @require      sox.common.js
 // @require      sox.github.js
 // @require      sox.dialog.js
 // @require      sox.features.js
-// @require      sox.enhanced_editor.js
 
 // @resource     css sox.css
 // @resource     dialog sox.dialog.html
-// @resource     featuresJSON sox.features.info.json?v=1
+// @resource     featuresJSON sox.features.info.json
 // @resource     common sox.common.info.json
 
 // @grant        GM_setValue
@@ -46,7 +45,6 @@
 // @grant        GM_addStyle
 // @grant        GM_info
 // ==/UserScript==
-//jQuery.noConflict();
 /*jshint loopfunc: true*/
 (function(sox, $, undefined) {
     'use strict';
@@ -85,7 +83,7 @@
         GM_addStyle(GM_getResourceText('css'));
         $('<link/>', {
             rel: 'stylesheet',
-            href: 'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'
+            href: 'https://use.fontawesome.com/releases/v5.1.0/css/all.css'
         }).appendTo('head');
 
         var settings = sox.settings.load(), //returns undefined if not set
@@ -96,7 +94,8 @@
             sox.dialog.init({
                 version: sox.info.version,
                 features: featureInfo,
-                settings: settings
+                settings: settings,
+                lastVersionInstalled: sox.info.lastVersionInstalled
             });
         } catch (e) {
             throw ('SOX: There was an error while attempting to initialize the SOX Settings Dialog, please report this on GitHub.\n' + e);
@@ -177,7 +176,7 @@
             sox.debug('sox-new-comment event triggered');
         });
 
-        sox.helpers.observe('li[id^="wmd-redo-button"], textarea[id^="wmd-input"]', function(target) {
+        sox.helpers.observe('textarea[id^="wmd-input"]', function(target) {
             $(document).trigger('sox-edit-window', [target]);
             sox.debug('sox-edit-window event triggered');
         });

@@ -6,7 +6,12 @@
             "extended_description": "If you receive a comment/answer/suggested edit notification, this feature will add the name of the author of the comment/answer/edit to the notification",
             "meta": "",
             "match": "",
-            "exclude": ""
+            "exclude": "",
+            "settings": [{
+                "id": "addNameBeforeMessageOrAtTop",
+                "type": "checkbox",
+                "desc": "Show name before contents (e.g. [name]: message) rather than at top (e.g. 'comment by [name]')?"
+            }]
         }, {
             "name": "alignBadgesByClass",
             "desc": "Align badges by their class on user profile pages",
@@ -139,6 +144,12 @@
             "meta": "",
             "match": "*://*/questions*,*://*/review*",
             "exclude": ""
+        }, {
+            "name": "showTagWikiLinkOnTagPopup",
+            "desc": "Add a link to the tag wiki page on the popup that appears when hovering over a tag",
+            "meta": "",
+            "match": "*://*/questions*,*://*/review*",
+            "exclude": ""
         }],
         "Comments": [{
             "name": "autoShowCommentImages",
@@ -190,6 +201,12 @@
             "meta": "http://meta.stackoverflow.com/q/296582/3541881",
             "match": "*://*/questions*,*://*/review*",
             "exclude": "SE1.0"
+        }, {
+            "name": "onlyShowCommentActionsOnHover",
+            "desc": "Only show the comment actions (flag/upvote) when hovering over a comment",
+            "meta": "https://meta.stackexchange.com/q/312794",
+            "match": "*://*/questions*,*://*/review*",
+            "exclude": ""
         }],
         "Editing": [{
             "name": "addSBSBtn",
@@ -250,6 +267,12 @@
             "meta": "http://meta.stackexchange.com/q/165962/260841",
             "match": "",
             "exclude": "SE1.0"
+        }, {
+            "name": "pasteImagesDirectly",
+            "desc": "Paste images directly into the post editor without the image dialog",
+            "meta": "",
+            "match": "*://*/questions*",
+            "exclude": ""
         }],
         "Flags": [{
             "name": "flagOutcomeTime",
@@ -366,7 +389,7 @@
             "exclude": "SE1.0"
         }, {
             "name": "disableVoteButtons",
-            "desc": "Disable vote buttons on posts you cannot vote on",
+            "desc": "Disable vote buttons on your own posts and deleted posts, which you cannot vote on",
             "meta": "",
             "match": "*://*/questions*",
             "exclude": "SE1.0"
