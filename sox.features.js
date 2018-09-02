@@ -272,13 +272,19 @@
                 return button.parentNode.parentNode.parentNode.querySelector("textarea");
             }
 
-            var kbdBtn = '<li class="wmd-button wmd-kbd-button" title="surround selected text with <kbd> tags"><span style="background-image:none;">kbd</span></li>',
-                listBtn = '<li class="wmd-button wmd-bullet-button" title="add dashes (\'-\') before every line to make a bullet list"><span style="background-image:none;">&#x25cf;</span></li>';
+            var kbdBtn = '<li class="wmd-button wmd-kbd-button-sox" title="surround selected text with <kbd> tags"><span style="background-image:none;">kbd</span></li>',
+                listBtn = '<li class="wmd-button wmd-bullet-button-sox" title="add dashes (\'-\') before every line to make a bullet list"><span style="background-image:none;">&#x25cf;</span></li>';
 
             function loopAndAddHandlers() {
                 $('[id^="wmd-redo-button"]').each(function() {
                     if (!this.dataset.kbdAdded) {
-                        $(this).after(kbdBtn + listBtn);
+                        //compatability with https://stackapps.com/q/3341 as requested in https://github.com/soscripted/sox/issues/361
+                        //the SOX kbd button isn't added if that script is installed
+                        if ($(this).parent().find('.tmAdded.wmd-kbd-button')) {
+                            $(this).after(listBtn);    
+                        } else {
+                            $(this).after(kbdBtn + listBtn);
+                        }
                         this.dataset.kbdAdded = true;
                     }
                 });
@@ -298,10 +304,10 @@
                 }
             });
 
-            $(document).on('click', '.wmd-kbd-button, .wmd-bullet-button', function(event) {
+            $(document).on('click', '.wmd-kbd-button-sox, .wmd-bullet-button-sox', function(event) {
                 var textarea = getTextarea(this);
 
-                if (this.classList.contains("wmd-kbd-button")) addKbd(textarea);
+                if (this.classList.contains("wmd-kbd-button-sox")) addKbd(textarea);
                 else addBullets(textarea);
             });
         },
@@ -1252,9 +1258,8 @@
             function SBS(jNode) {
                 jNode = $(jNode);
                 if (jNode.is('textarea')) jNode = jNode.parent().find('[id^="wmd-redo-button"]');
-                if (jNode.is('.inline-editor, .wmd-button-bar')) jNode = jNode.find('[id^="wmd-redo-button"]');
+                if (jNode.is('.inline-editor, .wmd-button-bar, .review-content')) jNode = jNode.find('[id^="wmd-redo-button"]');
                 if (!jNode.length) return;
-                console.log('jnode', jNode);
 
                 var itemid = jNode[0].id.replace(/^\D+/g, '');
                 var toAppend = (itemid.length > 0 ? '-' + itemid : ''); //helps select tags specific to the question/answer being
@@ -1306,7 +1311,6 @@
             //event listener for adding the sbs toggle button for posting new questions or answers
             $(document).on('sox-edit-window', function(e, target) {
                 if ($(target).is('.wmd-button-bar')) return; //don't want to catch extra mutation event for button bar
-                console.log('sox-edit-window', target);
                 SBS(target);
             });
 
