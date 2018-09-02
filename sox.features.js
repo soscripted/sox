@@ -744,9 +744,9 @@
             }
         },
 
-        autoShowCommentImages: function() {
+        autoShowCommentImages: function() { 
             // Description: For auto-inlining any links to imgur images in comments
-
+    
             function showImages() {
                 $('.comment .comment-text .comment-copy a').each(function() {
                     let href = this.href,
@@ -2326,9 +2326,8 @@
 
         showQuestionStateInSuggestedEditReviewQueue: function() {
             // Description: Show question's current state in the suggested edit review queue (duplicate, off-topic, etc.)
-
+            
             var PROCESSED_ID = "sox-showQuestionStateInSuggestedEditReviewQueue-checked";
-
             $(document).on('sox-new-review-post-appeared', function() {
                 if (document.getElementById(PROCESSED_ID)) return;
 
@@ -2534,6 +2533,76 @@
                     'title': 'view tag wiki (added by SOX)'
                 }));
             });
+        },
+
+        addTimelineAndRevisionLinks: function() {
+            // Description: Add timeline and revision links to the bottom of each post for quick access to them
+
+            $('.question, .answer').each(function() {
+                $(this).find('.post-menu').append($('<a/>', {
+                    'href': '//' + sox.site.url + '/posts/' + sox.site.href.split('/')[4] + '/revisions',
+                    'text': 'revisions'
+                })).append($('<a/>', {
+                    'href': '//' + sox.site.url + '/posts/' + sox.site.href.split('/')[4] + '/timeline',
+                    'text': 'timeline'
+                }));
+            });
+        },
+
+        findAndReplace: function() { //Salvaged from old 'enhanced editor' feature
+            // Description: adds a 'find and replace' option to the markdown editor
+
+            function startLoop() {
+                $('textarea[id^="wmd-input"].processed').each(function() {
+                    main($(this).attr('id'));
+                });
+
+                $('.edit-post').click(function() {
+                    var $that = $(this);
+                    sox.helpers.observe('#wmd-redo-button-' + $that.attr('href').split('/')[2], function() {
+                        main($that.parents('table').find('.inline-editor textarea.processed').attr('id'));
+                    });
+                });
+            }
+
+            function main(wmd) {
+                var s = '#' + wmd; //s is the selector we pass onto each function so the action is applied to the correct textarea (and not, for example the 'add answer' textarea *and* the 'edit' textarea!)
+                if ($(s).parents('.wmd-container').find('#findReplace').length) return;
+
+                $('.wmd-button-bar').css('margin-top', '0'); //https://github.com/soscripted/sox/issues/203
+
+                $(s).before("<div class='findReplaceToolbar'><span id='findReplace'>Find & Replace</span></div>");
+
+                $(document).on('click', '#findReplace', function(e) {
+                    if ($('.findReplaceInputs').length) {
+                        $('.findReplaceInputs').remove();
+                    } else {
+                        $(this).parent().append("<div class='findReplaceInputs'><input id='find' type='text' placeholder='Find'><input id='modifier' type='text' placeholder='Modifier'><input id='replace' type='text' placeholder='Replace with'><input id='replaceGo' type='button' value='Go'></div>");
+                    }
+                    $(document).on('click', '.findReplaceToolbar #replaceGo', function() {
+                        var regex = new RegExp($('.findReplaceToolbar #find').val(), $('.findReplaceToolbar #modifier').val());
+                        var oldval = $(this).parent().parent().parent().find('textarea').val();
+                        var newval = oldval.replace(regex, $('.findReplaceToolbar #replace').val());
+                        $(this).parent().parent().parent().find('textarea').val(newval);
+
+                        var Stack = (typeof StackExchange === "undefined" ? window.eval('StackExchange') : StackExchange);
+                        if (Stack.MarkdownEditor) Stack.MarkdownEditor.refreshAllPreviews();
+                    });
+                    e.preventDefault();
+                    e.stopPropagation();
+                });
+
+                $(s).keydown(function(e) {
+                    if (e.which == 70 && e.ctrlKey) { //ctrl+f (find+replace)
+                        $('#findReplace').trigger('click');
+                        e.stopPropagation();
+                        e.preventDefault();
+                        return false;
+                    }
+                });
+            }
+            $(document).on('sox-edit-window', startLoop);
+            startLoop();
         }
     };
 })(window.sox = window.sox || {}, jQuery);
