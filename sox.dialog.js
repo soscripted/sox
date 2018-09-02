@@ -3,9 +3,7 @@
 
     sox.dialog = {
         init: function(options) {
-
             if (!$('.top-bar').length) return;
-
             sox.debug('initializing SOX dialog');
 
             let version = options.version,
