@@ -25,9 +25,10 @@
                 $searchBox = $soxSettingsDialog.find('#search'),
                 $importSettingsButton = $soxSettingsDialog.find('#sox-settings-import'),
                 $exportSettingsButton = $soxSettingsDialog.find('#sox-settings-export'),
+                $featurePackButtons = $soxSettingsDialog.find('.sox-settings-dialog-feature-pack'),
 
                 //array of HTML strings that will be displayed as `li` items if the user has installed a new version.
-                changes = [/*TODO*/];
+                changes = ["Introduced 'feature packs' -- easily find and enable features we would categorise as 'major UI tweaks', 'key features', or 'power user fetures'!"];
 
             function addCategory(name) {
                 let $div = $('<div/>', {
@@ -49,9 +50,9 @@
                 }
             }
 
-            function addFeature(category, name, description, featureSettings, extendedDescription, metaLink) {
+            function addFeature(category, name, description, featureSettings, extendedDescription, metaLink, featurePacks) {
                 let $div = $('<div/>', {
-                        'class': 'sox-feature'
+                        'class': 'sox-feature ' + (featurePacks.length ? featurePacks.join(' ') : '')
                     }),
                     $info = $('<i/>', {
                         'class': 'fa fa-info',
@@ -259,7 +260,12 @@
                     $('.category, .features, #sox-settings-dialog .sox-feature, .sox-new-version-details').fadeIn();
                 }
             });
-
+            
+            $featurePackButtons.click(function() {
+                $('#sox-settings-dialog .sox-feature').removeClass('feature-fade-out');
+                if ($(this).is('.clear-feature-pack-selection')) return;
+                $('#sox-settings-dialog .sox-feature').not('.' + $(this).attr('data-feature-pack-id')).addClass('feature-fade-out');
+            });
 
             // create sox settings button
             let $soxSettingsButton = $('<a/>', {
@@ -311,7 +317,8 @@
                         currentFeature.desc,
                         (currentFeature.settings ? currentFeature.settings : false), //add the settings panel for this feautre if indicated in the JSON
                         (currentFeature.extended_description ? currentFeature.extended_description : false), //add the extra description on hover if the feature has the extended description
-                        (currentFeature.meta ? currentFeature.meta : false) //add the meta link to the extra description on hover
+                        (currentFeature.meta ? currentFeature.meta : false), //add the meta link to the extra description on hover
+                        (currentFeature.feature_packs ? currentFeature.feature_packs : [])
                     );
                 }
             }

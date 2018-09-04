@@ -133,10 +133,38 @@
 .sox-feature .fa-wrench {
     font-size: 12px;
     padding: 0 5px;
+    cursor: pointer;
 }
 
 .sox-feature .fa-info {
     float: right;
+}
+
+#sox-settings-dialog-features-packs {
+    margin-bottom: 5px;
+}
+
+.sox-settings-dialog-feature-packs-list {
+    padding: 10px;
+    margin: 5px;
+}
+
+.sox-settings-dialog-feature-packs-list li.sox-settings-dialog-feature-pack {
+    display: inline;
+    margin: 5px;
+    padding: 10px;
+    border-radius: 9px;
+    background-color: lightgrey;
+    cursor: pointer;
+}
+
+.sox-settings-dialog-feature-packs-list li.sox-settings-dialog-feature-pack.clear-feature-pack-selection {
+    background-color: inherit;
+    color: inherit;
+}
+
+#sox-settings-dialog .sox-feature.feature-fade-out {
+    opacity: 0.5;
 }
 
 /* -------- sox specific features' CSS ------- */
