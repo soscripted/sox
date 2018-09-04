@@ -321,17 +321,6 @@ li.fixedTopbar-siteLink {
     margin-left: 35px !important;
 }
 
-.edit-comment-p1.sbs-on {
-    float: left !important;
-    clear: both;
-}
-
-.edit-comment-p2.sbs-on {
-    float: left !important;
-    margin-left: 10px !important;
-    clear: both;
-}
-
 .post-editor.sbs-on {
     width: 1360px !important; //width: 1060px !important;
 }
@@ -369,6 +358,11 @@ li.fixedTopbar-siteLink {
 .post-form.sbs-on {
     /*https://github.com/soscripted/sox/issues/247*/
     width: 1335px;
+}
+
+.edit-comment.sbs-on {
+    clear: both;
+    position: initial;
 }
 
 /*linkedPostsInline for the displayed post text; https://github.com/shu8/Stack-Overflow-Optional-Features/issues/48 */

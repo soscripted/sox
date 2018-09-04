@@ -27,16 +27,7 @@
                 $exportSettingsButton = $soxSettingsDialog.find('#sox-settings-export'),
 
                 //array of HTML strings that will be displayed as `li` items if the user has installed a new version.
-                changes = ['Greasemonkey is no longer supported. Please use Tampermonkey',
-                    'You can now import and export your settings from the SOX dialog',
-                    'Added feature to paste images directly into SE textareas without using the image dialog',
-                    'The old topbar is no longer supported (affects Area 51 mainly)',
-                    'The feature that lets you watch posts for edits will soon be available as a separate userscript, and has been removed from SOX',
-                    'Behind the scenes refactoring by @GaurangTandon',
-                    'The fixed topbar feature has been deprecated as it is natively supported now!',
-                    'Added feature to only show comment flagging/upvote buttons on hover (like it used to be)',
-                    '<a href="https://github.com/soscripted/sox/milestone/10">Various bug fixes</a>',                    
-                ];
+                changes = [/*TODO*/];
 
             function addCategory(name) {
                 let $div = $('<div/>', {

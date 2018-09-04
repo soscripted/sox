@@ -1179,6 +1179,7 @@
         addSBSBtn: function(settings) {
             // Description: For adding a button to the editor toolbar to toggle side-by-side editing
             // Thanks szego (@https://github.com/szego) for completely rewriting this! https://github.com/shu8/SE-Answers_scripts/pull/2
+            // This is a heavily modified version by szego <https://github.com/szego/SE-Answers_scripts/blob/master/side-by-side-editing.user.js>:
 
             function startSBS(toAppend) {
                 //variables to reduce DOM searches
@@ -1187,29 +1188,29 @@
                 var posteditor = $('#post-editor' + toAppend);
                 var draftsaved = $('#draft-saved' + toAppend);
                 var draftdiscarded = $('#draft-discarded' + toAppend);
+                var editcommentdiv = $('#edit-comment' + toAppend).parent().parent(); //edit comment main parent div has no class or ID
 
                 $('#wmd-button-bar' + toAppend).toggleClass('sbs-on');
 
                 draftsaved.toggleClass('sbs-on');
                 draftdiscarded.toggleClass('sbs-on');
                 posteditor.toggleClass('sbs-on');
+                posteditor.find('.wmd-container').toggleClass('sbs-on');
                 posteditor.find('.wmd-container').parent().toggleClass('sbs-on-left-side');
                 wmdinput.parent().toggleClass('sbs-on'); //wmdinput.parent() has class wmd-container
                 wmdpreview.toggleClass('sbs-on');
+
                 if (sox.location.on('/edit-tag-wiki/')) $('#post-form').toggleClass('sbs-on'); //https://github.com/soscripted/sox/issues/247
 
                 if (toAppend.length > 0) { //options specific to making edits on existing questions/answers
-                    posteditor.find('.hide-preview').toggleClass('sbs-on');
-
-                    //hack: float nuttiness for "Edit Summary" box
-                    var editcommentp1 = $('#edit-comment' + toAppend).parent().parent().parent().parent().parent();
-                    editcommentp1.toggleClass('edit-comment-p1 sbs-on');
-                    editcommentp1.parent().toggleClass('edit-comment-p2 sbs-on');
+                    posteditor.find('.hide-preview').toggleClass('sbs-on'); //needed to stop the tag box from being 'on top of' the textarea blocking text from being entering
+                    editcommentdiv.toggleClass('sbs-on edit-comment');
                 } else if (window.location.pathname.indexOf('questions/ask') > -1) { //extra CSS for 'ask' page
                     wmdpreview.toggleClass('sbs-newq');
                     draftsaved.toggleClass('sbs-newq');
                     draftdiscarded.toggleClass('sbs-newq');
-                    $('.tag-editor').parent().toggleClass('tag-editor-p sbs-on sbs-newq');
+
+                    $('#tag-editor').toggleClass('sbs-on edit-comment'); //needed to stop the tag box from being 'on top of' the textarea blocking text from being entering
                     $('#question-only-section').children('.form-item').toggleClass('sbs-on sbs-newq');
 
                     //swap the order of things to prevent draft saved/discarded messages from
@@ -1257,7 +1258,7 @@
 
             function SBS(jNode) {
                 jNode = $(jNode);
-                if (jNode.is('textarea')) jNode = jNode.parent().find('[id^="wmd-redo-button"]');
+                if (jNode.is('textarea')) jNode = jNode.closest('.wmd-container').find('[id^="wmd-redo-button"]');
                 if (jNode.is('.inline-editor, .wmd-button-bar, .review-content')) jNode = jNode.find('[id^="wmd-redo-button"]');
                 if (!jNode.length) return;
 
@@ -1290,7 +1291,6 @@
                 }, 1000);
             }
 
-            //This is a heavily modified version by szego <https://github.com/szego/SE-Answers_scripts/blob/master/side-by-side-editing.user.js>:
             if (window.location.pathname.indexOf('questions/ask') < 0) { //not posting a new question
                 //get question and answer IDs for keeping track of the event listeners
                 var anchorList = $('#answers > a'), //answers have anchor tags before them of the form <a name="#">, where # is the answer ID
@@ -1314,17 +1314,6 @@
                 SBS(target);
             });
 
-            $('li[id^="wmd-redo-button"]').each(function() {
-                SBS($(this));
-            });
-
-            //https://github.com/soscripted/sox/issues/163
-            $('#tagnames').parent('.form-item').css('float', 'left');
-            $('#edit-comment').parent('.form-item').css('float', 'left');
-
-            sox.helpers.observe('.wmd-preview.sbs-on', function() {
-                $('#tag-suggestions').parent().css('position', 'static'); //https://github.com/soscripted/sox/issues/140
-            });
         },
 
         alwaysShowImageUploadLinkBox: function() {
