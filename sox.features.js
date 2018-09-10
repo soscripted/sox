@@ -280,7 +280,7 @@
                     if (!this.dataset.kbdAdded) {
                         //compatability with https://stackapps.com/q/3341 as requested in https://github.com/soscripted/sox/issues/361
                         //the SOX kbd button isn't added if that script is installed
-                        if ($(this).parent().find('.tmAdded.wmd-kbd-button')) {
+                        if ($(this).parent().find('.tmAdded.wmd-kbd-button').length) {
                             $(this).after(listBtn);    
                         } else {
                             $(this).after(kbdBtn + listBtn);
@@ -316,7 +316,9 @@
             // Description: For adding checkboxes when editing to add pre-defined edit reasons
 
             function addCheckboxes() {
+                sox.debug("editComment addCheckboxes() called");
                 var $editCommentField = $('[id^="edit-comment"]');
+                sox.debug("editComment addCheckboxes() $editCommentField:", $editCommentField);
                 if (!$editCommentField.length) return; //https://github.com/soscripted/sox/issues/246
 
                 function toLocaleSentenceCase(str) {
@@ -324,6 +326,7 @@
                 }
                 $('#reasons').remove(); //remove the div containing everything, we're going to add/remove stuff now:
                 if (/\/edit/.test(window.location.href) || $('[class^="inline-editor"]').length || $('.edit-comment').length) {
+                    sox.debug("editComment addCheckboxes() adding boxes");
                     $editCommentField.after('<div id="reasons" style="float:left;clear:both"></div>');
 
                     $.each(JSON.parse(GM_getValue('editReasons')), function(i, obj) {
@@ -456,6 +459,7 @@
             $(document).on('sox-edit-window', addCheckboxes);
 
             $('.post-menu > .edit-post').click(function() {
+                sox.debug("editComment edit post button clicked");
                 setTimeout(function() {
                     addCheckboxes();
                 }, 500);
@@ -2343,20 +2347,6 @@
             });
         },
 
-        addTimelineAndRevisionLinks: function() {
-            // Description: Add timeline and revision links to the bottom of each post for quick access to them
-
-            $('.question, .answer').each(function() {
-                $(this).find('.post-menu').append($('<a/>', {
-                    'href': '//' + sox.site.url + '/posts/' + sox.site.href.split('/')[4] + '/revisions',
-                    'text': 'revisions'
-                })).append($('<a/>', {
-                    'href': '//' + sox.site.url + '/posts/' + sox.site.href.split('/')[4] + '/timeline',
-                    'text': 'timeline'
-                }));
-            });
-        },
-
         findAndReplace: function() { //Salvaged from old 'enhanced editor' feature
             // Description: adds a 'find and replace' option to the markdown editor
 
@@ -2512,6 +2502,8 @@
         },
 
         showTagWikiLinkOnTagPopup: function() {
+            // Description: Add a 'wiki' link to the new tag popups that appear on hover
+
             sox.helpers.observe('.tag-popup', function() {
                 let tagName = $('.tag-popup .float-right').attr('href').match("/feeds/tag/(.*)")[1], //extract from feed URL button
                     wikiUrl = '//' + sox.site.url + '/tags/' + tagName + '/info';
@@ -2536,62 +2528,6 @@
                     'text': 'timeline'
                 }));
             });
-        },
-
-        findAndReplace: function() { //Salvaged from old 'enhanced editor' feature
-            // Description: adds a 'find and replace' option to the markdown editor
-
-            function startLoop() {
-                $('textarea[id^="wmd-input"].processed').each(function() {
-                    main($(this).attr('id'));
-                });
-
-                $('.edit-post').click(function() {
-                    var $that = $(this);
-                    sox.helpers.observe('#wmd-redo-button-' + $that.attr('href').split('/')[2], function() {
-                        main($that.parents('table').find('.inline-editor textarea.processed').attr('id'));
-                    });
-                });
-            }
-
-            function main(wmd) {
-                var s = '#' + wmd; //s is the selector we pass onto each function so the action is applied to the correct textarea (and not, for example the 'add answer' textarea *and* the 'edit' textarea!)
-                if ($(s).parents('.wmd-container').find('#findReplace').length) return;
-
-                $('.wmd-button-bar').css('margin-top', '0'); //https://github.com/soscripted/sox/issues/203
-
-                $(s).before("<div class='findReplaceToolbar'><span id='findReplace'>Find & Replace</span></div>");
-
-                $(document).on('click', '#findReplace', function(e) {
-                    if ($('.findReplaceInputs').length) {
-                        $('.findReplaceInputs').remove();
-                    } else {
-                        $(this).parent().append("<div class='findReplaceInputs'><input id='find' type='text' placeholder='Find'><input id='modifier' type='text' placeholder='Modifier'><input id='replace' type='text' placeholder='Replace with'><input id='replaceGo' type='button' value='Go'></div>");
-                    }
-                    $(document).on('click', '.findReplaceToolbar #replaceGo', function() {
-                        var regex = new RegExp($('.findReplaceToolbar #find').val(), $('.findReplaceToolbar #modifier').val());
-                        var oldval = $(this).parent().parent().parent().find('textarea').val();
-                        var newval = oldval.replace(regex, $('.findReplaceToolbar #replace').val());
-                        $(this).parent().parent().parent().find('textarea').val(newval);
-
-                        var Stack = (typeof StackExchange === "undefined" ? window.eval('StackExchange') : StackExchange);
-                        if (Stack.MarkdownEditor) Stack.MarkdownEditor.refreshAllPreviews();
-                    });
-                    e.preventDefault();
-                    e.stopPropagation();
-                });
-
-                $(s).keydown(function(e) {
-                    if (e.which == 70 && e.ctrlKey) { //ctrl+f (find+replace)
-                        $('#findReplace').trigger('click');
-                        e.stopPropagation();
-                        e.preventDefault();
-                        return false;
-                    }
-                });
-            }
-            $(document).on('sox-edit-window', startLoop);
-            startLoop();
         }
     };
 })(window.sox = window.sox || {}, jQuery);
