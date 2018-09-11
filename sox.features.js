@@ -318,7 +318,7 @@
             function addCheckboxes() {
                 sox.debug("editComment addCheckboxes() called");
                 var $editCommentField = $('[id^="edit-comment"]');
-                sox.debug("editComment addCheckboxes() $editCommentField:", $editCommentField);
+                sox.debug("editComment addCheckboxes() $editCommentField:", $editCommentField.get());
                 if (!$editCommentField.length) return; //https://github.com/soscripted/sox/issues/246
 
                 function toLocaleSentenceCase(str) {
