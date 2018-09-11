@@ -317,7 +317,7 @@
 
             function addCheckboxes() {
                 sox.debug("editComment addCheckboxes() called");
-                var $editCommentField = $('[id^="edit-comment"]');
+                var $editCommentField = $('input[id^="edit-comment"]'); //NOTE: input specifcally needed, due to https://github.com/soscripted/sox/issues/363
                 sox.debug("editComment addCheckboxes() $editCommentField:", $editCommentField.get());
                 if (!$editCommentField.length) return; //https://github.com/soscripted/sox/issues/246
 
