@@ -163,7 +163,7 @@
     color: inherit;
 }
 
-#sox-settings-dialog .sox-feature.feature-fade-out {
+#sox-settings-dialog .sox-feature.feature-fade-out, #sox-settings-dialog .sox-feature.disabled-feature {
     opacity: 0.5;
 }
 

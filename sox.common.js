@@ -103,7 +103,8 @@
         },
         get accessToken() {
             sox.debug('SOX Access Token: ' + (GM_getValue('SOX-accessToken', false) === false ? 'NOT SET' : 'SET'));
-            return GM_getValue('SOX-accessToken', false);
+            var accessToken = GM_getValue('SOX-accessToken', false);
+            return (accessToken == -2 ? false : accessToken); //if the user was already asked once, the value is set to -2, so make sure this is returned as false
         },
         writeToConsole: function(hideAccessToken) {
             sox.loginfo('logging sox stored values --- ');

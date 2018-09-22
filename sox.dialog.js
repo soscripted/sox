@@ -28,7 +28,8 @@
                 $featurePackButtons = $soxSettingsDialog.find('.sox-settings-dialog-feature-pack'),
 
                 //array of HTML strings that will be displayed as `li` items if the user has installed a new version.
-                changes = ["Introduced 'feature packs' -- easily find and enable features we would categorise as 'major UI tweaks', 'key features', or 'power user fetures'!"];
+                changes = ["Introduced 'feature packs' -- easily find and enable features we would categorise as 'major UI tweaks', 'key features', or 'power user fetures'!",
+                          "You will no longer be forced to get an access token. If you choose not to, SOX will simply disable features that need one. Thanks @Izzy for the suggestion!"];
 
             function addCategory(name) {
                 let $div = $('<div/>', {
@@ -50,9 +51,11 @@
                 }
             }
 
-            function addFeature(category, name, description, featureSettings, extendedDescription, metaLink, featurePacks) {
-                let $div = $('<div/>', {
-                        'class': 'sox-feature ' + (featurePacks.length ? featurePacks.join(' ') : '')
+            function addFeature(category, name, description, featureSettings, extendedDescription, metaLink, featurePacks, usesApi) {
+                let blockFeatureSelection = usesApi && !sox.settings.accessToken,
+                    $div = $('<div/>', {
+                        'class': 'sox-feature ' + (featurePacks.length ? featurePacks.join(' ') : '') + (blockFeatureSelection ? ' disabled-feature' : ''),
+                        'title': blockFeatureSelection ? 'You must get an access token to enable this feature (click the key button at the bottom of the SOX dialog)' : ''
                     }),
                     $info = $('<i/>', {
                         'class': 'fa fa-info',
@@ -68,8 +71,8 @@
                     $label = $('<label/>'),
                     $input = $('<input/>', {
                         id: name,
-                        type: 'checkbox'
-                    });
+                        type: 'checkbox',
+                    }).prop('disabled', blockFeatureSelection);
 
                 $div.on('mouseleave', function() {
                     $(this).find('.sox-feature-info').remove();
@@ -121,6 +124,7 @@
                         click: function(e) {
                             e.preventDefault(); //don't uncheck the checkbox
                             let settingsToSave = {};
+                            $('.sox-feature.disabled-feature input[type="checkbox"]').prop('checked', false); //uncheck any features that somehow were checked (they shouldn't be able to through the UI) but should be disabled (user doesn't have access token)
                             $(this).parent().find('.featureSetting').each(function() {
                                 settingsToSave[$(this).attr('id')] = ($(this).is(':checkbox') ? $(this).is(':checked') : $(this).val());
                             });
@@ -318,7 +322,8 @@
                         (currentFeature.settings ? currentFeature.settings : false), //add the settings panel for this feautre if indicated in the JSON
                         (currentFeature.extended_description ? currentFeature.extended_description : false), //add the extra description on hover if the feature has the extended description
                         (currentFeature.meta ? currentFeature.meta : false), //add the meta link to the extra description on hover
-                        (currentFeature.feature_packs ? currentFeature.feature_packs : [])
+                        (currentFeature.feature_packs ? currentFeature.feature_packs : []),
+                        (currentFeature.usesApi ? currentFeature.usesApi : false)
                     );
                 }
             }
@@ -327,9 +332,9 @@
                 for (let i = 0; i < settings.length; ++i) {
                     $soxSettingsDialogFeatures.find('#' + settings[i].split('-')[1]).prop('checked', true);
                 }
-            } else {
-                // no settings found, mark all inputs as checked and display settings dialog
-                $soxSettingsDialogFeatures.find('input').prop('checked', true);
+            } else { // no settings found, mark all inputs as checked and display settings dialog
+                //note: the .not() is to make sure any disabled features (user doesn't have access token) aren't selected by default
+                $soxSettingsDialogFeatures.find('input').not('.sox-feature.disabled-feature input').prop('checked', true);
                 $soxSettingsButton.addClass('topbar-icon-on');
                 $soxSettingsDialog.show();
             }

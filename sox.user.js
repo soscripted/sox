@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Stack Overflow Extras (SOX)
 // @namespace    https://github.com/soscripted/sox
-// @version      2.3.6 DEV
+// @version      2.3.7 DEV
 // @description  Extra optional features for Stack Overflow and Stack Exchange sites
 // @contributor  ᴉʞuǝ (https://stackoverflow.com/users/1454538/, https://github.com/mezmi)
 // @contributor  ᔕᖺᘎᕊ (https://stackexchange.com/users/4337810/, https://github.com/shu8)
@@ -192,8 +192,8 @@
             //it now uses a Github page to show the access token
             //and detects that page and saves it automatically.
             //this seems to be a much cleaner and easier-to-debug method!
-
-            var askUserToAuthorise = window.confirm('To complete the SOX installation, you need to get an access token! Please press "OK" to continue and follow the instructions in the window that opens.');
+            GM_setValue('SOX-accessToken', -2); //once we ask the user once, don't ask them again: set the value to -2 so this IF never evaluates to true
+            var askUserToAuthorise = window.confirm('To get the most out of SOX, you should get an access token! Please press "OK" to continue and follow the instructions in the window that opens. NOTE: this message will not appear again; if you choose not to, you can click the key at the bottom of the settings dialog at anytime to get one.');
             if (askUserToAuthorise) window.open('https://stackexchange.com/oauth/dialog?client_id=7138&scope=no_expiry&redirect_uri=http://soscripted.github.io/sox/');
             sox.warn('Please go to the following URL to get your access token for certain SOX features', 'https://stackexchange.com/oauth/dialog?client_id=7138&scope=no_expiry&redirect_uri=http://soscripted.github.io/sox/');
         }

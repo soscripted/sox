@@ -36,25 +36,15 @@
         markEmployees: function() {
             // Description: Adds an Stack Overflow logo next to users that *ARE* a Stack Overflow Employee
 
-            function unique(list) {
-                //credit: GUFFA https://stackoverflow.com/questions/12551635/12551709#12551709
-                var result = [];
-                $.each(list, function(i, e) {
-                    if ($.inArray(e, result) == -1) result.push(e);
-                });
-                return result;
-            }
-
             var $links = $('.comment a, .deleted-answer-info a, .employee-name a, .user-details a').filter('a[href^="/users/"]');
             var ids = [];
 
             $links.each(function() {
                 var href = $(this).attr('href'),
                     id = href.split('/')[2];
-                ids.push(id);
+                if (ids.indexOf(id) === -1) ids.push(id);
             });
 
-            ids = unique(ids);
             sox.debug('markEmployees user IDs', ids);
 
             var url = 'https://api.stackexchange.com/2.2/users/{ids}?pagesize=100&site={site}&key={key}&access_token={access_token}'
@@ -70,10 +60,10 @@
                     for (var i = 0; i < data.items.length; i++) {
                         var userId = data.items[i].user_id,
                             isEmployee = data.items[i].is_employee;
-
-                        if (isEmployee) {
-                            $links.filter('a[href^="/users/' + userId + '/"]').after('<span class="fab fa-stack-overflow" title="employee" style="padding: 0 5px; color: ' + $('.mod-flair').css('color') + '"></span>');
-                        }
+                        if (!isEmployee) return;
+                        
+                        $links.filter('a[href^="/users/' + userId + '/"]').after('<span class="fab fa-stack-overflow" title="employee (added by SOX)" style="padding: 0 5px; color: ' + $('.mod-flair').css('color') + '"></span>');
+                        
                     }
                 }
             });
@@ -186,13 +176,10 @@
                     sE = node.selectionEnd,
                     val = node.value,
                     valBefore = val.substring(0, sS),
-                    valMid = val.substring(sS, sE),
                     valAfter = val.substring(sE);
 
                 // situation contrary to our expectation
-                if (sS === sE) {
-                    return;
-                }
+                if (sS === sE) return;
 
                 node.value = valBefore + newText + valAfter;
                 node.selectionStart = node.selectionEnd = sS + newText.length;
@@ -231,8 +218,7 @@
                     endLen = end.length,
                     generatedWrapper,
                     // handle trailing spaces
-                    trimmedSelection = valMid.match(/^(\s*)(\S?(?:.|\n|\r)*\S)(\s*)$/) || ["", "", "", ""],
-                    command = start + end;
+                    trimmedSelection = valMid.match(/^(\s*)(\S?(?:.|\n|\r)*\S)(\s*)$/) || ["", "", "", ""];
 
                 // determine if text is currently wrapped
                 if (valBefore.endsWith(start) && valAfter.startsWith(end)) {

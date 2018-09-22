@@ -12,7 +12,8 @@
                 "type": "checkbox",
                 "desc": "Show name before contents (e.g. [name]: message) rather than at top (e.g. 'comment by [name]')?"
             }],
-            "feature_packs": ["power_user"]
+            "feature_packs": ["power_user"],
+            "usesApi": true
         }, {
             "name": "alignBadgesByClass",
             "desc": "Align badges by their class on user profile pages",
@@ -26,7 +27,8 @@
             "meta": "http://meta.stackexchange.com/questions/197874/include-tags-in-answers-entries-on-search-results",
             "match": "*://*.com/search*",
             "exclude": "SE1.0",
-            "feature_packs": ["power_user"]
+            "feature_packs": ["power_user"],
+            "usesApi": true
         }, {
             "name": "colorAnswerer",
             "desc": "Color answerer's comments",
@@ -80,7 +82,8 @@
             "meta": "http://meta.stackexchange.com/questions/246678/should-se-staff-have-a-special-character-in-their-user-name",
             "match": "",
             "exclude": "*://chat.*.com/*,SE1.0",
-            "feature_packs": ["major_ui", "key_feature", "power_user"]
+            "feature_packs": ["major_ui", "key_feature", "power_user"],
+            "usesApi": true
         }, {
             "name": "metaChatBlogStackExchangeButton",
             "desc": "Show meta and chat buttons on hover of a site under the site switcher button",
@@ -93,7 +96,8 @@
             "meta": "http://meta.stackexchange.com/questions/256318/can-high-rep-users-be-allowed-to-see-meta-notifications",
             "match": "",
             "exclude": "*://chat.*.com/*,SE1.0",
-            "feature_packs": ["power_user"]
+            "feature_packs": ["power_user"],
+            "usesApi": true
         }, {
             "name": "scrollToTop",
             "desc": "Add Scroll To Top button",
@@ -114,7 +118,8 @@
             "meta": "http://meta.stackexchange.com/questions/257021/proposal-to-make-duplicate-closed-and-migrated-in-the-title-more-obvious",
             "match": "",
             "exclude": "*://chat.*.com/*,SE1.0",
-            "feature_packs": ["major_ui, key_feature", "power_user"]
+            "feature_packs": ["major_ui, key_feature", "power_user"],
+            "usesApi": true
         }, {
             "name": "tabularReviewerStats",
             "desc": "Display reviewer stats on /review/suggested-edits in table form",
@@ -194,7 +199,8 @@
             "extended_description": "Adds a button next to comments in your profile's responses/activity tabs that when clicked, show you the score of your comment",
             "meta": "http://meta.stackexchange.com/questions/38285/display-the-number-of-comment-upvotes-in-recent-activity-pages",
             "match": "*://*/users/*",
-            "exclude": "SE1.0"
+            "exclude": "SE1.0",
+            "usesApi": true
         }, {
             "name": "hiddenCommentsIndicator",
             "desc": "Add a darker border underneath comments if there are some hidden after it",
@@ -355,7 +361,8 @@
                 "type": "textarea",
                 "desc": "Titles to hide (comma-separated regexes)"
             }],
-            "feature_packs": ["key_feature"]
+            "feature_packs": ["key_feature"],
+            "usesApi": true
         }],
         "Chat": [{
             "name": "chatEasyAccess",
@@ -418,14 +425,16 @@
             "extended_description": "Detects links to other questions on SE sites and converts them to their title",
             "meta": "http://meta.stackexchange.com/questions/251183/parse-question-links-from-other-se-sites",
             "match": "*://*/questions*,*://*/review*",
-            "exclude": "SE1.0"
+            "exclude": "SE1.0",
+            "usesApi": true
         }, {
             "name": "quickAuthorInfo",
             "desc": "Show when the post's author was last seen and whether they are registered",
             "meta": "",
             "match": "*://*/questions*,*://*/review*",
             "exclude": "SE1.0",
-            "feature_packs": ["power_user"]
+            "feature_packs": ["power_user"],
+            "usesApi": true
         }, {
             "name": "shareLinksPrivacy",
             "desc": "Remove your user ID from the 'share' link",
@@ -516,7 +525,8 @@
             "meta": "",
             "match": "*://*/review*",
             "exclude": "",
-            "feature_packs": ["power_user"]
+            "feature_packs": ["power_user"],
+            "usesApi": true
         }]
     }
 }
