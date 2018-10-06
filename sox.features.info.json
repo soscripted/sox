@@ -150,7 +150,7 @@
             "name": "showTagWikiLinkOnTagPopup",
             "desc": "Add a link to the tag wiki page on the popup that appears when hovering over a tag",
             "meta": "",
-            "match": "*://*/questions*,*://*/review*",
+            "match": "*://*/questions*,*://*/review*,*://*/tags*",
             "exclude": "",
             "feature_packs": ["power_user"]
         }],
