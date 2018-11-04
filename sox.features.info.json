@@ -153,6 +153,12 @@
             "match": "*://*/questions*,*://*/review*,*://*/tags*",
             "exclude": "",
             "feature_packs": ["power_user"]
+        }, {
+            "name": "hideWelcomeBackMessage",
+            "desc": "Hide the 'welcome back...don't forget to vote' message when visiting a site after a while",
+            "meta": "",
+            "match": "*://*/questions*",
+            "exclude": ""
         }],
         "Comments": [{
             "name": "autoShowCommentImages",

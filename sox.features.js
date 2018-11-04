@@ -2514,6 +2514,18 @@
                     'text': 'timeline'
                 }));
             });
-        }
+        },
+
+        hideWelcomeBackMessage: function() {
+            // Description: Hide the 'welcome back...don't forget to vote' message when visiting a site after a while
+
+            sox.helpers.observe('#overlay-header', function(el) {
+                if ($(el).text().match(/welcome back/gi)) {
+                    $(el).remove();
+                }
+            });
+        },
+
+                
     };
 })(window.sox = window.sox || {}, jQuery);
