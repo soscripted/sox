@@ -9,7 +9,7 @@
         handler: (typeof GM_info !== 'undefined' ? GM_info.scriptHandler : 'unknown'),
         apikey: 'lL1S1jr2m*DRwOvXMPp26g((',
         debugging: GM_getValue('SOX-debug', false),
-        lastVersionInstalled: lastVersionInstalled
+        lastVersionInstalled: lastVersionInstalled,
     };
 
     sox.NEW_TOPBAR = location.href.indexOf('area51') === -1;
@@ -48,9 +48,9 @@
     //var Stack = (typeof StackExchange === "undefined" ? window.eval('if (typeof StackExchange != "undefined") StackExchange') : StackExchange) | undefined;
     var Chat, Stack;
     if (location.href.indexOf('github.com') === -1) { //need this so it works on FF -- CSP blocks window.eval() it seems
-        Chat = (typeof CHAT === "undefined" ? window.eval("typeof CHAT != 'undefined' ? CHAT : undefined") : CHAT);
+        Chat = (typeof CHAT === 'undefined' ? window.eval('typeof CHAT != \'undefined\' ? CHAT : undefined') : CHAT);
         sox.debug(Chat);
-        Stack = (typeof Chat === "undefined" ? (typeof StackExchange === "undefined" ? window.eval('if (typeof StackExchange != "undefined") StackExchange') : (StackExchange || window.StackExchange)) : undefined);
+        Stack = (typeof Chat === 'undefined' ? (typeof StackExchange === 'undefined' ? window.eval('if (typeof StackExchange != "undefined") StackExchange') : (StackExchange || window.StackExchange)) : undefined);
         sox.debug(Stack);
     }
 
@@ -71,7 +71,7 @@
     };
 
     sox.ready = function(func) {
-        $(function() {
+        $(() => {
             if (Stack) {
                 if (Stack.ready) {
                     Stack.ready(func());
@@ -117,13 +117,13 @@
                     sox.loginfo(key, GM_getValue(key));
                 }
             }
-        }
+        },
     };
 
     function throttle(fn, countMax, time) {
         var counter = 0;
 
-        setInterval(function() {
+        setInterval(() => {
             counter = 0;
         }, time);
 
@@ -139,9 +139,9 @@
         getFromAPI: function(type, id, sitename, filter, callback, sortby) {
             sox.debug('Getting From API with URL: https://api.stackexchange.com/2.2/' + type + '/' + id + '?order=desc&sort=' + (sortby || 'creation') + '&site=' + sitename + '&key=' + sox.info.apikey + '&access_token=' + sox.settings.accessToken);
 
-            var filterQuery = filter ? "&filter=" + filter : "",
+            var filterQuery = filter ? '&filter=' + filter : '',
                 // optional for queries like /questions
-                idPath = id ? "/" + id : "";
+                idPath = id ? '/' + id : '';
 
             $.ajax({
                 type: 'get',
@@ -161,19 +161,19 @@
                 },
                 error: function(a, b, c) {
                     sox.error('SOX Error: ' + b + ' ' + c);
-                }
+                },
             });
         },
         observe: function(elements, callback, toObserve) {
             sox.debug('observe: ' + elements);
-            var observer = new MutationObserver(throttle(function(mutations, observer) {
+            var observer = new MutationObserver(throttle((mutations, observer) => {
                 for (var i = 0; i < mutations.length; i++) {
                     let mutation = mutations[i],
                         target = mutation.target,
                         addedNodes = mutation.addedNodes;
-                
+
                     if (addedNodes) {
-                        for (let n = 0; n < addedNodes.length; n++) {                        
+                        for (let n = 0; n < addedNodes.length; n++) {
                             if ($(addedNodes[n]).find(elements).length) {
                                 callback(target);
                                 sox.debug('fire: node: ', addedNodes[n]);
@@ -196,7 +196,7 @@
                         attributes: true,
                         childList: true,
                         characterData: true,
-                        subtree: true
+                        subtree: true,
                     });
                 }
             } else {
@@ -204,7 +204,7 @@
                     attributes: true,
                     childList: true,
                     characterData: true,
-                    subtree: true
+                    subtree: true,
                 });
             }
         },
@@ -227,7 +227,7 @@
                     }
                 }
 
-                $.each(elementDetails, function(k, v) {
+                $.each(elementDetails, (k, v) => {
                     extras[k] = v;
                 });
                 return $('<' + type + '/>', extras);
@@ -254,7 +254,7 @@
 
             // siteMatch[2] is for *.stackexchange.com sites
             return siteMatch ? siteMatch[2] || siteMatch[1] : null;
-        }
+        },
     };
 
     sox.site = {
@@ -262,7 +262,7 @@
             main: 'main',
             meta: 'meta',
             chat: 'chat',
-            beta: 'beta'
+            beta: 'beta',
         },
         id: (sox.exists('options.site.id') ? Stack.options.site.id : undefined),
         currentApiParameter: sox.helpers.getSiteNameFromLink(location.href),
@@ -292,10 +292,10 @@
             }
         },
         get icon() {
-            return "favicon-" + $(".current-site a:not([href*='meta']) .site-icon").attr('class').split('favicon-')[1];
+            return 'favicon-' + $('.current-site a:not([href*=\'meta\']) .site-icon').attr('class').split('favicon-')[1];
         },
         url: location.hostname, //e.g. "meta.stackexchange.com"
-        href: location.href //e.g. "https://meta.stackexchange.com/questions/blah/blah"
+        href: location.href, //e.g. "https://meta.stackexchange.com/questions/blah/blah"
     };
 
     sox.location = {
@@ -335,15 +335,15 @@
                 matchHost = matchSplit[2],
                 matchPath = matchSplit.slice(-(matchSplit.length - 3)).join('/');
 
-            matchScheme = matchScheme.replace(/\*/g, ".*");
-            matchHost = matchHost.replace(/\./g, "\\.").replace(/\*\\\./g, ".*.?").replace(/\\\.\*/g, ".*").replace(/\*$/g, ".*");
-            matchPath = '^\/' + matchPath.replace(/\//g, "\\/").replace(/\*/g, ".*");
+            matchScheme = matchScheme.replace(/\*/g, '.*');
+            matchHost = matchHost.replace(/\./g, '\\.').replace(/\*\\\./g, '.*.?').replace(/\\\.\*/g, '.*').replace(/\*$/g, '.*');
+            matchPath = '^\/' + matchPath.replace(/\//g, '\\/').replace(/\*/g, '.*');
 
             if (currentSiteScheme.match(new RegExp(matchScheme)) && currentSiteHost.match(new RegExp(matchHost)) && currentSitePath.match(new RegExp(matchPath))) {
                 return true;
             }
             return false;
-        }
+        },
     };
 
     sox.user = {
@@ -378,7 +378,7 @@
                 return this.rep > rep;
             }
             return false;
-        }
+        },
     };
 
 })(window.sox = window.sox || {}, jQuery);

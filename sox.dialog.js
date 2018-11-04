@@ -28,20 +28,20 @@
                 $featurePackButtons = $soxSettingsDialog.find('.sox-settings-dialog-feature-pack'),
 
                 //array of HTML strings that will be displayed as `li` items if the user has installed a new version.
-                changes = ["Introduced 'feature packs' -- easily find and enable features we would categorise as 'major UI tweaks', 'key features', or 'power user fetures'!",
-                          "You will no longer be forced to get an access token. If you choose not to, SOX will simply disable features that need one. Thanks @Izzy for the suggestion!"];
+                changes = ['Introduced \'feature packs\' -- easily find and enable features we would categorise as \'major UI tweaks\', \'key features\', or \'power user fetures\'!',
+                    'You will no longer be forced to get an access token. If you choose not to, SOX will simply disable features that need one. Thanks @Izzy for the suggestion!'];
 
             function addCategory(name) {
                 let $div = $('<div/>', {
                         'class': 'header category',
-                        'id': 'header-for-' + name
+                        'id': 'header-for-' + name,
                     }),
                     $h3 = $('<h3/>', {
-                        text: name.toLowerCase()
+                        text: name.toLowerCase(),
                     }),
                     $content = $('<div/>', {
                         id: name,
-                        class: 'modal-content features'
+                        class: 'modal-content features',
                     });
                 $div.append($h3);
 
@@ -55,16 +55,16 @@
                 let blockFeatureSelection = usesApi && !sox.settings.accessToken,
                     $div = $('<div/>', {
                         'class': 'sox-feature ' + (featurePacks.length ? featurePacks.join(' ') : '') + (blockFeatureSelection ? ' disabled-feature' : ''),
-                        'title': blockFeatureSelection ? 'You must get an access token to enable this feature (click the key button at the bottom of the SOX dialog)' : ''
+                        'title': blockFeatureSelection ? 'You must get an access token to enable this feature (click the key button at the bottom of the SOX dialog)' : '',
                     }),
                     $info = $('<i/>', {
                         'class': 'fa fa-info',
-                        'aria-hidden': true
+                        'aria-hidden': true,
                     }).hover(function() {
                         if (extendedDescription && !$(this).parent().find('.sox-feature-info').length) {
                             $(this).parent().append($('<div/>', {
                                 'class': 'sox-feature-info',
-                                'html': extendedDescription + (metaLink ? ' <a href="' + metaLink + '">[meta]</a>' : '')
+                                'html': extendedDescription + (metaLink ? ' <a href="' + metaLink + '">[meta]</a>' : ''),
                             }));
                         }
                     }),
@@ -85,7 +85,7 @@
                     let $settingsDiv = $('<div/>', {
                             id: 'feature-settings-' + name,
                             'class': 'sox-feature-settings',
-                            style: 'display: none; margin-top: 5px;'
+                            style: 'display: none; margin-top: 5px;',
                         }),
                         $settingsToggle = $('<i/>', {
                             'class': 'fa fa-wrench',
@@ -94,15 +94,15 @@
 
                                 let $settingsPanel = $('#feature-settings-' + name);
 
-                                if ($settingsPanel.is(":visible")) {
+                                if ($settingsPanel.is(':visible')) {
                                     $settingsPanel.fadeOut();
                                 } else {
                                     $settingsPanel.fadeIn();
                                 }
 
-                            }
+                            },
                         }),
-                        optionalSettings = GM_getValue("SOX-" + name + "-settings", -1);
+                        optionalSettings = GM_getValue('SOX-' + name + '-settings', -1);
 
                     for (let i = 0; i < featureSettings.length; i++) {
                         let currentSetting = featureSettings[i];
@@ -113,7 +113,7 @@
                                 id: currentSetting.id,
                                 'class': 'featureSetting',
                                 'checked': (currentSetting.type === 'checkbox' ? JSON.parse(optionalSettings)[currentSetting.id] : false),
-                                value: (optionalSettings === -1 ? '' : JSON.parse(optionalSettings)[currentSetting.id])
+                                value: (optionalSettings === -1 ? '' : JSON.parse(optionalSettings)[currentSetting.id]),
                             }))
                             .append('<br>');
                     }
@@ -131,7 +131,7 @@
                             GM_setValue('SOX-' + name + '-settings', JSON.stringify(settingsToSave));
                             sox.settings.writeToConsole(true);
                             alert('Saved!');
-                        }
+                        },
                     });
 
                     $settingsDiv.append($saveFeatureSettings);
@@ -158,11 +158,11 @@
             if (version !== lastVersionInstalled) {
                 GM_setValue('SOX-lastVersionInstalled', version);
                 let $newVersionDetailsContainer = $('<div/>', {
-                        'class': 'sox-new-version-details'
+                        'class': 'sox-new-version-details',
                     }),
                     $newVersionHeader = $('<div/>', {
                         'class': 'header category',
-                        'html': '<h3>new in this version</h3>'
+                        'html': '<h3>new in this version</h3>',
                     }),
                     $changes = $('<ul/>'),
                     $newVersionInfoContainer;
@@ -170,13 +170,13 @@
                 for (let i = 0; i < changes.length; i++) {
                     $changes.append($('<li/>', {
                         'html': changes[i], //this array is defined near the top of the file
-                        'class': 'sox-new-version-item'
+                        'class': 'sox-new-version-item',
                     }));
                 }
 
                 $newVersionInfoContainer = $('<div/>', {
                     'class': 'modal-content',
-                    'html': $changes
+                    'html': $changes,
                 });
 
                 $soxSettingsDialogFeatures.append($newVersionDetailsContainer.append($newVersionHeader).append($newVersionInfoContainer));
@@ -185,18 +185,18 @@
             if (sox.info.debugging) $soxSettingsDebugging.text('Disable debugging');
 
             // wire up event handlers
-            $soxSettingsClose.on('click', function() {
+            $soxSettingsClose.on('click', () => {
                 $soxSettingsDialog.hide();
             });
 
-            $soxSettingsReset.on('click', function() {
+            $soxSettingsReset.on('click', () => {
                 if (confirm('Are you sure you want to reset SOX?')) {
                     sox.settings.reset();
                     location.reload(); // reload page to reflect changed settings
                 }
             });
 
-            $soxSettingsDebugging.on('click', function() {
+            $soxSettingsDebugging.on('click', () => {
                 let currentState = sox.info.debugging;
                 if (typeof currentState === 'undefined') {
                     GM_setValue('SOX-debug', true);
@@ -208,7 +208,7 @@
                 location.reload();
             });
 
-            $soxSettingsNewAccessTokenButton.on('click', function() {
+            $soxSettingsNewAccessTokenButton.on('click', () => {
                 window.open('https://stackexchange.com/oauth/dialog?client_id=7138&scope=no_expiry&redirect_uri=http://soscripted.github.io/sox/');
                 sox.loginfo('To get a new access token, please go to the following URL', 'https://stackexchange.com/oauth/dialog?client_id=7138&scope=no_expiry&redirect_uri=http://soscripted.github.io/sox/');
             });
@@ -226,7 +226,7 @@
                 $soxSettingsDialogFeatures.find('input').prop('checked', !checked);
             });
 
-            $soxSettingsSave.on('click', function() {
+            $soxSettingsSave.on('click', () => {
                 let settings = [];
                 $soxSettingsDialogFeatures.find('input[type=checkbox]:checked').not('.featureSetting').each(function() { //NOT the per-feature featureSetting checkboxes, because they are saved in THEIR OWN setting object!
                     let x = $(this).closest('.modal-content').attr('id') + '-' + $(this).attr('id');
@@ -237,14 +237,14 @@
                 location.reload(); // reload page to reflect changed settings
             });
 
-            $importSettingsButton.on('click', function() {
+            $importSettingsButton.on('click', () => {
                 let settingsToImport = window.prompt('Please paste the settings exactly as they were given to you');
                 if (!settingsToImport) return;
                 sox.settings.save(settingsToImport);
                 location.reload();
             });
 
-            $exportSettingsButton.on('click', function() {
+            $exportSettingsButton.on('click', () => {
                 window.prompt('Your settings are below. Press Ctrl/Cmd + C to copy.', JSON.stringify(sox.settings.load()));
             });
 
@@ -253,7 +253,6 @@
                     let searchQuery = $(this).val();
                     $('.sox-new-version-details').hide();
                     $('#sox-settings-dialog .sox-feature').each(function() {
-                        let $features = $(this).closest('.features');
                         if ($(this).find('label').text().toLowerCase().indexOf(searchQuery) == -1) {
                             $(this).hide();
                         } else {
@@ -264,7 +263,7 @@
                     $('.category, .features, #sox-settings-dialog .sox-feature, .sox-new-version-details').fadeIn();
                 }
             });
-            
+
             $featurePackButtons.click(function() {
                 $('#sox-settings-dialog .sox-feature').removeClass('feature-fade-out');
                 if ($(this).is('.clear-feature-pack-selection')) return;
@@ -285,14 +284,14 @@
                         } else {
                             $(this).removeClass('topbar-icon-on');
                         }
-                    }
+                    },
                 }),
                 $icon = $('<i/>', {
-                    class: 'fa fa-cogs'
+                    class: 'fa fa-cogs',
                 });
 
             //close dialog if clicked outside it
-            $(document).click(function(e) { //close dialog if clicked outside it
+            $(document).click((e) => { //close dialog if clicked outside it
                 let $target = $(e.target),
                     isToggle = $target.is('#soxSettingsButton, #sox-settings-dialog'),
                     isChild = $target.parents('#soxSettingsButton, #sox-settings-dialog').is('#soxSettingsButton, #sox-settings-dialog');
@@ -304,7 +303,7 @@
             });
 
             //close dialog if one of the links on the topbar is clicked
-            $('.topbar-icon, .-link').not('.sox-settings-button').click(function() {
+            $('.topbar-icon, .-link').not('.sox-settings-button').click(() => {
                 $soxSettingsDialog.hide();
                 $soxSettingsButton.removeClass('topbar-icon-on');
             });
@@ -345,12 +344,12 @@
 
             $soxSettingsDialog.css({
                 'top': $('.top-bar').height(),
-                'right': $('.-container').outerWidth() - $('#soxSettingsButton').parent().position().left - $('#soxSettingsButton').outerWidth()
+                'right': $('.-container').outerWidth() - $('#soxSettingsButton').parent().position().left - $('#soxSettingsButton').outerWidth(),
             });
 
             //only add dialog if button was added successfully
             if ($('#soxSettingsButton').length) $('.js-topbar-dialog-corral').append($soxSettingsDialog);
-        }
+        },
     };
 
 })(window.sox = window.sox || {}, jQuery);

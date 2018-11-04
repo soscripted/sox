@@ -3,7 +3,7 @@
 // @namespace    https://github.com/soscripted/sox
 // @homepage     https://github.com/soscripted/sox
 // @homepageURL  https://github.com/soscripted/sox
-// @version      2.3.11 DEV
+// @version      2.3.12 DEV
 // @description  Extra optional features for Stack Overflow and Stack Exchange sites
 // @contributor  ᴉʞuǝ (https://stackoverflow.com/users/1454538/, https://github.com/mezmi)
 // @contributor  ᔕᖺᘎᕊ (https://stackexchange.com/users/4337810/, https://github.com/shu8)
@@ -85,7 +85,7 @@
         GM_addStyle(GM_getResourceText('css'));
         $('<link/>', {
             rel: 'stylesheet',
-            href: 'https://use.fontawesome.com/releases/v5.1.0/css/all.css'
+            href: 'https://use.fontawesome.com/releases/v5.1.0/css/all.css',
         }).appendTo('head');
 
         var settings = sox.settings.load(), //returns undefined if not set
@@ -97,7 +97,7 @@
                 version: sox.info.version,
                 features: featureInfo,
                 settings: settings,
-                lastVersionInstalled: sox.info.lastVersionInstalled
+                lastVersionInstalled: sox.info.lastVersionInstalled,
             });
         } catch (e) {
             throw ('SOX: There was an error while attempting to initialize the SOX Settings Dialog, please report this on GitHub.\n' + e);
@@ -116,7 +116,7 @@
                     continue;
                 }
 
-                var feature = featureInfo.categories[category].filter(function(obj) {
+                var feature = featureInfo.categories[category].filter((obj) => {
                         return obj.name == featureId;
                     })[0],
                     runFeature = true,
@@ -151,7 +151,7 @@
                     if (runFeature) {
                         sox.debug('running ' + featureId);
                         if (feature.settings) {
-                            var settingsToPass = GM_getValue("SOX-" + featureId + "-settings") ? JSON.parse(GM_getValue("SOX-" + featureId + "-settings")) : {};
+                            var settingsToPass = GM_getValue('SOX-' + featureId + '-settings') ? JSON.parse(GM_getValue('SOX-' + featureId + '-settings')) : {};
                             sox.features[featureId](settingsToPass); //run the feature if match and exclude conditions are met, pass on settings object
                         } else {
                             sox.features[featureId](); //run the feature if match and exclude conditions are met
@@ -173,17 +173,17 @@
 
 
         //custom events....
-        sox.helpers.observe('.new_comment', function() { //custom event that triggers when a new comment appears/show more comments clicked; avoids lots of the same mutationobserver
+        sox.helpers.observe('.new_comment', () => { //custom event that triggers when a new comment appears/show more comments clicked; avoids lots of the same mutationobserver
             $(document).trigger('sox-new-comment');
             sox.debug('sox-new-comment event triggered');
         });
 
-        sox.helpers.observe('textarea[id^="wmd-input"]', function(target) {
+        sox.helpers.observe('textarea[id^="wmd-input"]', (target) => {
             $(document).trigger('sox-edit-window', [target]);
             sox.debug('sox-edit-window event triggered');
         });
 
-        sox.helpers.observe('.reviewable-post, .review-content', function(target) {
+        sox.helpers.observe('.reviewable-post, .review-content', (target) => {
             $(document).trigger('sox-new-review-post-appeared', [target]);
             sox.debug('sox-new-review-post-appeared event triggered');
         });
