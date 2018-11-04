@@ -2124,7 +2124,7 @@
             // Description: Enabled inline editor on all sites
             // Written by @nicael: http://stackapps.com/questions/6216/inline-editor-regardless-of-reputation, and copied with nicael's permission
 
-            if (sox.Stack.using) {
+            if (sox.Stack) {
                 $(".suggest-edit-post").removeClass("suggest-edit-post").addClass("edit-post");
                 sox.Stack.using("inlineEditing", function() {
                     sox.Stack.inlineEditing.init();
