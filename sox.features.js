@@ -2519,6 +2519,16 @@
             });
         },
 
+        hideHowToAskWhenZoomed: function() {
+            // Description: Hides the 'How to ask' yellow box that appears under the title input when asking a question zoomed in
+
+            sox.helpers.observe('.js-help-pointer', (el) => {
+                if ($(el).text().match(/How to Ask/gi)) {
+                    $(el).remove();
+                }
+            });
+        }
+
 
     };
 })(window.sox = window.sox || {}, jQuery);

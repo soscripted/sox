@@ -159,6 +159,12 @@
             "meta": "",
             "match": "*://*/questions*",
             "exclude": ""
+        }, {
+            "name": "hideHowToAskWhenZoomed",
+            "desc": "Hide the 'How to ask' yellow box shown under the title input when asking a question zoomed in",
+            "meta": "",
+            "match": "*://*/questions/ask",
+            "exclude": ""
         }],
         "Comments": [{
             "name": "autoShowCommentImages",
