@@ -1,4 +1,4 @@
-(function(sox, $, undefined) {
+(function(sox, $) {
     'use strict';
     var SOX_SETTINGS = 'SOXSETTINGS',
         commonInfo = JSON.parse(GM_getResourceText('common')),
@@ -48,10 +48,10 @@
     //var Stack = (typeof StackExchange === "undefined" ? window.eval('if (typeof StackExchange != "undefined") StackExchange') : StackExchange) | undefined;
     var Chat, Stack;
     if (location.href.indexOf('github.com') === -1) { //need this so it works on FF -- CSP blocks window.eval() it seems
-        Chat = (typeof CHAT === 'undefined' ? window.eval('typeof CHAT != \'undefined\' ? CHAT : undefined') : CHAT);
-        sox.debug(Chat);
+        Chat = (typeof window.CHAT === 'undefined' ? window.eval('typeof CHAT != \'undefined\' ? CHAT : undefined') : CHAT);
+        sox.debug('CHAT', Chat);
         Stack = (typeof Chat === 'undefined' ? (typeof StackExchange === 'undefined' ? window.eval('if (typeof StackExchange != "undefined") StackExchange') : (StackExchange || window.StackExchange)) : undefined);
-        sox.debug(Stack);
+        sox.debug('Stack', Stack);
     }
 
     sox.Stack = Stack;
@@ -166,7 +166,7 @@
         },
         observe: function(elements, callback, toObserve) {
             sox.debug('observe: ' + elements);
-            var observer = new MutationObserver(throttle((mutations, observer) => {
+            var observer = new MutationObserver(throttle((mutations) => {
                 for (var i = 0; i < mutations.length; i++) {
                     let mutation = mutations[i],
                         target = mutation.target,
@@ -288,6 +288,7 @@
                     }
                 }
             }
+            return null;
         },
         get icon() {
             return 'favicon-' + $('.current-site a:not([href*=\'meta\']) .site-icon').attr('class').split('favicon-')[1];
@@ -335,7 +336,7 @@
 
             matchScheme = matchScheme.replace(/\*/g, '.*');
             matchHost = matchHost.replace(/\./g, '\\.').replace(/\*\\\./g, '.*.?').replace(/\\\.\*/g, '.*').replace(/\*$/g, '.*');
-            matchPath = '^\/' + matchPath.replace(/\//g, '\\/').replace(/\*/g, '.*');
+            matchPath = '^/' + matchPath.replace(/\//g, '\\/').replace(/\*/g, '.*');
 
             if (currentSiteScheme.match(new RegExp(matchScheme)) && currentSiteHost.match(new RegExp(matchHost)) && currentSitePath.match(new RegExp(matchPath))) {
                 return true;

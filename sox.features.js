@@ -1,4 +1,4 @@
-(function(sox, $, undefined) {
+(function(sox, $) {
     'use strict';
 
     sox.features = { //SOX functions must go in here
@@ -476,7 +476,7 @@
 
             sox.helpers.observe('.share-tip', () => {
                 var link = $('.share-tip input').val(),
-                    title = $('meta[name="twitter:title"]').attr('content').replace(/\[(.*?)\]/g, '\[$1\]'); //https://github.com/soscripted/sox/issues/226, https://github.com/soscripted/sox/issues/292
+                    title = $('meta[name="twitter:title"]').attr('content').replace(/\[(.*?)\]/g, '[$1]'); //https://github.com/soscripted/sox/issues/226, https://github.com/soscripted/sox/issues/292
 
                 if (link.indexOf(title) !== -1) return; //don't do anything if the function's already done its thing
                 $('.share-tip input').val('[' + title + '](' + link + ')');
@@ -1808,7 +1808,7 @@
                 $('.question, .answer, .reviewable-post').each(function() {
                     sox.debug('current post', $(this));
 
-                    var anchor = this.querySelector('.post-signature:last-child .user-details a[href^=\"/users\"]');
+                    var anchor = this.querySelector('.post-signature:last-child .user-details a[href^="/users"]');
 
                     if (!anchor) {
                         return;
@@ -1840,7 +1840,7 @@
                 var FILTER_USER_LASTSEEN_TYPE = '!*MxL2H2Vp3iPIKLu';
 
                 $('.question, .answer, .reviewable-post').each(function() {
-                    var userDetailsAnchor = this.querySelector('.post-signature:last-child .user-details a[href^=\"/users\"]'),
+                    var userDetailsAnchor = this.querySelector('.post-signature:last-child .user-details a[href^="/users"]'),
                         userid, username;
 
                     if (userDetailsAnchor) {
@@ -2449,7 +2449,7 @@
                             // the URL is guaranteed to begin with HTTPS (StackExchange uses it by default)
                             // and also to begin with i.stack
                             // won't hardcode the rest of the URL to keep it future proof
-                            var link = data.match(/(https:\/\/i\.stack.*)\"/)[1],
+                            var link = data.match(/(https:\/\/i\.stack.*)"/)[1],
                                 PLACEHOLDER = 'enter image description here',
                                 nSS = node.selectionStart;
 
@@ -2527,7 +2527,7 @@
                     $(el).remove();
                 }
             });
-        }
+        },
 
 
     };

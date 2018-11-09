@@ -48,7 +48,7 @@
 // @grant        GM_info
 // ==/UserScript==
 /*jshint loopfunc: true*/
-(function(sox, $, undefined) {
+(function(sox, $) {
     'use strict';
 
     function init() {
@@ -57,9 +57,8 @@
                 sox.github.init(sox.info.version, sox.info.handler);
             } catch (e) {
                 throw ('SOX: There was an error while attempting to initialize the sox.github.js file, please report this on GitHub.\n' + e);
-            } finally {
-                return;
             }
+            return;
         }
 
         if (sox.location.on('soscripted.github.io/sox/#access_token')) { //save access token
@@ -70,11 +69,9 @@
                 alert('Access token successfully saved! You can close this window :)');
             } catch (e) {
                 throw ('SOX: There was an error saving your access token');
-            } finally {
-                return;
             }
+            return;
         }
-
         if (sox.info.debugging) {
             sox.debug('DEBUGGING SOX VERSION ' + sox.info.version);
             sox.debug('----------------saved variables---------------------');
