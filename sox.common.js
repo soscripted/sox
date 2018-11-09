@@ -249,11 +249,10 @@
             return idMatch ? +idMatch[1] : null;
         },
         getSiteNameFromLink: function(link) {
-            var siteRegex = /(([a-z\.]+)\.stackexchange|stackoverflow|superuser|serverfault|askubuntu|stackapps|mathoverflow|programmers|bitcoin)\.com/,
-                siteMatch = link.match(siteRegex);
+            var siteRegex = /(((.+)\.)?(stackexchange|stackoverflow|superuser|serverfault|askubuntu|stackapps|mathoverflow|programmers|bitcoin))\.com/,
+                siteMatch = link.replace(/https?:\/\//, '').match(siteRegex);
 
-            // siteMatch[2] is for *.stackexchange.com sites
-            return siteMatch ? siteMatch[2] || siteMatch[1] : null;
+            return siteMatch ? siteMatch[1] : null;
         },
     };
 
@@ -272,7 +271,6 @@
             } else { //using StackExchange object doesn't give correct name (eg. `Biology` is called `Biology Stack Exchange` in the object)
                 return $('.js-topbar-dialog-corral .modal-content.current-site-container .current-site-link div').attr('title');
             }
-            return undefined;
         },
 
         get type() {
