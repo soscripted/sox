@@ -1191,6 +1191,7 @@
                 wmdpreview.toggleClass('sbs-on');
 
                 if (sox.location.on('/edit-tag-wiki/')) $('#post-form').toggleClass('sbs-on'); //https://github.com/soscripted/sox/issues/247
+                if (sox.location.on('/edit')) $('.post-editor').next().css('clear', 'both');
 
                 if (toAppend.length > 0) { //options specific to making edits on existing questions/answers
                     posteditor.find('.hide-preview').toggleClass('sbs-on'); //needed to stop the tag box from being 'on top of' the textarea blocking text from being entering
