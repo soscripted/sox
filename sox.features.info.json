@@ -539,6 +539,12 @@
             "exclude": "",
             "feature_packs": ["power_user"],
             "usesApi": true
+        }, {
+            "name": "addOnTopicLinkToSiteSwitcher",
+            "desc": "Add an 'on-topic' link to the site switcher dropdown next to the 'help' button",
+            "meta": "",
+            "match": "",
+            "exclude": "*://chat.*.com/*,SE1.0"
         }]
     }
 }

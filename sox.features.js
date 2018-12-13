@@ -2529,6 +2529,11 @@
             });
         },
 
+        addOnTopicLinkToSiteSwitcher: function() {
+            // Description: Adds a 'on-topic' link to the site switcher dropdown next to the 'help' button
+
+            $('.top-bar .related-links').prepend('<a href="/help/on-topic">on-topic</a>');
+        },
 
     };
 })(window.sox = window.sox || {}, jQuery);
