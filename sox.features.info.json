@@ -161,7 +161,7 @@
             "exclude": ""
         }, {
             "name": "hideHowToAskWhenZoomed",
-            "desc": "Hide the 'How to ask' yellow box shown under the title input when asking a question zoomed in",
+            "desc": "Hide the 'How to ask/format/tag' yellow boxes that appear when asking a question whilst zoomed in",
             "meta": "",
             "match": "*://*/questions/ask",
             "exclude": ""
@@ -283,13 +283,6 @@
             "meta": "",
             "match": "*://*/questions*",
             "exclude": ""
-        }, {
-            "name": "pasteImagesDirectly",
-            "desc": "Paste images directly into the post editor without the image dialog",
-            "meta": "",
-            "match": "*://*/questions*",
-            "exclude": "",
-            "feature_packs": ["key_feature", "power_user"]
         }],
         "Flags": [{
             "name": "flagOutcomeTime",
