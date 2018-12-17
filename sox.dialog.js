@@ -1,4 +1,4 @@
-(function(sox, $, undefined) {
+(function(sox, $) {
   'use strict';
 
   sox.dialog = {
@@ -6,44 +6,45 @@
       if (!$('.top-bar').length) return;
       sox.debug('initializing SOX dialog');
 
-      let version = options.version,
-        features = options.features,
-        settings = options.settings,
-        lastVersionInstalled = options.lastVersionInstalled,
+      const version = options.version;
+      const features = options.features;
+      const settings = options.settings;
+      const lastVersionInstalled = options.lastVersionInstalled;
+      const html = GM_getResourceText('dialog');
+      const $soxSettingsDialog = $(html);
+      const $soxSettingsDialogFeatures = $soxSettingsDialog.find('#sox-settings-dialog-features');
+      const $soxSettingsDialogVersion = $soxSettingsDialog.find('#sox-settings-dialog-version');
+      const $soxSettingsSave = $soxSettingsDialog.find('#sox-settings-dialog-save');
+      const $soxSettingsReset = $soxSettingsDialog.find('#sox-settings-dialog-reset');
+      const $soxSettingsDebugging = $soxSettingsDialog.find('#sox-settings-dialog-debugging');
+      const $soxSettingsNewAccessTokenButton = $soxSettingsDialog.find('#sox-settings-dialog-access-token');
+      const $soxSettingsToggle = $soxSettingsDialog.find('#sox-settings-dialog-check-toggle');
+      const $soxSettingsClose = $soxSettingsDialog.find('#sox-settings-dialog-close');
+      const $searchBox = $soxSettingsDialog.find('#search');
+      const $importSettingsButton = $soxSettingsDialog.find('#sox-settings-import');
+      const $exportSettingsButton = $soxSettingsDialog.find('#sox-settings-export');
+      const $featurePackButtons = $soxSettingsDialog.find('.sox-settings-dialog-feature-pack');
 
-        html = GM_getResourceText('dialog'),
+      //array of HTML strings that will be displayed as `li` items if the user has installed a new version.
 
-        $soxSettingsDialog = $(html),
-        $soxSettingsDialogFeatures = $soxSettingsDialog.find('#sox-settings-dialog-features'),
-        $soxSettingsDialogVersion = $soxSettingsDialog.find('#sox-settings-dialog-version'),
-        $soxSettingsSave = $soxSettingsDialog.find('#sox-settings-dialog-save'),
-        $soxSettingsReset = $soxSettingsDialog.find('#sox-settings-dialog-reset'),
-        $soxSettingsDebugging = $soxSettingsDialog.find('#sox-settings-dialog-debugging'),
-        $soxSettingsNewAccessTokenButton = $soxSettingsDialog.find('#sox-settings-dialog-access-token'),
-        $soxSettingsToggle = $soxSettingsDialog.find('#sox-settings-dialog-check-toggle'),
-        $soxSettingsClose = $soxSettingsDialog.find('#sox-settings-dialog-close'),
-        $searchBox = $soxSettingsDialog.find('#search'),
-        $importSettingsButton = $soxSettingsDialog.find('#sox-settings-import'),
-        $exportSettingsButton = $soxSettingsDialog.find('#sox-settings-export'),
-        $featurePackButtons = $soxSettingsDialog.find('.sox-settings-dialog-feature-pack'),
-
-        //array of HTML strings that will be displayed as `li` items if the user has installed a new version.
-        changes = ['Introduced \'feature packs\' -- easily find and enable features we would categorise as \'major UI tweaks\', \'key features\', or \'power user fetures\'!',
-          'You will no longer be forced to get an access token. If you choose not to, SOX will simply disable features that need one. Thanks @Izzy for the suggestion!',
-          'Deprecated paste images feature -- it has been implemented natively by SE now!'];
+      const changes = ['Introduced \'feature packs\' -- easily find and enable features we would categorise as \'major UI tweaks\', \'key features\', or \'power user fetures\'!',
+        'You will no longer be forced to get an access token. If you choose not to, SOX will simply disable features that need one. Thanks @Izzy for the suggestion!',
+        'Deprecated paste images feature -- it has been implemented natively by SE now!'];
 
       function addCategory(name) {
-        let $div = $('<div/>', {
-            'class': 'header category',
-            'id': 'header-for-' + name,
-          }),
-          $h3 = $('<h3/>', {
-            text: name.toLowerCase(),
-          }),
-          $content = $('<div/>', {
-            id: name,
-            class: 'modal-content features',
-          });
+        const $div = $('<div/>', {
+          'class': 'header category',
+          'id': 'header-for-' + name,
+        });
+
+        const $h3 = $('<h3/>', {
+          text: name.toLowerCase(),
+        });
+
+        const $content = $('<div/>', {
+          id: name,
+          class: 'modal-content features',
+        });
         $div.append($h3);
 
         if (!$soxSettingsDialogFeatures.find('div#header-for-' + name).length) {
@@ -53,27 +54,31 @@
       }
 
       function addFeature(category, name, description, featureSettings, extendedDescription, metaLink, featurePacks, usesApi) {
-        let blockFeatureSelection = usesApi && !sox.settings.accessToken,
-          $div = $('<div/>', {
-            'class': 'sox-feature ' + (featurePacks.length ? featurePacks.join(' ') : '') + (blockFeatureSelection ? ' disabled-feature' : ''),
-            'title': blockFeatureSelection ? 'You must get an access token to enable this feature (click the key button at the bottom of the SOX dialog)' : '',
-          }),
-          $info = $('<i/>', {
-            'class': 'fa fa-info',
-            'aria-hidden': true,
-          }).hover(function() {
-            if (extendedDescription && !$(this).parent().find('.sox-feature-info').length) {
-              $(this).parent().append($('<div/>', {
-                'class': 'sox-feature-info',
-                'html': extendedDescription + (metaLink ? ' <a href="' + metaLink + '">[meta]</a>' : ''),
-              }));
-            }
-          }),
-          $label = $('<label/>'),
-          $input = $('<input/>', {
-            id: name,
-            type: 'checkbox',
-          }).prop('disabled', blockFeatureSelection);
+        const blockFeatureSelection = usesApi && !sox.settings.accessToken;
+
+        const $div = $('<div/>', {
+          'class': 'sox-feature ' + (featurePacks.length ? featurePacks.join(' ') : '') + (blockFeatureSelection ? ' disabled-feature' : ''),
+          'title': blockFeatureSelection ? 'You must get an access token to enable this feature (click the key button at the bottom of the SOX dialog)' : '',
+        });
+
+        const $info = $('<i/>', {
+          'class': 'fa fa-info',
+          'aria-hidden': true,
+        }).hover(function() {
+          if (extendedDescription && !$(this).parent().find('.sox-feature-info').length) {
+            $(this).parent().append($('<div/>', {
+              'class': 'sox-feature-info',
+              'html': extendedDescription + (metaLink ? ' <a href="' + metaLink + '">[meta]</a>' : ''),
+            }));
+          }
+        });
+
+        const $label = $('<label/>');
+
+        const $input = $('<input/>', {
+          id: name,
+          type: 'checkbox',
+        }).prop('disabled', blockFeatureSelection);
 
         $div.on('mouseleave', function() {
           $(this).find('.sox-feature-info').remove();
@@ -83,30 +88,32 @@
         $soxSettingsDialogFeatures.find('#' + category).append($div);
 
         if (featureSettings) {
-          let $settingsDiv = $('<div/>', {
-              id: 'feature-settings-' + name,
-              'class': 'sox-feature-settings',
-              style: 'display: none; margin-top: 5px;',
-            }),
-            $settingsToggle = $('<i/>', {
-              'class': 'fa fa-wrench',
-              click: function(e) {
-                e.preventDefault(); //don't uncheck the checkbox
+          const $settingsDiv = $('<div/>', {
+            id: 'feature-settings-' + name,
+            'class': 'sox-feature-settings',
+            style: 'display: none; margin-top: 5px;',
+          });
 
-                let $settingsPanel = $('#feature-settings-' + name);
+          const $settingsToggle = $('<i/>', {
+            'class': 'fa fa-wrench',
+            click: function(e) {
+              e.preventDefault(); //don't uncheck the checkbox
 
-                if ($settingsPanel.is(':visible')) {
-                  $settingsPanel.fadeOut();
-                } else {
-                  $settingsPanel.fadeIn();
-                }
+              const $settingsPanel = $('#feature-settings-' + name);
 
-              },
-            }),
-            optionalSettings = GM_getValue('SOX-' + name + '-settings', -1);
+              if ($settingsPanel.is(':visible')) {
+                $settingsPanel.fadeOut();
+              } else {
+                $settingsPanel.fadeIn();
+              }
+
+            },
+          });
+
+          const optionalSettings = GM_getValue('SOX-' + name + '-settings', -1);
 
           for (let i = 0; i < featureSettings.length; i++) {
-            let currentSetting = featureSettings[i];
+            const currentSetting = featureSettings[i];
             $settingsDiv
               .append(currentSetting.desc)
               .append('<br>')
@@ -119,12 +126,12 @@
               .append('<br>');
           }
 
-          let $saveFeatureSettings = $('<a/>', {
+          const $saveFeatureSettings = $('<a/>', {
             id: 'saveSettings-' + name,
             text: 'Save Settings',
             click: function(e) {
               e.preventDefault(); //don't uncheck the checkbox
-              let settingsToSave = {};
+              const settingsToSave = {};
               $('.sox-feature.disabled-feature input[type="checkbox"]').prop('checked', false); //uncheck any features that somehow were checked (they shouldn't be able to through the UI) but should be disabled (user doesn't have access token)
               $(this).parent().find('.featureSetting').each(function() {
                 settingsToSave[$(this).attr('id')] = ($(this).is(':checkbox') ? $(this).is(':checked') : $(this).val());
@@ -137,7 +144,7 @@
 
           $settingsDiv.append($saveFeatureSettings);
 
-          let $feature = $soxSettingsDialogFeatures.find('input#' + name).parent();
+          const $feature = $soxSettingsDialogFeatures.find('input#' + name).parent();
           $feature.append($settingsToggle);
 
           if ($div.has('i.fa-info').length) {
@@ -158,15 +165,16 @@
 
       if (version !== lastVersionInstalled) {
         GM_setValue('SOX-lastVersionInstalled', version);
-        let $newVersionDetailsContainer = $('<div/>', {
-            'class': 'sox-new-version-details',
-          }),
-          $newVersionHeader = $('<div/>', {
-            'class': 'header category',
-            'html': '<h3>new in this version</h3>',
-          }),
-          $changes = $('<ul/>'),
-          $newVersionInfoContainer;
+        const $newVersionDetailsContainer = $('<div/>', {
+          'class': 'sox-new-version-details',
+        });
+
+        const $newVersionHeader = $('<div/>', {
+          'class': 'header category',
+          'html': '<h3>new in this version</h3>',
+        });
+
+        const $changes = $('<ul/>');
 
         for (let i = 0; i < changes.length; i++) {
           $changes.append($('<li/>', {
@@ -175,7 +183,7 @@
           }));
         }
 
-        $newVersionInfoContainer = $('<div/>', {
+        const $newVersionInfoContainer = $('<div/>', {
           'class': 'modal-content',
           'html': $changes,
         });
@@ -198,7 +206,7 @@
       });
 
       $soxSettingsDebugging.on('click', () => {
-        let currentState = sox.info.debugging;
+        const currentState = sox.info.debugging;
         if (typeof currentState === 'undefined') {
           GM_setValue('SOX-debug', true);
           $soxSettingsDebugging.text('Disable debugging');
@@ -215,8 +223,9 @@
       });
 
       $soxSettingsToggle.on('click', function() {
-        let $icon = $(this).find('i'),
-          checked = $icon.hasClass('fas');
+        const $icon = $(this).find('i');
+
+        const checked = $icon.hasClass('fas');
 
         if (checked) {
           $icon.removeClass('fas').addClass('far');
@@ -228,9 +237,9 @@
       });
 
       $soxSettingsSave.on('click', () => {
-        let settings = [];
+        const settings = [];
         $soxSettingsDialogFeatures.find('input[type=checkbox]:checked').not('.featureSetting').each(function() { //NOT the per-feature featureSetting checkboxes, because they are saved in THEIR OWN setting object!
-          let x = $(this).closest('.modal-content').attr('id') + '-' + $(this).attr('id');
+          const x = $(this).closest('.modal-content').attr('id') + '-' + $(this).attr('id');
           settings.push(x); //Add the function's ID (also the checkbox's ID) to the array
         });
 
@@ -239,7 +248,7 @@
       });
 
       $importSettingsButton.on('click', () => {
-        let settingsToImport = window.prompt('Please paste the settings exactly as they were given to you');
+        const settingsToImport = window.prompt('Please paste the settings exactly as they were given to you');
         if (!settingsToImport) return;
         sox.settings.save(settingsToImport);
         location.reload();
@@ -251,7 +260,7 @@
 
       $searchBox.on('keyup keydown', function() { //search box
         if ($(this).val() !== '') {
-          let searchQuery = $(this).val();
+          const searchQuery = $(this).val();
           $('.sox-new-version-details').hide();
           $('#sox-settings-dialog .sox-feature').each(function() {
             if ($(this).find('label').text().toLowerCase().indexOf(searchQuery) == -1) {
@@ -272,30 +281,31 @@
       });
 
       // create sox settings button
-      let $soxSettingsButton = $('<a/>', {
-          id: 'soxSettingsButton',
-          class: 'sox-settings-button -link',
-          title: 'Change SOX settings',
-          href: '#',
-          click: function(e) {
-            e.preventDefault();
-            $('#sox-settings-dialog').toggle();
-            if ($soxSettingsDialog.is(':visible')) {
-              $(this).addClass('topbar-icon-on');
-            } else {
-              $(this).removeClass('topbar-icon-on');
-            }
-          },
-        }),
-        $icon = $('<i/>', {
-          class: 'fa fa-cogs',
-        });
+      const $soxSettingsButton = $('<a/>', {
+        id: 'soxSettingsButton',
+        class: 'sox-settings-button -link',
+        title: 'Change SOX settings',
+        href: '#',
+        click: function(e) {
+          e.preventDefault();
+          $('#sox-settings-dialog').toggle();
+          if ($soxSettingsDialog.is(':visible')) {
+            $(this).addClass('topbar-icon-on');
+          } else {
+            $(this).removeClass('topbar-icon-on');
+          }
+        },
+      });
+
+      const $icon = $('<i/>', {
+        class: 'fa fa-cogs',
+      });
 
       //close dialog if clicked outside it
       $(document).click((e) => { //close dialog if clicked outside it
-        let $target = $(e.target),
-          isToggle = $target.is('#soxSettingsButton, #sox-settings-dialog'),
-          isChild = $target.parents('#soxSettingsButton, #sox-settings-dialog').is('#soxSettingsButton, #sox-settings-dialog');
+        const $target = $(e.target);
+        const isToggle = $target.is('#soxSettingsButton, #sox-settings-dialog');
+        const isChild = $target.parents('#soxSettingsButton, #sox-settings-dialog').is('#soxSettingsButton, #sox-settings-dialog');
 
         if (!isToggle && !isChild) {
           $soxSettingsDialog.hide();
@@ -311,10 +321,10 @@
 
       // load features into dialog
       sox.debug('injecting features into dialog');
-      for (let category in features.categories) {
+      for (const category in features.categories) {
         addCategory(category);
-        for (let feature in features.categories[category]) {
-          let currentFeature = features.categories[category][feature];
+        for (const feature in features.categories[category]) {
+          const currentFeature = features.categories[category][feature];
           addFeature(
             category,
             currentFeature.name,

@@ -1,8 +1,8 @@
 (function(sox, $) {
   'use strict';
-  var SOX_SETTINGS = 'SOXSETTINGS',
-    commonInfo = JSON.parse(GM_getResourceText('common')),
-    lastVersionInstalled = GM_getValue('SOX-lastVersionInstalled');
+  const SOX_SETTINGS = 'SOXSETTINGS';
+  const commonInfo = JSON.parse(GM_getResourceText('common'));
+  const lastVersionInstalled = GM_getValue('SOX-lastVersionInstalled');
 
   sox.info = {
     version: (typeof GM_info !== 'undefined' ? GM_info.script.version : 'unknown'),
@@ -16,37 +16,38 @@
 
   sox.debug = function() {
     if (!sox.info.debugging) return;
-    for (var arg = 0; arg < arguments.length; ++arg) {
+    for (let arg = 0; arg < arguments.length; ++arg) {
       console.debug('SOX: ', arguments[arg]);
     }
   };
 
   sox.log = function() {
-    for (var arg = 0; arg < arguments.length; ++arg) {
+    for (let arg = 0; arg < arguments.length; ++arg) {
       console.log('SOX: ', arguments[arg]);
     }
   };
 
   sox.warn = function() {
-    for (var arg = 0; arg < arguments.length; ++arg) {
+    for (let arg = 0; arg < arguments.length; ++arg) {
       console.warn('SOX: ', arguments[arg]);
     }
   };
 
   sox.error = function() {
-    for (var arg = 0; arg < arguments.length; ++arg) {
+    for (let arg = 0; arg < arguments.length; ++arg) {
       console.error('SOX: ', arguments[arg]);
     }
   };
 
   sox.loginfo = function() {
-    for (var arg = 0; arg < arguments.length; ++arg) {
+    for (let arg = 0; arg < arguments.length; ++arg) {
       console.info('SOX: ', arguments[arg]);
     }
   };
 
   //var Stack = (typeof StackExchange === "undefined" ? window.eval('if (typeof StackExchange != "undefined") StackExchange') : StackExchange) | undefined;
-  var Chat, Stack;
+  let Chat;
+  let Stack;
   if (location.href.indexOf('github.com') === -1) { //need this so it works on FF -- CSP blocks window.eval() it seems
     Chat = (typeof window.CHAT === 'undefined' ? window.eval('typeof CHAT != \'undefined\' ? CHAT : undefined') : CHAT);
     sox.debug('CHAT', Chat);
@@ -58,10 +59,12 @@
 
   sox.exists = function(path) {
     if (!Stack) return false;
-    var toCheck = path.split('.'),
-      cont = true,
-      o = Stack,
-      i;
+    const toCheck = path.split('.');
+
+    let cont = true;
+    let o = Stack;
+    let i;
+
     for (i = 0; i < toCheck.length; i++) {
       if (!cont) return false;
       if (!(toCheck[i] in o)) cont = false;
@@ -87,30 +90,30 @@
   sox.settings = {
     available: GM_getValue(SOX_SETTINGS, -1) != -1,
     load: function() {
-      var settings = GM_getValue(SOX_SETTINGS);
+      const settings = GM_getValue(SOX_SETTINGS);
       return settings === undefined ? undefined : JSON.parse(settings);
     },
     save: function(settings) {
       GM_setValue(SOX_SETTINGS, typeof settings === 'string' ? settings : JSON.stringify(settings)); //if importing, it will already be a string so don't stringify the string!
     },
     reset: function() {
-      var keys = GM_listValues();
+      const keys = GM_listValues();
       sox.debug(keys);
-      for (var i = 0; i < keys.length; i++) {
-        var key = keys[i];
+      for (let i = 0; i < keys.length; i++) {
+        const key = keys[i];
         GM_deleteValue(key);
       }
     },
     get accessToken() {
       sox.debug('SOX Access Token: ' + (GM_getValue('SOX-accessToken', false) === false ? 'NOT SET' : 'SET'));
-      var accessToken = GM_getValue('SOX-accessToken', false);
+      const accessToken = GM_getValue('SOX-accessToken', false);
       return (accessToken == -2 ? false : accessToken); //if the user was already asked once, the value is set to -2, so make sure this is returned as false
     },
     writeToConsole: function(hideAccessToken) {
       sox.loginfo('logging sox stored values --- ');
-      var keys = GM_listValues();
-      for (var i = 0; i < keys.length; i++) {
-        var key = keys[i];
+      const keys = GM_listValues();
+      for (let i = 0; i < keys.length; i++) {
+        const key = keys[i];
         if (hideAccessToken && key == 'SOX-accessToken') {
           sox.loginfo('access token set');
         } else {
@@ -121,7 +124,7 @@
   };
 
   function throttle(fn, countMax, time) {
-    var counter = 0;
+    let counter = 0;
 
     setInterval(() => {
       counter = 0;
@@ -139,9 +142,9 @@
     getFromAPI: function(type, id, sitename, filter, callback, sortby) {
       sox.debug('Getting From API with URL: https://api.stackexchange.com/2.2/' + type + '/' + id + '?order=desc&sort=' + (sortby || 'creation') + '&site=' + sitename + '&key=' + sox.info.apikey + '&access_token=' + sox.settings.accessToken);
 
-      var filterQuery = filter ? '&filter=' + filter : '',
-        // optional for queries like /questions
-        idPath = id ? '/' + id : '';
+      const filterQuery = filter ? '&filter=' + filter : '';
+      // optional for queries like /questions
+      const idPath = id ? '/' + id : '';
 
       $.ajax({
         type: 'get',
@@ -166,11 +169,11 @@
     },
     observe: function(elements, callback, toObserve) {
       sox.debug('observe: ' + elements);
-      var observer = new MutationObserver(throttle((mutations) => {
-        for (var i = 0; i < mutations.length; i++) {
-          let mutation = mutations[i],
-            target = mutation.target,
-            addedNodes = mutation.addedNodes;
+      const observer = new MutationObserver(throttle((mutations) => {
+        for (let i = 0; i < mutations.length; i++) {
+          const mutation = mutations[i];
+          const target = mutation.target;
+          const addedNodes = mutation.addedNodes;
 
           if (addedNodes) {
             for (let n = 0; n < addedNodes.length; n++) {
@@ -191,7 +194,7 @@
       }, 250));
 
       if (toObserve) {
-        for (var i = 0; i < toObserve.length; i++) { //could be multiple elements with querySelectorAll
+        for (let i = 0; i < toObserve.length; i++) { //could be multiple elements with querySelectorAll
           observer.observe(toObserve[i], {
             attributes: true,
             childList: true,
@@ -209,8 +212,9 @@
       }
     },
     newElement: function(type, elementDetails) {
-      var extras = {},
-        allowed = ['text', 'checkbox', 'radio', 'textarea', 'span'];
+      const extras = {};
+      const allowed = ['text', 'checkbox', 'radio', 'textarea', 'span'];
+
       if (allowed.indexOf(type) != -1) {
         if (type == 'text') {
           type = 'input';
@@ -244,14 +248,12 @@
     // answer ID, question ID, user ID, comment ID ("posts/comments/ID" NOT "comment1545_5566")
     getIDFromLink: function(link) {
       // test cases: https://regex101.com/r/6P9sDX/2
-      var idMatch = link.match(/\/(\d+)($|\/|\?)/);
-
+      const idMatch = link.match(/\/(\d+)($|\/|\?)/);
       return idMatch ? +idMatch[1] : null;
     },
     getSiteNameFromLink: function(link) {
-      var siteRegex = /(((.+)\.)?(stackexchange|stackoverflow|superuser|serverfault|askubuntu|stackapps|mathoverflow|programmers|bitcoin))\.com/,
-        siteMatch = link.replace(/https?:\/\//, '').match(siteRegex);
-
+      const siteRegex = /(((.+)\.)?(stackexchange|stackoverflow|superuser|serverfault|askubuntu|stackapps|mathoverflow|programmers|bitcoin))\.com/;
+      const siteMatch = link.replace(/https?:\/\//, '').match(siteRegex);
       return siteMatch ? siteMatch[1] : null;
     },
   };
@@ -317,9 +319,9 @@
         }
         return false;
       }
-      var currentSiteScheme, currentSiteHost, currentSitePath;
+      let currentSiteScheme; let currentSiteHost; let currentSitePath;
       if (urlToMatchWith) {
-        var split = urlToMatchWith.split('/');
+        const split = urlToMatchWith.split('/');
         currentSiteScheme = split[0];
         currentSiteHost = split[2];
         currentSitePath = '/' + split.slice(-(split.length - 3)).join('/');
@@ -329,11 +331,11 @@
         currentSitePath = location.pathname;
       }
 
-      var matchSplit = pattern.split('/'),
-        matchScheme = matchSplit[0],
-        matchHost = matchSplit[2],
-        matchPath = matchSplit.slice(-(matchSplit.length - 3)).join('/');
-
+      const matchSplit = pattern.split('/');
+      let matchScheme = matchSplit[0];
+      let matchHost = matchSplit[2];
+      let matchPath = matchSplit.slice(-(matchSplit.length - 3)).join('/');
+      
       matchScheme = matchScheme.replace(/\*/g, '.*');
       matchHost = matchHost.replace(/\./g, '\\.').replace(/\*\\\./g, '.*.?').replace(/\\\.\*/g, '.*').replace(/\*$/g, '.*');
       matchPath = '^/' + matchPath.replace(/\//g, '\\/').replace(/\*/g, '.*');
@@ -364,7 +366,7 @@
       if (sox.site.type == sox.site.types.chat) {
         return Chat.RoomUsers.current().name;
       } else {
-        var $uname = $('.top-bar div.gravatar-wrapper-24'); //used to be $('body > div.topbar > div > div.topbar-links > a > div.gravatar-wrapper-24');
+        const $uname = $('.top-bar div.gravatar-wrapper-24'); //used to be $('body > div.topbar > div > div.topbar-links > a > div.gravatar-wrapper-24');
         return ($uname.length ? $uname.attr('title') : false);
       }
     },
@@ -373,7 +375,7 @@
     },
     hasPrivilege: function(privilege) {
       if (this.loggedIn) {
-        var rep = (sox.site.type == 'beta' ? commonInfo.privileges.beta[privilege] : commonInfo.privileges.graduated[privilege]);
+        const rep = (sox.site.type == 'beta' ? commonInfo.privileges.beta[privilege] : commonInfo.privileges.graduated[privilege]);
         return this.rep > rep;
       }
       return false;

@@ -27,8 +27,11 @@
             "always"
         ],
         "comma-dangle": ["error", "always-multiline"],
-        "no-console":"off",
+        "no-console": "off",
         "prefer-arrow-callback":"warn",
-        "no-trailing-spaces":"error"
+        "no-trailing-spaces":"error",
+        "prefer-const": "warn",
+        "one-var": ["warn", "never"],
+        "no-multiple-empty-lines": ["warn", { "max": 1 }]
     }
 }

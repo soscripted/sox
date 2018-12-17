@@ -3,7 +3,7 @@
 // @namespace    https://github.com/soscripted/sox
 // @homepage     https://github.com/soscripted/sox
 // @homepageURL  https://github.com/soscripted/sox
-// @version      2.3.19 DEV
+// @version      2.3.20 DEV
 // @description  Extra optional features for Stack Overflow and Stack Exchange sites
 // @contributor  ᴉʞuǝ (https://stackoverflow.com/users/1454538/, https://github.com/mezmi)
 // @contributor  ᔕᖺᘎᕊ (https://stackexchange.com/users/4337810/, https://github.com/shu8)
@@ -63,7 +63,7 @@
 
     if (sox.location.on('soscripted.github.io/sox/#access_token')) { //save access token
       try {
-        var access_token = window.location.href.split('=')[1].split('&')[0];
+        const access_token = window.location.href.split('=')[1].split('&')[0];
         sox.loginfo('SOX ACCESS TOKEN: ', access_token);
         GM_setValue('SOX-accessToken', access_token);
         alert('Access token successfully saved! You can close this window :)');
@@ -85,8 +85,10 @@
       href: 'https://use.fontawesome.com/releases/v5.1.0/css/all.css',
     }).appendTo('head');
 
-    var settings = sox.settings.load(), //returns undefined if not set
-      featureInfo = JSON.parse(GM_getResourceText('featuresJSON'));
+    const settings = sox.settings.load();
+    //returns undefined if not set
+
+    const featureInfo = JSON.parse(GM_getResourceText('featuresJSON'));
 
     try {
       sox.debug('init', sox, sox.dialog);
@@ -102,9 +104,10 @@
 
     if (sox.settings.available) {
       // execute features
-      for (var i = 0; i < settings.length; ++i) {
-        var category = settings[i].split('-')[0],
-          featureId = settings[i].split('-')[1];
+      for (let i = 0; i < settings.length; ++i) {
+        var category = settings[i].split('-')[0];
+
+        var featureId = settings[i].split('-')[1];
 
         if (!(category in featureInfo.categories)) { //if we ever rename a category
           sox.loginfo('Deleting feature "' + settings[i] + '" (category rename?)');
@@ -114,11 +117,14 @@
         }
 
         var feature = featureInfo.categories[category].filter((obj) => {
-            return obj.name == featureId;
-          })[0],
-          runFeature = true,
-          sites,
-          pattern;
+          return obj.name == featureId;
+        })[0];
+
+        var runFeature = true;
+
+        var sites;
+
+        var pattern;
 
         try {
           //NOTE: there is no else if() because it is possible to have both match and exclude patterns..
@@ -148,7 +154,7 @@
           if (runFeature) {
             sox.debug('running ' + featureId);
             if (feature.settings) {
-              var settingsToPass = GM_getValue('SOX-' + featureId + '-settings') ? JSON.parse(GM_getValue('SOX-' + featureId + '-settings')) : {};
+              const settingsToPass = GM_getValue('SOX-' + featureId + '-settings') ? JSON.parse(GM_getValue('SOX-' + featureId + '-settings')) : {};
               sox.features[featureId](settingsToPass); //run the feature if match and exclude conditions are met, pass on settings object
             } else {
               sox.features[featureId](); //run the feature if match and exclude conditions are met
@@ -167,7 +173,6 @@
         }
       }
     }
-
 
     //custom events....
     sox.helpers.observe('.new_comment', () => { //custom event that triggers when a new comment appears/show more comments clicked; avoids lots of the same mutationobserver
@@ -192,7 +197,7 @@
       //and detects that page and saves it automatically.
       //this seems to be a much cleaner and easier-to-debug method!
       GM_setValue('SOX-accessToken', -2); //once we ask the user once, don't ask them again: set the value to -2 so this IF never evaluates to true
-      var askUserToAuthorise = window.confirm('To get the most out of SOX, you should get an access token! Please press "OK" to continue and follow the instructions in the window that opens. NOTE: this message will not appear again; if you choose not to, you can click the key at the bottom of the settings dialog at anytime to get one.');
+      const askUserToAuthorise = window.confirm('To get the most out of SOX, you should get an access token! Please press "OK" to continue and follow the instructions in the window that opens. NOTE: this message will not appear again; if you choose not to, you can click the key at the bottom of the settings dialog at anytime to get one.');
       if (askUserToAuthorise) window.open('https://stackexchange.com/oauth/dialog?client_id=7138&scope=no_expiry&redirect_uri=http://soscripted.github.io/sox/');
       sox.warn('Please go to the following URL to get your access token for certain SOX features', 'https://stackexchange.com/oauth/dialog?client_id=7138&scope=no_expiry&redirect_uri=http://soscripted.github.io/sox/');
     }
