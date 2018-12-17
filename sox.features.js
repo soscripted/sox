@@ -2444,9 +2444,9 @@
         },
 
         addOnTopicLinkToSiteSwitcher: function() {
-            // Description: Adds a 'on-topic' link to the site switcher dropdown next to the 'help' button
+            // Description: Replaces 'help' with an 'on-topic' link in the site switcher dropdown
 
-            $('.top-bar .related-links').prepend('<a href="/help/on-topic">on-topic</a>');
+            $('.top-bar .related-links').find('a').eq(0).replaceWith('<a href="/help/on-topic">on-topic</a>');
         },
 
     };

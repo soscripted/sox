@@ -29,7 +29,8 @@
 
                 //array of HTML strings that will be displayed as `li` items if the user has installed a new version.
                 changes = ['Introduced \'feature packs\' -- easily find and enable features we would categorise as \'major UI tweaks\', \'key features\', or \'power user fetures\'!',
-                    'You will no longer be forced to get an access token. If you choose not to, SOX will simply disable features that need one. Thanks @Izzy for the suggestion!'];
+                    'You will no longer be forced to get an access token. If you choose not to, SOX will simply disable features that need one. Thanks @Izzy for the suggestion!',
+                    'Deprecated paste images feature -- it has been implemented natively by SE now!'];
 
             function addCategory(name) {
                 let $div = $('<div/>', {

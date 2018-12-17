@@ -534,7 +534,7 @@
             "usesApi": true
         }, {
             "name": "addOnTopicLinkToSiteSwitcher",
-            "desc": "Add an 'on-topic' link to the site switcher dropdown next to the 'help' button",
+            "desc": "Replace the 'help' link with an 'on-topic' link in the site switcher dropdown",
             "meta": "",
             "match": "",
             "exclude": "*://chat.*.com/*,SE1.0"
