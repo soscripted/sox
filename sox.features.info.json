@@ -538,6 +538,14 @@
             "meta": "",
             "match": "",
             "exclude": "*://chat.*.com/*,SE1.0"
+        }, {
+            "name": "customMagicLinks",
+            "desc": "Add custom magic links to comments and posts",
+            "extended_description": "Allows you to create your own magic links ('[text]' auto-converts to a link of your choice). Links can use the placeholders $BASEURL, $METABASEURL, $QUESTIONID, and $ANSWERID which are auto-replaced with the respective data. You can set the reasons by clicking the 'Magic Links' button added to the 'Help' dropdown at the top-right of the page. See https://stackapps.com/q/6650 for more details.",
+            "meta": "",
+            "match": "*://*/questions*",
+            "exclude": "",
+            "feature_packs": ["power_user"]
         }]
     }
 }

@@ -45,7 +45,6 @@
     }
   };
 
-  //var Stack = (typeof StackExchange === "undefined" ? window.eval('if (typeof StackExchange != "undefined") StackExchange') : StackExchange) | undefined;
   let Chat;
   let Stack;
   if (location.href.indexOf('github.com') === -1) { //need this so it works on FF -- CSP blocks window.eval() it seems
@@ -256,6 +255,50 @@
       const siteMatch = link.replace(/https?:\/\//, '').match(siteRegex);
       return siteMatch ? siteMatch[1] : null;
     },
+    createModal: function (params) {
+      const $dialog = $('<aside/>', {
+        'class': 's-modal js-modal-overlay js-modal-close js-stacks-managed-popup js-fades-with-aria-hidden sox-custom-dialog',
+        'role': 'dialog',
+        'aria-hidden': false,
+      });
+      if (params.css) $dialog.css(params.css);
+      const $dialogInnerContainer = $('<div/>', {
+        'class': 's-modal--dialog js-modal-dialog ',
+        'style': 'min-width: 568px;',// top: 227.736px; left: 312.653px;',
+      });
+      const $header = $('<h1/>', {
+        'class': 's-modal--header fs-headline1 fw-bold mr48 js-first-tabbable',
+        'text': params.header,
+      });
+      const $mainContent = $('<div/>', {
+        'class': 's-modal--body sox-custom-dialog-content',
+      });
+      if (params.html) $mainContent.html(params.html);
+      const $closeButton = $('<button/>', {
+        'class': 's-modal--close s-btn s-btn__muted js-modal-close js-last-tabbable',
+        'click': () => $('.sox-custom-dialog').remove(),
+      }).append($('<svg aria-hidden="true" class="svg-icon m0 iconClearSm" width="14" height="14" viewBox="0 0 14 14"><path d="M12 3.41L10.59 2 7 5.59 3.41 2 2 3.41 5.59 7 2 10.59 3.41 12 7 8.41 10.59 12 12 10.59 8.41 7z"></path></svg>'));
+
+      $dialogInnerContainer.append($header).append($mainContent).append($closeButton);
+      $dialog.append($dialogInnerContainer);
+
+      return $dialog;
+    },
+    addButtonToHelpMenu: function (params) {
+      const $li = $('<li/>');
+      const $a = $('<a/>', {
+        'href': 'javascript:void(0)',
+        'id': params.id,
+        'text': params.linkText,
+      });
+      const $span = $('<span/>', {
+        'class': 'item-summary',
+        'text': params.summary,
+        'click': params.click,
+      });
+      $li.append($a.append($span));
+      $('.topbar-dialog.help-dialog.js-help-dialog > .modal-content ul').append($li);
+    },
   };
 
   sox.site = {
@@ -335,7 +378,7 @@
       let matchScheme = matchSplit[0];
       let matchHost = matchSplit[2];
       let matchPath = matchSplit.slice(-(matchSplit.length - 3)).join('/');
-      
+
       matchScheme = matchScheme.replace(/\*/g, '.*');
       matchHost = matchHost.replace(/\./g, '\\.').replace(/\*\\\./g, '.*.?').replace(/\\\.\*/g, '.*').replace(/\*$/g, '.*');
       matchPath = '^/' + matchPath.replace(/\//g, '\\/').replace(/\*/g, '.*');

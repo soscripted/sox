@@ -429,20 +429,22 @@
           //reset textbox values to empty
           $('#displayReason').val('');
           $('#actualReason').val('');
-
         }
       });
 
-      setTimeout(() => {
-        addCheckboxes();
-        //Add the button to update and view the values in the help menu:
-        $('.topbar-dialog.help-dialog.js-help-dialog > .modal-content ul').append('<li><a href=\'javascript:void(0)\' id=\'editReasonsLink\'>Edit Reasons     \
-                                                                                      <span class=\'item-summary\'>Edit your personal edit reasons for SE sites</span></a></li>');
-        $('.topbar-dialog.help-dialog.js-help-dialog > .modal-content ul #editReasonsLink').on('click', () => {
+      addCheckboxes();
+
+      //Add the button to update and view the values in the help menu:
+      sox.helpers.addButtonToHelpMenu({
+        'id': 'editReasonsLink',
+        'linkText': 'Edit Reasons',
+        'summary': 'Edit your personal edit reasons for SE sites',
+        'click': function () {
           displayDeleteValues();
           $('#dialogEditReasons').show(500); //Show the dialog to view and update values
-        });
-      }, 500);
+        },
+      });
+
       $(document).on('sox-edit-window', addCheckboxes);
 
       $('.post-menu > .edit-post').click(() => {
@@ -690,7 +692,7 @@
 
       function updateTS() {
         const utcTimestamp = $(this).attr('title');
-        const matches = utcTimestamp.match(/^([\d]{4})-([\d]{2})-([\d]{2}) ([\d]{2}):([\d]{2}):([\d]{2}) ?(?:Z|UTC|GMT(?:[+\-]00:?00))$/);
+        const matches = utcTimestamp.match(/^([\d]{4})-([\d]{2})-([\d]{2}) ([\d]{2}):([\d]{2}):([\d]{2}) ?(?:Z|UTC|GMT(?:[+-]00:?00))$/);
         const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
         if (!matches) return;
@@ -2478,5 +2480,137 @@
       $('.top-bar .related-links').find('a').eq(0).replaceWith('<a href="/help/on-topic">on-topic</a>');
     },
 
+    customMagicLinks: function () {
+      // Description: Adds custom magic links to the post and comment editors
+
+      var magicLinks = JSON.parse(GM_getValue('SOX-customMagicLinks', '[]'));
+      // magicLinks = [ { text: 'edit/q', replacement: 'Edit Question', link: '$BASEURL$/posts/$QUESTIONID$/edit' }];
+
+      function updateGMValue(magicLinks) {
+        GM_setValue('SOX-customMagicLinks', JSON.stringify(magicLinks));
+      }
+
+      function generateSettingsTableHtml(magicLinks) {
+        const $magicLinksTable = $(`
+        <table class='sox-customMagicLinks-settings-table'>
+          <tr>
+            <th>Text</th>
+            <th>Replacement</th>
+            <th>Link</th>
+          </tr>
+        </table>`);
+        for (let i = 0; i < magicLinks.length; i++) {
+          const currentLink = magicLinks[i];
+          const $saveButton = $('<button/>', {
+            'text': 'save',
+            'click': function () {
+              const $parentTr = $(this).parent().parent();
+              const index = $parentTr.attr('data-magic-link-index');
+              magicLinks[index].text = $parentTr.find('.magic-link-text').text();
+              magicLinks[index].replacement = $parentTr.find('.magic-link-replacement').text();
+              magicLinks[index].link = $parentTr.find('.magic-link-link').text();
+              window.alert('Your changes were saved!');
+              updateGMValue(magicLinks);
+            },
+          });
+          const $deleteButton = $('<button/>', {
+            'text': 'delete',
+            'click': function () {
+              magicLinks.splice($(this).parent().attr('data-magic-link-index'), 1);
+              $(this).parent().parent().remove();
+              updateGMValue(magicLinks);
+            },
+          });
+          const $linkDetails = $(
+            `<tr class='sox-magic-link-details' data-magic-link-index=${i}>
+              <td contenteditable class='magic-link-text'>${currentLink.text}</td>
+              <td contenteditable class='magic-link-replacement'>${currentLink.replacement}</td>
+              <td contenteditable class='magic-link-link'>${currentLink.link}</td>
+            </tr>`);
+          $linkDetails.append($('<td/>').append($saveButton)).append($('<td/>').append($deleteButton));
+          $magicLinksTable.append($linkDetails);
+        }
+        return $magicLinksTable;
+      }
+
+      function replacePlaceholders(text, $textarea) {
+        const baseUrl = $(location).attr('protocol') + '//' + $(location).attr('hostname');
+        const localMetaBase = $(location).attr('protocol') + '//meta.' + $(location).attr('hostname');
+        const questionId = $('.question').data('questionid');
+        const answerId = $textarea.closest('.answer').data('answerid');
+
+        return text
+          .replace(/\$BASEURL\$/ig, baseUrl)
+          .replace(/\$METABASEURL\$/ig, localMetaBase)
+          .replace(/\$QUESTIONID\$/ig, questionId)
+          .replace(/\$ANSWERID\$/ig, answerId);
+      }
+
+      function magicLink($el) {
+        const $textarea = $el.is('textarea') ? $el : $el.parents('form').find('textarea').eq(0);
+        var newVal = $textarea.val();
+        for (let i = 0; i < magicLinks.length; i++) {
+          const currentMagicLink = magicLinks[i];
+          const replacementText = currentMagicLink.replacement;
+          const url = replacePlaceholders(currentMagicLink.link, $textarea);
+          const regex = new RegExp('\\[' + currentMagicLink.text + '\\]', 'g');
+          newVal = newVal.replace(regex, '[' + replacementText + '](' + url + ')');
+        }
+        $textarea.val(newVal);
+      }
+
+      $(document).on('keydown', '.comment-form textarea', function (e) {
+        if (e.keyCode == 13) magicLink($(this));
+      });
+      $(document).on('click', '.comment-form input[type="submit"], .form-submit #submit-button, form.inline-post button[id*="submit-button-"]', function (e) {
+        magicLink($(this));
+      });
+
+      function createSettingsDialog(magicLinks) {
+        const $settingsDialog = sox.helpers.createModal({
+          'header': 'SOX: Magic Link Settings',
+          'css': {
+            'min- width': '50%',
+          },
+          'html': '<i>the table cells below are editable; be sure to save any changes!</i><br><br><div class="table-container"></div>',
+        });
+        const $settingsDialogContent = $settingsDialog.find('.sox-custom-dialog-content');
+
+        const $newMagicLinkButton = $('<button/>', {
+          'text': 'new link',
+          'click': function () {
+            const text = window.prompt('Enter the magic link text (e.g. edit/q)');
+            const replacement = window.prompt('Enter the text you would like the link to show as (e.g. Edit Question)');
+            const link = window.prompt('Enter the replacement link, using the placeholders as required');
+
+            if (text && replacement && link) {
+              magicLinks.push({
+                text,
+                replacement,
+                link,
+              });
+              updateGMValue(magicLinks);
+              $settingsDialogContent.find('.table-container table').remove();
+              $settingsDialogContent.find('.table-container').append(generateSettingsTableHtml(magicLinks));
+            } else {
+              window.alert('Please enter details for all three fields');
+            }
+          },
+        });
+        $settingsDialogContent.find('.table-container').append(generateSettingsTableHtml(magicLinks));
+        $settingsDialogContent.append($newMagicLinkButton);
+
+        $('body').append($settingsDialog);
+      }
+
+      sox.helpers.addButtonToHelpMenu({
+        'id': 'magicLinksSettingsLink',
+        'linkText': 'Magic Links',
+        'summary': 'Edit your custom magic links for SE sites',
+        'click': function () {
+          createSettingsDialog(magicLinks);
+        },
+      });
+    },
   };
 })(window.sox = window.sox || {}, jQuery);

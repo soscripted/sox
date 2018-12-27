@@ -285,6 +285,7 @@
 }
 
 .fixedTopbar-linksList {
+    box-sizing: border-box;
     -moz-box-sizing: border-box;
     background: none repeat scroll 0 0 #fff;
 }
@@ -350,7 +351,7 @@ li.fixedTopbar-siteLink {
 }
 
 .post-editor.sbs-on {
-    width: 1360px !important; //width: 1060px !important;
+    width: 1360px !important;
 }
 
 .sbs-on-left-side {
@@ -615,4 +616,19 @@ li.fixedTopbar-siteLink {
 /* editComment -- for the checkboxes shown when editin */
 .sox-editComment-reason {
     display: inline-block !important;
+}
+
+/* customMagicLinks -- for the settings table in the dialog */
+.sox-customMagicLinks-settings-table {
+    margin-bottom: 10px;
+}
+
+.sox-customMagicLinks-settings-table td,
+.sox-customMagicLinks-settings-table th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.sox-customMagicLinks-settings-table th {
+    font-weight: bold;
 }
