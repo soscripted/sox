@@ -935,7 +935,7 @@
     metaNewQuestionAlert: function() {
       // Description: For adding a fake mod diamond that notifies you if there has been a new post posted on the current site's meta
 
-      //DO NOT RUN ON META OR CHAT OR SITES WITHOUT A META
+      //Do not run on meta, chat, or sites without a meta
       if ((sox.site.type != 'main' && sox.site.type != 'beta') || !$('.related-site').length) return;
 
       var NEWQUESTIONS = 'metaNewQuestionAlert-lastQuestions';
@@ -949,9 +949,11 @@
       });
       var $header = $('<div/>', {
         'class': 'header',
-      }).append($('<h3/>', {
+      }).append($('<h3/>').append($('<a/>', {
         text: 'new meta posts',
-      }));
+        href: `//meta.${sox.site.url}`,
+        style: 'color: #0077cc',
+      })));
       var $content = $('<div/>', {
         'class': 'modal-content',
       });
