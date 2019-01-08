@@ -438,7 +438,7 @@
       sox.helpers.addButtonToHelpMenu({
         'id': 'editReasonsLink',
         'linkText': 'Edit Reasons',
-        'summary': 'Edit your personal edit reasons for SE sites',
+        'summary': 'Edit your personal edit reasons (edit summary checkboxes)',
         'click': function () {
           displayDeleteValues();
           $('#dialogEditReasons').show(500); //Show the dialog to view and update values
@@ -2561,12 +2561,14 @@
         $textarea.val(newVal);
       }
 
-      $(document).on('keydown', '.comment-form textarea', function (e) {
-        if (e.keyCode == 13) magicLink($(this));
-      });
-      $(document).on('click', '.comment-form input[type="submit"], .form-submit #submit-button, form.inline-post button[id*="submit-button-"]', function (e) {
-        magicLink($(this));
-      });
+      if (sox.site.href.indexOf('/questions') !== -1) {
+        $(document).on('keydown', '.comment-form textarea', function (e) {
+          if (e.keyCode == 13) magicLink($(this));
+        });
+        $(document).on('click', '.comment-form input[type="submit"], .form-submit #submit-button, form.inline-post button[id*="submit-button-"]', function (e) {
+          magicLink($(this));
+        });
+      }
 
       function createSettingsDialog(magicLinks) {
         const $settingsDialog = sox.helpers.createModal({
@@ -2608,7 +2610,7 @@
       sox.helpers.addButtonToHelpMenu({
         'id': 'magicLinksSettingsLink',
         'linkText': 'Magic Links',
-        'summary': 'Edit your custom magic links for SE sites',
+        'summary': 'Edit your custom magic links',
         'click': function () {
           createSettingsDialog(magicLinks);
         },

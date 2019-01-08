@@ -289,7 +289,7 @@
       const $a = $('<a/>', {
         'href': 'javascript:void(0)',
         'id': params.id,
-        'text': params.linkText,
+        'text': `SOX: ${params.linkText}`,
       });
       const $span = $('<span/>', {
         'class': 'item-summary',
@@ -297,6 +297,7 @@
         'click': params.click,
       });
       $li.append($a.append($span));
+      console.log($li);
       $('.topbar-dialog.help-dialog.js-help-dialog > .modal-content ul').append($li);
     },
   };
