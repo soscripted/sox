@@ -1656,7 +1656,7 @@
       $table.append($row).appendTo($topAnswers);
 
       function score(e) {
-        return +$(e).parent().find('.vote-count-post').text();
+        return +$(e).parent().find('.js-vote-count').text();
       }
 
       function compareByScore(a, b) {
@@ -1667,7 +1667,7 @@
         count++;
         const id = $(this).find('.short-link').attr('id').replace('link-post-', '');
 
-        const score = $(this).prev().find('.vote-count-post').text();
+        const score = $(this).prev().find('.js-vote-count').text();
 
         let icon = 'vote-up-off';
 
