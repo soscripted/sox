@@ -270,48 +270,6 @@
     overflow: auto;
 }
 
-/*fixedTopbar */
-
-/*Ubuntu CSS by @UnicornsAreVeryVeryYummy - http://stackapps.com/users/33746/unicorns-are-very-very-yummy */
-
-.fixedTopbar-links {
-    z-index: 10001;
-    line-height: 19.2px;
-    -moz-box-shadow: 0 0 4px #ccc;
-    -webkit-box-shadow: 0 0 4px #ccc;
-    box-shadow: 0 0 4px #ccc;
-    font-family: Ubuntu, Arial, "libra sans", sans-serif;
-    font-weight: 300;
-}
-
-.fixedTopbar-linksList {
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    background: none repeat scroll 0 0 #fff;
-}
-
-li.fixedTopbar-activeSite {
-    border-right: 3px solid #dd4814;
-}
-
-ul.fixedTopbar-siteLink {
-    list-style: none;
-    list-style-type: none;
-}
-
-li.fixedTopbar-siteLink {
-    display: inline-block;
-    margin-left: 10px;
-}
-
-.fixedTopbar-stickyToolbar {
-    position: fixed;
-    top: 0px;
-    left: 50%;
-    margin-left: -545px;
-    z-index: 1000;
-}
-
 /*Side by Side Editing (SBS, addSBSBtn, startSBS): https://github.com/szego/SE-Answers_scripts/blob/side-by-side/editing-and-toggling/side-by-side-editing.user.js:*/
 
 #sidebar.sbs-on {
@@ -460,43 +418,6 @@ li.fixedTopbar-siteLink {
     background: black;
 }
 
-/*downvotedPostsEditAlert -- for the button and dropdown*/
-
-#downvotedPostsEditAlertButton {
-    background-image: none;
-    font-size: 14px;
-    color: #9fa6ad;
-    min-width: 34px;
-    cursor: pointer;
-}
-
-#downvotedPostsEditAlertButton:hover {
-    color: #999;
-}
-
-.downvotedPostsEditAlertButtonCount {
-    background-color: red;
-    width: 22px;
-    margin-left: 4px;
-    border-radius: 10px;
-    color: white;
-    font-weight: bold;
-    position: absolute;
-    font-size: 20px;
-    top: 8px;
-}
-
-#downvotedPostsEditAlertDialog {
-    right: 273px;
-    width: 377px;
-    display: none;
-}
-
-#downvotedPostsEditAlertButton.glow {
-    -webkit-text-stroke-color: blue;
-    -webkit-text-stroke-width: 3px;
-}
-
 /*commentReplies -- for the reply buttons*/
 
 .soxReplyLink {
@@ -613,7 +534,21 @@ li.fixedTopbar-siteLink {
     border: 1px dotted black;
 }
 
-/* editComment -- for the checkboxes shown when editin */
+/* editComment -- for the dialog and checkboxes shown when editing */
+.sox-editComment-currentValues {
+    border: 1px solid black;
+    padding: 12px;
+}
+
+.sox-editComment-deleteDialogButton {
+    margin-left: 5px;
+    padding: 5px;
+    min-height: 2.2em;
+    background-color: #dc3545 !important;
+    border-color: #dc3545 !important;
+    box-shadow: none !important;
+}
+
 .sox-editComment-reason {
     display: inline-block !important;
 }

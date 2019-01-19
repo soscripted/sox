@@ -262,6 +262,7 @@
         'aria-hidden': false,
       });
       if (params.css) $dialog.css(params.css);
+      if (params.id) $dialog.attr('id', params.id);
       const $dialogInnerContainer = $('<div/>', {
         'class': 's-modal--dialog js-modal-dialog ',
         'style': 'min-width: 568px;',// top: 227.736px; left: 312.653px;',
@@ -294,10 +295,9 @@
       const $span = $('<span/>', {
         'class': 'item-summary',
         'text': params.summary,
-        'click': params.click,
       });
+      $li.on('click', params.click);
       $li.append($a.append($span));
-      console.log($li);
       $('.topbar-dialog.help-dialog.js-help-dialog > .modal-content ul').append($li);
     },
   };

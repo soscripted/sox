@@ -302,6 +302,15 @@
     editComment: function() {
       // Description: For adding checkboxes when editing to add pre-defined edit reasons
 
+      const DEFAULT_OPTIONS = [
+        ['formatting', 'Improved Formatting'],
+        ['spelling', 'Corrected Spelling'],
+        ['grammar', 'Fixed grammar'],
+        ['greetings', 'Removed thanks/greetings'],
+        ['retag', 'Improved usage of tags'],
+        ['title', 'Improved title'],
+      ];
+
       function addCheckboxes() {
         sox.debug('editComment addCheckboxes() called');
         const $editCommentField = $('input[id^="edit-comment"]'); //NOTE: input specifcally needed, due to https://github.com/soscripted/sox/issues/363
@@ -352,69 +361,20 @@
         }
       }
 
-      function displayDeleteValues() {
-        //Display the items from list and add buttons to delete them
-
-        $('#currentValues').html(' ');
-        $.each(JSON.parse(GM_getValue('editReasons')), function(i) {
-          $('#currentValues').append(this[0] + ' - ' + this[1] + '<input type="button" id="' + i + '" value="Delete"><br />');
-        });
-        addCheckboxes();
-      }
-
-      const div = '<div id="dialogEditReasons" class="sox-centered wmd-prompt-dialog"><span id="closeDialogEditReasons" style="float:right;">Close</span><span id="resetEditReasons" style="float:left;">Reset</span> \
-                        <h2>View/Remove Edit Reasons</h2> \
-                        <div id="currentValues"></div> \
-                        <br /> \
-                        <h3>Add a custom reason</h3> \
-                        Display Reason:	<input type="text" id="displayReason"> \
-                        <br /> \
-                        Actual Reason: <input type="text" id="actualReason"> \
-                        <br /> \
-                        <input type="button" id="submitUpdate" value="Submit"> \
-                    </div>';
-
-      $('body').append(div);
-      $('#dialogEditReasons').draggable().css('position', 'absolute').css('text-align', 'center').css('height', '60%').hide();
-
-      $('#closeDialogEditReasons').css('cursor', 'pointer').click(function() {
-        $(this).parent().hide(500);
-      });
-
-      $('#resetEditReasons').css('cursor', 'pointer').click(() => { //manual reset
-        const options = [ //Edit these to change the default settings
-          ['formatting', 'Improved Formatting'],
-          ['spelling', 'Corrected Spelling'],
-          ['grammar', 'Fixed grammar'],
-          ['greetings', 'Removed thanks/greetings'],
-        ];
-        if (confirm('Are you sure you want to reset the settings to Formatting, Spelling, Grammar and Greetings')) {
-          GM_setValue('editReasons', JSON.stringify(options));
-          alert('Reset options to default. Refreshing...');
-          location.reload();
-        }
-      });
-
       if (GM_getValue('editReasons', -1) == -1) { //If settings haven't been set/are empty
-        const defaultOptions = [
-          ['formatting', 'Improved Formatting'],
-          ['spelling', 'Corrected Spelling'],
-          ['grammar', 'Fixed grammar'],
-          ['greetings', 'Removed thanks/greetings'],
-        ];
-        GM_setValue('editReasons', JSON.stringify(defaultOptions)); //save the default settings
+        GM_setValue('editReasons', JSON.stringify(DEFAULT_OPTIONS)); //save the default settings
       } else {
         var options = JSON.parse(GM_getValue('editReasons')); //If they have, get the options
       }
 
-      $('#dialogEditReasons').on('click', 'input[value="Delete"]', function() { //Click handler to delete when delete button is pressed
+      $(document).on('click', '#dialogEditReasons input[value = "Delete"]', function() { //Click handler to delete when delete button is pressed
         const delMe = $(this).attr('id');
         options.splice(delMe, 1); //actually delete it
         GM_setValue('editReasons', JSON.stringify(options)); //save it
         displayDeleteValues(); //display the items again (update them)
       });
 
-      $('#submitUpdate').click(() => { //Click handler to update the array with custom value
+      $(document).on('click', '#dialogEditReasons #submitUpdate', () => { //Click handler to update the array with custom value
         if (!$('#displayReason').val() || !$('#actualReason').val()) {
           alert('Please enter something in both the textboxes!');
         } else {
@@ -432,7 +392,45 @@
         }
       });
 
-      addCheckboxes();
+      function displayDeleteValues() {
+        //Display the items from list and add buttons to delete them
+
+        $('#currentValues').html(' ');
+        $.each(JSON.parse(GM_getValue('editReasons')), function (i) {
+          $('#currentValues').append(this[0] + ' - ' + this[1] + '<input class="sox-editComment-deleteDialogButton" type="button" id="' + i + '" value="Delete"><br />');
+        });
+        addCheckboxes();
+      }
+
+      function createDialogEditReasons() {
+        const $settingsDialog = sox.helpers.createModal({
+          'header': 'SOX: View/Remove Edit Reasons',
+          'id': 'dialogEditReasons',
+          'css': {
+            'min- width': '50%',
+          },
+          'html': `<div id="currentValues" class="sox-editComment-currentValues"></div>
+                  <br />
+                  <h3>Add a custom reason</h3>
+                  Display Reason:	<input type="text" id="displayReason">
+                  <br />
+                  Actual Reason: <input type="text" id="actualReason">
+                  <br />
+                  <input type="button" id="submitUpdate" value="Submit">
+                  <input type="button" id="resetEditReasons" style="float:right;" value="Reset">`,
+        });
+
+        $(document).on('click', '#resetEditReasons', () => { //manual reset
+          if (confirm('Are you sure you want to reset the settings to the default ones?')) {
+            GM_setValue('editReasons', JSON.stringify(DEFAULT_OPTIONS));
+            alert('Reset options to default. Refreshing...');
+            location.reload();
+          }
+        });
+
+        $('body').append($settingsDialog);
+        $('#dialogEditReasons').show(500);
+      }
 
       //Add the button to update and view the values in the help menu:
       sox.helpers.addButtonToHelpMenu({
@@ -440,19 +438,13 @@
         'linkText': 'Edit Reasons',
         'summary': 'Edit your personal edit reasons (edit summary checkboxes)',
         'click': function () {
+          createDialogEditReasons(); //Show the dialog to view and update values
           displayDeleteValues();
-          $('#dialogEditReasons').show(500); //Show the dialog to view and update values
         },
       });
 
+      addCheckboxes();
       $(document).on('sox-edit-window', addCheckboxes);
-
-      $('.post-menu > .edit-post').click(() => {
-        sox.debug('editComment edit post button clicked');
-        setTimeout(() => {
-          addCheckboxes();
-        }, 500);
-      });
     },
 
     shareLinksPrivacy: function() {
