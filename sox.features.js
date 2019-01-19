@@ -1012,36 +1012,44 @@
         const items = json.items;
         const latestQuestion = items[0].title;
 
+        // Make diamond blue if there's a new question
         if (latestQuestion != lastQuestions[metaName]) {
           $diamond.css('color', '#0077cc');
-
-          for (let i = 0, len = items.length; i < len; i++) {
-            const title = items[i].title;
-            const link = items[i].link;
-
-            addQuestion(title, link);
-          }
-
-          lastQuestions[metaName] = latestQuestion;
-
-          $diamond.click(() => {
-            GM_setValue(NEWQUESTIONS, JSON.stringify(lastQuestions));
-          });
         }
+
+        let seen = false;
+        // Regardless of if there's a new question, show the latest 5
+        for (let i = 0, len = items.length; i < len; i++) {
+          const title = items[i].title;
+          const link = items[i].link;
+          // If one's been seen, the older questions must also have been seen
+          if (title === lastQuestions[metaName]) seen = true;
+
+          addQuestion(title, link, seen);
+        }
+
+        lastQuestions[metaName] = latestQuestion;
+
+        $diamond.click(() => {
+          GM_setValue(NEWQUESTIONS, JSON.stringify(lastQuestions));
+        });
       }, 'activity&pagesize=5');
 
-      function addQuestion(title, link) {
+      function addQuestion(title, link, seen) {
         const $li = $('<li/>');
         const $link = $('<a/>', {
           href: link,
+          style: 'display: flex',
         });
         const $icon = $('<div/>', {
           'class': 'site-icon favicon ' + favicon,
+          style: 'margin-right: 3px',
         });
         const $message = $('<div/>', {
           'class': 'message-text',
         }).append($('<h4/>', {
           html: title,
+          style: `font-weight: ${seen ? 'normal' : 'bold'}`,
         }));
 
         $link.append($icon).append($message).appendTo($li);
