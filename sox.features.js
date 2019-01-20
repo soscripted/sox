@@ -1053,7 +1053,7 @@
       // Description: For adding the better CSS for the voting buttons and favourite button
 
       function addCSS() {
-        $('.vote-down-off, .vote-down-on, .vote-up-off, .vote-up-on, .star-off, .star-on').addClass('sox-better-css');
+        $('.js-vote-up-btn, .js-vote-down-btn, .js-favorite-btn').addClass('sox-better-css');
         $('head').append('<link rel="stylesheet" href="https://rawgit.com/shu8/SE-Answers_scripts/master/coolMaterialDesignCss.css" type="text/css" />');
         $('#hmenus').css('-webkit-transform', 'translateZ(0)');
       }
