@@ -541,12 +541,13 @@
 }
 
 .sox-editComment-deleteDialogButton {
-    margin-left: 5px;
-    padding: 5px;
-    min-height: 2.2em;
+    min-height: 2.2em !important;
     background-color: #dc3545 !important;
     border-color: #dc3545 !important;
     box-shadow: none !important;
+    padding: 5px !important;
+    font-size: 12px;
+    margin-left: 10px;
 }
 
 .sox-editComment-reason {
