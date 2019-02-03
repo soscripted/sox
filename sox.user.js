@@ -3,7 +3,7 @@
 // @namespace    https://github.com/soscripted/sox
 // @homepage     https://github.com/soscripted/sox
 // @homepageURL  https://github.com/soscripted/sox
-// @version      2.3.30 DEV
+// @version      2.3.31 DEV
 // @description  Extra optional features for Stack Overflow and Stack Exchange sites
 // @contributor  ᴉʞuǝ (https://stackoverflow.com/users/1454538/, https://github.com/mezmi)
 // @contributor  ᔕᖺᘎᕊ (https://stackexchange.com/users/4337810/, https://github.com/shu8)
@@ -175,8 +175,8 @@
     }
 
     //custom events....
-    sox.helpers.observe('.new_comment, .comment', () => { //custom event that triggers when a new comment appears/show more comments clicked; avoids lots of the same mutationobserver
-      $(document).trigger('sox-new-comment');
+    sox.helpers.observe('.new_comment, .comment, .comments', (target) => {
+      $(document).trigger('sox-new-comment', [target]);
       sox.debug('sox-new-comment event triggered');
     });
 

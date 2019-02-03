@@ -563,14 +563,17 @@
       if (!sox.user.loggedIn) return;
 
       function addReplyLinks() {
-        $('.comment').each(function() {
-          if (!$(this).find('.soxReplyLink').length) { //if the link doesn't already exist
-            if (sox.user.name !== $(this).find('.comment-text a.comment-user').text()) { //make sure the link is not added to your own comments
-              $(this).find('.comment-text').css('overflow-x', 'hidden');
-              $(this).find('.comment-text .comment-body').append('<span class="soxReplyLink" title="reply to this user" style="margin-left: -7px">&crarr;</span>');
+        // Delay needed because of https://github.com/soscripted/sox/issues/379#issuecomment-460001854
+        setTimeout(() => {
+          $('.comment').each(function () {
+            if (!$(this).find('.soxReplyLink').length) { //if the link doesn't already exist
+              if (sox.user.name !== $(this).find('.comment-text a.comment-user').text()) { //make sure the link is not added to your own comments
+                $(this).find('.comment-text').css('overflow-x', 'hidden');
+                $(this).find('.comment-text .comment-body').append('<span class="soxReplyLink" title="reply to this user" style="margin-left: -7px">&crarr;</span>');
+              }
             }
-          }
-        });
+          });
+        }, 100);
       }
 
       $(document).on('click', 'span.soxReplyLink', function() {
@@ -2443,7 +2446,8 @@
       // Description: Only show the comment actions (flag/upvote) when hovering over a comment
 
       function addCSS() {
-        $('.comment').addClass('sox-onlyShowCommentActionsOnHover');
+        // Delay needed because of https://github.com/soscripted/sox/issues/379#issuecomment-460001854
+        setTimeout(() => $('.comment').addClass('sox-onlyShowCommentActionsOnHover'), 100);
       }
 
       $(document).on('sox-new-comment', addCSS);
