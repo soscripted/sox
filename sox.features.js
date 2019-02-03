@@ -118,24 +118,7 @@
 
       highlight();
 
-      if ($('.question-summary').length) {
-        const target = document.body;
-        // TODO use new observer helper
-
-        new MutationObserver(((mutations) => {
-          $.each(mutations, (i, mutation) => {
-            if (mutation.attributeName == 'class') {
-              highlight();
-              return false; //no point looping through everything; if *something* has changed, assume everything has
-            }
-          });
-        })).observe(target, {
-          'attributes': true,
-          'childList': true,
-          'characterData': true,
-          'subtree': true,
-        });
-      }
+      if ($('.question-summary').length) sox.helpers.observe('.question-summary', highlight);
     },
 
     displayName: function() {
@@ -303,101 +286,64 @@
       // Description: For adding checkboxes when editing to add pre-defined edit reasons
 
       const DEFAULT_OPTIONS = [
-        ['formatting', 'Improved Formatting'],
-        ['spelling', 'Corrected Spelling'],
-        ['grammar', 'Fixed grammar'],
-        ['greetings', 'Removed thanks/greetings'],
-        ['retag', 'Improved usage of tags'],
-        ['title', 'Improved title'],
+        { 'formatting': 'Improved Formatting' },
+        { 'spelling': 'Corrected Spelling' },
+        { 'grammar': 'Fixed grammar' },
+        { 'greetings': 'Removed thanks/greetings' },
+        { 'retag': 'Improved usage of tags' },
+        { 'title': 'Improved title' },
       ];
 
-      function addCheckboxes() {
-        sox.debug('editComment addCheckboxes() called');
-        const $editCommentField = $('input[id^="edit-comment"]'); //NOTE: input specifcally needed, due to https://github.com/soscripted/sox/issues/363
-        sox.debug('editComment addCheckboxes() $editCommentField:', $editCommentField.get());
-        if (!$editCommentField.length) return; //https://github.com/soscripted/sox/issues/246
-
-        function toLocaleSentenceCase(str) {
-          return str.substr(0, 1).toLocaleUpperCase() + str.substr(1);
-        }
-        $('#reasons').remove(); //remove the div containing everything, we're going to add/remove stuff now:
-        if (/\/edit/.test(window.location.href) || $('[class^="inline-editor"]').length || $('.edit-comment').length) {
-          sox.debug('editComment addCheckboxes() adding boxes');
-          $editCommentField.after('<div id="reasons" style="float:left;clear:both"></div>');
-
-          $.each(JSON.parse(GM_getValue('editReasons')), function() {
-            $('#reasons').append('<label class="sox-editComment-reason"><input type="checkbox" value="' + this[1] + '"</input>' + this[0] + '</label>&nbsp;');
-          });
-
-          $('#reasons input[type="checkbox"]').css('vertical-align', '-2px');
-
-          $('#reasons label').hover(function() {
-            $(this).css({ //on hover
-              'background-color': 'gray',
-              'color': 'white',
-            });
-          }, function() {
-            $(this).css({ //on un-hover
-              'background-color': 'inherit',
-              'color': 'inherit',
-            });
-          });
-
-          $('#reasons input[type="checkbox"]').change(function() {
-            if (this.checked) { //Add it to the summary
-              if (!$editCommentField.val()) {
-                $editCommentField.val(toLocaleSentenceCase($(this).val()));
-              } else {
-                $editCommentField.val($editCommentField.val() + '; ' + $(this).val());
-              }
-              const newEditComment = $editCommentField.val(); //Remove the last space and last semicolon
-              $editCommentField.val(newEditComment).focus();
-            } else if (!this.checked) { //Remove it from the summary
-              $editCommentField.val(toLocaleSentenceCase($editCommentField.val().replace(new RegExp(toLocaleSentenceCase($(this).val()) + ';? ?'), ''))); //for beginning values
-              $editCommentField.val($editCommentField.val().replace($(this).val() + '; ', '')); //for middle values
-              $editCommentField.val($editCommentField.val().replace(new RegExp(';? ?' + $(this).val()), '')); //for last value
-            }
-          });
-        }
+      function toLocaleSentenceCase(str) {
+        return str.substr(0, 1).toLocaleUpperCase() + str.substr(1);
       }
 
-      if (GM_getValue('editReasons', -1) == -1) { //If settings haven't been set/are empty
-        GM_setValue('editReasons', JSON.stringify(DEFAULT_OPTIONS)); //save the default settings
-      } else {
-        var options = JSON.parse(GM_getValue('editReasons')); //If they have, get the options
+      function convertOptionsToNewFormat(options) {
+        // Storage format was changed 03-02-19
+        // Old storage format was an array of arrays: [[name, text], [name, text], ...]
+        // This converts it to an object (like DEFAULT_OPTIONS above)
+        const newOptions = [];
+        options.forEach((opt) => {
+          newOptions.push({
+            [opt[0]]: opt[1],
+          });
+        });
+        return newOptions;
       }
 
-      $(document).on('click', '#dialogEditReasons input[value = "Delete"]', function() { //Click handler to delete when delete button is pressed
-        const delMe = $(this).attr('id');
-        options.splice(delMe, 1); //actually delete it
-        GM_setValue('editReasons', JSON.stringify(options)); //save it
-        displayDeleteValues(); //display the items again (update them)
-      });
+      function saveOptions(options) {
+        GM_setValue('editReasons', JSON.stringify(options));
+      }
 
-      $(document).on('click', '#dialogEditReasons #submitUpdate', () => { //Click handler to update the array with custom value
-        if (!$('#displayReason').val() || !$('#actualReason').val()) {
-          alert('Please enter something in both the textboxes!');
+      function getOptions() {
+        let options = GM_getValue('editReasons', -1);
+        if (options === -1) {
+          options = DEFAULT_OPTIONS;
+          saveOptions(options);
         } else {
-          const arrayToAdd = [$('#displayReason').val(), $('#actualReason').val()];
-          options.push(arrayToAdd); //actually add the value to array
-
-          GM_setValue('editReasons', JSON.stringify(options)); //Save the value
-
-          // moved display call after setvalue call, list now refreshes when items are added
-          displayDeleteValues(); //display the items again (update them)
-
-          //reset textbox values to empty
-          $('#displayReason').val('');
-          $('#actualReason').val('');
+          options = JSON.parse(options);
         }
-      });
+        // If options are being stored in the old format, convert them to the new
+        if (Array.isArray(options[0])) {
+          options = convertOptionsToNewFormat(options);
+          saveOptions(options);
+        }
 
-      function displayDeleteValues() {
-        //Display the items from list and add buttons to delete them
+        return options;
+      }
 
+      function addOptionsToDialog() {
         $('#currentValues').html(' ');
-        $.each(JSON.parse(GM_getValue('editReasons')), function (i) {
-          $('#currentValues').append(this[0] + ' - ' + this[1] + '<input class="sox-editComment-deleteDialogButton" type="button" id="' + i + '" value="Delete"><br />');
+        const options = getOptions();
+        options.forEach(opt => {
+          console.log(opt);
+          const [[name, text]] = Object.entries(opt);
+          $('#currentValues').append(`
+          <div>
+            ${name} - <i>${text}</i>
+            <button class="grid--cell s-btn s-btn__muted discard-question sox-editComment-editDialogButton" data-name="${name}">Edit</button>
+            <button class="grid--cell s-btn s-btn__danger discard-question sox-editComment-deleteDialogButton" data-name="${name}">Delete</button>
+          </div>`);
         });
         addCheckboxes();
       }
@@ -421,9 +367,8 @@
         });
 
         $(document).on('click', '#resetEditReasons', () => { //manual reset
-          if (confirm('Are you sure you want to reset the settings to the default ones?')) {
-            GM_setValue('editReasons', JSON.stringify(DEFAULT_OPTIONS));
-            alert('Reset options to default. Refreshing...');
+          if (confirm('Are you sure you want to reset the settings to the default ones? The page will be refreshed afterwards')) {
+            saveOptions(DEFAULT_OPTIONS);
             location.reload();
           }
         });
@@ -432,6 +377,85 @@
         $('#dialogEditReasons').show(500);
       }
 
+      function addCheckboxes() {
+        sox.debug('editComment addCheckboxes() called');
+        const $editCommentField = $('input[id^="edit-comment"]'); //NOTE: input specifcally needed, due to https://github.com/soscripted/sox/issues/363
+        sox.debug('editComment addCheckboxes() $editCommentField:', $editCommentField.get());
+        if (!$editCommentField.length) return; //https://github.com/soscripted/sox/issues/246
+
+        $('#reasons').remove(); //remove the div containing everything, we're going to add/remove stuff now:
+        if (/\/edit/.test(sox.site.href) || $('[class^="inline-editor"]').length || $('.edit-comment').length) {
+          sox.debug('editComment addCheckboxes() adding boxes');
+          $editCommentField.after('<div id="reasons" style="float:left;clear:both"></div>');
+
+          const options = getOptions();
+          options.forEach(opt => {
+            const [[name, text]] = Object.entries(opt);
+            $('#reasons').append(`
+              <label class="sox-editComment-reason"><input type="checkbox" value="${text}"</input>${name}</label>&nbsp;
+            `);
+          });
+
+          $('#reasons input[type="checkbox"]').change(function() {
+            if (this.checked) { //Add it to the summary
+              if ($editCommentField.val()) {
+                $editCommentField.val($editCommentField.val() + '; ' + $(this).val());
+              } else {
+                $editCommentField.val(toLocaleSentenceCase($(this).val()));
+              }
+              const newEditComment = $editCommentField.val(); //Remove the last space and last semicolon
+              $editCommentField.val(newEditComment).focus();
+            } else { //Remove it from the summary
+              $editCommentField.val(toLocaleSentenceCase($editCommentField.val().replace(new RegExp(toLocaleSentenceCase($(this).val()) + ';? ?'), ''))); //for beginning values
+              $editCommentField.val($editCommentField.val().replace($(this).val() + '; ', '')); //for middle values
+              $editCommentField.val($editCommentField.val().replace(new RegExp(';? ?' + $(this).val()), '')); //for last value
+            }
+          });
+        }
+      }
+
+      $(document).on('click', '#dialogEditReasons .sox-editComment-deleteDialogButton', function () { //Click handler to delete an option
+        const optionToDelete = $(this).attr('data-name');
+        const options = getOptions();
+        const index = options.findIndex(opt => opt[optionToDelete]);
+        options.splice(index, 1); //actually delete it
+        saveOptions(options);
+        addOptionsToDialog(); //display the items again (update them)
+      });
+
+      $(document).on('click', '#dialogEditReasons .sox-editComment-editDialogButton', function () { //Click handler to edit an option
+        const optionToEdit = $(this).attr('data-name');
+        const options = getOptions();
+        const index = options.findIndex(opt => opt[optionToEdit]);
+
+        const [[name, text]] = Object.entries(options[index]);
+        const newName = window.prompt('Enter new name', name);
+        const newText = window.prompt('Enter new text', text);
+
+        if (!newName || !newText) return;
+
+        options[index] = { [newName]: newText };
+        saveOptions(options);
+        addOptionsToDialog(); //display the items again (update them)
+      });
+
+      $(document).on('click', '#dialogEditReasons #submitUpdate', () => { //Click handler to update the array with custom value
+        const name = $('#displayReason').val();
+        const text = $('#actualReason').val();
+
+        if (!name || !text) {
+          alert('Please enter something in both the textboxes!');
+        } else {
+          const optionToAdd = { [name]: text };
+          const options = getOptions();
+          options.push(optionToAdd);
+          saveOptions(options);
+
+          addOptionsToDialog(); //display the items again (update them)
+          $('#displayReason, #actualReason').val('');
+        }
+      });
+
       //Add the button to update and view the values in the help menu:
       sox.helpers.addButtonToHelpMenu({
         'id': 'editReasonsLink',
@@ -439,7 +463,7 @@
         'summary': 'Edit your personal edit reasons (edit summary checkboxes)',
         'click': function () {
           createDialogEditReasons(); //Show the dialog to view and update values
-          displayDeleteValues();
+          addOptionsToDialog();
         },
       });
 

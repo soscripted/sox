@@ -540,18 +540,25 @@
     padding: 12px;
 }
 
-.sox-editComment-deleteDialogButton {
+.sox-editComment-deleteDialogButton,
+.sox-editComment-editDialogButton {
     min-height: 2.2em !important;
-    background-color: #dc3545 !important;
-    border-color: #dc3545 !important;
-    box-shadow: none !important;
     padding: 5px !important;
     font-size: 12px;
-    margin-left: 10px;
+    margin-left: 5px;
 }
 
 .sox-editComment-reason {
     display: inline-block !important;
+    background-color: inherit;
+    color: inherit;
+    margin-top: 7px;
+    padding: 3px;
+}
+
+.sox-editComment-reason:hover {
+    background-color: gray;
+    color: white;
 }
 
 /* customMagicLinks -- for the settings table in the dialog */
