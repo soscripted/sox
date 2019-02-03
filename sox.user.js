@@ -106,7 +106,6 @@
       // execute features
       for (let i = 0; i < settings.length; ++i) {
         var category = settings[i].split('-')[0];
-
         var featureId = settings[i].split('-')[1];
 
         if (!(category in featureInfo.categories)) { //if we ever rename a category

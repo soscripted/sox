@@ -18,6 +18,7 @@
             $(this).css({
               'width': 'auto',
               'height': 'auto',
+
             });
           },
         }).css('cursor', 'move');
@@ -1043,7 +1044,6 @@
           const link = items[i].link;
           // If one's been seen, the older questions must also have been seen
           if (title === lastQuestions[metaName]) seen = true;
-
           addQuestion(title, link, seen);
         }
 
@@ -1243,7 +1243,6 @@
             draftdiscarded.after(wmdpreview);
           }
         }
-
         if (wmdpreview.hasClass('sbs-on')) { //sbs was toggled on
           $('#sidebar').addClass('sbs-on');
           $('#content').addClass('sbs-on');
@@ -1350,7 +1349,6 @@
 
     addAuthorNameToInboxNotifications: function(settings) {
       // Description: To add the author's name to inbox notifications
-
       function setAuthorName(node) {
         //for https://github.com/soscripted/sox/issues/347
         const prependToMessage = Object.keys(settings).length !== 0 ? settings.addNameBeforeMessageOrAtTop : false;
@@ -2041,8 +2039,8 @@
             sox.helpers.getFromAPI('questions', id, sitename, FILTER_QUESTION_TAGS, (d) => {
               this.dataset.tags = d.items[0].tags.join(', ');
               insertTagsList(this);
-            });
 
+            });
             this.dataset.tags = PLACEHOLDER;
           } else if (typeof this.dataset.tags !== 'undefined' && this.dataset.tags !== PLACEHOLDER) {
             insertTagsList(this);

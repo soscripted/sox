@@ -165,6 +165,12 @@
             "meta": "",
             "match": "*://*/questions/ask",
             "exclude": ""
+        }, {
+            "name": "showTagWikiLinkOnTagPopup",
+            "desc": "Add a link to the tag wiki page on the popup that appears when hovering over a tag",
+            "meta": "",
+            "match": "*://*/questions*,*://*/review*",
+            "exclude": ""
         }],
         "Comments": [{
             "name": "autoShowCommentImages",

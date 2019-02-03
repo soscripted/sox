@@ -152,7 +152,6 @@
           } else {
             $feature.append($settingsDiv);
           }
-
         }
       }
 
