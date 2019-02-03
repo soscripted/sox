@@ -2591,7 +2591,7 @@
         $(document).on('keydown', '.comment-form textarea', function (e) {
           if (e.keyCode == 13) magicLink($(this));
         });
-        $(document).on('click', '.comment-form input[type="submit"], .form-submit #submit-button, form.inline-post button[id*="submit-button-"]', function (e) {
+        $(document).on('click', '.comment-form input[type="submit"], .form-submit #submit-button, form.inline-post button[id*="submit-button-"]', function () {
           magicLink($(this));
         });
       }
