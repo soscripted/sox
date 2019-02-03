@@ -133,10 +133,38 @@
 .sox-feature .fa-wrench {
     font-size: 12px;
     padding: 0 5px;
+    cursor: pointer;
 }
 
 .sox-feature .fa-info {
     float: right;
+}
+
+#sox-settings-dialog-features-packs {
+    margin-bottom: 5px;
+}
+
+.sox-settings-dialog-feature-packs-list {
+    padding: 10px;
+    margin: 5px;
+}
+
+.sox-settings-dialog-feature-packs-list li.sox-settings-dialog-feature-pack {
+    display: inline;
+    margin: 5px;
+    padding: 10px;
+    border-radius: 9px;
+    background-color: lightgrey;
+    cursor: pointer;
+}
+
+.sox-settings-dialog-feature-packs-list li.sox-settings-dialog-feature-pack.clear-feature-pack-selection {
+    background-color: inherit;
+    color: inherit;
+}
+
+#sox-settings-dialog .sox-feature.feature-fade-out, #sox-settings-dialog .sox-feature.disabled-feature {
+    opacity: 0.5;
 }
 
 /* -------- sox specific features' CSS ------- */
@@ -242,47 +270,6 @@
     overflow: auto;
 }
 
-/*fixedTopbar */
-
-/*Ubuntu CSS by @UnicornsAreVeryVeryYummy - http://stackapps.com/users/33746/unicorns-are-very-very-yummy */
-
-.fixedTopbar-links {
-    z-index: 10001;
-    line-height: 19.2px;
-    -moz-box-shadow: 0 0 4px #ccc;
-    -webkit-box-shadow: 0 0 4px #ccc;
-    box-shadow: 0 0 4px #ccc;
-    font-family: Ubuntu, Arial, "libra sans", sans-serif;
-    font-weight: 300;
-}
-
-.fixedTopbar-linksList {
-    -moz-box-sizing: border-box;
-    background: none repeat scroll 0 0 #fff;
-}
-
-li.fixedTopbar-activeSite {
-    border-right: 3px solid #dd4814;
-}
-
-ul.fixedTopbar-siteLink {
-    list-style: none;
-    list-style-type: none;
-}
-
-li.fixedTopbar-siteLink {
-    display: inline-block;
-    margin-left: 10px;
-}
-
-.fixedTopbar-stickyToolbar {
-    position: fixed;
-    top: 0px;
-    left: 50%;
-    margin-left: -545px;
-    z-index: 1000;
-}
-
 /*Side by Side Editing (SBS, addSBSBtn, startSBS): https://github.com/szego/SE-Answers_scripts/blob/side-by-side/editing-and-toggling/side-by-side-editing.user.js:*/
 
 #sidebar.sbs-on {
@@ -321,19 +308,8 @@ li.fixedTopbar-siteLink {
     margin-left: 35px !important;
 }
 
-.edit-comment-p1.sbs-on {
-    float: left !important;
-    clear: both;
-}
-
-.edit-comment-p2.sbs-on {
-    float: left !important;
-    margin-left: 10px !important;
-    clear: both;
-}
-
 .post-editor.sbs-on {
-    width: 1360px !important; //width: 1060px !important;
+    width: 1360px !important;
 }
 
 .sbs-on-left-side {
@@ -369,6 +345,11 @@ li.fixedTopbar-siteLink {
 .post-form.sbs-on {
     /*https://github.com/soscripted/sox/issues/247*/
     width: 1335px;
+}
+
+.edit-comment.sbs-on {
+    clear: both;
+    position: initial;
 }
 
 /*linkedPostsInline for the displayed post text; https://github.com/shu8/Stack-Overflow-Optional-Features/issues/48 */
@@ -435,43 +416,6 @@ li.fixedTopbar-siteLink {
     width: 2px;
     height: 100%;
     background: black;
-}
-
-/*downvotedPostsEditAlert -- for the button and dropdown*/
-
-#downvotedPostsEditAlertButton {
-    background-image: none;
-    font-size: 14px;
-    color: #9fa6ad;
-    min-width: 34px;
-    cursor: pointer;
-}
-
-#downvotedPostsEditAlertButton:hover {
-    color: #999;
-}
-
-.downvotedPostsEditAlertButtonCount {
-    background-color: red;
-    width: 22px;
-    margin-left: 4px;
-    border-radius: 10px;
-    color: white;
-    font-weight: bold;
-    position: absolute;
-    font-size: 20px;
-    top: 8px;
-}
-
-#downvotedPostsEditAlertDialog {
-    right: 273px;
-    width: 377px;
-    display: none;
-}
-
-#downvotedPostsEditAlertButton.glow {
-    -webkit-text-stroke-color: blue;
-    -webkit-text-stroke-width: 3px;
 }
 
 /*commentReplies -- for the reply buttons*/
@@ -590,7 +534,44 @@ li.fixedTopbar-siteLink {
     border: 1px dotted black;
 }
 
-/* editComment -- for the checkboxes shown when editin */
+/* editComment -- for the dialog and checkboxes shown when editing */
+.sox-editComment-currentValues {
+    border: 1px solid black;
+    padding: 12px;
+}
+
+.sox-editComment-deleteDialogButton,
+.sox-editComment-editDialogButton {
+    min-height: 2.2em !important;
+    padding: 5px !important;
+    font-size: 12px;
+    margin-left: 5px;
+}
+
 .sox-editComment-reason {
     display: inline-block !important;
+    background-color: inherit;
+    color: inherit;
+    margin-top: 7px;
+    padding: 3px;
+}
+
+.sox-editComment-reason:hover {
+    background-color: gray;
+    color: white;
+}
+
+/* customMagicLinks -- for the settings table in the dialog */
+.sox-customMagicLinks-settings-table {
+    margin-bottom: 10px;
+}
+
+.sox-customMagicLinks-settings-table td,
+.sox-customMagicLinks-settings-table th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.sox-customMagicLinks-settings-table th {
+    font-weight: bold;
 }

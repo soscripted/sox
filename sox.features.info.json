@@ -11,7 +11,9 @@
                 "id": "addNameBeforeMessageOrAtTop",
                 "type": "checkbox",
                 "desc": "Show name before contents (e.g. [name]: message) rather than at top (e.g. 'comment by [name]')?"
-            }]
+            }],
+            "feature_packs": ["power_user"],
+            "usesApi": true
         }, {
             "name": "alignBadgesByClass",
             "desc": "Align badges by their class on user profile pages",
@@ -24,14 +26,17 @@
             "extended_description": "By default, any search results that are answers do not show its question's tags. This feature adds the question's tags underneath the result.",
             "meta": "http://meta.stackexchange.com/questions/197874/include-tags-in-answers-entries-on-search-results",
             "match": "*://*.com/search*",
-            "exclude": "SE1.0"
+            "exclude": "SE1.0",
+            "feature_packs": ["power_user"],
+            "usesApi": true
         }, {
             "name": "colorAnswerer",
             "desc": "Color answerer's comments",
             "extended_description": "Highlight the username of a commenter if they have posted an answer on that page.",
             "meta": "http://meta.stackexchange.com/questions/19574/highlight-comments-from-answer-author-in-addition-to-question-author",
             "match": "*://*/questions*",
-            "exclude": "SE1.0"
+            "exclude": "SE1.0",
+            "feature_packs": ["major_ui", "key_feature", "power_user"]
         }, {
             "name": "displayName",
             "desc": "Add display name before gravatar in topbar",
@@ -45,24 +50,13 @@
             "match": "*://*/questions*",
             "exclude": "SE1.0"
         }, {
-            "name": "fixedTopbar",
-            "desc": "Fix topbar position",
-            "extended_description": "Locks the topbar to the top of the window so you can see it at all times, even when scrolling down. You can optionally enable this on Ask Ubuntu due to the different default styling of the topbar.",
-            "meta": "http://meta.stackexchange.com/questions/101385/should-the-top-navigation-be-frozen-optional",
-            "match": "",
-            "exclude": "*://stackoverflow.com/*",
-            "settings": [{
-                "id": "enableOnAskUbuntu",
-                "type": "checkbox",
-                "desc": "Enable on Ask Ubuntu?"
-            }]
-        }, {
             "name": "highlightQuestions",
             "desc": "Change highlighting for questions with favourite tags",
             "extended_description": "Changes the favourite tag question highlighting to be a more subtle, coloured left-border",
             "meta": "http://meta.stackexchange.com/questions/238591/should-favorite-tag-highlighting-in-question-lists-be-changed",
             "match": "",
-            "exclude": "*://chat.*.com/*"
+            "exclude": "*://chat.*.com/*",
+            "feature_packs": ["major_ui", "key_feature", "power_user"]
         }, {
             "name": "isQuestionHot",
             "desc": "Add a label on questions which are hot-network questions",
@@ -87,7 +81,9 @@
             "desc": "Add the SO logo after employee names to make them stand out",
             "meta": "http://meta.stackexchange.com/questions/246678/should-se-staff-have-a-special-character-in-their-user-name",
             "match": "",
-            "exclude": "*://chat.*.com/*,SE1.0"
+            "exclude": "*://chat.*.com/*,SE1.0",
+            "feature_packs": ["major_ui", "key_feature", "power_user"],
+            "usesApi": true
         }, {
             "name": "metaChatBlogStackExchangeButton",
             "desc": "Show meta and chat buttons on hover of a site under the site switcher button",
@@ -99,7 +95,9 @@
             "desc": "Add a mod diamond to the topbar to alert you of new questions on the site's child-meta",
             "meta": "http://meta.stackexchange.com/questions/256318/can-high-rep-users-be-allowed-to-see-meta-notifications",
             "match": "",
-            "exclude": "*://chat.*.com/*,SE1.0"
+            "exclude": "*://chat.*.com/*,SE1.0",
+            "feature_packs": ["power_user"],
+            "usesApi": true
         }, {
             "name": "scrollToTop",
             "desc": "Add Scroll To Top button",
@@ -119,13 +117,16 @@
             "extended_description": "Adds a coloured box at the end of a title (that replaces the standard [duplicate], etc.) in question lists to more easily tell what the state of a question is",
             "meta": "http://meta.stackexchange.com/questions/257021/proposal-to-make-duplicate-closed-and-migrated-in-the-title-more-obvious",
             "match": "",
-            "exclude": "*://chat.*.com/*,SE1.0"
+            "exclude": "*://chat.*.com/*,SE1.0",
+            "feature_packs": ["major_ui, key_feature", "power_user"],
+            "usesApi": true
         }, {
             "name": "tabularReviewerStats",
             "desc": "Display reviewer stats on /review/suggested-edits in table form",
             "meta": "http://meta.stackexchange.com/q/276946/260841",
             "match": "*://*.com/review/suggested-edits/*",
-            "exclude": ""
+            "exclude": "",
+            "feature_packs": ["power_user"]
         }, {
             "name": "topAnswers",
             "desc": "Improve answer visibility by listing top answers",
@@ -143,6 +144,26 @@
             "desc": "Add timeline and revision links to the bottom of each post for quick access to them",
             "meta": "",
             "match": "*://*/questions*,*://*/review*",
+            "exclude": "",
+            "feature_packs": ["power_user"]
+        }, {
+            "name": "showTagWikiLinkOnTagPopup",
+            "desc": "Add a link to the tag wiki page on the popup that appears when hovering over a tag",
+            "meta": "",
+            "match": "*://*/questions*,*://*/review*,*://*/tags*",
+            "exclude": "",
+            "feature_packs": ["power_user"]
+        }, {
+            "name": "hideWelcomeBackMessage",
+            "desc": "Hide the 'welcome back...don't forget to vote' message when visiting a site after a while",
+            "meta": "",
+            "match": "*://*/questions*",
+            "exclude": ""
+        }, {
+            "name": "hideHowToAskWhenZoomed",
+            "desc": "Hide the 'How to ask/format/tag' yellow boxes that appear when asking a question whilst zoomed in",
+            "meta": "",
+            "match": "*://*/questions/ask",
             "exclude": ""
         }, {
             "name": "showTagWikiLinkOnTagPopup",
@@ -157,13 +178,15 @@
             "extended_description": "This feature will automatically detect comments with links to imgur and will display them inline",
             "meta": "",
             "match": "*://*/questions*,*://*/review*",
-            "exclude": "SE1.0"
+            "exclude": "SE1.0",
+            "feature_packs": ["major_ui, key_feature", "power_user"]
         }, {
             "name": "commentReplies",
             "desc": "Add reply links to comments for quick replying (without having to type someone's username)",
             "meta": "http://meta.stackexchange.com/questions/74778/add-reply-link-to-comment-that-pre-populates-comment-box-with-username",
             "match": "*://*/questions*,*://*/review*",
-            "exclude": "SE1.0"
+            "exclude": "SE1.0",
+            "feature_packs": ["power_user"]
         }, {
             "name": "commentShortcuts",
             "desc": "Use Ctrl+I,B,K (to italicise, bolden and add code backticks) in comments",
@@ -194,13 +217,15 @@
             "extended_description": "Adds a button next to comments in your profile's responses/activity tabs that when clicked, show you the score of your comment",
             "meta": "http://meta.stackexchange.com/questions/38285/display-the-number-of-comment-upvotes-in-recent-activity-pages",
             "match": "*://*/users/*",
-            "exclude": "SE1.0"
+            "exclude": "SE1.0",
+            "usesApi": true
         }, {
             "name": "hiddenCommentsIndicator",
             "desc": "Add a darker border underneath comments if there are some hidden after it",
             "meta": "http://meta.stackoverflow.com/q/296582/3541881",
             "match": "*://*/questions*,*://*/review*",
-            "exclude": "SE1.0"
+            "exclude": "SE1.0",
+            "feature_packs": ["power_user"]
         }, {
             "name": "onlyShowCommentActionsOnHover",
             "desc": "Only show the comment actions (flag/upvote) when hovering over a comment",
@@ -219,21 +244,24 @@
                 "id": "sbsByDefault",
                 "type": "checkbox",
                 "desc": "Automatically enable SBS on all posts?"
-            }]
+            }],
+            "feature_packs": ["key_feature", "power_user"]
         }, {
             "name": "editComment",
             "desc": "Pre-defined edit comment options (checkboxes)",
             "extended_description": "Adds checkboxes to add canned messages for edit revisions when editing. You can make *your own* canned responses by clicking the 'Edit Reasons' button that is added to the Help dropdown menu in the topbar",
             "meta": "http://meta.stackexchange.com/questions/190461/improve-the-editing-flow-with-predefined-options-for-edit-summary",
             "match": "",
-            "exclude": "*://chat.*.com/*,SE1.0"
+            "exclude": "*://chat.*.com/*,SE1.0",
+            "feature_packs": ["power_user"]
         }, {
             "name": "editReasonTooltip",
             "desc": "Add a tooltip to posts showing the last revision's comment",
             "extended_description": "When a post is edited, the editor is displayed underneath the post. This feature will show what the last revision's comment was as a tooltip when you hover over 'edited' underneath a post in 'edited [date] at [time]'",
             "meta": "http://meta.stackexchange.com/questions/2315/show-reason-for-edit-without-clicking-through-to-diff",
             "match": "*://*/questions*,*://*/review*",
-            "exclude": "SE1.0"
+            "exclude": "SE1.0",
+            "feature_packs": ["power_user"]
         }, {
             "name": "findAndReplace",
             "desc": "Add a find & replace feature to the markdown editor",
@@ -261,18 +289,6 @@
             "meta": "",
             "match": "*://*/questions*",
             "exclude": ""
-        }, {
-            "name": "downvotedPostsEditAlert",
-            "desc": "Add a notification to your inbox when a question you downvote is edited",
-            "meta": "http://meta.stackexchange.com/q/165962/260841",
-            "match": "",
-            "exclude": "SE1.0"
-        }, {
-            "name": "pasteImagesDirectly",
-            "desc": "Paste images directly into the post editor without the image dialog",
-            "meta": "",
-            "match": "*://*/questions*",
-            "exclude": ""
         }],
         "Flags": [{
             "name": "flagOutcomeTime",
@@ -285,13 +301,15 @@
             "desc": "Show flagging percentages for each type in the Flag Summary",
             "meta": "",
             "match": "",
-            "exclude": "*://chat.*.com/*,SE1.0"
+            "exclude": "*://chat.*.com/*,SE1.0",
+            "feature_packs": ["power_user"]
         }, {
             "name": "flagPercentageBar",
             "desc": "Show the total percentage of helpful flags as a coloured bar on the Flag Summary Page",
             "meta": "http://meta.stackoverflow.com/questions/310881/overall-percentage-of-helpful-flags",
             "match": "",
-            "exclude": "*://chat.*.com/*,SE1.0"
+            "exclude": "*://chat.*.com/*,SE1.0",
+            "feature_packs": ["power_user"]
         }],
         "Sidebar": [{
             "name": "hideCommunityBulletin",
@@ -353,7 +371,9 @@
                 "id": "titlesToHideRegex",
                 "type": "textarea",
                 "desc": "Titles to hide (comma-separated regexes)"
-            }]
+            }],
+            "feature_packs": ["key_feature"],
+            "usesApi": true
         }],
         "Chat": [{
             "name": "chatEasyAccess",
@@ -380,13 +400,15 @@
             "extended_description": "Pulse effect when hovering over the upvote/downvote/favourite buttons. Currently only implemented natively on Android.SE.",
             "meta": "http://meta.stackexchange.com/questions/252685/i-want-to-have-those-voting-animations-like-on-android-se-pretty-please",
             "match": "*://*/questions*,*://*/review*",
-            "exclude": "SE1.0"
+            "exclude": "SE1.0",
+            "feature_packs": ["major_ui"]
         }, {
             "name": "stickyVoteButtons",
             "desc": "Make vote buttons next to posts sticky whilst scrolling on that post",
             "meta": "http://meta.stackexchange.com/a/35047/260841",
             "match": "*://*/questions*,*://*/review*",
-            "exclude": "SE1.0"
+            "exclude": "SE1.0",
+            "feature_packs": ["major_ui, key_feature", "power_user"]
         }, {
             "name": "disableVoteButtons",
             "desc": "Disable vote buttons on your own posts and deleted posts, which you cannot vote on",
@@ -414,20 +436,24 @@
             "extended_description": "Detects links to other questions on SE sites and converts them to their title",
             "meta": "http://meta.stackexchange.com/questions/251183/parse-question-links-from-other-se-sites",
             "match": "*://*/questions*,*://*/review*",
-            "exclude": "SE1.0"
+            "exclude": "SE1.0",
+            "usesApi": true
         }, {
             "name": "quickAuthorInfo",
             "desc": "Show when the post's author was last seen and whether they are registered",
             "meta": "",
             "match": "*://*/questions*,*://*/review*",
-            "exclude": "SE1.0"
+            "exclude": "SE1.0",
+            "feature_packs": ["power_user"],
+            "usesApi": true
         }, {
             "name": "shareLinksPrivacy",
             "desc": "Remove your user ID from the 'share' link",
             "extended_description": "When you click 'share' under a post, this displays a referral link, which incorporates your user ID. This option strips your user ID from the displayed link, preventing inadvertent privacy leaks when disseminating the link via copy-paste. The social-media sharing buttons are unaffected, since the lack of privacy is obvious.",
             "meta": "https://meta.stackexchange.com/questions/74274/privacy-leak-in-permalink",
             "match": "*://*/questions*,*://*/review*",
-            "exclude": "SE1.0"
+            "exclude": "SE1.0",
+            "feature_packs": ["power_user"]
         }, {
             "name": "shareLinksMarkdown",
             "desc": "Change 'share' link to format of [post-name](url)",
@@ -509,7 +535,23 @@
             "desc": "Show question's current state in the suggested edit review queue",
             "meta": "",
             "match": "*://*/review*",
-            "exclude": ""
+            "exclude": "",
+            "feature_packs": ["power_user"],
+            "usesApi": true
+        }, {
+            "name": "addOnTopicLinkToSiteSwitcher",
+            "desc": "Replace the 'help' link with an 'on-topic' link in the site switcher dropdown",
+            "meta": "",
+            "match": "",
+            "exclude": "*://chat.*.com/*,SE1.0"
+        }, {
+            "name": "customMagicLinks",
+            "desc": "Add custom magic links to comments and posts",
+            "extended_description": "Allows you to create your own magic links ('[text]' auto-converts to a link of your choice). Links can use the placeholders $BASEURL, $METABASEURL, $QUESTIONID, and $ANSWERID which are auto-replaced with the respective data. You can set the reasons by clicking the 'Magic Links' button added to the 'Help' dropdown at the top-right of the page. See https://stackapps.com/q/6650 for more details.",
+            "meta": "",
+            "match": "",
+            "exclude": "*://chat.*.com/*,SE1.0",
+            "feature_packs": ["power_user"]
         }]
     }
 }
