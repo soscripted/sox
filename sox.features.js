@@ -1476,7 +1476,6 @@
         COMMENT: 4,
       };
       const type = {
-        TOTAL: 'flags',
         WAITING: 'waiting',
         HELPFUL: 'helpful',
         DECLINED: 'declined',
@@ -1490,10 +1489,10 @@
 
       function addPercentage(group, type, percentage) {
         const $span = $('<span/>', {
-          text: '({0}%)'.replace('{0}', percentage),
+          text: `(${percentage}%)`,
           style: 'margin-left:5px; color: #999; font-size: 12px;',
         });
-        $('td > a[href*="group=' + group + '"]:contains("' + type + '")').after($span);
+        $(`li > a[href*="group=${group}"]:contains("${type}")`).find('div:first').after($span);
       }
 
       function calculatePercentage(count, total) {
@@ -1503,9 +1502,9 @@
 
       function getFlagCount(group, type) {
         let flagCount = 0;
-        flagCount += Number($('td > a[href*="group=' + group + '"]:contains("' + type + '")')
-          .parent()
-          .prev()
+        const $groupHeader = $(`li > a[href="?group=${group}"]`);
+        flagCount += Number($groupHeader.next().find(`li:contains("${type}")`)
+          .find('div:last')
           .text()
           .replace(',', ''));
         return flagCount;
@@ -1514,16 +1513,13 @@
       // add percentages
       for (const groupKey in group) {
         const item = group[groupKey];
+        const total = +$(`li > a[href="?group=${item}"]`).find('div:last').text();
 
-        const total = getFlagCount(item, type.TOTAL);
         for (const typeKey in type) {
           const typeItem = type[typeKey];
-          if (typeKey !== 'TOTAL') {
-            count = getFlagCount(item, typeItem);
-            percentage = calculatePercentage(count, total);
-            //sox.debug(groupKey + ": " + typeKey + " Flags -- " + count);
-            addPercentage(item, typeItem, percentage);
-          }
+          count = getFlagCount(item, typeItem);
+          percentage = calculatePercentage(count, total);
+          addPercentage(item, typeItem, percentage);
         }
       }
     },
@@ -1536,14 +1532,11 @@
 
         if (url.indexOf('/a/') > -1) { //eg. http://meta.stackexchange.com/a/26764/260841
           return url.split('/a/')[1].split('/')[0];
-
         } else if (url.indexOf('/q/') > -1) { //eg. http://meta.stackexchange.com/q/26756/260841
           return url.split('/q/')[1].split('/')[0];
-
         } else if (url.indexOf('/questions/') > -1) {
           if (url.indexOf('#') > -1) { //then it's probably an answer, eg. http://meta.stackexchange.com/questions/26756/how-do-i-use-a-small-font-size-in-questions-and-answers/26764#26764
             return url.split('#')[1];
-
           } else { //then it's a question
             return url.split('/questions/')[1].split('/')[0];
           }
@@ -1691,9 +1684,7 @@
       $(':not(.deleted-answer) .answercell').slice(1).sort(compareByScore).slice(0, 5).each(function() {
         count++;
         const id = $(this).find('.short-link').attr('id').replace('link-post-', '');
-
         const score = $(this).prev().find('.js-vote-count').text();
-
         let icon = 'vote-up-off';
 
         if (score > 0) {
@@ -1734,15 +1725,10 @@
         const info = {};
         $('.review-more-instructions ul:eq(0) li').each(function() {
           const text = $(this).text();
-
           const username = $(this).find('a').text();
-
           const link = $(this).find('a').attr('href');
-
           const approved = text.match(/approved (.*?)[a-zA-Z]/)[1];
-
           const rejected = text.match(/rejected (.*?)[a-zA-Z]/)[1];
-
           const improved = text.match(/improved (.*?)[a-zA-Z]/)[1];
           info[username] = {
             'link': link,
@@ -1752,14 +1738,10 @@
           };
         });
         const $editor = $('.review-more-instructions ul:eq(1) li');
-
         const editorName = $editor.find('a').text();
-
         const editorLink = $editor.find('a').attr('href');
-
         const editorApproved = $editor.clone().find('a').remove().end().text().match(/([0-9]+)/g)[0];
         //`+` matches 'one or more' to make sure it works on multi-digit numbers!
-
         const editorRejected = $editor.clone().find('a').remove().end().text().match(/([0-9]+)/g)[1]; //https://stackoverflow.com/q/11347779/3541881 for fixing https://github.com/soscripted/sox/issues/279
         info[editorName] = {
           'link': editorLink,
@@ -1860,20 +1842,15 @@
 
           const anchor = this.querySelector('.post-signature:last-child .user-details a[href^="/users"]');
 
-          if (!anchor) {
-            return;
-          }
+          if (!anchor) return;
 
           const id = sox.helpers.getIDFromAnchor(anchor);
           sox.debug('quickAuthorInfo addLastSeen(): current id', id);
           sox.debug('quickAuthorInfo addLastSeen(): userdetailscurrent id', userDetailsFromAPI[id]);
 
-          if (!id || !(userDetailsFromAPI[id] && !this.getElementsByClassName('sox-last-seen').length)) {
-            return;
-          }
+          if (!id || !(userDetailsFromAPI[id] && !this.getElementsByClassName('sox-last-seen').length)) return;
 
           const lastSeenDate = new Date(userDetailsFromAPI[id].last_seen);
-
           const type = userDetailsFromAPI[id].type === 'unregistered' ? ' (unregistered)' : '';
 
           $(this).find('.user-info').last().append(
@@ -1944,16 +1921,12 @@
       $('.question, .answer').each(function() {
         if ($(this).find('.js-show-link.comments-link:visible').length) {
           const postId = $(this).attr('data-questionid') || $(this).attr('data-answerid');
-
           const x = [];
-
           const y = [];
-
           const protocol = location.protocol;
-
           const hostname = location.hostname;
-
           const baseUrl = protocol + '//' + hostname;
+
           $.get(baseUrl + '/posts/' + postId + '/comments', (d) => {
             const $commentCopy = $('#comments-' + postId + ' .comment-text .comment-copy');
 
@@ -2065,7 +2038,7 @@
       });
 
       function checkAndAddReminder() {
-        if (!sox.user.loggedIn && !sox.location.on('winterbash2016.stackexchange.com')) {
+        if (!sox.user.loggedIn && !sox.location.match('winterbash')) {
           if (!$('#loggedInReminder').length) $('.container').append(div);
         } else {
           $('#loggedInReminder').remove();
@@ -2190,19 +2163,17 @@
       // Description: Adds a coloured percentage bar above the pane on the right of the flag summary page to show percentage of helpful flags
 
       let helpfulFlags = 0;
-      $('td > a:contains(\'helpful\')').parent().prev().each(function() {
-        helpfulFlags += parseInt($(this).text().replace(',', ''));
+      $('li > a:contains(\'helpful\')').each(function() {
+        helpfulFlags += parseInt($(this).find('div:last').text().replace(',', ''));
       });
 
       let declinedFlags = 0;
-      $('td > a:contains(\'declined\')').parent().prev().each(function() {
-        declinedFlags += parseInt($(this).text().replace(',', ''));
+      $('li > a:contains(\'declined\')').each(function() {
+        declinedFlags += parseInt($(this).find('div:last').text().replace(',', ''));
       });
 
       if (helpfulFlags > 0) {
-
         let percentHelpful = Number(Math.round((helpfulFlags / (helpfulFlags + declinedFlags)) * 100 + 'e2') + 'e-2');
-
         if (percentHelpful > 100) percentHelpful = 100;
 
         let percentColor;
@@ -2215,12 +2186,12 @@
         }
 
         //this is for the dynamic part; the rest of the CSS is in the main CSS file
-        GM_addStyle('#sox-flagPercentProgressBar:after {\
-                               background: ' + percentColor + ';\
-                               width: ' + percentHelpful + '%;\
-                           }');
+        GM_addStyle(`#sox-flagPercentProgressBar:after {
+                      background: ${percentColor};
+                      width: ${percentHelpful}%;
+                    }`);
 
-        $('#flag-stat-info-table').before('<h3 id=\'sox-flagPercentHelpful\' title=\'only helpful and declined flags are counted\'><span id=\'percent\'>' + percentHelpful + '%</span> helpful</h3>');
+        $('#flag-summary-filter').after('<h3 id=\'sox-flagPercentHelpful\' title=\'only helpful and declined flags are counted\'><span id=\'percent\'>' + percentHelpful + '%</span> helpful</h3>');
         $('#sox-flagPercentHelpful span#percent').css('color', percentColor);
 
         $('#sox-flagPercentHelpful').after('<div id=\'sox-flagPercentProgressBar\'></div>');

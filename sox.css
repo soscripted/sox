@@ -433,6 +433,7 @@
     width: 220px;
     margin: 6px 10px 10px 0;
     padding: 0px;
+    margin: auto;
 }
 
 #sox-flagPercentProgressBar:after {
@@ -443,6 +444,7 @@
 
 #sox-flagPercentHelpful {
     margin-bottom: 5px;
+    text-align: center;
 }
 
 /*titleEditDiff -- for the toggle button*/
