@@ -27,4 +27,4 @@ A clear and concise description of what you expected to happen.
 If applicable, please add screenshots/GIFs (you can use something like [LICEcap](https://www.cockos.com/licecap/) to make one!) to help explain the problem.
 
 **Environment**
-If this is not auto-populated, please state your full browser version, operating system, and userscript manager (e.g. Tampermonkey)
+If this is not auto-populated, please state your full browser version, SOX version number, and userscript manager (e.g. Tampermonkey)
