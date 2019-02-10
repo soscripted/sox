@@ -5,6 +5,7 @@
     init: function(version, handler) {
       // auto-inject version number and environment information into GitHub issues
       function inject() {
+        if (!sox.location.on('github.com/soscripted/sox') || location.href.includes('feature_request')) return;
         const $issue = $('#issue_body');
         if ($issue.length) {
           $issue.prop('disabled', 'true');
@@ -21,12 +22,7 @@ Platform: ${handler}
         }
       }
 
-      $(document).on('pjax:complete', () => {
-        if (sox.location.on('github.com')) {
-          inject();
-        }
-      });
-
+      $(document).on('pjax:complete', inject);
       inject();
     },
   };
