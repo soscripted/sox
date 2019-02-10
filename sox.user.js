@@ -9,7 +9,7 @@
 // @contributor  ᔕᖺᘎᕊ (https://stackexchange.com/users/4337810/, https://github.com/shu8)
 // @contributor  Sir-Cumference (https://stackexchange.com/users/4119142/, https://github.com/Sir-Cumference)
 // @contributor  GaurangTandon (https://github.com/GaurangTandon)
-// @updateURL    https://rawgit.com/soscripted/sox/dev/sox.user.js
+// @updateURL    https://cdn.jsdelivr.net/gh/soscripted/sox@dev/sox.user.js
 
 // @match        *://*.stackoverflow.com/*
 // @match        *://*.stackexchange.com/*
