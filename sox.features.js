@@ -1081,7 +1081,7 @@
 
       function addCSS() {
         $('.js-vote-up-btn, .js-vote-down-btn, .js-favorite-btn').addClass('sox-better-css');
-        $('head').append('<link rel="stylesheet" href="https://rawgit.com/shu8/SE-Answers_scripts/master/coolMaterialDesignCss.css" type="text/css" />');
+        $('head').append('<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/shu8/SE-Answers_scripts@master/coolMaterialDesignCss.css" type="text/css" />');
         $('#hmenus').css('-webkit-transform', 'translateZ(0)');
       }
       addCSS();
