@@ -1616,9 +1616,9 @@
     },
 
     hideLoveThisSite: function() {
-      // Description: Hides the "Love This Site?"" module from the sidebar
+      // Description: Hides the "Love This Site?" (weekly newsletter) module from the sidebar
 
-      $('#sidebar #newsletter-ad').parent().remove();
+      $('#sidebar #newsletter-ad').remove();
     },
 
     chatEasyAccess: function() {
