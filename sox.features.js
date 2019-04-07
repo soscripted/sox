@@ -1711,7 +1711,7 @@
         $column.append($link).appendTo($row);
       });
 
-      if (count > 0) {
+      if (count > 0 && !$('#sox-top-answers').length) {
         $('#answers div.answer:first').before($topAnswers);
         $table.css('width', count * 100 + 'px');
       }
