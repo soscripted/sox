@@ -138,16 +138,36 @@
   }
 
   sox.helpers = {
-    getFromAPI: function(type, id, sitename, filter, callback, sortby) {
-      sox.debug('Getting From API with URL: https://api.stackexchange.com/2.2/' + type + '/' + id + '?order=desc&sort=' + (sortby || 'creation') + '&site=' + sitename + '&key=' + sox.info.apikey + '&access_token=' + sox.settings.accessToken);
+    getFromAPI: function(details, callback) {
+      const {
+        endpoint,
+        ids,
+        sort = 'creation',
+        order = 'desc',
+        sitename,
+        filter,
+        limit,
+      } = details;
+      const baseURL = 'https://api.stackexchange.com/2.2/';
+      const queryParams = [];
 
-      const filterQuery = filter ? '&filter=' + filter : '';
-      // optional for queries like /questions
-      const idPath = id ? '/' + id : '';
+      if (filter) queryParams.push(`filter=${filter}`);
+      if (order) queryParams.push(`order=${order}`);
+      if (limit) queryParams.push(`pagesize=${limit}`);
+      queryParams.push(`sort=${sort}`);
+      queryParams.push(`site=${sitename}`);
+      queryParams.push(`key=${sox.info.apikey}`);
+      queryParams.push(`access_token=${sox.settings.accessToken}`);
+      const queryString = queryParams.join('&');
+
+      // IDs are optional for endpoints like /questions
+      const idPath = ids ? `/${ids}` : '';
+      const queryURL = `${baseURL}${endpoint}${idPath}?${queryString}`;
+      sox.debug('Getting From API with URL', queryURL);
 
       $.ajax({
         type: 'get',
-        url: 'https://api.stackexchange.com/2.2/' + type + idPath + '?order=desc&sort=' + (sortby || 'creation') + '&site=' + sitename + '&key=' + sox.info.apikey + '&access_token=' + sox.settings.accessToken + filterQuery,
+        url: queryURL,
         success: function(d) {
           if (d.backoff) {
             sox.error('SOX Error: BACKOFF: ' + d.backoff);
