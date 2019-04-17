@@ -18,7 +18,6 @@
             $(this).css({
               'width': 'auto',
               'height': 'auto',
-
             });
           },
         }).css('cursor', 'move');
@@ -101,13 +100,13 @@
       }
 
       let color;
-      if (sox.location.on('superuser.com')) { //superuser
+      if (sox.location.on('superuser.com')) {
         color = '#00a1c9';
-      } else if (sox.location.on('stackoverflow.com')) { //stackoverflow
+      } else if (sox.location.on('stackoverflow.com')) {
         color = '#f69c55';
       } else if (sox.location.on('serverfault.com')) {
         color = '#EA292C';
-      } else { //for all other sites
+      } else {
         color = $('.post-tag').css('color');
       }
 
@@ -139,7 +138,6 @@
 
         $('.answercell').each(function() {
           answererID = +this.querySelector('.post-signature:nth-last-of-type(1) a[href^="/users"]').href.match(/\d+/)[0];
-
           $(this.nextElementSibling.querySelectorAll('.comment-user[href^="/users/' + answererID + '/"]')).addClass('sox-answerer');
         });
       }
@@ -885,6 +883,7 @@
 
       $('.votecell > .js-voting-container').css({ //.votecell is necessary; e.g., the number of votes of questions on the Questions list for a site uses the .vote class too
         'position': '-webkit-sticky',
+        // eslint-disable-next-line no-dupe-keys
         'position': 'sticky',
         'top': parseInt($('.container').css('margin-top'), 10) + parseInt($('body').css('padding-top'), 10), //Seems like most sites use margin-top on the container, but Meta and SO use padding on the body
       });
@@ -1191,12 +1190,9 @@
 
       function getComment(url, $that) {
         $.get(url, (responseText, textStatus, XMLHttpRequest) => {
-          sox.debug('SOX editReasonTooltip URL: ' + url);
-          sox.debug('SOX editReasonTooltip text: ' + $(XMLHttpRequest.responseText).find('.revision-comment:eq(0)')[0].innerHTML);
-          sox.debug('SOX editReasonTooltip: adding to tooltip');
-          $that.find('.sox-revision-comment').attr('title', $(XMLHttpRequest.responseText).find('.revision-comment:eq(0)')[0].innerHTML);
-          sox.debug('SOX editReasonTooltip: finished adding to tooltip');
-          sox.debug('SOX editReasonTooltip: tooltip is now: ' + $that.find('.sox-revision-comment').attr('title'));
+          const text = $(XMLHttpRequest.responseText).find('.revision-comment:eq(0)')[0].innerHTML;
+          sox.debug('editReasonTooltip adding text to tooltip: ' + text);
+          $that.find('.sox-revision-comment').attr('title', text);
         });
       }
 
