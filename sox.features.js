@@ -1761,26 +1761,31 @@
     linkedToFrom: function() {
       // Description: Add an arrow to linked posts in the sidebar to show whether they are linked to or linked from
 
-      const currentId = location.href.split('/')[4];
-      $('.linked .spacer a.question-hyperlink').each(function() {
-        const id = $(this).attr('href').split('/')[4];
-        if ($('a[href*="' + id + '"]').not('.spacer a').length) {
-          const $that = $(this);
-          $that.append('<i class="fa fa-chevron-right"  title="Current question links to this question" style="color:black;margin-left:5px;"></i>');
-          $.ajax({
-            url: '/questions/' + id,
-            type: 'get',
-            dataType: 'html',
-            async: 'false',
-            success: function(d) {
-              if ($(d).find('a[href*="' + currentId + '"]').not('.spacer a').length) {
-                $that.append('<i class="fa fa-chevron-left" title="Current question is linked from this question" style="color:black;margin-left:5px;"></i>');
-              }
-            },
-          });
-        } else {
-          $(this).append('<i class="fa fa-chevron-left" title="Current question is linked from this question" style="color:black;margin-left:5px;"></i>');
-        }
+      const currentPageId = +location.href.match(/\/(\d+)\//)[1];
+      sox.helpers.getFromAPI('questions', `${currentPageId}/linked`, sox.site.url, '!-MOiNm40Dv9qWI4dBqjO5FBS8p*ODCWqP', (data) => {
+        const pagesThatLinkToThisPage = data.items;
+        $('.linked .spacer a.question-hyperlink').each(function () {
+          const id = +$(this).attr('href').match(/\/(\d+)\//)[1];
+
+          if ($('a[href*="' + id + '"]').not('#sidebar a').length) {
+            // If a link from 'linked questions' does exist elsewhere on this page
+            // Then we know that this page definitely references the linked post
+            $(this).append('<i class="fa fa-chevron-right sox-linkedToFrom-chevron" title="Current page links to this question"></i>');
+
+            // However, the linked post _might_ also reference the current page, so let's check:
+            if (pagesThatLinkToThisPage.find(question => question.question_id === currentPageId && question.qustion_id === id)) {
+              // The current page is linked to from question_id (which is also the current anchor in the loop)
+              sox.debug(`linkedToFrom: link to current page (${currentPageId}) exists on question ${id}`);
+              $(this).append('<i class="fa fa-chevron-left sox-linkedToFrom-chevron" title="This question links to the current page"></i>');
+            } else {
+              sox.debug(`linkedToFrom: link to current page not found on question ${id}`);
+            }
+          } else {
+            // If a link from 'linked questions' doesn't exist on the rest of the page
+            // Then it must be there _only_ due to the fact that the linked post references the current page
+            $(this).append('<i class="fa fa-chevron-left sox-linkedToFrom-chevron" title="This question links to the current page"></i>');
+          }
+        });
       });
     },
 

@@ -577,3 +577,9 @@
 .sox-customMagicLinks-settings-table th {
     font-weight: bold;
 }
+
+/* linkedToFrom -- for the >/< chevrons */
+.sox-linkedToFrom-chevron {
+    color: black;
+    margin-left: 5px;
+}
