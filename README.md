@@ -10,8 +10,17 @@ Note: This project has no relation to Stack Overflow or Stack Exchange; it is si
 
 ## Installation & Requirements
 
-1. Install [Tampermonkey](http://tampermonkey.net/) (for Chrome or Firefox). These are userscript managers that *must* be installed in order for this to work, as the script relies on certain `GM_*` functions in order to save your settings! Tampermonkey is available for many more browsers, and whilst we do not explicitly support them, SOX should work on them. **Note: Greasemonkey 4 and upwards [is not supported with SOX](https://github.com/soscripted/sox/issues/306).**
-2. Install the script. Clicking on 'install' below will make your userscript manager prompt you automatically to install it.
+1. Install a userscript manager; these are free extensions available for all popular browsers that allow you to manage and install userscripts, along with exposing certain code functions that SOX requires.
+
+    We recommend [Tampermonkey](http://tampermonkey.net/) for Chrome and Firefox.
+
+    Whilst SOX only explicitly supports Chrome and Firefox, it should work on any popular browser that can run userscripts.
+
+    **Note: Greasemonkey 4 and upwards [is not supported with SOX](https://github.com/soscripted/sox/issues/306).**
+
+    **There seems to be [an issue with Tampermonkey on Firefox](https://github.com/Tampermonkey/tampermonkey/issues/477) where userscripts don't seem to run. If this happens, please restart your browser and/or computer before raising an issue on GitHub, as a restart seems to fix this!**
+
+2. Install the script. Clicking on 'install' below will make Tampermonkey prompt you automatically to install it.
 
     - Official Version: <kbd>[install](https://github.com/soscripted/sox/raw/v2.4.0/sox.user.js)</kbd>. <kbd>[view source](https://github.com/soscripted/sox/blob/v2.4.0/sox.user.js)</kbd>
     - Development Version: <kbd>[install](https://github.com/soscripted/sox/raw/dev/sox.user.js)</kbd>. <kbd>[view source](https://github.com/soscripted/sox/blob/dev/sox.user.js)</kbd>
