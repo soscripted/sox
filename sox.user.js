@@ -103,7 +103,8 @@
     }
 
     if (sox.settings.available) {
-      // execute features
+      // Execute features
+      performance.mark('allFeatures-start');
       for (let i = 0; i < settings.length; ++i) {
         var category = settings[i].split('-')[0];
         var featureId = settings[i].split('-')[1];
@@ -120,9 +121,7 @@
         })[0];
 
         var runFeature = true;
-
         var sites;
-
         var pattern;
 
         try {
@@ -152,12 +151,15 @@
           }
           if (runFeature) {
             sox.debug('running ' + featureId);
+            performance.mark(`${featureId}-start`);
             if (feature.settings) {
               const settingsToPass = GM_getValue('SOX-' + featureId + '-settings') ? JSON.parse(GM_getValue('SOX-' + featureId + '-settings')) : {};
               sox.features[featureId](settingsToPass); //run the feature if match and exclude conditions are met, pass on settings object
             } else {
               sox.features[featureId](); //run the feature if match and exclude conditions are met
             }
+            performance.mark(`${featureId}-end`);
+            performance.measure(featureId, `${featureId}-start`, `${featureId}-end`);
           }
         } catch (err) {
           if (!sox.features[featureId] || !feature) { //remove deprecated/'corrupt' feature IDs from saved settings
@@ -171,6 +173,9 @@
           }
         }
       }
+      performance.mark('allFeatures-end');
+      performance.measure('allFeatures', 'allFeatures-start', 'allFeatures-end');
+      sox.debug('Performance Data', performance.getEntriesByType('measure'));
     }
 
     //custom events....
