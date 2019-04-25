@@ -99,7 +99,12 @@
       // Description: For highlighting only the tags of favorite questions
 
       function highlight() {
-        $('.tagged-interesting').removeClass('tagged-interesting sox-tagged-interesting').addClass('sox-tagged-interesting');
+        const interestingQuestions = document.getElementsByClassName('tagged-interesting');
+        for (let i = 0; i < interestingQuestions.length; i++) {
+          const question = interestingQuestions[i];
+          question.classList.remove('tagged-interesting');
+          question.classList.add('sox-tagged-interesting');
+        }
       }
 
       let color;
@@ -110,14 +115,17 @@
       } else if (sox.location.on('serverfault.com')) {
         color = '#EA292C';
       } else {
-        color = $('.post-tag').css('color');
+        color = document.getElementsByClassName('post-tag')[0].style.color;
       }
 
-      $('<style type="text/css">.sox-tagged-interesting:before{background: ' + color + ';}</style>').appendTo('head');
+      const style = document.createElement('style');
+      style.type = 'text/css';
+      style.appendChild(document.createTextNode(`.sox-tagged-interesting:before{ background: ${color} }`));
+      document.head.appendChild(style);
 
       highlight();
 
-      if ($('.question-summary').length) sox.helpers.observe('.question-summary', highlight);
+      if (document.getElementsByClassName('question-summary').length) sox.helpers.observe('.question-summary', highlight);
     },
 
     displayName: function() {
