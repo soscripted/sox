@@ -33,17 +33,19 @@
       }
     },
 
-    markEmployees: function() {
+    markEmployees: function () {
       // Description: Adds an Stack Overflow logo next to users that *ARE* a Stack Overflow Employee
 
-      const $links = $('.comment a, .deleted-answer-info a, .employee-name a, .user-details a, .question-summary .started a').filter('a[href^="/users/"]');
+      const anchors = [...document.querySelectorAll('.comment a, .deleted-answer-info a, .employee-name a, .user-details a, .question-summary .started a')].filter(el => {
+        return el.href.startsWith('/users/');
+      });
       const ids = [];
 
-      $links.each(function() {
-        const href = $(this).attr('href');
+      for (let i = 0; i < anchors.length; i++) {
+        const href = anchors[i].href;
         const id = href.split('/')[2];
         if (ids.indexOf(id) === -1) ids.push(id);
-      });
+      }
       sox.debug('markEmployees user IDs', ids);
 
       // TODO is pagination needed?
@@ -60,8 +62,9 @@
           const isEmployee = data.items[i].is_employee;
           if (!isEmployee) continue;
 
-          $links.filter('a[href^="/users/' + userId + '/"]')
-            .after('<span class="fab fa-stack-overflow" title="employee (added by SOX)" style="padding: 0 5px; color: ' + $('.mod-flair').css('color') + '"></span>');
+          anchors.filter(el => el.href.startsWith(`/users/${userId}/`)).forEach(el => {
+            el.insertAdjacentHTML('<span class="fab fa-stack-overflow" title="employee (added by SOX)" style="padding: 0 5px; color: ' + $('.mod-flair').css('color') + '"></span>');
+          });
         }
       });
     },
