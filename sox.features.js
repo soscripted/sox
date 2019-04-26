@@ -489,16 +489,19 @@
 
       sox.helpers.observe('.share-tip', () => {
         const toRemove = ' (includes your user id)';
-        const popup = $('.share-tip');
-        const origHtml = popup.html();
-        if (origHtml.indexOf(toRemove) == -1) return; //don't do anything if the function's already done its thing
+        const popup = document.getElementsByClassName('share-tip')[0];
+        if (!popup) return;
 
-        popup.html(() => origHtml.replace(toRemove, ''));
+        // Do nothing if the function's already done its thing
+        const origHtml = popup.innerHTML;
+        if (origHtml.indexOf(toRemove) == -1) return;
 
-        const inputBox = $('.share-tip input');
-        const origLink = inputBox.val();
-        inputBox.val(origLink.match(/.+\/(q|a)\/[0-9]+/g));
-        inputBox.select();
+        popup.innerHTML = origHtml.replace(toRemove, '');
+
+        const input = popup.querySelector('input');
+        const origLink = input.value;
+        input.value = origLink.match(/.+\/(q|a)\/[0-9]+/g);
+        input.select();
       });
     },
 
