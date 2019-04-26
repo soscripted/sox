@@ -257,18 +257,20 @@
       const listBtn = '<li class="wmd-button wmd-bullet-button-sox" title="add dashes (\'-\') before every line to make a bullet list"><span style="background-image:none;">&#x25cf;</span></li>';
 
       function loopAndAddHandlers() {
-        $('[id^="wmd-redo-button"]').each(function() {
-          if (!this.dataset.kbdAdded) {
-            //compatability with https://stackapps.com/q/3341 as requested in https://github.com/soscripted/sox/issues/361
-            //the SOX kbd button isn't added if that script is installed
-            if ($(this).parent().find('.tmAdded.wmd-kbd-button').length) {
-              $(this).after(listBtn);
+        const redoButtons = [...document.querySelectorAll('[id^="wmd-redo-button"]')];
+        for (let i = 0; i < redoButtons.length; i++) {
+          const button = redoButtons[i];
+          if (!button.dataset.kbdAdded) {
+            // Compatability with https://stackapps.com/q/3341 as requested in https://github.com/soscripted/sox/issues/361
+            // The SOX kbd button isn't added if that script is installed
+            if (button.parentNode.querySelector('.tmAdded.wmd-kbd-button')) {
+              button.insertAdjacentHTML('afterend', listBtn);
             } else {
-              $(this).after(kbdBtn + listBtn);
+              button.insertAdjacentHTML('afterend', kbdBtn + listBtn);
             }
-            this.dataset.kbdAdded = true;
+            button.dataset.kbdAdded = true;
           }
-        });
+        }
       }
 
       $(document).on('sox-edit-window', loopAndAddHandlers);
