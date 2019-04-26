@@ -63,7 +63,7 @@
           if (!isEmployee) continue;
 
           anchors.filter(el => el.href.startsWith(`/users/${userId}/`)).forEach(el => {
-            el.insertAdjacentHTML('<span class="fab fa-stack-overflow" title="employee (added by SOX)" style="padding: 0 5px; color: ' + $('.mod-flair').css('color') + '"></span>');
+            el.insertAdjacentHTML('afterend', '<span class="fab fa-stack-overflow" title="employee (added by SOX)" style="padding: 0 5px; color: ' + $('.mod-flair').css('color') + '"></span>');
           });
         }
       });
