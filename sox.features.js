@@ -145,12 +145,17 @@
       // Description: For highlighting the names of answerers on comments
 
       function color() {
-        let answererID;
+        const answerCells = [...document.getElementsByClassName('answercell')];
+        for (let i = 0; i < answerCells.length; i++) {
+          const cell = answerCells[i];
+          const answererID = cell.querySelector('.post-signature:nth-last-of-type(1) a').href.match(/\d+/)[0];
+          const commentUsers = [...cell.nextElementSibling.getElementsByClassName('comment-user')]
+            .filter(c => c.href && c.href.contains(`/users/${answererID}/`));
 
-        $('.answercell').each(function() {
-          answererID = +this.querySelector('.post-signature:nth-last-of-type(1) a[href^="/users"]').href.match(/\d+/)[0];
-          $(this.nextElementSibling.querySelectorAll('.comment-user[href^="/users/' + answererID + '/"]')).addClass('sox-answerer');
-        });
+          for (let c = 0; c < commentUsers.length; c++) {
+            commentUsers[c].classList.add('sox-answerer');
+          }
+        }
       }
 
       color();
