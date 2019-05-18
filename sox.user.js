@@ -64,7 +64,7 @@
     if (sox.location.on('soscripted.github.io/sox/#access_token')) { //save access token
       try {
         const access_token = window.location.href.split('=')[1].split('&')[0];
-        sox.loginfo('SOX ACCESS TOKEN: ', access_token);
+        sox.loginfo('ACCESS TOKEN: ', access_token);
         GM_setValue('SOX-accessToken', access_token);
         alert('Access token successfully saved! You can close this window :)');
       } catch (e) {
@@ -91,7 +91,7 @@
     const featureInfo = JSON.parse(GM_getResourceText('featuresJSON'));
 
     try {
-      sox.debug('init', sox, sox.dialog);
+      sox.debug('SOX object', sox);
       sox.dialog.init({
         version: sox.info.version,
         features: featureInfo,

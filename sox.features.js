@@ -349,7 +349,6 @@
         $('#currentValues').html(' ');
         const options = getOptions();
         options.forEach(opt => {
-          console.log(opt);
           const [[name, text]] = Object.entries(opt);
           $('#currentValues').append(`
           <div>
@@ -391,14 +390,11 @@
       }
 
       function addCheckboxes() {
-        sox.debug('editComment addCheckboxes() called');
         const $editCommentField = $('input[id^="edit-comment"]'); //NOTE: input specifcally needed, due to https://github.com/soscripted/sox/issues/363
-        sox.debug('editComment addCheckboxes() $editCommentField:', $editCommentField.get());
         if (!$editCommentField.length) return; //https://github.com/soscripted/sox/issues/246
 
         $('#reasons').remove(); //remove the div containing everything, we're going to add/remove stuff now:
         if (/\/edit/.test(sox.site.href) || $('[class^="inline-editor"]').length || $('.edit-comment').length) {
-          sox.debug('editComment addCheckboxes() adding boxes');
           $editCommentField.after('<div id="reasons" style="float:left;clear:both"></div>');
 
           const options = getOptions();
@@ -1214,10 +1210,11 @@
     editReasonTooltip: function() {
       // Description: For showing the latest revision's comment as a tooltip on 'edit [date] at [time]'
 
-      function getComment(url, $that) {
+      function getComment(id, $that) {
+        const url = location.protocol + '//' + sox.site.url + '/posts/' + id + '/revisions';
         $.get(url, (responseText, textStatus, XMLHttpRequest) => {
           const text = $(XMLHttpRequest.responseText).find('.revision-comment:eq(0)')[0].innerHTML;
-          sox.debug('editReasonTooltip adding text to tooltip: ' + text);
+          sox.debug(`editReasonTooltip adding text to tooltip for post ${id}: '${text}'`);
           $that.find('.sox-revision-comment').attr('title', text);
         });
       }
@@ -1227,8 +1224,7 @@
           if ($(this).find('.post-signature').length > 1) {
             const id = $(this).attr('data-questionid') || $(this).attr('data-answerid');
             $(this).find('.post-signature:eq(0)').find('.user-action-time a').wrapInner('<span class="sox-revision-comment"></span>');
-            const $that = $(this);
-            getComment(location.protocol + '//' + sox.site.url + '/posts/' + id + '/revisions', $that);
+            getComment(id, $(this));
           }
         });
       }
@@ -1892,16 +1888,10 @@
 
       function addLastSeen(userDetailsFromAPI) {
         $('.question, .answer, .reviewable-post').each(function() {
-          sox.debug('current post', $(this));
-
           const anchor = this.querySelector('.post-signature:last-child .user-details a[href^="/users"]');
-
           if (!anchor) return;
 
           const id = sox.helpers.getIDFromAnchor(anchor);
-          sox.debug('quickAuthorInfo addLastSeen(): current id', id);
-          sox.debug('quickAuthorInfo addLastSeen(): userdetailscurrent id', userDetailsFromAPI[id]);
-
           if (!id || !(userDetailsFromAPI[id] && !this.getElementsByClassName('sox-last-seen').length)) return;
 
           const lastSeenDate = new Date(userDetailsFromAPI[id].last_seen);
@@ -1943,8 +1933,6 @@
           filter: FILTER_USER_LASTSEEN_TYPE,
           sort: 'creation',
         }, (data) => {
-          sox.debug('quickAuthorInfo api dump', data);
-
           const userDetailsFromAPI = {};
           data.items.forEach((user) => {
             userDetailsFromAPI[user.user_id] = {
@@ -1953,7 +1941,7 @@
             };
           });
 
-          sox.debug('quickAuthorInfo userdetailsfromapi', userDetailsFromAPI);
+          sox.debug('quickAuthorInfo userDetailsFromAPI', userDetailsFromAPI);
           addLastSeen(userDetailsFromAPI);
 
           $(document).on('sox-new-comment', () => { //make sure it doesn't disappear when adding a new comment!

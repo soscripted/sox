@@ -49,9 +49,7 @@
   let Stack;
   if (location.href.indexOf('github.com') === -1) { //need this so it works on FF -- CSP blocks window.eval() it seems
     Chat = (typeof window.CHAT === 'undefined' ? window.eval('typeof CHAT != \'undefined\' ? CHAT : undefined') : CHAT);
-    sox.debug('CHAT', Chat);
     Stack = (typeof Chat === 'undefined' ? (typeof StackExchange === 'undefined' ? window.eval('if (typeof StackExchange != "undefined") StackExchange') : (StackExchange || window.StackExchange)) : undefined);
-    sox.debug('Stack', Stack);
   }
 
   sox.Stack = Stack;
@@ -104,7 +102,6 @@
       }
     },
     get accessToken() {
-      sox.debug('SOX Access Token: ' + (GM_getValue('SOX-accessToken', false) === false ? 'NOT SET' : 'SET'));
       const accessToken = GM_getValue('SOX-accessToken', false);
       return (accessToken == -2 ? false : accessToken); //if the user was already asked once, the value is set to -2, so make sure this is returned as false
     },
