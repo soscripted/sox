@@ -336,12 +336,6 @@
             "match": "",
             "exclude": "*://chat.*.com/*"
         }, {
-            "name": "hideHotNetworkQuestions",
-            "desc": "Hide the Hot Network Questions module",
-            "meta": "",
-            "match": "",
-            "exclude": "*://chat.*.com/*"
-        }, {
             "name": "linkedToFrom",
             "desc": "Add an arrow to linked posts in the sidebar to show whether they are linked to or linked from",
             "meta": "http://meta.stackexchange.com/q/276235/260841",

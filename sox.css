@@ -492,12 +492,6 @@
     padding: 1px 5px !important;
 }
 
-/*hotNetworkQuestionsFiltering -- for the questions to hide*/
-
-.sox-hot-network-question-filter-hide {
-    display: none !important;
-}
-
 /*addAuthorNameToInboxNotifications -- for the author span*/
 
 .sox-notification-author {

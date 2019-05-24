@@ -1619,12 +1619,6 @@
       });
     },
 
-    hideHotNetworkQuestions: function() {
-      // Description: Hides the Hot Network Questions module from the sidebar
-
-      $('#hot-network-questions').remove();
-    },
-
     hideHireMe: function() {
       // Description: Hides the Looking for a Job module from the sidebar
 
