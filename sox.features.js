@@ -1568,32 +1568,30 @@
       // Description: Displays linked posts inline with an arrow
 
       function getIdFromUrl(url) {
-        if (url.indexOf('/questions/tagged/') !== -1) return false;
-
-        if (url.indexOf('/a/') > -1) { //eg. http://meta.stackexchange.com/a/26764/260841
-          return url.split('/a/')[1].split('/')[0];
-        } else if (url.indexOf('/q/') > -1) { //eg. http://meta.stackexchange.com/q/26756/260841
-          return url.split('/q/')[1].split('/')[0];
-        } else if (url.indexOf('/questions/') > -1) {
-          if (url.indexOf('#') > -1) { //then it's probably an answer, eg. http://meta.stackexchange.com/questions/26756/how-do-i-use-a-small-font-size-in-questions-and-answers/26764#26764
-            return url.split('#')[1];
-          } else { //then it's a question
-            return url.split('/questions/')[1].split('/')[0];
-          }
+        let idMatch;
+        if (url.match('\/a|q\/')) {
+          // eg. http://meta.stackexchange.com/a/26764/260841 or http://meta.stackexchange.com/q/26756/260841
+          idMatch = url.match(/\/(?:a|q)\/(\d+)/);
+        } else if (url.includes('/questions/')) {
+          // If URL includes '#', probably an answer, eg. http://meta.stackexchange.com/questions/26756/how-do-i-use-a-small-font-size-in-questions-and-answers/26764#26764
+          // Oherwise, it's a question
+          idMatch = url.match(/#?(\d+)/);
         }
+        if (idMatch) return idMatch[1];
       }
 
       function addButton() {
         $('.post-text a, .comments .comment-copy a').each(function() {
           const url = $(this).attr('href');
 
-          //https://github.com/soscripted/sox/issues/205 -- check link's location is to same site, eg if on SU, don't allow on M.SU
-          //http://stackoverflow.com/a/4815665/3541881
+          // https://github.com/soscripted/sox/issues/205 -- check link's location is to same site, eg if on SU, don't allow on M.SU
+          // http://stackoverflow.com/a/4815665/3541881
           if (url &&
               $('<a>').prop('href', url).prop('hostname') == location.hostname &&
-              url.indexOf('#comment') == -1 &&
-              url.indexOf('/edit') == -1 && //https://github.com/soscripted/sox/issues/281
-              getIdFromUrl(url) && //getIdFromUrl(url) makes sure it won't fail later on
+              !url.includes('#comment') &&
+              !url.includes('/edit/') && // https://github.com/soscripted/sox/issues/281
+              !url.includes('/tagged/') &&
+              getIdFromUrl(url) && // getIdFromUrl(url) makes sure it won't fail later on
               !$(this).prev().is('.expand-post-sox')) {
             $(this).before('<a class="expander-arrow-small-hide expand-post-sox" style="border-bottom:0"></a>');
           }
