@@ -1169,6 +1169,7 @@
         }, data => {
           sox.debug('standOutDupeCloseMigrated received API details', data);
           questions.forEach(question => {
+            sox.debug('standOutDupeCloseMigrated adding details for question', question);
             question.anchor.innerText = question.text.replace(NOTICE_REGEX, '');
             question.element.dataset[QUESTION_STATE_KEY] = question.noticeName;
 
@@ -1200,8 +1201,16 @@
               break;
             }
             case 'migrated': {
-              const migratedToSite = questionDetails.migrated_to.other_site.name;
-              const textToAdd = 'migrated to ' + migratedToSite;
+              let textToAdd;
+              if (questionDetails.migrated_to) {
+                const migratedToSite = questionDetails.migrated_to.other_site.name;
+                textToAdd = 'migrated to ' + migratedToSite;
+              } else if (questionDetails.migrated_from) {
+                const migratedFromSite = questionDetails.migrated_from.other_site.name;
+                textToAdd = 'migrated from ' + migratedFromSite;
+              } else {
+                sox.warn('standOutDupeCloseMigrated: unknown migration state');
+              }
 
               $(question.anchor).after('&nbsp;<span class=\'standOutDupeCloseMigrated-migrated\' title=\'' + textToAdd + '\'>&nbsp;migrated&nbsp;</span>');
               break;
