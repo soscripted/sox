@@ -390,22 +390,23 @@
       }
 
       function addCheckboxes() {
+        const $reasons = $('#reasons');
         const $editCommentField = $('input[id^="edit-comment"]'); //NOTE: input specifcally needed, due to https://github.com/soscripted/sox/issues/363
         if (!$editCommentField.length) return; //https://github.com/soscripted/sox/issues/246
 
-        $('#reasons').remove(); //remove the div containing everything, we're going to add/remove stuff now:
+        $reasons.remove(); //remove the div containing everything, we're going to add/remove stuff now:
         if (/\/edit/.test(sox.site.href) || $('[class^="inline-editor"]').length || $('.edit-comment').length) {
           $editCommentField.after('<div id="reasons" style="float:left;clear:both"></div>');
 
           const options = getOptions();
           options.forEach(opt => {
             const [[name, text]] = Object.entries(opt);
-            $('#reasons').append(`
+            $reasons.append(`
               <label class="sox-editComment-reason"><input type="checkbox" value="${text}"</input>${name}</label>&nbsp;
             `);
           });
 
-          $('#reasons input[type="checkbox"]').change(function() {
+          $reasons.find('input[type="checkbox"]').change(function() {
             if (this.checked) { //Add it to the summary
               if ($editCommentField.val()) {
                 $editCommentField.val($editCommentField.val() + '; ' + $(this).val());
@@ -563,8 +564,10 @@
       // Description: For adding some text to spoilers to tell people to hover over it
 
       function addSpoilerTip() {
-        $('.spoiler').prepend('<div id="isSpoiler" style="color:red; font-size:smaller; float:right;">hover to show spoiler<div>');
-        $('.spoiler').hover(function() {
+        const $spoiler = $('.spoiler');
+
+        $spoiler.prepend('<div id="isSpoiler" style="color:red; font-size:smaller; float:right;">hover to show spoiler<div>');
+        $spoiler.hover(function() {
           $(this).find('#isSpoiler').hide(500);
         }, function() {
           $(this).find('#isSpoiler').show(500);
@@ -919,30 +922,36 @@
       // Description: For showing the new version of a title in a diff separately rather than loads of crossing outs in red and additions in green
 
       function betterTitle() {
-        sox.debug('ran betterTitle from titleEditDiff');
-        const $questionHyperlink = $('.summary h2 .question-hyperlink').clone();
-        const $questionHyperlinkTwo = $('.summary h2 .question-hyperlink').clone();
-        const link = $('.summary h2 .question-hyperlink').attr('href');
+        sox.debug('titleEditDiff: running betterTitle');
+        const $questionHyperlinkOriginal = $('.summary h2 .question-hyperlink');
+        const $questionHyperlink = $questionHyperlinkOriginal.clone();
+        const $questionHyperlinkTwo = $questionHyperlinkOriginal.clone();
+
+        const link = $questionHyperlinkOriginal.attr('href');
         const added = ($questionHyperlinkTwo.find('.diff-delete').remove().end().text());
         const removed = ($questionHyperlink.find('.diff-add').remove().end().text());
 
-        if ($('.summary h2 .question-hyperlink').find('.diff-delete, .diff-add').length && !($('.sox-better-title').length)) {
-          if (!$('.sox-better-title-toggle').length) $('.summary h2 .question-hyperlink').before('<i class="sox-better-title-toggle fa fa-toggle-on" title="toggle SOX better title diff"></i>');
-          $('.summary h2 .question-hyperlink').addClass('sox-original-title-diff').hide();
-          $('.summary h2 .question-hyperlink').after('<a href="' + link + '" class="question-hyperlink sox-better-title"><span class="diff-delete">' + removed + '</span><span class="diff-add">' + added + '</span></a>');
+        if ($questionHyperlinkOriginal.find('.diff-delete, .diff-add').length && !($('.sox-better-title').length)) {
+          if (!$('.sox-better-title-toggle').length) {
+            $('.summary h2 .question-hyperlink').before('<i class="sox-better-title-toggle fa fa-toggle-on" title="toggle SOX better title diff"></i>');
+          }
+          $questionHyperlinkOriginal.addClass('sox-original-title-diff').hide();
+          $questionHyperlinkOriginal.after('<a href="' + link + '" class="question-hyperlink sox-better-title"><span class="diff-delete">' + removed + '</span><span class="diff-add">' + added + '</span></a>');
         }
       }
       betterTitle();
       sox.helpers.observe('.review-status, .review-content, .suggested-edit, .post-id', betterTitle);
 
-      $(document).on('click', '.sox-better-title-toggle', function() { //https://github.com/soscripted/sox/issues/166#issuecomment-269925059
-        if ($('.sox-original-title-diff').is(':visible')) {
+      // https://github.com/soscripted/sox/issues/166#issuecomment-269925059
+      $(document).on('click', '.sox-better-title-toggle', function() {
+        const $soxOriginalTitleDiff = $('.sox-original-title-diff');
+        if ($soxOriginalTitleDiff.is(':visible')) {
           $(this).addClass('fa-toggle-on').removeClass('fa-toggle-off');
-          $('.sox-original-title-diff').hide();
+          $soxOriginalTitleDiff.hide();
           $('.sox-better-title').show();
         } else {
           $(this).removeClass('fa-toggle-on').addClass('fa-toggle-off');
-          $('.sox-original-title-diff').show();
+          $soxOriginalTitleDiff.show();
           $('.sox-better-title').hide();
         }
       });
@@ -1046,7 +1055,7 @@
 
       $dialog.css({
         'top': $('.top-bar').height(),
-        'right': $('.-container').outerWidth() - $('#metaNewQuestionAlertButton').parent().position().left - $('#metaNewQuestionAlertButton').outerWidth(),
+        'right': $('.-container').outerWidth() - $diamond.parent().position().left - $diamond.outerWidth(),
       });
 
       if ($('#metaNewQuestionAlertButton').length) $('.js-topbar-dialog-corral').append($dialog);
@@ -1869,8 +1878,9 @@
       // Description: Aligns badges by their class (bronze/silver/gold) on user profiles
 
       const acs = {};
+      const $badges = $('.user-accounts tr .badges');
 
-      $('.user-accounts tr .badges').each(function(i) {
+      $badges.each(function(i) {
         let b; let s; let g;
         if ($(this).find('>span[title*="bronze badge"]').length) {
           b = $(this).find('>span[title*="bronze badge"] .badgecount').text();
@@ -1888,7 +1898,7 @@
         };
       });
       $.each(acs, k => {
-        const $badgesTd = $('.user-accounts tr .badges').eq(k);
+        const $badgesTd = $badges.eq(k);
         $badgesTd.html('');
         if (acs[k].gold) {
           $badgesTd.append('<span title="' + acs[k].gold + ' gold badges"><span class="badge1"></span><span class="badgecount">' + acs[k].gold + '</span></span>');
@@ -2339,9 +2349,11 @@
 
       $(document).on('click', '.sox-copyCodeButton', function() {
         try {
-          if (!$('.sox-copyCodeTextarea').length) $('body').append('<textarea class="sox-copyCodeTextarea">');
-          $('.sox-copyCodeTextarea').val($(this).next('pre').text());
-          $('.sox-copyCodeTextarea').select();
+          const copyCodeTextareas = document.getElementsByClassName('sox-copyCodeTextarea');
+          if (!copyCodeTextareas.length) $('body').append('<textarea class="sox-copyCodeTextarea">');
+
+          copyCodeTextareas[0].value = $(this).next('pre').text();
+          copyCodeTextareas[0].select();
           document.execCommand('copy');
           $(this).effect('highlight', {
             color: 'white',
@@ -2369,9 +2381,10 @@
         $.get(urlToGet, d => {
           const count = +$(d).find('.review-stats-count-current-user').first().text().trim();
           const width = (count / 20) * 100;
-          if ($('#sox-daily-review-count').length) {
-            $('#sox-daily-review-count').find('#badge-progress-bar').css('width', width);
-            $('#sox-daily-review-count').find('#badge-progress-count').text(count);
+          const $soxDailyReviewCount = $('#sox-daily-review-count');
+          if ($soxDailyReviewCount.length) {
+            $soxDailyReviewCount.find('#badge-progress-bar').css('width', width);
+            $soxDailyReviewCount.find('#badge-progress-count').text(count);
           } else {
             $('.subheader.tools-rev').append(`<div id="sox-daily-review-count" title="your daily review cap in this queue" class="review-badge-progress">
                             <div class="meter" style="width: 100px;margin-top: 14px;margin-right: 15px;height: 9px;float: right;">

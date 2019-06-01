@@ -301,7 +301,7 @@
       });
 
       //close dialog if clicked outside it
-      $(document).click((e) => { //close dialog if clicked outside it
+      $(document).click(e => { //close dialog if clicked outside it
         const $target = $(e.target);
         const isToggle = $target.is('#soxSettingsButton, #sox-settings-dialog');
         const isChild = $target.parents('#soxSettingsButton, #sox-settings-dialog').is('#soxSettingsButton, #sox-settings-dialog');
