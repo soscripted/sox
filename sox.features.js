@@ -1586,7 +1586,7 @@
 
       function getIdFromUrl(url) {
         let idMatch;
-        if (url.match('\/a|q\/')) {
+        if (url.match('/a|q/')) {
           // eg. http://meta.stackexchange.com/a/26764/260841 or http://meta.stackexchange.com/q/26756/260841
           idMatch = url.match(/\/(?:a|q)\/(\d+)/);
         } else if (url.includes('/questions/')) {
