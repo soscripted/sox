@@ -852,18 +852,20 @@
       const questionIDs = [];
 
       // questionID: [tagArray, insertedTagDOM]
-      // second element is for caching, in case more than
-      // one answer in the search list belongs to the same question
+      // Second element is for caching, in case more than one answer in
+      // the search list belongs to the same question
       let questionID;
 
       const tagsForQuestionIDs = {};
       const QUESTION_TAGS_FILTER = '!)8aDT8Opwq-vdo8';
 
-      // get corresponding question's ID for each answer
-      $('div[id*="answer"]').each(function() {
-        questionID = getQuestionIDFromAnswerDIV(this);
-        // cache value for later reference
-        this.dataset.questionid = questionID;
+      const answers = [...document.getElementsByClassName('question-summary')].filter(q => /answer-id/.test(q.id));
+
+      // Get corresponding question's ID for each answer
+      answers.forEach(answer => {
+        questionID = getQuestionIDFromAnswerDIV(answer);
+        // Cache value for later reference
+        answer.dataset.questionid = questionID;
         questionIDs.push(questionID);
       });
 
@@ -884,9 +886,8 @@
           tagsForQuestionIDs[item.question_id] = [item.tags, null];
         }
 
-        $('div[id*="answer"]').each(function() {
-          const $this = $(this);
-          const id = +this.dataset.questionid;
+        answers.forEach(answer => {
+          const id = +answer.dataset.questionid;
           const tagsForThisQuestion = tagsForQuestionIDs[id][0];
 
           let currTag;
@@ -894,7 +895,7 @@
 
           for (let x = 0; x < tagsForThisQuestion.length; x++) {
             currTag = tagsForThisQuestion[x];
-            $insertedTag = $this.find('.summary .tags').append('<a href="/questions/tagged/' + currTag + '" class="post-tag">' + currTag + '</a>');
+            $insertedTag = $(answer.querySelector('.summary .tags')).append('<a href="/questions/tagged/' + currTag + '" class="post-tag">' + currTag + '</a>');
             addClassToInsertedTag($insertedTag);
           }
         });
