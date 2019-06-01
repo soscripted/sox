@@ -194,7 +194,7 @@
     },
     observe: function(elements, callback, toObserve) {
       sox.debug('observe: ' + elements);
-      const observer = new MutationObserver(throttle((mutations) => {
+      const observer = new MutationObserver(throttle(mutations => {
         for (let i = 0; i < mutations.length; i++) {
           const mutation = mutations[i];
           const target = mutation.target;

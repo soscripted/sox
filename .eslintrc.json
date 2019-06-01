@@ -32,6 +32,7 @@
         "no-trailing-spaces":"error",
         "prefer-const": "warn",
         "one-var": ["warn", "never"],
-        "no-multiple-empty-lines": ["warn", { "max": 1 }]
+        "no-multiple-empty-lines": ["warn", { "max": 1 }],
+        "arrow-parens": ["warn", "as-needed"]
     }
 }

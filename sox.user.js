@@ -116,7 +116,7 @@
           continue;
         }
 
-        var feature = featureInfo.categories[category].filter((obj) => {
+        var feature = featureInfo.categories[category].filter(obj => {
           return obj.name == featureId;
         })[0];
 
@@ -179,17 +179,17 @@
     }
 
     //custom events....
-    sox.helpers.observe('.new_comment, .comment, .comments', (target) => {
+    sox.helpers.observe('.new_comment, .comment, .comments', target => {
       $(document).trigger('sox-new-comment', [target]);
       sox.debug('sox-new-comment event triggered');
     });
 
-    sox.helpers.observe('textarea[id^="wmd-input"]', (target) => {
+    sox.helpers.observe('textarea[id^="wmd-input"]', target => {
       $(document).trigger('sox-edit-window', [target]);
       sox.debug('sox-edit-window event triggered');
     });
 
-    sox.helpers.observe('.reviewable-post, .review-content', (target) => {
+    sox.helpers.observe('.reviewable-post, .review-content', target => {
       $(document).trigger('sox-new-review-post-appeared', [target]);
       sox.debug('sox-new-review-post-appeared event triggered');
     });

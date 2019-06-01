@@ -55,7 +55,7 @@
         sitename: sox.site.url,
         filter: '!*MxJcsv91Tcz6yRH',
         limit: 100,
-      }, (data) => {
+      }, data => {
         sox.debug('markEmployees returned data', data);
         for (let i = 0; i < data.items.length; i++) {
           const userId = data.items[i].user_id;
@@ -277,7 +277,7 @@
 
       loopAndAddHandlers();
 
-      document.addEventListener('keydown', (event) => {
+      document.addEventListener('keydown', event => {
         const kC = event.keyCode;
         const target = event.target;
 
@@ -316,7 +316,7 @@
         // Old storage format was an array of arrays: [[name, text], [name, text], ...]
         // This converts it to an object (like DEFAULT_OPTIONS above)
         const newOptions = [];
-        options.forEach((opt) => {
+        options.forEach(opt => {
           newOptions.push({
             [opt[0]]: opt[1],
           });
@@ -633,7 +633,7 @@
               ids: questionID,
               sitename,
               filter: FILTER_QUESTION_TITLE,
-            }, (json) => {
+            }, json => {
               this.innerHTML = json.items[0].title;
             });
           }
@@ -708,7 +708,7 @@
         const hnqJSONUrl = 'https://stackexchange.com/hot-questions-for-mobile';
         const requestUrl = proxyUrl + hnqJSONUrl;
 
-        $.get(requestUrl, (results) => {
+        $.get(requestUrl, results => {
           if (sox.location.on('/questions/')) {
             $.each(results, (i, o) => {
               if (document.URL.indexOf(o.site + '/questions/' + o.question_id) > -1) addHotText();
@@ -716,7 +716,7 @@
           } else {
             $('.question-summary').each(function() {
               const id = $(this).attr('id').split('-')[2];
-              if (results.filter((d) => {
+              if (results.filter(d => {
                 return d.question_id == id;
               }).length) {
                 $(this).find('.summary h3').prepend('<div title="SOX: this question is a hot network question!" class="sox-hot" style="font-size:x-large;float:none;display:inline"><i class="fab fa-free-code-camp"></i></div>');
@@ -821,7 +821,7 @@
             ids: this.id,
             sitename,
             filter: COMMENT_SCORE_FILTER,
-          }, (json) => {
+          }, json => {
             this.innerHTML = WHITESPACES + json.items[0].score;
           });
         });
@@ -872,7 +872,7 @@
         filter: QUESTION_TAGS_FILTER,
         limit: 60,
         sort: 'creation',
-      }, (json) => {
+      }, json => {
         const items = json.items;
         const itemsLength = items.length;
         let item;
@@ -1048,7 +1048,7 @@
 
       if ($('#metaNewQuestionAlertButton').length) $('.js-topbar-dialog-corral').append($dialog);
 
-      $(document).mouseup((e) => {
+      $(document).mouseup(e => {
         if (!$dialog.is(e.target) &&
                     $dialog.has(e.target).length === 0 &&
                     !$(e.target).is('#metaNewQuestionAlertButton, svg, path')) {
@@ -1069,7 +1069,7 @@
         filter: FILTER_QUESTION_TITLE_LINK,
         sort: 'activity',
         limit: 5,
-      }, (json) => {
+      }, json => {
         const items = json.items;
         const latestQuestion = items[0].title;
 
@@ -1449,7 +1449,7 @@
           ids: id,
           sitename,
           filter,
-        }, (json) => {
+        }, json => {
           sox.debug('addAuthorNameToInboxNotifications JSON returned from API', json);
 
           // https://github.com/soscripted/sox/issues/233
@@ -1637,7 +1637,7 @@
           $(this).addClass('expander-arrow-small-show');
           const $that = $(this);
           const id = getIdFromUrl($(this).next().attr('href'));
-          $.get(location.protocol + '//' + sox.site.url + '/posts/' + id + '/body', (d) => {
+          $.get(location.protocol + '//' + sox.site.url + '/posts/' + id + '/body', d => {
             const div = '<div class="linkedPostsInline-loaded-body-sox">' + d + '</div>';
             $that.next().after(div);
           });
@@ -1682,7 +1682,7 @@
     chatEasyAccess: function() {
       // Description: Adds options to give a user read/write/no access in chat from their user popup dialog
 
-      sox.helpers.observe('.user-popup', (node) => {
+      sox.helpers.observe('.user-popup', node => {
         const $node = $(node).parent();
         const id = $node.find('a')[0].href.split('/')[4];
 
@@ -1826,7 +1826,7 @@
         ids: currentPageId,
         sitename: sox.site.url,
         filter: '!-MOiNm40Dv9qWI4dBqjO5FBS8p*ODCWqP',
-      }, (data) => {
+      }, data => {
         const pagesThatLinkToThisPage = data.items;
         $('.linked .spacer a.question-hyperlink').each(function () {
           const id = +$(this).attr('href').match(/\/(\d+)\//)[1];
@@ -1875,7 +1875,7 @@
           'gold': g,
         };
       });
-      $.each(acs, (k) => {
+      $.each(acs, k => {
         const $badgesTd = $('.user-accounts tr .badges').eq(k);
         $badgesTd.html('');
         if (acs[k].gold) {
@@ -1951,9 +1951,9 @@
           sitename: sox.site.currentApiParameter,
           filter: FILTER_USER_LASTSEEN_TYPE,
           sort: 'creation',
-        }, (data) => {
+        }, data => {
           const userDetailsFromAPI = {};
-          data.items.forEach((user) => {
+          data.items.forEach(user => {
             userDetailsFromAPI[user.user_id] = {
               'last_seen': user.last_access_date * 1000,
               'type': user.user_type,
@@ -1994,14 +1994,14 @@
           const hostname = location.hostname;
           const baseUrl = protocol + '//' + hostname;
 
-          $.get(baseUrl + '/posts/' + postId + '/comments', (d) => {
+          $.get(baseUrl + '/posts/' + postId + '/comments', d => {
             const $commentCopy = $('#comments-' + postId + ' .comment-text .comment-copy');
 
             $(d).find('.comment-text').each(function() {
               x.push($(this).find('.comment-copy').text());
             });
 
-            $commentCopy.filter((d) => {
+            $commentCopy.filter(d => {
               y.push(x.indexOf($commentCopy.eq(d).text()));
             });
 
@@ -2081,7 +2081,7 @@
               ids: id,
               sitename,
               filter: FILTER_QUESTION_TAGS,
-            }, (d) => {
+            }, d => {
               this.dataset.tags = d.items[0].tags.join(', ');
               insertTagsList(this);
             });
@@ -2173,7 +2173,7 @@
           $(this).next().find('.meta').hide().find('.newreply').remove();
         })
 
-        .on('click', '.newreply.added-by-sox', (e) => {
+        .on('click', '.newreply.added-by-sox', e => {
           const $message = $(e.target).closest('.message');
           const id = $message.attr('id').split('-')[1];
           const rest = $('#input').focus().val().replace(/^:([0-9]+)\s+/, '');
@@ -2277,7 +2277,7 @@
       const metaUrl = sox.Stack.options.site.childUrl;
       const requestUrl = proxyUrl + metaUrl + '/review';
 
-      $.get(requestUrl, (d) => {
+      $.get(requestUrl, d => {
         const $doc = $(d);
         let total = 0;
         const $metaDashboardEl = $('.dashboard-item').last().find('.dashboard-count');
@@ -2354,7 +2354,7 @@
           urlToGet = currentUrl.join('/') + '/stats';
         }
 
-        $.get(urlToGet, (d) => {
+        $.get(urlToGet, d => {
           const count = +$(d).find('.review-stats-count-current-user').first().text().trim();
           const width = (count / 20) * 100;
           if ($('#sox-daily-review-count').length) {
@@ -2414,7 +2414,7 @@
           sitename: sox.site.currentApiParameter,
           filter: QUESTION_STATE_FILTER,
           sort: 'creation',
-        }, (data) => {
+        }, data => {
           $('body').append($('<div/>', {
             'id': PROCESSED_ID,
             'style': 'display: none',
@@ -2474,7 +2474,7 @@
           e.stopPropagation();
         });
 
-        $(s).keydown((e) => {
+        $(s).keydown(e => {
           if (e.which == 70 && e.ctrlKey) { //ctrl+f (find+replace)
             $('#findReplace').trigger('click');
             e.stopPropagation();
@@ -2532,7 +2532,7 @@
     hideWelcomeBackMessage: function() {
       // Description: Hide the 'welcome back...don't forget to vote' message when visiting a site after a while
 
-      sox.helpers.observe('#overlay-header', (el) => {
+      sox.helpers.observe('#overlay-header', el => {
         if ($(el).text().match(/welcome back/gi)) {
           $(el).remove();
         }
@@ -2542,7 +2542,7 @@
     hideHowToAskWhenZoomed: function() {
       // Description: Hides the 'How to ask/format/tag' yellow boxes that appear when asking a question whilst zoomed in
 
-      sox.helpers.observe('.js-help-pointer', (el) => {
+      sox.helpers.observe('.js-help-pointer', el => {
         if ($(el).text().match(/(How to Ask)|(How to Format)|(How to Tag)/gi)) {
           $(el).remove();
         }
