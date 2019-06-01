@@ -51,7 +51,7 @@
       // TODO is pagination needed?
       sox.helpers.getFromAPI({
         endpoint: 'users',
-        ids: ids.join(';'),
+        ids,
         sitename: sox.site.url,
         filter: '!*MxJcsv91Tcz6yRH',
         limit: 100,
@@ -866,7 +866,7 @@
 
       sox.helpers.getFromAPI({
         endpoint: 'questions',
-        ids: questionIDs.join(';'),
+        ids: questionIDs,
         sitename,
         filter: QUESTION_TAGS_FILTER,
         limit: 60,
@@ -1796,7 +1796,8 @@
       const currentPageId = +location.href.match(/\/(\d+)\//)[1];
       sox.helpers.getFromAPI({
         endpoint: 'questions',
-        ids: `${currentPageId}/linked`,
+        childEndpoint: 'linked',
+        ids: currentPageId,
         sitename: sox.site.url,
         filter: '!-MOiNm40Dv9qWI4dBqjO5FBS8p*ODCWqP',
       }, (data) => {
@@ -1920,7 +1921,7 @@
 
         sox.helpers.getFromAPI({
           endpoint: 'users',
-          ids: Object.keys(postAuthors).join(';'),
+          ids: Object.keys(postAuthors),
           sitename: sox.site.currentApiParameter,
           filter: FILTER_USER_LASTSEEN_TYPE,
           sort: 'creation',

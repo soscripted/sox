@@ -136,9 +136,10 @@
 
   sox.helpers = {
     getFromAPI: function(details, callback) {
+      let { ids } = details;
       const {
         endpoint,
-        ids,
+        childEndpoint,
         sort = 'creation',
         order = 'desc',
         sitename,
@@ -158,8 +159,16 @@
       const queryString = queryParams.join('&');
 
       // IDs are optional for endpoints like /questions
+      if (ids && Array.isArray(ids)) ids = ids.join(';');
       const idPath = ids ? `/${ids}` : '';
-      const queryURL = `${baseURL}${endpoint}${idPath}?${queryString}`;
+      let queryURL;
+      if (childEndpoint) {
+        // e.g. /posts/{ids}/revisions
+        queryURL = `${baseURL}${endpoint}${idPath}/${childEndpoint}?${queryString}`;
+      } else {
+        // e.g. /questions/{ids}
+        queryURL = `${baseURL}${endpoint}${idPath}?${queryString}`;
+      }
       sox.debug('Getting From API with URL', queryURL);
 
       $.ajax({
