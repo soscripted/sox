@@ -661,33 +661,35 @@
     sortByBountyAmount: function() {
       // Description: For adding some buttons to sort bounty's by size
 
-      if ($('.bounty-indicator').length) { //if there is at least one bounty on the page
-        $('.question-summary').each(function() {
-          const bountyAmount = $(this).find('.bounty-indicator').text().replace('+', '');
-          if (bountyAmount) {
-            $(this).attr('data-bountyamount', bountyAmount).addClass('hasBounty'); //add a 'bountyamount' attribute to all the questions
-          }
-        });
+      // Do nothing unless there is at least one bounty on the page
+      if (!document.getElementsByClassName('bounty-indicator').length) return;
 
-        const $wrapper = $('#question-mini-list').length ? $('#question-mini-list') : $('#questions'); //homepage/questions tab
+      [...document.getElementsByClassName('question-summary')].forEach(summary => {
+        const bountyAmount = summary.querySelector('.bounty-indicator').innerText.replace('+', '');
+        if (bountyAmount) {
+          summary.setAttribute('data-bountyamount', bountyAmount);
+          summary.classList.add('hasBounty'); // Add a 'bountyamount' attribute to all the questions
+        }
+      });
 
-        //filter buttons:
-        $('.subheader').after('<span>sort by bounty amount:&nbsp;&nbsp;&nbsp;</span><span id="largestFirst">largest first&nbsp;&nbsp;</span><span id="smallestFirst">smallest first</span>');
+      // Homepage/questions tab
+      const wrapper = document.getElementById('question-mini-list') || document.getElementById('questions');
 
-        //Thanks: http://stackoverflow.com/a/14160529/3541881
-        $('#largestFirst').css('cursor', 'pointer').on('click', () => { //largest first
-          $wrapper.find('.question-summary.hasBounty').sort((a, b) => {
-            return +b.getAttribute('data-bountyamount') - +a.getAttribute('data-bountyamount');
-          }).prependTo($wrapper);
-        });
+      // Filter buttons:
+      $('.subheader').after('<span>sort by bounty amount:&nbsp;&nbsp;&nbsp;</span><span id="largestFirst">largest first&nbsp;&nbsp;</span><span id="smallestFirst">smallest first</span>');
 
-        //Thanks: http://stackoverflow.com/a/14160529/3541881
-        $('#smallestFirst').css('cursor', 'pointer').on('click', () => { //smallest first
-          $wrapper.find('.question-summary.hasBounty').sort((a, b) => {
-            return +a.getAttribute('data-bountyamount') - +b.getAttribute('data-bountyamount');
-          }).prependTo($wrapper);
-        });
-      }
+      // Thanks: http://stackoverflow.com/a/14160529/3541881
+      $('#largestFirst').css('cursor', 'pointer').on('click', () => { // Largest first
+        [...wrapper.querySelectorAll('.question-summary.hasBounty')].sort((a, b) => {
+          return +b.getAttribute('data-bountyamount') - +a.getAttribute('data-bountyamount');
+        }).prependTo($(wrapper));
+      });
+
+      $('#smallestFirst').css('cursor', 'pointer').on('click', () => { // Smallest first
+        [...wrapper.querySelectorAll('.question-summary.hasBounty')].sort((a, b) => {
+          return +a.getAttribute('data-bountyamount') - +b.getAttribute('data-bountyamount');
+        }).prependTo($(wrapper));
+      });
     },
 
     isQuestionHot: function() {
