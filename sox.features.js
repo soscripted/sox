@@ -1210,26 +1210,43 @@
     editReasonTooltip: function() {
       // Description: For showing the latest revision's comment as a tooltip on 'edit [date] at [time]'
 
-      function getComment(id, $that) {
-        const url = location.protocol + '//' + sox.site.url + '/posts/' + id + '/revisions';
-        $.get(url, (responseText, textStatus, XMLHttpRequest) => {
-          const text = $(XMLHttpRequest.responseText).find('.revision-comment:eq(0)')[0].innerHTML;
-          sox.debug(`editReasonTooltip adding text to tooltip for post ${id}: '${text}'`);
-          $that.find('.sox-revision-comment').attr('title', text);
+      function addTooltips() {
+        const ids = [];
+        const $posts = [];
+        $('.question, .answer').each(function() {
+          if ($(this).find('.post-signature').length > 1) {
+            $posts.push($(this));
+            const id = $(this).attr('data-questionid') || $(this).attr('data-answerid');
+            ids.push(id);
+          }
+        });
+        if (!ids.length) return;
+
+        sox.helpers.getFromAPI({
+          endpoint: 'posts',
+          childEndpoint: 'revisions',
+          sitename: sox.site.url,
+          filter: '!SWJaL02RNFkXc_we4i',
+          ids,
+        }, json => {
+          const revisions = json.items;
+          $posts.forEach($post => {
+            const id = $post.attr('data-questionid') || $post.attr('data-answerid');
+            const revision = revisions.find(r => r.revision_type === 'single_user' && r.post_id === +id);
+            if (revision) {
+              const span = sox.helpers.newElement('span', {
+                'class': 'sox-revision-comment',
+                'title': revision.comment,
+              });
+              sox.debug(`editReasonTooltip, adding text to tooltip for post ${id}: '${revision.comment}'`);
+              $post.find('.post-signature:eq(0)').find('.user-action-time a').wrapInner(span);
+            }
+          });
         });
       }
 
-      function loopAndAddTooltip() {
-        $('.question, .answer').each(function() {
-          if ($(this).find('.post-signature').length > 1) {
-            const id = $(this).attr('data-questionid') || $(this).attr('data-answerid');
-            $(this).find('.post-signature:eq(0)').find('.user-action-time a').wrapInner('<span class="sox-revision-comment"></span>');
-            getComment(id, $(this));
-          }
-        });
-      }
-      loopAndAddTooltip();
-      $(document).on('sox-new-review-post-appeared', loopAndAddTooltip);
+      addTooltips();
+      $(document).on('sox-new-review-post-appeared', addTooltips);
     },
 
     addSBSBtn: function(settings) {
