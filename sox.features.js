@@ -649,7 +649,8 @@
 
       if (window.location.href.indexOf('questions/') >= 0) {
         $(window).bind('beforeunload', () => {
-          if ($('.comment-form textarea').length && $('.comment-form textarea').val()) {
+          const textarea = document.querySelector('.comment-form textarea');
+          if (textarea && textarea.value) {
             return 'Do you really want to navigate away? Anything you have written will be lost!';
           }
           return;
