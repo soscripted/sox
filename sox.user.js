@@ -3,7 +3,7 @@
 // @namespace    https://github.com/soscripted/sox
 // @homepage     https://github.com/soscripted/sox
 // @homepageURL  https://github.com/soscripted/sox
-// @version      2.4.22 DEV
+// @version      2.4.23 DEV
 // @description  Extra optional features for Stack Overflow and Stack Exchange sites
 // @contributor  ᴉʞuǝ (https://stackoverflow.com/users/1454538/, https://github.com/mezmi)
 // @contributor  ᔕᖺᘎᕊ (https://stackexchange.com/users/4337810/, https://github.com/shu8)
@@ -106,8 +106,8 @@
       // Execute features
       performance.mark('allFeatures-start');
       for (let i = 0; i < settings.length; ++i) {
-        var category = settings[i].split('-')[0];
-        var featureId = settings[i].split('-')[1];
+        const category = settings[i].split('-')[0];
+        const featureId = settings[i].split('-')[1];
 
         if (!(category in featureInfo.categories)) { //if we ever rename a category
           sox.loginfo('Deleting feature "' + settings[i] + '" (category rename?)');
@@ -116,21 +116,18 @@
           continue;
         }
 
-        var feature = featureInfo.categories[category].filter(obj => {
+        const feature = featureInfo.categories[category].filter(obj => {
           return obj.name == featureId;
         })[0];
 
-        var runFeature = true;
-        var sites;
-        var pattern;
-
+        let runFeature = true;
         try {
           //NOTE: there is no else if() because it is possible to have both match and exclude patterns..
           //which could have minor exceptions making it neccessary to check both
           if (feature.match !== '') {
-            sites = feature.match.split(',');
+            const sites = feature.match.split(',');
 
-            for (pattern = 0; pattern < sites.length; pattern++) {
+            for (let pattern = 0; pattern < sites.length; pattern++) {
               if (!sox.location.matchWithPattern(sites[pattern])) {
                 runFeature = false; //none of the patterns match the current site.. yet.
               } else {
@@ -140,9 +137,9 @@
             }
           }
           if (feature.exclude !== '') {
-            sites = feature.exclude.split(',');
+            const sites = feature.exclude.split(',');
 
-            for (pattern = 0; pattern < sites.length; pattern++) {
+            for (let pattern = 0; pattern < sites.length; pattern++) {
               if (sox.location.matchWithPattern(sites[pattern])) { //if current site is in list, DON'T run feature
                 runFeature = false; //don't run feature
                 break; //no need to keep on looping

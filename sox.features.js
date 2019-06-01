@@ -669,7 +669,7 @@
           }
         });
 
-        var $wrapper = $('#question-mini-list').length ? $('#question-mini-list') : $wrapper = $('#questions'); //homepage/questions tab
+        const $wrapper = $('#question-mini-list').length ? $('#question-mini-list') : $('#questions'); //homepage/questions tab
 
         //filter buttons:
         $('.subheader').after('<span>sort by bounty amount:&nbsp;&nbsp;&nbsp;</span><span id="largestFirst">largest first&nbsp;&nbsp;</span><span id="smallestFirst">smallest first</span>');
@@ -993,30 +993,29 @@
       //Do not run on meta, chat, or sites without a meta
       if ((sox.site.type != 'main' && sox.site.type != 'beta') || !$('.related-site').length) return;
 
-      var NEWQUESTIONS = 'metaNewQuestionAlert-lastQuestions';
-      var favicon = sox.site.icon;
-      var metaName = 'meta.' + sox.site.currentApiParameter;
-      var lastQuestions = {};
-      var FILTER_QUESTION_TITLE_LINK = '!BHMIbze0EQ*ved8LyoO6rNk25qGESy';
-      var $dialog = $('<div/>', {
+      const NEWQUESTIONS = 'metaNewQuestionAlert-lastQuestions';
+      const favicon = sox.site.icon;
+      const metaName = 'meta.' + sox.site.currentApiParameter;
+      const FILTER_QUESTION_TITLE_LINK = '!BHMIbze0EQ*ved8LyoO6rNk25qGESy';
+      const $dialog = $('<div/>', {
         id: 'metaNewQuestionAlertDialog',
         'class': 'topbar-dialog dno new-topbar',
       });
-      var $header = $('<div/>', {
+      const $header = $('<div/>', {
         'class': 'header',
       }).append($('<h3/>').append($('<a/>', {
         text: 'new meta posts',
         href: `//meta.${sox.site.url}`,
         style: 'color: #0077cc',
       })));
-      var $content = $('<div/>', {
+      const $content = $('<div/>', {
         'class': 'modal-content',
       });
-      var $questions = $('<ul/>', {
+      const $questions = $('<ul/>', {
         id: 'metaNewQuestionAlertDialogList',
         'class': 'js-items items',
       });
-      var $diamond = $('<a/>', {
+      const $diamond = $('<a/>', {
         id: 'metaNewQuestionAlertButton',
         href: '#',
         'class': '-link',
@@ -1035,6 +1034,7 @@
       }).append($('<path/>', {
         d: 'M8.4.78c.33-.43.87-.43 1.3 0l5.8 7.44c.33.43.33 1.13 0 1.56l-5.8 7.44c-.33.43-.87.43-1.2 0L2.6 9.78a1.34 1.34 0 0 1 0-0.156L8.4.78z',
       })));
+      let lastQuestions = {};
 
       $diamond.html($diamond.html()); //Reloads the diamond icon, which is necessary when adding an SVG using jQuery.
 
@@ -1389,13 +1389,13 @@
         const numAnchors = anchorList.length;
         const itemIDs = [];
 
-        for (var i = 1; i <= numAnchors - 2; i++) { //the first and last anchors aren't answers
+        for (let i = 1; i <= numAnchors - 2; i++) { //the first and last anchors aren't answers
           itemIDs.push(anchorList[i].name);
         }
         itemIDs.push($('.question').data('questionid'));
 
         //event listeners for adding the sbs toggle buttons for editing existing questions or answers
-        for (i = 0; i <= numAnchors - 2; i++) {
+        for (let i = 0; i <= numAnchors - 2; i++) {
           sox.helpers.observe('#wmd-redo-button-' + itemIDs[i], SBS);
         }
       }
@@ -2014,7 +2014,7 @@
               y.push(x.indexOf($commentCopy.eq(d).text()));
             });
 
-            for (var i = 0; i < y.length; i++) {
+            for (let i = 0; i < y.length; i++) {
               if (y[i] != y[i + 1] - 1) {
                 $commentCopy.filter(function() {
                   return $(this).text() == x[y[i]];
@@ -2189,7 +2189,7 @@
           $('#input').val(':' + id + ' ' + rest).focus();
         });
 
-      var replySpan = $('<span/>', {
+      const replySpan = $('<span/>', {
         class: 'newreply added-by-sox',
         'title': 'link my next chat message as a reply to this',
       });
@@ -2567,7 +2567,7 @@
     customMagicLinks: function () {
       // Description: Adds custom magic links to the post and comment editors
 
-      var magicLinks = JSON.parse(GM_getValue('SOX-customMagicLinks', '[]'));
+      const magicLinks = JSON.parse(GM_getValue('SOX-customMagicLinks', '[]'));
       // magicLinks = [ { text: 'edit/q', replacement: 'Edit Question', link: '$BASEURL$/posts/$QUESTIONID$/edit' }];
 
       function updateGMValue(magicLinks) {
@@ -2632,7 +2632,7 @@
 
       function magicLink($el) {
         const $textarea = $el.is('textarea') ? $el : $el.parents('form').find('textarea').eq(0);
-        var newVal = $textarea.val();
+        let newVal = $textarea.val();
         for (let i = 0; i < magicLinks.length; i++) {
           const currentMagicLink = magicLinks[i];
           const replacementText = currentMagicLink.replacement;
