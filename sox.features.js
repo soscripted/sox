@@ -115,7 +115,13 @@
       } else if (sox.location.on('serverfault.com')) {
         color = '#EA292C';
       } else {
-        color = document.getElementsByClassName('post-tag')[0].style.color;
+        const existingPostTags = document.getElementsByClassName('post-tag');
+        if (existingPostTags.length) {
+          color = existingPostTags[0].style.color;
+        } else {
+          // Default colour if we can't find one on the page already
+          color = '#39739d';
+        }
       }
 
       const style = document.createElement('style');
@@ -668,7 +674,8 @@
       if (!document.getElementsByClassName('bounty-indicator').length) return;
 
       [...document.getElementsByClassName('question-summary')].forEach(summary => {
-        const bountyAmount = summary.querySelector('.bounty-indicator').innerText.replace('+', '');
+        const indicator = summary.querySelector('.bounty-indicator');
+        const bountyAmount = indicator ? indicator.innerText.replace('+', '') : undefined;
         if (bountyAmount) {
           summary.setAttribute('data-bountyamount', bountyAmount);
           summary.classList.add('hasBounty'); // Add a 'bountyamount' attribute to all the questions
@@ -851,22 +858,15 @@
         }
       }
 
-      const sitename = sox.site.currentApiParameter;
-      const questionIDs = [];
-
-      // questionID: [tagArray, insertedTagDOM]
-      // Second element is for caching, in case more than one answer in
-      // the search list belongs to the same question
-      let questionID;
-
       const tagsForQuestionIDs = {};
       const QUESTION_TAGS_FILTER = '!)8aDT8Opwq-vdo8';
+      const questionIDs = [];
 
       const answers = [...document.getElementsByClassName('question-summary')].filter(q => /answer-id/.test(q.id));
 
       // Get corresponding question's ID for each answer
       answers.forEach(answer => {
-        questionID = getQuestionIDFromAnswerDIV(answer);
+        const questionID = getQuestionIDFromAnswerDIV(answer);
         // Cache value for later reference
         answer.dataset.questionid = questionID;
         questionIDs.push(questionID);
@@ -875,30 +875,26 @@
       sox.helpers.getFromAPI({
         endpoint: 'questions',
         ids: questionIDs,
-        sitename,
+        sitename: sox.site.currentApiParameter,
         filter: QUESTION_TAGS_FILTER,
         limit: 60,
         sort: 'creation',
       }, json => {
         const items = json.items;
         const itemsLength = items.length;
-        let item;
 
         for (let i = 0; i < itemsLength; i++) {
-          item = items[i];
-          tagsForQuestionIDs[item.question_id] = [item.tags, null];
+          const item = items[i];
+          tagsForQuestionIDs[item.question_id] = item.tags;
         }
 
         answers.forEach(answer => {
           const id = +answer.dataset.questionid;
-          const tagsForThisQuestion = tagsForQuestionIDs[id][0];
-
-          let currTag;
-          let $insertedTag = tagsForQuestionIDs[id][1];
+          const tagsForThisQuestion = tagsForQuestionIDs[id];
 
           for (let x = 0; x < tagsForThisQuestion.length; x++) {
-            currTag = tagsForThisQuestion[x];
-            $insertedTag = $(answer.querySelector('.summary .tags')).append('<a href="/questions/tagged/' + currTag + '" class="post-tag">' + currTag + '</a>');
+            const currTag = tagsForThisQuestion[x];
+            const $insertedTag = $(answer.querySelector('.summary .tags')).append('<a href="/questions/tagged/' + currTag + '" class="post-tag">' + currTag + '</a>');
             addClassToInsertedTag($insertedTag);
           }
         });
