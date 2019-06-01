@@ -1132,80 +1132,88 @@
     standOutDupeCloseMigrated: function() {
       // Description: For adding cooler signs that a questions has been closed/migrated/put on hod/is a dupe
 
-      // for use in dataset
-      // used for hideCertainQuestions feature compatability
+      // For use in dataset, used for hideCertainQuestions feature compatability
       const QUESTION_STATE_KEY = 'soxQuestionState';
       const FILTER_QUESTION_CLOSURE_NOTICE = '!)Ei)3K*irDvFA)l92Lld3zD9Mu9KMQ59-bgpVw7D9ngv5zEt3';
+      const NOTICE_REGEX = /\[(duplicate|closed|migrated|on hold)\]$/;
 
-      function addLabel(index, question) {
-        // don't run if question already has tag added
-        if (question.dataset[QUESTION_STATE_KEY]) return;
+      function addLabels() {
+        const questions = [];
+        const questionSummaries = [...document.getElementsByClassName('question-summary')];
+        questionSummaries.forEach(question => {
+          // Don't run if tag has already been added to question
+          if (question.dataset[QUESTION_STATE_KEY]) return;
 
-        const $anchor = $(question.querySelector('.summary h3 a'));
-        const text = $anchor.text().trim();
-        const id = sox.helpers.getIDFromAnchor($anchor[0]);
+          const anchor = question.querySelector('.summary h3 a');
+          const id = sox.helpers.getIDFromAnchor(anchor);
+          const text = anchor.innerText.trim();
 
-        //https://github.com/soscripted/sox/issues/181
+          const noticeMatch = text.match(NOTICE_REGEX);
+          const noticeName = noticeMatch && noticeMatch[1];
+
+          // Don't run if the question is still open
+          if (!noticeName) return;
+          questions.push({ element: question, noticeName, text, anchor, id });
+        });
+        sox.debug('standOutDupeCloseMigrated questions to request API for', questions);
+
+        // https://github.com/soscripted/sox/issues/181
         $('.question-summary .answer-hyperlink, .question-summary .question-hyperlink, .question-summary .result-link a').css('display', 'inline');
-        $('.summary h3').css('line-height', '1.2em'); //fixes line height on "Questions" page
-
-        const noticeRegex = /\[(duplicate|closed|migrated|on hold)\]$/;
-        const noticeMatch = text.match(noticeRegex);
-        const noticeName = noticeMatch && noticeMatch[1];
-
-        if (!noticeName) return;
-
-        $anchor.text(text.replace(noticeRegex, ''));
-        question.dataset[QUESTION_STATE_KEY] = noticeName;
+        $('.summary h3').css('line-height', '1.2em'); // Fixes line height on "Questions" page
 
         sox.helpers.getFromAPI({
           endpoint: 'questions',
-          ids: id,
+          ids: questions.map(q => q.id),
           sitename: sox.site.currentApiParameter,
           filter: FILTER_QUESTION_CLOSURE_NOTICE,
-        }, (data) => {
-          const question = data.items[0];
-          switch (noticeName) {
-          case 'duplicate': {
-            const questionId = question.closed_details.original_questions[0].question_id;
+        }, data => {
+          sox.debug('standOutDupeCloseMigrated received API details', data);
+          questions.forEach(question => {
+            question.anchor.innerText = question.text.replace(NOTICE_REGEX, '');
+            question.element.dataset[QUESTION_STATE_KEY] = question.noticeName;
 
-            //styling for https://github.com/soscripted/sox/issues/181
+            const questionDetails = data.items.find(d => d.question_id === question.id);
+            if (!questionDetails) return;
 
-            //NOTE: the `data-searchsession` attribute is to workaround a weird line of code in SE *search* pages,
-            //which changes the `href` of anchors in in `.result-link` containers to `data-searchsession`
-            //See https://github.com/soscripted/sox/pull/348#issuecomment-404245056
-            $anchor.after('&nbsp;<a data-searchsession=\'/questions/' + questionId + '\' style=\'display: inline\' href=\'https://' + sox.site.url + '/q/' + questionId + '\'><span class=\'standOutDupeCloseMigrated-duplicate\' title=\'click to visit duplicate\'>&nbsp;duplicate&nbsp;</span></a>');
-            break;
-          }
-          case 'closed':
-          case 'on hold': {
-            const details = question.closed_details;
-            const users = details.by_users.reduce((str, user) => str + ', ' + user.display_name, '').substr(2);
-            const closureDate = new Date(question.closed_date * 1000);
-            const timestamp = closureDate.toLocaleString();
-            const closeNotice = (details.on_hold ? 'put on hold' : 'closed') + ' as ';
-            const closeText = details.on_hold ? 'on hold' : 'closed';
-            const cssClass = details.on_hold ? 'onhold' : 'closed';
+            switch (question.noticeName) {
+            case 'duplicate': {
+              const questionId = questionDetails.closed_details.original_questions[0].question_id;
 
-            $anchor.after('&nbsp;<span class="standOutDupeCloseMigrated-' + cssClass + '" title="' + closeNotice + details.reason + ' by ' + users + ' on ' + timestamp + '">&nbsp;' + closeText + '&nbsp;</span>');
-            break;
-          }
-          case 'migrated': {
-            const migratedToSite = question.migrated_to.other_site.name;
-            const textToAdd = 'migrated to ' + migratedToSite;
+              // Styling for https://github.com/soscripted/sox/issues/181
+              // NOTE: the `data-searchsession` attribute is to workaround a weird line of code in SE *search* pages,
+              // which changes the `href` of anchors in in `.result-link` containers to `data-searchsession`
+              // See https://github.com/soscripted/sox/pull/348#issuecomment-404245056
+              $(question.anchor).after('&nbsp;<a data-searchsession=\'/questions/' + questionId + '\' style=\'display: inline\' href=\'https://' + sox.site.url + '/q/' + questionId + '\'><span class=\'standOutDupeCloseMigrated-duplicate\' title=\'click to visit duplicate\'>&nbsp;duplicate&nbsp;</span></a>');
+              break;
+            }
+            case 'closed':
+            case 'on hold': {
+              const details = questionDetails.closed_details;
+              const users = details.by_users.reduce((str, user) => str + ', ' + user.display_name, '').substr(2);
+              const closureDate = new Date(questionDetails.closed_date * 1000);
+              const timestamp = closureDate.toLocaleString();
+              const closeNotice = (details.on_hold ? 'put on hold' : 'closed') + ' as ';
+              const closeText = details.on_hold ? 'on hold' : 'closed';
+              const cssClass = details.on_hold ? 'onhold' : 'closed';
 
-            $anchor.after('&nbsp;<span class=\'standOutDupeCloseMigrated-migrated\' title=\'' + textToAdd + '\'>&nbsp;migrated&nbsp;</span>');
-            break;
-          }}
+              $(question.anchor).after('&nbsp;<span class="standOutDupeCloseMigrated-' + cssClass + '" title="' + closeNotice + details.reason + ' by ' + users + ' on ' + timestamp + '">&nbsp;' + closeText + '&nbsp;</span>');
+              break;
+            }
+            case 'migrated': {
+              const migratedToSite = questionDetails.migrated_to.other_site.name;
+              const textToAdd = 'migrated to ' + migratedToSite;
+
+              $(question.anchor).after('&nbsp;<span class=\'standOutDupeCloseMigrated-migrated\' title=\'' + textToAdd + '\'>&nbsp;migrated&nbsp;</span>');
+              break;
+            }
+            }
+          });
         });
       }
 
-      // Find the questions and add their id's and statuses to an object
-      $('.question-summary').each(addLabel);
-
-      sox.helpers.observe('#user-tab-questions, #question-mini-list', () => { //new questions on homepage, or for on user profile page
-        $('.question-summary').each(addLabel);
-      });
+      addLabels();
+      // New questions on homepage, or for on user profile page
+      sox.helpers.observe('#user-tab-questions, #question-mini-list', addLabels);
     },
 
     editReasonTooltip: function() {
