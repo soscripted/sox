@@ -1829,6 +1829,7 @@
           };
         });
         const $editor = $('.review-more-instructions ul:eq(1) li');
+        if (!$editor.length) return;
         const editorName = $editor.find('a').text();
         const editorLink = $editor.find('a').attr('href');
         const editorApproved = $editor.clone().find('a').remove().end().text().match(/([0-9]+)/g)[0];
@@ -2441,6 +2442,7 @@
         if (document.getElementById(PROCESSED_ID)) return;
 
         const $anchor = $('.summary h2 a');
+        if (!$anchor.length) return;
         const postId = sox.helpers.getIDFromAnchor($anchor[0]);
         const QUESTION_STATE_FILTER = '!-MOiNm40B3fle5H6oLVI3nx6UQo(vNstn';
 
