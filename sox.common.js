@@ -345,7 +345,7 @@
     // answer ID, question ID, user ID, comment ID ("posts/comments/ID" NOT "comment1545_5566")
     getIDFromLink: function(link) {
       // test cases: https://regex101.com/r/6P9sDX/2
-      const idMatch = link.match(/\/(\d+)($|\/|\?)/);
+      const idMatch = link.match(/\/(\d+)/);
       return idMatch ? +idMatch[1] : null;
     },
     getSiteNameFromLink: function(link) {

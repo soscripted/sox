@@ -101,7 +101,8 @@
 
       function highlight() {
         const interestingQuestions = document.getElementsByClassName('tagged-interesting');
-        for (let i = 0; i < interestingQuestions.length; i++) {
+        const questionsLength = interestingQuestions.length;
+        for (let i = 0; i < questionsLength; i++) {
           const question = interestingQuestions[i];
           question.classList.remove('tagged-interesting');
           question.classList.add('sox-tagged-interesting');

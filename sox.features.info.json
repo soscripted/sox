@@ -62,7 +62,7 @@
             "desc": "Add a label on questions which are hot-network questions",
             "extended_description": "If the question you are currently viewing is HOT, a flame icon is added next to the title",
             "meta": "http://meta.stackexchange.com/questions/245390/let-mods-and-10k-know-when-questions-go-hot",
-            "match": "",
+            "match": "*://*/questions/*",
             "exclude": "SE1.0"
         }, {
             "name": "localTimestamps",
@@ -294,14 +294,14 @@
             "name": "flagPercentages",
             "desc": "Show flagging percentages for each type in the Flag Summary",
             "meta": "",
-            "match": "",
+            "match": "*://*/users/*",
             "exclude": "*://chat.*.com/*,SE1.0",
             "feature_packs": ["power_user"]
         }, {
             "name": "flagPercentageBar",
             "desc": "Show the total percentage of helpful flags as a coloured bar on the Flag Summary Page",
             "meta": "http://meta.stackoverflow.com/questions/310881/overall-percentage-of-helpful-flags",
-            "match": "",
+            "match": "*://*/users/*",
             "exclude": "*://chat.*.com/*,SE1.0",
             "feature_packs": ["power_user"]
         }],
