@@ -398,13 +398,13 @@
       }
 
       function addCheckboxes() {
-        const $reasons = $('#reasons');
         const $editCommentField = $('input[id^="edit-comment"]'); //NOTE: input specifcally needed, due to https://github.com/soscripted/sox/issues/363
         if (!$editCommentField.length) return; //https://github.com/soscripted/sox/issues/246
 
-        $reasons.remove(); //remove the div containing everything, we're going to add/remove stuff now:
+        $('#reasons').remove(); //remove the div containing everything, we're going to add/remove stuff now:
         if (/\/edit/.test(sox.site.href) || $('[class^="inline-editor"]').length || $('.edit-comment').length) {
           $editCommentField.after('<div id="reasons" style="float:left;clear:both"></div>');
+          const $reasons = $('#reasons');
 
           const options = getOptions();
           options.forEach(opt => {
