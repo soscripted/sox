@@ -405,13 +405,6 @@
             "exclude": "SE1.0"
         }],
         "Extras": [{
-            "name": "alwaysShowImageUploadLinkBox",
-            "desc": "Always show the 'Link from the web' box when uploading an image",
-            "extended_description": "Removes the 'you can also provide a link from the web' button when uploading images, and shows the URL input field by default",
-            "meta": "http://meta.stackoverflow.com/q/306888/3541881",
-            "match": "*://*/questions*,*://*/review*",
-            "exclude": "SE1.0"
-        }, {
             "name": "linkedPostsInline",
             "desc": "Display linked posts inline by clicking on an arrow",
             "extended_description": "Adds a button next to links to posts on the same site that expand to show the post inline",

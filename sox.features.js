@@ -1420,15 +1420,6 @@
 
     },
 
-    alwaysShowImageUploadLinkBox: function() {
-      // Description: For always showing the 'Link from the web' box when uploading an image.
-
-      sox.helpers.observe('.image-upload', () => {
-        const toClick = $('.image-upload form div.modal-options-default.tab-page > a');
-        if (toClick.length) toClick[0].click();
-      });
-    },
-
     addAuthorNameToInboxNotifications: function(settings) {
       // Description: To add the author's name to inbox notifications
       function setAuthorName(node) {
