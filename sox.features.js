@@ -55,11 +55,12 @@
         sitename: sox.site.url,
         filter: '!*MxJcsv91Tcz6yRH',
         limit: 100,
-      }, data => {
-        sox.debug('markEmployees returned data', data);
-        for (let i = 0; i < data.items.length; i++) {
-          const userId = data.items[i].user_id;
-          const isEmployee = data.items[i].is_employee;
+        featureId: 'markEmployees',
+      }, items => {
+        sox.debug('markEmployees returned data', items);
+        for (let i = 0; i < items.length; i++) {
+          const userId = items[i].user_id;
+          const isEmployee = items[i].is_employee;
           if (!isEmployee) continue;
 
           anchors.filter(el => el.href.startsWith(`/users/${userId}/`)).forEach(el => {
@@ -642,8 +643,9 @@
               ids: questionID,
               sitename,
               filter: FILTER_QUESTION_TITLE,
-            }, json => {
-              this.innerHTML = json.items[0].title;
+              featureId: 'parseCrossSiteLinks',
+            }, items => {
+              this.innerHTML = items[0].title;
             });
           }
         });
@@ -833,8 +835,9 @@
             ids: this.id,
             sitename,
             filter: COMMENT_SCORE_FILTER,
-          }, json => {
-            this.innerHTML = WHITESPACES + json.items[0].score;
+            useCache: false, // Single ID, so no point
+          }, items => {
+            this.innerHTML = WHITESPACES + items[0].score;
           });
         });
       }
@@ -879,8 +882,8 @@
         filter: QUESTION_TAGS_FILTER,
         limit: 60,
         sort: 'creation',
-      }, json => {
-        const items = json.items;
+        featureId: 'answerTagsSearch',
+      }, items => {
         const itemsLength = items.length;
 
         for (let i = 0; i < itemsLength; i++) {
@@ -1077,8 +1080,8 @@
         filter: FILTER_QUESTION_TITLE_LINK,
         sort: 'activity',
         limit: 5,
-      }, json => {
-        const items = json.items;
+        featureId: 'metaNewQuestionAlert',
+      }, items => {
         const latestQuestion = items[0].title;
 
         // Make diamond blue if there's a new question
@@ -1174,14 +1177,14 @@
           ids: questions.map(q => q.id),
           sitename: sox.site.currentApiParameter,
           filter: FILTER_QUESTION_CLOSURE_NOTICE,
-        }, data => {
-          sox.debug('standOutDupeCloseMigrated received API details', data);
+          featureId: 'standOutDupeCloseMigrated',
+        }, items => {
           questions.forEach(question => {
             sox.debug('standOutDupeCloseMigrated adding details for question', question);
             question.anchor.innerText = question.text.replace(NOTICE_REGEX, '');
             question.element.dataset[QUESTION_STATE_KEY] = question.noticeName;
 
-            const questionDetails = data.items.find(d => d.question_id === question.id);
+            const questionDetails = items.find(d => d.question_id === question.id);
             if (!questionDetails) return;
 
             switch (question.noticeName) {
@@ -1254,8 +1257,8 @@
           sitename: sox.site.url,
           filter: '!SWJaL02RNFkXc_we4i',
           ids,
-        }, json => {
-          const revisions = json.items;
+          featureId: 'editReasonTooltip',
+        }, revisions => {
           $posts.forEach($post => {
             const id = $post.attr('data-questionid') || $post.attr('data-answerid');
             const revision = revisions.find(r => r.revision_type === 'single_user' && r.post_id === +id);
@@ -1466,14 +1469,15 @@
           ids: id,
           sitename,
           filter,
-        }, json => {
-          sox.debug('addAuthorNameToInboxNotifications JSON returned from API', json);
+          useCache: false, // Single ID so no point
+        }, items => {
+          sox.debug('addAuthorNameToInboxNotifications JSON returned from API', items);
 
           // https://github.com/soscripted/sox/issues/233
           const temporaryDIV = $('<div>');
-          if (!json.items.length) return;
+          if (!items.length) return;
 
-          const author = (link.indexOf('/suggested-edits/') > -1 ? json.items[0].proposing_user.display_name : json.items[0].owner.display_name);
+          const author = (link.indexOf('/suggested-edits/') > -1 ? items[0].proposing_user.display_name : items[0].owner.display_name);
           const $author = $('<span/>', {
             class: 'sox-notification-author',
             text: (prependToMessage ? '' : ' by ') + temporaryDIV.html(author).text() + (prependToMessage ? ': ' : ''), //https://github.com/soscripted/sox/issues/347
@@ -1843,8 +1847,8 @@
         ids: currentPageId,
         sitename: sox.site.url,
         filter: '!-MOiNm40Dv9qWI4dBqjO5FBS8p*ODCWqP',
-      }, data => {
-        const pagesThatLinkToThisPage = data.items;
+        featureId: 'linkedToFrom',
+      }, pagesThatLinkToThisPage => {
         $('.linked .spacer a.question-hyperlink').each(function () {
           const id = +$(this).attr('href').match(/\/(\d+)\//)[1];
 
@@ -1969,9 +1973,10 @@
           sitename: sox.site.currentApiParameter,
           filter: FILTER_USER_LASTSEEN_TYPE,
           sort: 'creation',
-        }, data => {
+          featureId: 'quickAuthorInfo',
+        }, items => {
           const userDetailsFromAPI = {};
-          data.items.forEach(user => {
+          items.forEach(user => {
             userDetailsFromAPI[user.user_id] = {
               'last_seen': user.last_access_date * 1000,
               'type': user.user_type,
@@ -1995,9 +2000,6 @@
       });
 
       getIdsAndAddDetails(postAuthors);
-
-      sox.debug('quickAuthorInfo answerer IDs', postAuthors);
-      sox.debug('quickAuthorInfo API call parameters', 'users', Object.keys(postAuthors).join(';'), sox.site.currentApiParameter);
     },
 
     hiddenCommentsIndicator: function() {
@@ -2099,8 +2101,9 @@
               ids: id,
               sitename,
               filter: FILTER_QUESTION_TAGS,
-            }, d => {
-              this.dataset.tags = d.items[0].tags.join(', ');
+              useCache: false, // Single ID, so no point
+            }, items => {
+              this.dataset.tags = items[0].tags.join(', ');
               insertTagsList(this);
             });
             this.dataset.tags = PLACEHOLDER;
@@ -2435,18 +2438,19 @@
           sitename: sox.site.currentApiParameter,
           filter: QUESTION_STATE_FILTER,
           sort: 'creation',
-        }, data => {
+          useCache: false, // Single ID, so no point
+        }, items => {
           $('body').append($('<div/>', {
             'id': PROCESSED_ID,
             'style': 'display: none',
           }));
 
-          if (!data.closed_reason) return;
-          if (data.closed_reason === 'duplicate') {
+          if (!items[0].closed_reason) return;
+          if (items[0].closed_reason === 'duplicate') {
             $anchor.after('&nbsp;<span class=\'standOutDupeCloseMigrated-duplicate\'>&nbsp;duplicate&nbsp;</span></a>');
-          } else if (data.closed_details.on_hold === true) { //on-hold
+          } else if (items[0].closed_details.on_hold === true) { //on-hold
             $anchor.after('&nbsp;<span class="standOutDupeCloseMigrated-onhold">&nbsp;on hold&nbsp;</span>');
-          } else if (data.closed_details.on_hold === false && data.closed_reason == 'off-topic') { //closed
+          } else if (items[0].closed_details.on_hold === false && items[0].closed_reason == 'off-topic') { //closed
             $anchor.after('&nbsp;<span class="standOutDupeCloseMigrated-closed">&nbsp;closed&nbsp;</span>');
           }
         });

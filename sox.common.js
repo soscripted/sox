@@ -135,8 +135,12 @@
   }
 
   sox.helpers = {
-    getFromAPI: function(details, callback) {
-      let { ids } = details;
+    getFromAPI: function (details, callback) {
+      let {
+        ids,
+        useCache = true,
+      } = details;
+
       const {
         endpoint,
         childEndpoint,
@@ -145,9 +149,27 @@
         sitename,
         filter,
         limit,
+        featureId,
       } = details;
       const baseURL = 'https://api.stackexchange.com/2.2/';
       const queryParams = [];
+
+      // Cache can only be used if the featureId and IDs (as an array) have been provided
+      useCache = featureId && useCache && Array.isArray(ids);
+      const apiCache = JSON.parse(GM_getValue('SOX-apiCache', '{}'));
+
+      if (!(featureId in apiCache)) apiCache[featureId] = {};
+      const featureCache = apiCache[featureId];
+
+      if (!(endpoint in featureCache)) featureCache[endpoint] = [];
+      const endpointCache = featureCache[endpoint];
+
+      const endpointToIdFieldNames = {
+        'questions': 'question_id',
+        'answers': 'answer_id',
+        'users': 'user_id',
+        'comments': 'comment_id',
+      };
 
       if (filter) queryParams.push(`filter=${filter}`);
       if (order) queryParams.push(`order=${order}`);
@@ -158,8 +180,47 @@
       queryParams.push(`access_token=${sox.settings.accessToken}`);
       const queryString = queryParams.join('&');
 
+      let finalItems = [];
+      if (useCache) {
+        // Count backwards so splicing doesn't change indices
+        for (let i = ids.length; i >= 0; i--) {
+          const cachedItemIndex = endpointCache.findIndex(item => {
+            const idFieldName = endpointToIdFieldNames[endpoint];
+            return item[idFieldName] === +ids[i];
+          });
+
+          // Cache results for max. 3 minutes (convert to milliseconds)
+          const earliestRequestTime = new Date().getTime() - (60 * 3 * 1000);
+          if (cachedItemIndex !== -1) {
+            const cachedItem = endpointCache[cachedItemIndex];
+            if (cachedItem.sox_request_time >= earliestRequestTime) {
+              // If we have a cached item for this ID, delete it from `ids` so we don't request the API for it
+              sox.debug(`API: [${featureId}:/${endpoint}/${ids[i]}] Using cached API item`);
+              finalItems.push(cachedItem);
+              ids.splice(i, 1);
+            } else {
+              // The cached item is now stale (too old); delete it
+              sox.debug(`API: [${featureId}:/${endpoint}/${ids[i]}] Deleting stale cached item`);
+              endpointCache.splice(cachedItemIndex, 1);
+            }
+          }
+        }
+      }
+
       // IDs are optional for endpoints like /questions
-      if (ids && Array.isArray(ids)) ids = ids.join(';');
+      if (ids && Array.isArray(ids)) {
+        if (ids.length) {
+          ids = ids.join(';');
+        } else if (useCache) {
+          // The cache had details for all IDs; no need to request API at all
+          sox.debug(`API: [${featureId}:/${endpoint}] API Cache had details for all requested IDs, skipping API request`);
+          GM_setValue('SOX-apiCache', JSON.stringify(apiCache));
+          sox.debug('API: Saving new cache', apiCache);
+          callback(finalItems);
+          return;
+        }
+      }
+
       const idPath = ids ? `/${ids}` : '';
       let queryURL;
       if (childEndpoint) {
@@ -169,7 +230,7 @@
         // e.g. /questions/{ids}
         queryURL = `${baseURL}${endpoint}${idPath}?${queryString}`;
       }
-      sox.debug('Getting From API with URL', queryURL);
+      sox.debug(`API: Sending request to URL: '${queryURL}'`);
 
       $.ajax({
         type: 'get',
@@ -184,7 +245,18 @@
             window.open('https://stackexchange.com/oauth/dialog?client_id=7138&scope=no_expiry&redirect_uri=http://soscripted.github.io/sox/');
             alert('Your access token is no longer valid. A window has been opened to request a new one.');
           } else {
-            callback(d);
+            if (useCache) {
+              d.items.forEach(item => {
+                item.sox_request_time = new Date().getTime();
+                finalItems.push(item);
+                endpointCache.push(item);
+              });
+              GM_setValue('SOX-apiCache', JSON.stringify(apiCache));
+              sox.debug('API: saving new cache', apiCache);
+            } else {
+              finalItems = d.items;
+            }
+            callback(finalItems);
           }
         },
         error: function(a, b, c) {
