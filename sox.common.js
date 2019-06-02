@@ -150,6 +150,7 @@
         filter,
         limit,
         featureId,
+        cacheDuration = 3, // Minutes to cache data for
       } = details;
       const baseURL = 'https://api.stackexchange.com/2.2/';
       const queryParams = [];
@@ -189,8 +190,8 @@
             return item[idFieldName] === +ids[i];
           });
 
-          // Cache results for max. 3 minutes (convert to milliseconds)
-          const earliestRequestTime = new Date().getTime() - (60 * 3 * 1000);
+          // Cache results for max. cacheDuraction minutes (convert to milliseconds)
+          const earliestRequestTime = new Date().getTime() - (60 * cacheDuration * 1000);
           if (cachedItemIndex !== -1) {
             const cachedItem = endpointCache[cachedItemIndex];
             if (cachedItem.sox_request_time >= earliestRequestTime) {

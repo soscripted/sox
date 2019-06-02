@@ -57,6 +57,7 @@
         filter: '!*MxJcsv91Tcz6yRH',
         limit: 100,
         featureId: 'markEmployees',
+        cacheDuration: 60 * 24, // Cache for 24 hours (in minutes)
       }, items => {
         sox.debug('markEmployees returned data', items);
         for (let i = 0; i < items.length; i++) {
@@ -654,6 +655,7 @@
               sitename,
               filter: FILTER_QUESTION_TITLE,
               featureId: 'parseCrossSiteLinks',
+              cacheDuration: 10, // Cache for 10 minutes
             }, items => {
               this.innerHTML = items[0].title;
             });
@@ -894,6 +896,7 @@
         limit: 60,
         sort: 'creation',
         featureId: 'answerTagsSearch',
+        cacheDuration: 10, // Cache for 10 minutes
       }, items => {
         const itemsLength = items.length;
 
@@ -1191,6 +1194,7 @@
           sitename: sox.site.currentApiParameter,
           filter: FILTER_QUESTION_CLOSURE_NOTICE,
           featureId: 'standOutDupeCloseMigrated',
+          cacheDuration: 10, // Cache for 10 minutes
         }, items => {
           questions.forEach(question => {
             sox.debug('standOutDupeCloseMigrated adding details for question', question);
@@ -1273,6 +1277,7 @@
           filter: '!SWJaL02RNFkXc_we4i',
           ids,
           featureId: 'editReasonTooltip',
+          cacheDuration: 5, // Cache for 5 minutes
         }, revisions => {
           $posts.forEach($post => {
             const id = $post.attr('data-questionid') || $post.attr('data-answerid');
@@ -1861,6 +1866,7 @@
         sitename: sox.site.url,
         filter: '!-MOiNm40Dv9qWI4dBqjO5FBS8p*ODCWqP',
         featureId: 'linkedToFrom',
+        cacheDuration: 30, // Cache for 30 minutes
       }, pagesThatLinkToThisPage => {
         $('.linked .spacer a.question-hyperlink').each(function () {
           const id = +$(this).attr('href').match(/\/(\d+)\//)[1];
