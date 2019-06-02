@@ -12,7 +12,8 @@
     dragBounty: function() {
       // Description: Makes the bounty window draggable
 
-      sox.helpers.observe('#start-bounty-popup', () => {
+      const target = document.getElementById('question');
+      sox.helpers.observe(target, '#start-bounty-popup', () => {
         $('#start-bounty-popup').draggable({
           drag: function() {
             $(this).css({
@@ -100,7 +101,7 @@
       // Description: For highlighting only the tags of favorite questions
 
       function highlight() {
-        const interestingQuestions = document.getElementsByClassName('tagged-interesting');
+        const interestingQuestions = [...document.getElementsByClassName('tagged-interesting')];
         const questionsLength = interestingQuestions.length;
         for (let i = 0; i < questionsLength; i++) {
           const question = interestingQuestions[i];
@@ -133,7 +134,11 @@
 
       highlight();
 
-      if (document.getElementsByClassName('question-summary').length) sox.helpers.observe('.question-summary', highlight);
+      if (document.getElementsByClassName('question-summary').length) {
+        const targetMainPage = document.getElementById('question-mini-list');
+        const targetQuestionsPage = document.getElementById('questions');
+        sox.helpers.observe([targetMainPage, targetQuestionsPage], '.question-summary', highlight);
+      }
     },
 
     displayName: function() {
@@ -492,7 +497,9 @@
     shareLinksPrivacy: function() {
       // Description: Remove your user ID from the 'share' link
 
-      sox.helpers.observe('.share-tip', () => {
+      const questionTarget = document.getElementById('question');
+      const answersTargets = document.getElementsByClassName('answer');
+      sox.helpers.observe([questionTarget, ...answersTargets], '.share-tip', () => {
         const toRemove = ' (includes your user id)';
         const popup = document.getElementsByClassName('share-tip')[0];
         if (!popup) return;
@@ -513,7 +520,9 @@
     shareLinksMarkdown: function() {
       // Description: For changing the 'share' button link to the format [name](link)
 
-      sox.helpers.observe('.share-tip', () => {
+      const questionTarget = document.getElementById('question');
+      const answersTargets = document.getElementsByClassName('answer');
+      sox.helpers.observe([questionTarget, ...answersTargets], '.share-tip', () => {
         const input = document.querySelector('.share-tip input');
         if (!input) return;
 
@@ -844,7 +853,8 @@
       }
 
       addLabelsAndHandlers();
-      sox.helpers.observe('.history-table', addLabelsAndHandlers);
+      const target = document.getElementById('mainbar-full');
+      if (target) sox.helpers.observe(target, '.history-table', addLabelsAndHandlers);
     },
 
     answerTagsSearch: function() {
@@ -939,8 +949,6 @@
           $questionHyperlinkOriginal.after('<a href="' + link + '" class="question-hyperlink sox-better-title"><span class="diff-delete">' + removed + '</span><span class="diff-add">' + added + '</span></a>');
         }
       }
-      betterTitle();
-      sox.helpers.observe('.review-status, .review-content, .suggested-edit, .post-id', betterTitle);
 
       // https://github.com/soscripted/sox/issues/166#issuecomment-269925059
       $(document).on('click', '.sox-better-title-toggle', function() {
@@ -955,6 +963,10 @@
           $('.sox-better-title').hide();
         }
       });
+
+      betterTitle();
+      const target = document.querySelector('.review-content');
+      sox.helpers.observe(target, '.review-status, .review-content, .suggested-edit, .post-id', betterTitle);
     },
 
     metaChatBlogStackExchangeButton: function() {
@@ -1233,8 +1245,10 @@
       }
 
       addLabels();
-      // New questions on homepage, or for on user profile page
-      sox.helpers.observe('#user-tab-questions, #question-mini-list', addLabels);
+
+      const targetMainPage = document.getElementById('question-mini-list');
+      const targetQuestionsPage = document.getElementById('questions');
+      sox.helpers.observe([targetMainPage, targetQuestionsPage], '#questions, #question-mini-list', addLabels);
     },
 
     editReasonTooltip: function() {
@@ -1407,8 +1421,10 @@
         itemIDs.push($('.question').data('questionid'));
 
         //event listeners for adding the sbs toggle buttons for editing existing questions or answers
+        const targetQuestionCells = document.getElementsByClassName('postcell');
+        const targetAnswerCells = document.getElementsByClassName('answercell');
         for (let i = 0; i <= numAnchors - 2; i++) {
-          sox.helpers.observe('#wmd-redo-button-' + itemIDs[i], SBS);
+          sox.helpers.observe([...targetAnswerCells, ...targetQuestionCells], '#wmd-redo-button-' + itemIDs[i], SBS);
         }
       }
 
@@ -1492,19 +1508,21 @@
       const PROCESSED_CLASS = 'sox-authorNameAdded';
       const MAX_PROCESSED_AT_ONCE = 20;
 
-      sox.helpers.observe('.' + inboxClass, () => {
-        const inboxDialog = document.getElementsByClassName(inboxClass)[0];
-        const unprocessedElements = inboxDialog.querySelectorAll('.inbox-item:not(.' + PROCESSED_CLASS + ')');
-        const lim = Math.min(unprocessedElements.length, MAX_PROCESSED_AT_ONCE);
+      const target = document.querySelector('.-dialog-container');
+      if (target) {
+        sox.helpers.observe(target, '.inbox-item', () => {
+          const inboxDialog = document.getElementsByClassName(inboxClass)[0];
+          let eligibleElements = [...inboxDialog.querySelectorAll('.inbox-item')];
+          eligibleElements = eligibleElements.slice(0, MAX_PROCESSED_AT_ONCE);
 
-        let element;
-
-        for (let x = 0; x < lim; x++) {
-          element = unprocessedElements[x];
-          setAuthorName(element);
-          element.classList.add(PROCESSED_CLASS);
-        }
-      });
+          const unprocessedElements = eligibleElements.filter(e => !e.classList.contains(PROCESSED_CLASS));
+          for (let x = 0; x < unprocessedElements.length; x++) {
+            const element = unprocessedElements[x];
+            setAuthorName(element);
+            element.classList.add(PROCESSED_CLASS);
+          }
+        });
+      }
     },
 
     flagOutcomeTime: function() {
@@ -1695,7 +1713,8 @@
     chatEasyAccess: function() {
       // Description: Adds options to give a user read/write/no access in chat from their user popup dialog
 
-      sox.helpers.observe('.user-popup', node => {
+      const target = document.getElementById('chat-body');
+      sox.helpers.observe(target, '.user-popup', node => {
         const $node = $(node).parent();
         const id = $node.find('a')[0].href.split('/')[4];
 
@@ -1789,10 +1808,11 @@
     },
 
     tabularReviewerStats: function() {
-      // Description: Adds a notification to the inbox if a question you downvoted and watched is edited
+      // Description: Display reviewer stats on /review/suggested-edits in table form
       // Idea by lolreppeatlol @ http://meta.stackexchange.com/a/277446/260841 :)
 
-      sox.helpers.observe('.review-more-instructions', () => {
+      const target = document.querySelector('.mainbar-full');
+      sox.helpers.observe(target, '.review-more-instructions', () => {
         const info = {};
         $('.review-more-instructions ul:eq(0) li').each(function() {
           const text = $(this).text();
@@ -1987,7 +2007,7 @@
       // key:id, value:username
       const postAuthors = {};
 
-      sox.helpers.observe('.review-content', () => {
+      $(document).on('sox-new-review-post-appeared', () => {
         getIdsAndAddDetails(postAuthors);
       });
 
@@ -2459,7 +2479,9 @@
 
         $('.edit-post').click(function() {
           const $that = $(this);
-          sox.helpers.observe('#wmd-redo-button-' + $that.attr('href').split('/')[2], () => {
+          const targetQuestionCells = document.getElementsByClassName('postcell');
+          const targetAnswerCells = document.getElementsByClassName('answercell');
+          sox.helpers.observe([...targetQuestionCells, ...targetAnswerCells], '#wmd-redo-button-' + $that.attr('href').split('/')[2], () => {
             main($that.parents('table').find('.inline-editor textarea.processed').attr('id'));
           });
         });
@@ -2519,9 +2541,10 @@
     showTagWikiLinkOnTagPopup: function() {
       // Description: Add a 'wiki' link to the new tag popups that appear on hover
 
-      sox.helpers.observe('.tag-popup', () => {
+      const target = document.querySelector('.question-page');
+      sox.helpers.observe(target, '.tag-popup', () => {
         //extract from feed URL button
-        const tagName = $('.tag-popup .float-right').attr('href').match('/feeds/tag/(.*)')[1];
+        const tagName = $('.tag-popup .float-right a').attr('href').match('/feeds/tag/(.*)')[1];
         const wikiUrl = '//' + sox.site.url + '/tags/' + tagName + '/info';
 
         $('.tag-popup .mr8:last').after($('<span/>', {
@@ -2549,7 +2572,7 @@
     hideWelcomeBackMessage: function() {
       // Description: Hide the 'welcome back...don't forget to vote' message when visiting a site after a while
 
-      sox.helpers.observe('#overlay-header', el => {
+      sox.helpers.observe(document.body, '#overlay-header', el => {
         if ($(el).text().match(/welcome back/gi)) {
           $(el).remove();
         }
@@ -2559,7 +2582,8 @@
     hideHowToAskWhenZoomed: function() {
       // Description: Hides the 'How to ask/format/tag' yellow boxes that appear when asking a question whilst zoomed in
 
-      sox.helpers.observe('.js-help-pointer', el => {
+      const target = document.getElementById('question-form');
+      sox.helpers.observe(target, '.js-help-pointer', el => {
         if ($(el).text().match(/(How to Ask)|(How to Format)|(How to Tag)/gi)) {
           $(el).remove();
         }

@@ -17,31 +17,31 @@
   sox.debug = function() {
     if (!sox.info.debugging) return;
     for (let arg = 0; arg < arguments.length; ++arg) {
-      console.debug('SOX: ', arguments[arg]);
+      console.debug('SOX:', arguments[arg]);
     }
   };
 
   sox.log = function() {
     for (let arg = 0; arg < arguments.length; ++arg) {
-      console.log('SOX: ', arguments[arg]);
+      console.log('SOX:', arguments[arg]);
     }
   };
 
   sox.warn = function() {
     for (let arg = 0; arg < arguments.length; ++arg) {
-      console.warn('SOX: ', arguments[arg]);
+      console.warn('SOX:', arguments[arg]);
     }
   };
 
   sox.error = function() {
     for (let arg = 0; arg < arguments.length; ++arg) {
-      console.error('SOX: ', arguments[arg]);
+      console.error('SOX:', arguments[arg]);
     }
   };
 
   sox.loginfo = function() {
     for (let arg = 0; arg < arguments.length; ++arg) {
-      console.info('SOX: ', arguments[arg]);
+      console.info('SOX:', arguments[arg]);
     }
   };
 
@@ -264,8 +264,10 @@
         },
       });
     },
-    observe: function(elements, callback, toObserve) {
-      sox.debug('observe: ' + elements);
+    observe: function (targets, elements, callback) {
+      sox.debug(`OBSERVE: '${elements}' on target(s)`, targets);
+      if (!targets || (Array.isArray(targets) && !targets.length)) return;
+
       const observer = new MutationObserver(throttle(mutations => {
         for (let i = 0; i < mutations.length; i++) {
           const mutation = mutations[i];
@@ -288,11 +290,14 @@
             return;
           }
         }
-      }, 250));
+      }, 1500));
 
-      if (toObserve) {
-        for (let i = 0; i < toObserve.length; i++) { //could be multiple elements with querySelectorAll
-          observer.observe(toObserve[i], {
+      if (Array.isArray(targets)) {
+        for (let i = 0; i < targets.length; i++) {
+          const target = targets[i];
+          if (!target) continue;
+
+          observer.observe(target, {
             attributes: true,
             childList: true,
             characterData: true,
@@ -300,7 +305,7 @@
           });
         }
       } else {
-        observer.observe(document.body, {
+        observer.observe(targets, {
           attributes: true,
           childList: true,
           characterData: true,

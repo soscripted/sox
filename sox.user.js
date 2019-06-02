@@ -3,7 +3,7 @@
 // @namespace    https://github.com/soscripted/sox
 // @homepage     https://github.com/soscripted/sox
 // @homepageURL  https://github.com/soscripted/sox
-// @version      2.4.32 DEV
+// @version      2.4.33 DEV
 // @description  Extra optional features for Stack Overflow and Stack Exchange sites
 // @contributor  ᴉʞuǝ (https://stackoverflow.com/users/1454538/, https://github.com/mezmi)
 // @contributor  ᔕᖺᘎᕊ (https://stackexchange.com/users/4337810/, https://github.com/shu8)
@@ -176,17 +176,17 @@
     }
 
     //custom events....
-    sox.helpers.observe('.new_comment, .comment, .comments', target => {
+    sox.helpers.observe([...document.getElementsByClassName('post-layout')], '.new_comment, .comment, .comments', target => {
       $(document).trigger('sox-new-comment', [target]);
       sox.debug('sox-new-comment event triggered');
     });
 
-    sox.helpers.observe('textarea[id^="wmd-input"]', target => {
+    sox.helpers.observe(document.body, 'textarea[id^="wmd-input"]', target => {
       $(document).trigger('sox-edit-window', [target]);
       sox.debug('sox-edit-window event triggered');
     });
 
-    sox.helpers.observe('.reviewable-post, .review-content', target => {
+    sox.helpers.observe(document.body, '.reviewable-post, .review-content', target => {
       $(document).trigger('sox-new-review-post-appeared', [target]);
       sox.debug('sox-new-review-post-appeared event triggered');
     });
