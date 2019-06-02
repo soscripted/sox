@@ -278,8 +278,8 @@
           if (addedNodes) {
             for (let n = 0; n < addedNodes.length; n++) {
               if ($(addedNodes[n]).find(elements).length) {
-                callback(target);
                 sox.debug('fire: node: ', addedNodes[n]);
+                callback(target);
                 return;
               }
             }

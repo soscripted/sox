@@ -76,26 +76,44 @@
       // Description: Adds the 'show x more comments' link before the commnents
       // Test on e.g. https://meta.stackexchange.com/questions/125439/
 
-      $('.js-show-link.comments-link').each(function() {
-        if (!$(this).parent().prev().find('.comment-text').length) return; //https://github.com/soscripted/sox/issues/196
+      function copyLinks() {
+        $('.js-show-link.comments-link').each(function() {
+          if (!$(this).parent().prev().find('.comment-text').length) return; // https://github.com/soscripted/sox/issues/196
 
-        const $btnToAdd = $(this).clone();
-        $btnToAdd.on('click', function(e) {
-          e.preventDefault();
-          $(this).hide();
+          const $existingClonedBtn = $(this).parent().parent().find('.sox-copyCommentsLinkClone');
+          if ($existingClonedBtn.length) {
+            if ($(this).parent().parent().find('.js-show-link.comments-link:visible').length !== 2) {
+              // If we've already cloned the button, we would expect 2 of the buttons to now exist
+              // If now, delete the clone as the comments have already been expanded (direct link to deep comment)
+              // See https://github.com/soscripted/sox/issues/379#issuecomment-460069876
+              $existingClonedBtn.remove();
+            }
+            // Don't add again if we've already cloned the button
+            return;
+          }
+
+          const $btnToAdd = $(this).clone();
+          $btnToAdd.addClass('sox-copyCommentsLinkClone');
+          $btnToAdd.on('click', function(e) {
+            e.preventDefault();
+            $(this).hide();
+          });
+
+          $(this).parent().parent().prepend($btnToAdd);
+
+          $(this).click(() => {
+            $btnToAdd.hide();
+          });
         });
 
-        $(this).parent().parent().prepend($btnToAdd);
-
-        $(this).click(() => {
-          $btnToAdd.hide();
+        $(document).on('click', '.js-add-link', function() { //https://github.com/soscripted/sox/issues/239
+          const commentParent = ($(this).parents('.answer').length ? '.answer' : '.question');
+          $(this).closest(commentParent).find('.js-show-link.comments-link').hide();
         });
-      });
+      }
 
-      $(document).on('click', '.js-add-link', function() { //https://github.com/soscripted/sox/issues/239
-        const commentParent = ($(this).parents('.answer').length ? '.answer' : '.question');
-        $(this).closest(commentParent).find('.js-show-link.comments-link').hide();
-      });
+      // copyLinks();
+      $(document).on('sox-new-comment', copyLinks);
     },
 
     highlightQuestions: function() {
@@ -601,17 +619,14 @@
       if (!sox.user.loggedIn) return;
 
       function addReplyLinks() {
-        // Delay needed because of https://github.com/soscripted/sox/issues/379#issuecomment-460001854
-        setTimeout(() => {
-          $('.comment').each(function () {
-            if (!$(this).find('.soxReplyLink').length) { //if the link doesn't already exist
-              if (sox.user.name !== $(this).find('.comment-text a.comment-user').text()) { //make sure the link is not added to your own comments
-                $(this).find('.comment-text').css('overflow-x', 'hidden');
-                $(this).find('.comment-text .comment-body').append('<span class="soxReplyLink" title="reply to this user" style="margin-left: -7px">&crarr;</span>');
-              }
+        $('.comment').each(function () {
+          if (!$(this).find('.soxReplyLink').length) { //if the link doesn't already exist
+            if (sox.user.name !== $(this).find('.comment-text a.comment-user').text()) { //make sure the link is not added to your own comments
+              $(this).find('.comment-text').css('overflow-x', 'hidden');
+              $(this).find('.comment-text .comment-body').append('<span class="soxReplyLink" title="reply to this user" style="margin-left: -7px">&crarr;</span>');
             }
-          });
-        }, 100);
+          }
+        });
       }
 
       $(document).on('click', 'span.soxReplyLink', function() {
