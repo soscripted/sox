@@ -433,6 +433,7 @@
     width: 220px;
     margin: 6px 10px 10px 0;
     padding: 0px;
+    margin: auto;
 }
 
 #sox-flagPercentProgressBar:after {
@@ -443,6 +444,7 @@
 
 #sox-flagPercentHelpful {
     margin-bottom: 5px;
+    text-align: center;
 }
 
 /*titleEditDiff -- for the toggle button*/
@@ -488,12 +490,6 @@
     color: rgba(0, 50, 200, 1);
     background-color: rgba(220, 220, 220, 1);
     padding: 1px 5px !important;
-}
-
-/*hotNetworkQuestionsFiltering -- for the questions to hide*/
-
-.sox-hot-network-question-filter-hide {
-    display: none !important;
 }
 
 /*addAuthorNameToInboxNotifications -- for the author span*/
@@ -574,4 +570,10 @@
 
 .sox-customMagicLinks-settings-table th {
     font-weight: bold;
+}
+
+/* linkedToFrom -- for the >/< chevrons */
+.sox-linkedToFrom-chevron {
+    color: black;
+    margin-left: 5px;
 }

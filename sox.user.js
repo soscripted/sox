@@ -3,13 +3,13 @@
 // @namespace    https://github.com/soscripted/sox
 // @homepage     https://github.com/soscripted/sox
 // @homepageURL  https://github.com/soscripted/sox
-// @version      2.4.0
+// @version      2.5.0
 // @description  Extra optional features for Stack Overflow and Stack Exchange sites
 // @contributor  ᴉʞuǝ (https://stackoverflow.com/users/1454538/, https://github.com/mezmi)
 // @contributor  ᔕᖺᘎᕊ (https://stackexchange.com/users/4337810/, https://github.com/shu8)
 // @contributor  Sir-Cumference (https://stackexchange.com/users/4119142/, https://github.com/Sir-Cumference)
 // @contributor  GaurangTandon (https://github.com/GaurangTandon)
-// @updateURL    https://rawgit.com/soscripted/sox/dev/sox.user.js
+// @updateURL    https://cdn.jsdelivr.net/gh/soscripted/sox@dev/sox.user.js
 
 // @match        *://*.stackoverflow.com/*
 // @match        *://*.stackexchange.com/*
@@ -64,7 +64,7 @@
     if (sox.location.on('soscripted.github.io/sox/#access_token')) { //save access token
       try {
         const access_token = window.location.href.split('=')[1].split('&')[0];
-        sox.loginfo('SOX ACCESS TOKEN: ', access_token);
+        sox.loginfo('ACCESS TOKEN: ', access_token);
         GM_setValue('SOX-accessToken', access_token);
         alert('Access token successfully saved! You can close this window :)');
       } catch (e) {
@@ -91,7 +91,7 @@
     const featureInfo = JSON.parse(GM_getResourceText('featuresJSON'));
 
     try {
-      sox.debug('init', sox, sox.dialog);
+      sox.debug('SOX object', sox);
       sox.dialog.init({
         version: sox.info.version,
         features: featureInfo,
@@ -103,10 +103,11 @@
     }
 
     if (sox.settings.available) {
-      // execute features
+      // Execute features
+      performance.mark('allFeatures-start');
       for (let i = 0; i < settings.length; ++i) {
-        var category = settings[i].split('-')[0];
-        var featureId = settings[i].split('-')[1];
+        const category = settings[i].split('-')[0];
+        const featureId = settings[i].split('-')[1];
 
         if (!(category in featureInfo.categories)) { //if we ever rename a category
           sox.loginfo('Deleting feature "' + settings[i] + '" (category rename?)');
@@ -115,23 +116,18 @@
           continue;
         }
 
-        var feature = featureInfo.categories[category].filter((obj) => {
+        const feature = featureInfo.categories[category].filter(obj => {
           return obj.name == featureId;
         })[0];
 
-        var runFeature = true;
-
-        var sites;
-
-        var pattern;
-
+        let runFeature = true;
         try {
           //NOTE: there is no else if() because it is possible to have both match and exclude patterns..
           //which could have minor exceptions making it neccessary to check both
           if (feature.match !== '') {
-            sites = feature.match.split(',');
+            const sites = feature.match.split(',');
 
-            for (pattern = 0; pattern < sites.length; pattern++) {
+            for (let pattern = 0; pattern < sites.length; pattern++) {
               if (!sox.location.matchWithPattern(sites[pattern])) {
                 runFeature = false; //none of the patterns match the current site.. yet.
               } else {
@@ -141,9 +137,9 @@
             }
           }
           if (feature.exclude !== '') {
-            sites = feature.exclude.split(',');
+            const sites = feature.exclude.split(',');
 
-            for (pattern = 0; pattern < sites.length; pattern++) {
+            for (let pattern = 0; pattern < sites.length; pattern++) {
               if (sox.location.matchWithPattern(sites[pattern])) { //if current site is in list, DON'T run feature
                 runFeature = false; //don't run feature
                 break; //no need to keep on looping
@@ -152,12 +148,15 @@
           }
           if (runFeature) {
             sox.debug('running ' + featureId);
+            performance.mark(`${featureId}-start`);
             if (feature.settings) {
               const settingsToPass = GM_getValue('SOX-' + featureId + '-settings') ? JSON.parse(GM_getValue('SOX-' + featureId + '-settings')) : {};
               sox.features[featureId](settingsToPass); //run the feature if match and exclude conditions are met, pass on settings object
             } else {
               sox.features[featureId](); //run the feature if match and exclude conditions are met
             }
+            performance.mark(`${featureId}-end`);
+            performance.measure(featureId, `${featureId}-start`, `${featureId}-end`);
           }
         } catch (err) {
           if (!sox.features[featureId] || !feature) { //remove deprecated/'corrupt' feature IDs from saved settings
@@ -171,22 +170,25 @@
           }
         }
       }
+      performance.mark('allFeatures-end');
+      performance.measure('allFeatures', 'allFeatures-start', 'allFeatures-end');
+      sox.debug('Performance Data', performance.getEntriesByType('measure'));
     }
 
     //custom events....
-    sox.helpers.observe('.new_comment, .comment, .comments', (target) => {
-      $(document).trigger('sox-new-comment', [target]);
+    sox.helpers.observe([...document.getElementsByClassName('post-layout')], '.new_comment, .comment, .comments, .comment-text', target => {
       sox.debug('sox-new-comment event triggered');
+      $(document).trigger('sox-new-comment', [target]);
     });
 
-    sox.helpers.observe('textarea[id^="wmd-input"]', (target) => {
-      $(document).trigger('sox-edit-window', [target]);
+    sox.helpers.observe(document.body, 'textarea[id^="wmd-input"]', target => {
       sox.debug('sox-edit-window event triggered');
+      $(document).trigger('sox-edit-window', [target]);
     });
 
-    sox.helpers.observe('.reviewable-post, .review-content', (target) => {
-      $(document).trigger('sox-new-review-post-appeared', [target]);
+    sox.helpers.observe(document.body, '.reviewable-post, .review-content', target => {
       sox.debug('sox-new-review-post-appeared event triggered');
+      $(document).trigger('sox-new-review-post-appeared', [target]);
     });
 
     if (GM_getValue('SOX-accessToken', -1) == -1) { //set access token

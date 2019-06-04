@@ -25,11 +25,13 @@
       const $exportSettingsButton = $soxSettingsDialog.find('#sox-settings-export');
       const $featurePackButtons = $soxSettingsDialog.find('.sox-settings-dialog-feature-pack');
 
-      //array of HTML strings that will be displayed as `li` items if the user has installed a new version.
-
-      const changes = ['Introduced \'feature packs\' -- easily find and enable features we would categorise as \'major UI tweaks\', \'key features\', or \'power user fetures\'!',
-        'You will no longer be forced to get an access token. If you choose not to, SOX will simply disable features that need one. Thanks @Izzy for the suggestion!',
-        'Deprecated paste images feature -- it has been implemented natively by SE now!'];
+      // Array of HTML strings that will be displayed as `li` items if the user has installed a new version.
+      const changes = [
+        'Only inject into Github issues if you are on the SOX repo',
+        'Fix bugs in various features',
+        'Improve SOX\'s performance by making lots of behind-the-scenes improvements',
+        'Deprecated the \'Hide HNQ\'s\' feature; it is now implemented natively!',
+      ];
 
       function addCategory(name) {
         const $div = $('<div/>', {
@@ -301,7 +303,7 @@
       });
 
       //close dialog if clicked outside it
-      $(document).click((e) => { //close dialog if clicked outside it
+      $(document).click(e => { //close dialog if clicked outside it
         const $target = $(e.target);
         const isToggle = $target.is('#soxSettingsButton, #sox-settings-dialog');
         const isChild = $target.parents('#soxSettingsButton, #sox-settings-dialog').is('#soxSettingsButton, #sox-settings-dialog');

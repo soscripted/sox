@@ -5,24 +5,24 @@
     init: function(version, handler) {
       // auto-inject version number and environment information into GitHub issues
       function inject() {
+        if (!sox.location.on('github.com/soscripted/sox') || location.href.includes('feature_request')) return;
         const $issue = $('#issue_body');
         if ($issue.length) {
           $issue.prop('disabled', 'true');
-          let issueText = $issue.text();
+          const environmentText = `
+**Environment**
+SOX version: ${version}
+Platform: ${handler}
+`;
 
-          issueText = issueText.replace('1.X.X', version); //inject the SOX version by replacing the issue template's placeholder '1.X.X'
-          issueText = issueText.replace('Chrome/Tampermonkey', handler); //inject the SOX userscript manager+platform by replacing the issue template's placeholder 'Chrome/Tampermonkey'
+          let issueText = $issue.text();
+          issueText = issueText.replace('**Environment**', environmentText); //inject environment details
           issueText += '\n---\n\n### Features Enabled \n\n    ' + JSON.stringify(sox.settings.load());
           $('#issue_body').delay(500).text(issueText).removeAttr('disabled');
         }
       }
 
-      $(document).on('pjax:complete', () => {
-        if (sox.location.on('github.com')) {
-          inject();
-        }
-      });
-
+      $(document).on('pjax:complete', inject);
       inject();
     },
   };

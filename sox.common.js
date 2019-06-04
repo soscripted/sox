@@ -17,31 +17,31 @@
   sox.debug = function() {
     if (!sox.info.debugging) return;
     for (let arg = 0; arg < arguments.length; ++arg) {
-      console.debug('SOX: ', arguments[arg]);
+      console.debug('SOX:', arguments[arg]);
     }
   };
 
   sox.log = function() {
     for (let arg = 0; arg < arguments.length; ++arg) {
-      console.log('SOX: ', arguments[arg]);
+      console.log('SOX:', arguments[arg]);
     }
   };
 
   sox.warn = function() {
     for (let arg = 0; arg < arguments.length; ++arg) {
-      console.warn('SOX: ', arguments[arg]);
+      console.warn('SOX:', arguments[arg]);
     }
   };
 
   sox.error = function() {
     for (let arg = 0; arg < arguments.length; ++arg) {
-      console.error('SOX: ', arguments[arg]);
+      console.error('SOX:', arguments[arg]);
     }
   };
 
   sox.loginfo = function() {
     for (let arg = 0; arg < arguments.length; ++arg) {
-      console.info('SOX: ', arguments[arg]);
+      console.info('SOX:', arguments[arg]);
     }
   };
 
@@ -49,9 +49,7 @@
   let Stack;
   if (location.href.indexOf('github.com') === -1) { //need this so it works on FF -- CSP blocks window.eval() it seems
     Chat = (typeof window.CHAT === 'undefined' ? window.eval('typeof CHAT != \'undefined\' ? CHAT : undefined') : CHAT);
-    sox.debug('CHAT', Chat);
     Stack = (typeof Chat === 'undefined' ? (typeof StackExchange === 'undefined' ? window.eval('if (typeof StackExchange != "undefined") StackExchange') : (StackExchange || window.StackExchange)) : undefined);
-    sox.debug('Stack', Stack);
   }
 
   sox.Stack = Stack;
@@ -104,7 +102,6 @@
       }
     },
     get accessToken() {
-      sox.debug('SOX Access Token: ' + (GM_getValue('SOX-accessToken', false) === false ? 'NOT SET' : 'SET'));
       const accessToken = GM_getValue('SOX-accessToken', false);
       return (accessToken == -2 ? false : accessToken); //if the user was already asked once, the value is set to -2, so make sure this is returned as false
     },
@@ -138,16 +135,107 @@
   }
 
   sox.helpers = {
-    getFromAPI: function(type, id, sitename, filter, callback, sortby) {
-      sox.debug('Getting From API with URL: https://api.stackexchange.com/2.2/' + type + '/' + id + '?order=desc&sort=' + (sortby || 'creation') + '&site=' + sitename + '&key=' + sox.info.apikey + '&access_token=' + sox.settings.accessToken);
+    getFromAPI: function (details, callback) {
+      let {
+        ids,
+        useCache = true,
+      } = details;
 
-      const filterQuery = filter ? '&filter=' + filter : '';
-      // optional for queries like /questions
-      const idPath = id ? '/' + id : '';
+      const {
+        endpoint,
+        childEndpoint,
+        sort = 'creation',
+        order = 'desc',
+        sitename,
+        filter,
+        limit,
+        featureId,
+        cacheDuration = 3, // Minutes to cache data for
+      } = details;
+      const baseURL = 'https://api.stackexchange.com/2.2/';
+      const queryParams = [];
+
+      // Cache can only be used if the featureId and IDs (as an array) have been provided
+      useCache = featureId && useCache && Array.isArray(ids);
+      const apiCache = JSON.parse(GM_getValue('SOX-apiCache', '{}'));
+
+      if (!(featureId in apiCache)) apiCache[featureId] = {};
+      const featureCache = apiCache[featureId];
+
+      if (!(endpoint in featureCache)) featureCache[endpoint] = [];
+      const endpointCache = featureCache[endpoint];
+
+      const endpointToIdFieldNames = {
+        'questions': 'question_id',
+        'answers': 'answer_id',
+        'users': 'user_id',
+        'comments': 'comment_id',
+      };
+
+      if (filter) queryParams.push(`filter=${filter}`);
+      if (order) queryParams.push(`order=${order}`);
+      if (limit) queryParams.push(`pagesize=${limit}`);
+      queryParams.push(`sort=${sort}`);
+      queryParams.push(`site=${sitename}`);
+      queryParams.push(`key=${sox.info.apikey}`);
+      queryParams.push(`access_token=${sox.settings.accessToken}`);
+      const queryString = queryParams.join('&');
+
+      let finalItems = [];
+      if (useCache) {
+        // Count backwards so splicing doesn't change indices
+        for (let i = ids.length; i >= 0; i--) {
+          const cachedItemIndex = endpointCache.findIndex(item => {
+            const idFieldName = endpointToIdFieldNames[endpoint];
+            return item[idFieldName] === +ids[i];
+          });
+
+          // Cache results for max. cacheDuraction minutes (convert to milliseconds)
+          const earliestRequestTime = new Date().getTime() - (60 * cacheDuration * 1000);
+          if (cachedItemIndex !== -1) {
+            const cachedItem = endpointCache[cachedItemIndex];
+            if (cachedItem.sox_request_time >= earliestRequestTime) {
+              // If we have a cached item for this ID, delete it from `ids` so we don't request the API for it
+              sox.debug(`API: [${featureId}:/${endpoint}/${ids[i]}] Using cached API item`);
+              finalItems.push(cachedItem);
+              ids.splice(i, 1);
+            } else {
+              // The cached item is now stale (too old); delete it
+              sox.debug(`API: [${featureId}:/${endpoint}/${ids[i]}] Deleting stale cached item`);
+              endpointCache.splice(cachedItemIndex, 1);
+            }
+          }
+        }
+      }
+
+      // IDs are optional for endpoints like /questions
+      if (ids && Array.isArray(ids)) {
+        if (ids.length) {
+          ids = ids.join(';');
+        } else if (useCache) {
+          // The cache had details for all IDs; no need to request API at all
+          sox.debug(`API: [${featureId}:/${endpoint}] API Cache had details for all requested IDs, skipping API request`);
+          GM_setValue('SOX-apiCache', JSON.stringify(apiCache));
+          sox.debug('API: Saving new cache', apiCache);
+          callback(finalItems);
+          return;
+        }
+      }
+
+      const idPath = ids ? `/${ids}` : '';
+      let queryURL;
+      if (childEndpoint) {
+        // e.g. /posts/{ids}/revisions
+        queryURL = `${baseURL}${endpoint}${idPath}/${childEndpoint}?${queryString}`;
+      } else {
+        // e.g. /questions/{ids}
+        queryURL = `${baseURL}${endpoint}${idPath}?${queryString}`;
+      }
+      sox.debug(`API: Sending request to URL: '${queryURL}'`);
 
       $.ajax({
         type: 'get',
-        url: 'https://api.stackexchange.com/2.2/' + type + idPath + '?order=desc&sort=' + (sortby || 'creation') + '&site=' + sitename + '&key=' + sox.info.apikey + '&access_token=' + sox.settings.accessToken + filterQuery,
+        url: queryURL,
         success: function(d) {
           if (d.backoff) {
             sox.error('SOX Error: BACKOFF: ' + d.backoff);
@@ -158,7 +246,18 @@
             window.open('https://stackexchange.com/oauth/dialog?client_id=7138&scope=no_expiry&redirect_uri=http://soscripted.github.io/sox/');
             alert('Your access token is no longer valid. A window has been opened to request a new one.');
           } else {
-            callback(d);
+            if (useCache) {
+              d.items.forEach(item => {
+                item.sox_request_time = new Date().getTime();
+                finalItems.push(item);
+                endpointCache.push(item);
+              });
+              GM_setValue('SOX-apiCache', JSON.stringify(apiCache));
+              sox.debug('API: saving new cache', apiCache);
+            } else {
+              finalItems = d.items;
+            }
+            callback(finalItems);
           }
         },
         error: function(a, b, c) {
@@ -166,9 +265,11 @@
         },
       });
     },
-    observe: function(elements, callback, toObserve) {
-      sox.debug('observe: ' + elements);
-      const observer = new MutationObserver(throttle((mutations) => {
+    observe: function (targets, elements, callback) {
+      sox.debug(`OBSERVE: '${elements}' on target(s)`, targets);
+      if (!targets || (Array.isArray(targets) && !targets.length)) return;
+
+      const observer = new MutationObserver(throttle(mutations => {
         for (let i = 0; i < mutations.length; i++) {
           const mutation = mutations[i];
           const target = mutation.target;
@@ -177,8 +278,8 @@
           if (addedNodes) {
             for (let n = 0; n < addedNodes.length; n++) {
               if ($(addedNodes[n]).find(elements).length) {
-                callback(target);
                 sox.debug('fire: node: ', addedNodes[n]);
+                callback(target);
                 return;
               }
             }
@@ -190,11 +291,14 @@
             return;
           }
         }
-      }, 250));
+      }, 1500));
 
-      if (toObserve) {
-        for (let i = 0; i < toObserve.length; i++) { //could be multiple elements with querySelectorAll
-          observer.observe(toObserve[i], {
+      if (Array.isArray(targets)) {
+        for (let i = 0; i < targets.length; i++) {
+          const target = targets[i];
+          if (!target) continue;
+
+          observer.observe(target, {
             attributes: true,
             childList: true,
             characterData: true,
@@ -202,7 +306,7 @@
           });
         }
       } else {
-        observer.observe(document.body, {
+        observer.observe(targets, {
           attributes: true,
           childList: true,
           characterData: true,
@@ -247,7 +351,7 @@
     // answer ID, question ID, user ID, comment ID ("posts/comments/ID" NOT "comment1545_5566")
     getIDFromLink: function(link) {
       // test cases: https://regex101.com/r/6P9sDX/2
-      const idMatch = link.match(/\/(\d+)($|\/|\?)/);
+      const idMatch = link.match(/\/(\d+)/);
       return idMatch ? +idMatch[1] : null;
     },
     getSiteNameFromLink: function(link) {
