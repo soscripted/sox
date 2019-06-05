@@ -170,7 +170,7 @@
         title: name,
         text: name,
       });
-      $span.insertBefore('.gravatar-wrapper-24');
+      $span.insertBefore('.top-bar .gravatar-wrapper-24');
     },
 
     colorAnswerer: function() {
