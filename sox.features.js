@@ -38,14 +38,14 @@
       // Description: Adds an Stack Overflow logo next to users that *ARE* a Stack Overflow Employee
 
       const anchors = [...document.querySelectorAll('.comment a, .deleted-answer-info a, .employee-name a, .user-details a, .question-summary .started a')].filter(el => {
-        return el.href.startsWith('/users/');
+        return el.href.contains('/users/');
       });
       const ids = [];
 
       for (let i = 0; i < anchors.length; i++) {
         const href = anchors[i].href;
-        const id = href.split('/')[2];
-        if (ids.indexOf(id) === -1) ids.push(id);
+        const idMatch = href.match(/(\d+)/);
+        if (idMatch && ids.indexOf(idMatch[1]) === -1) ids.push(idMatch[1]);
       }
       sox.debug('markEmployees user IDs', ids);
 
@@ -65,7 +65,7 @@
           const isEmployee = items[i].is_employee;
           if (!isEmployee) continue;
 
-          anchors.filter(el => el.href.startsWith(`/users/${userId}/`)).forEach(el => {
+          anchors.filter(el => el.href.contains(`/users/${userId}/`)).forEach(el => {
             el.insertAdjacentHTML('afterend', '<span class="fab fa-stack-overflow" title="employee (added by SOX)" style="padding: 0 5px; color: ' + $('.mod-flair').css('color') + '"></span>');
           });
         }
