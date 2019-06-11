@@ -2581,12 +2581,13 @@
     addTimelineAndRevisionLinks: function() {
       // Description: Add timeline and revision links to the bottom of each post for quick access to them
 
-      $('.question, .answer').each(function() {
+      $('.question, .answer').each(function () {
+        const id = $(this).attr('data-questionid') || $(this).attr('data-answerid');
         $(this).find('.post-menu').append($('<a/>', {
-          'href': '//' + sox.site.url + '/posts/' + sox.site.href.split('/')[4] + '/revisions',
+          'href': '//' + sox.site.url + '/posts/' + id + '/revisions',
           'text': 'revisions',
         })).append($('<a/>', {
-          'href': '//' + sox.site.url + '/posts/' + sox.site.href.split('/')[4] + '/timeline',
+          'href': '//' + sox.site.url + '/posts/' + id + '/timeline',
           'text': 'timeline',
         }));
       });
