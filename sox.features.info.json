@@ -58,13 +58,6 @@
             "exclude": "*://chat.*.com/*,*://*/questions/*",
             "feature_packs": ["major_ui", "key_feature", "power_user"]
         }, {
-            "name": "isQuestionHot",
-            "desc": "Add a label on questions which are hot-network questions",
-            "extended_description": "If the question you are currently viewing is HOT, a flame icon is added next to the title",
-            "meta": "http://meta.stackexchange.com/questions/245390/let-mods-and-10k-know-when-questions-go-hot",
-            "match": "*://*/questions/*",
-            "exclude": "SE1.0,*://*/questions/ask"
-        }, {
             "name": "localTimestamps",
             "desc": "Convert timestamps to your local time",
             "extended_description": "Displays timestamps based on your time zone. You can also display time in 12-hour format by checking the option.",

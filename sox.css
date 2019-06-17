@@ -247,15 +247,6 @@
     content: "No new meta questions at this time.";
 }
 
-/*addHotText for the 'this question is hot' banner */
-
-.sox-hot {
-    float: left;
-    font-size: xx-large;
-    color: red;
-    margin-right: 8px;
-}
-
 /*quickCommentShortcutsMain: */
 
 .quickCommentShortcutsReminder {

@@ -731,43 +731,6 @@
       });
     },
 
-    isQuestionHot: function() {
-      // Description: For adding some text to questions that are in the hot network questions list
-
-      function addHotText() {
-        if (!document.getElementsByClassName('sox-hot').length) {
-          document.getElementById('feed').innerHTML = '<p>SOX: One of the 100 hot network questions!</p>';
-
-          //display:block to fix https://github.com/soscripted/sox/issues/243:
-          $(document.getElementById('question-header')).css('display', 'block').prepend('<div title="SOX: this is a hot network question!" ' + (sox.location.on('english.stackexchange.com') ? 'style="padding:13px"' : '') + ' class="sox-hot"><i class="fab fa-free-code-camp"></i><div>');
-        }
-      }
-      $(document.getElementById('qinfo')).after('<div id="feed"></div>');
-
-      if (sox.location.on('/questions') || $('.question-summary').length) {
-        const proxyUrl = 'https://cors-anywhere.herokuapp.com/'; //CORS proxy
-        const hnqJSONUrl = 'https://stackexchange.com/hot-questions-for-mobile';
-        const requestUrl = proxyUrl + hnqJSONUrl;
-
-        $.get(requestUrl, results => {
-          if (sox.location.on('/questions/')) {
-            $.each(results, (i, o) => {
-              if (document.URL.indexOf(o.site + '/questions/' + o.question_id) > -1) addHotText();
-            });
-          } else {
-            $('.question-summary').each(function() {
-              const id = $(this).attr('id').split('-')[2];
-              if (results.filter(d => {
-                return d.question_id == id;
-              }).length) {
-                $(this).find('.summary h3').prepend('<div title="SOX: this question is a hot network question!" class="sox-hot" style="font-size:x-large;float:none;display:inline"><i class="fab fa-free-code-camp"></i></div>');
-              }
-            });
-          }
-        });
-      }
-    },
-
     localTimestamps: function(settings) {
       // Description: Gets local timestamp
 
