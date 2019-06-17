@@ -812,7 +812,7 @@
 
         const newTimestamp = (new Date()).getFullYear() == date.getFullYear() ? month + ' ' + date.getDate() + ' at ' + hour + ':' + minute + dayTime : month + ' ' + date.getDate() + ' \'' + year + ' at ' + hour + ':' + minute + dayTime;
 
-        $(this).attr('title', newTimestamp).text(newTimestamp);
+        $(this).text(newTimestamp);
       }
     },
 
