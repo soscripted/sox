@@ -2317,10 +2317,11 @@
                       width: ${percentHelpful}%;
                     }`);
 
-        $('#flag-summary-filter').after('<h3 id=\'sox-flagPercentHelpful\' title=\'only helpful and declined flags are counted\'><span id=\'percent\'>' + percentHelpful + '%</span> helpful</h3>');
+        $('#flag-summary-filter').after('<h3 id=\'sox-flagPercentHelpful\' title=\'only helpful and declined flags are counted\' class=\'wrap-div\'><span id=\'percent\'>' + percentHelpful + '%</span> helpful</h3>');
         $('#sox-flagPercentHelpful span#percent').css('color', percentColor);
 
-        $('#sox-flagPercentHelpful').after('<div id=\'sox-flagPercentProgressBar\'></div>');
+        $('#sox-flagPercentHelpful').after('<div id=\'sox-flagPercentProgressBar\' class=\'wrap-div\'></div>');
+        $('.wrap-div').wrapAll("<div class='main'></div>")
       }
     },
 
