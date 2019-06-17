@@ -430,7 +430,7 @@
 #sox-flagPercentProgressBar {
     background: #ccc;
     height: 10px;
-    width: 220px;
+    width: 250px;
     margin: 6px 10px 10px 0;
     padding: 0px;
     margin: auto;
@@ -445,6 +445,10 @@
 #sox-flagPercentHelpful {
     margin-bottom: 5px;
     text-align: center;
+}
+
+.sox-flagPercentProgressBar-container {
+    background-color: #fafafb
 }
 
 /*titleEditDiff -- for the toggle button*/
