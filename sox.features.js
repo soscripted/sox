@@ -2321,7 +2321,7 @@
         $('#sox-flagPercentHelpful span#percent').css('color', percentColor);
 
         $('#sox-flagPercentHelpful').after('<div id=\'sox-flagPercentProgressBar\' class=\'wrap-div\'></div>');
-        $('.wrap-div').wrapAll("<div class='.sox-flagPercentProgressBar-container'></div>")
+        $('.wrap-div').wrapAll("<div class='sox-flagPercentProgressBar-container'></div>")
       }
     },
 
