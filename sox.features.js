@@ -738,8 +738,7 @@
         if (!document.getElementsByClassName('sox-hot').length) {
           document.getElementById('feed').innerHTML = '<p>SOX: One of the 100 hot network questions!</p>';
 
-          //display:block to fix https://github.com/soscripted/sox/issues/243:
-          $(document.getElementById('question-header')).css('display', 'block').prepend('<div title="SOX: this is a hot network question!" ' + (sox.location.on('english.stackexchange.com') ? 'style="padding:13px"' : '') + ' class="sox-hot"><i class="fab fa-free-code-camp"></i><div>');
+          $(document.getElementById('question-header')).prepend('<div title="SOX: this is a hot network question!" ' + (sox.location.on('english.stackexchange.com') ? 'style="padding:13px"' : '') + ' class="sox-hot"><i class="fab fa-free-code-camp"></i><div>');
         }
       }
       $(document.getElementById('qinfo')).after('<div id="feed"></div>');
