@@ -1,3 +1,9 @@
+/* sprites */
+.sox-sprite {
+    width: 15px;
+    height: 15px;
+}
+
 /* -------- sox settings dialog  ------- */
 
 #sox-settings-dialog {
