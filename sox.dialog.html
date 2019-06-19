@@ -9,7 +9,7 @@
     </div>
     <div class="modal-content" id="search-container">
         <input type="text" id="search" placeholder="looking for a specific feature?">
-        <i class="fa fa-search"></i>
+        <svg role="img" title="delete" class="sox-sprite sox-sprite-search"> <use xlink:href="#sox_search"> </use> </svg>
     </div>
     <div id="sox-settings-dialog-features">
         <div id="sox-settings-dialog-features-packs">
@@ -29,9 +29,17 @@
         <a class="action" id="sox-settings-dialog-reset" title="reset SOX (deletes everything, including your settings and access token)">Reset</a>
         <a class="action" id="sox-settings-dialog-report" title="report issue on Github" target="_blank" href="https://github.com/soscripted/sox/issues/new">Report Issue</a>
         <a class="action" id="sox-settings-dialog-debugging">Enable Debugging</a>
-        <a class="action" id="sox-settings-dialog-access-token" title="request a new access token"><i class="fa fa-key"></i></a>
-        <a class="action" id="sox-settings-export" title="export/copy feature settings"><i class="fa fa-file-export"></i></a>
-        <a class="action" id="sox-settings-import" title="import/paste feature settings"><i class="fa fa-file-import"></i></a>
-        <a id="sox-settings-dialog-check-toggle" title="toggle all features on/off"><i class="far fa-check-square"></i></a>
+        <a class="action" id="sox-settings-dialog-access-token" title="request a new access token">
+            <svg role="img" class="sox-sprite sox-sprite-key"> <use xlink:href="#sox_key"> </use> </svg>
+        </a>
+        <a class="action" id="sox-settings-export" title="export/copy feature settings">
+            <svg role="img" class="sox-sprite sox-sprite-export"> <use xlink:href="#sox_export"> </use> </svg>
+        </a>
+        <a class="action" id="sox-settings-import" title="import/paste feature settings">
+            <svg role="img" class="sox-sprite sox-sprite-import"> <use xlink:href="#sox_import"> </use> </svg>
+        </a>
+        <a class="action" id="sox-settings-dialog-check-toggle" title="toggle all features on/off">
+            <svg role="img" class="sox-sprite sox-sprite-checked-box"> <use xlink:href="#sox_checked_box"> </use> </svg>
+        </a>
     </div>
 </div>

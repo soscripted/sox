@@ -37,12 +37,18 @@
     min-height: 0;
 }
 
-#sox-settings-dialog:not(.new-topbar) #search-container .fa-search {
+#sox-settings-dialog #search-container .sox-sprite-search {
+    width: 20px;
+    height: 20px;
+    top: 5px;
+}
+
+#sox-settings-dialog:not(.new-topbar) #search-container .sox-sprite-search {
     position: relative;
     left: -485px;
 }
 
-#sox-settings-dialog.new-topbar #search-container .fa-search {
+#sox-settings-dialog.new-topbar #search-container .sox-sprite-search {
     position: relative;
     left: -485px;
 }
@@ -83,11 +89,7 @@
 
 #sox-settings-dialog-actions .action {
     float: right;
-    padding: 14px;
-}
-
-#sox-settings-dialog-actions #sox-settings-dialog-access-token {
-    transform: scaleX(-1);
+    padding: 11px;
 }
 
 #sox-settings-dialog .sox-new-version-item {
@@ -135,15 +137,17 @@
     padding: 5px !important;
 }
 
-.sox-feature .fa-info,
-.sox-feature .fa-wrench {
+.sox-feature .sox-sprite-info,
+.sox-feature .sox-sprite-wrench {
     font-size: 12px;
-    padding: 0 5px;
     cursor: pointer;
 }
 
-.sox-feature .fa-info {
+.sox-feature .sox-sprite-info {
     float: right;
+    width: 17px;
+    height: 17px;
+    fill: gray;
 }
 
 #sox-settings-dialog-features-packs {
