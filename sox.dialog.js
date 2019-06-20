@@ -63,10 +63,7 @@
           'title': blockFeatureSelection ? 'You must get an access token to enable this feature (click the key button at the bottom of the SOX dialog)' : '',
         });
 
-        const $info = $('<i/>', {
-          'class': 'fa fa-info',
-          'aria-hidden': true,
-        }).hover(function() {
+        const $info = sox.sprites.getSvg('info').hover(function() {
           if (extendedDescription && !$(this).parent().find('.sox-feature-info').length) {
             $(this).parent().append($('<div/>', {
               'class': 'sox-feature-info',
@@ -76,7 +73,6 @@
         });
 
         const $label = $('<label/>');
-
         const $input = $('<input/>', {
           id: name,
           type: 'checkbox',
@@ -96,20 +92,16 @@
             style: 'display: none; margin-top: 5px;',
           });
 
-          const $settingsToggle = $('<i/>', {
-            'class': 'fa fa-wrench',
-            click: function(e) {
-              e.preventDefault(); //don't uncheck the checkbox
+          const $settingsToggle = sox.sprites.getSvg('wrench', 'Edit this feature\'s settings').click(e => {
+            e.preventDefault(); //don't uncheck the checkbox
 
-              const $settingsPanel = $('#feature-settings-' + name);
+            const $settingsPanel = $('#feature-settings-' + name);
 
-              if ($settingsPanel.is(':visible')) {
-                $settingsPanel.fadeOut();
-              } else {
-                $settingsPanel.fadeIn();
-              }
-
-            },
+            if ($settingsPanel.is(':visible')) {
+              $settingsPanel.fadeOut();
+            } else {
+              $settingsPanel.fadeIn();
+            }
           });
 
           const optionalSettings = GM_getValue('SOX-' + name + '-settings', -1);
@@ -149,7 +141,7 @@
           const $feature = $soxSettingsDialogFeatures.find('input#' + name).parent();
           $feature.append($settingsToggle);
 
-          if ($div.has('i.fa-info').length) {
+          if ($div.has('.sox-sprite-info').length) {
             $info.after($settingsDiv);
           } else {
             $feature.append($settingsDiv);
@@ -298,8 +290,10 @@
         },
       });
 
-      const $icon = $('<i/>', {
-        class: 'fa fa-cogs',
+      const $icon = sox.sprites.getSvg('settings', 'Change your SOX settings', {
+        fill: $('.top-bar .-secondary .-link').css('color'),
+        width: '25px',
+        height: '25px',
       });
 
       //close dialog if clicked outside it

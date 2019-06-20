@@ -79,11 +79,13 @@
       sox.debug('----------------end saved variables---------------------');
     }
 
+    // Send a GET request for the sprites SVG (so it is cached) & insert into head
+    $.get('https://gist.githack.com/shu8/f1ba4cacaa39b1f6b33d6973f21ea3e0/raw/57744c2fdcde8b5b905947de3fad7dafee6e0efb/sox.sprites.svg', null, data => {
+      const div = $('<div/>', { html: data });
+      $('head').append(div);
+    }, 'text');
+
     GM_addStyle(GM_getResourceText('css'));
-    $('<link/>', {
-      rel: 'stylesheet',
-      href: 'https://use.fontawesome.com/releases/v5.1.0/css/all.css',
-    }).appendTo('head');
 
     const settings = sox.settings.load();
     //returns undefined if not set
