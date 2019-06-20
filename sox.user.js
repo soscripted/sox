@@ -3,7 +3,7 @@
 // @namespace    https://github.com/soscripted/sox
 // @homepage     https://github.com/soscripted/sox
 // @homepageURL  https://github.com/soscripted/sox
-// @version      2.5.8 DEV
+// @version      2.5.9 DEV
 // @description  Extra optional features for Stack Overflow and Stack Exchange sites
 // @contributor  ᴉʞuǝ (https://stackoverflow.com/users/1454538/, https://github.com/mezmi)
 // @contributor  ᔕᖺᘎᕊ (https://stackexchange.com/users/4337810/, https://github.com/shu8)
@@ -80,7 +80,7 @@
     }
 
     // Send a GET request for the sprites SVG (so it is cached) & insert into head
-    $.get('https://gist.githack.com/shu8/f1ba4cacaa39b1f6b33d6973f21ea3e0/raw/57744c2fdcde8b5b905947de3fad7dafee6e0efb/sox.sprites.svg', null, data => {
+    $.get('https://cdn.jsdelivr.net/gh/soscripted/sox@dev/sox.sprites.svg', null, data => {
       const div = $('<div/>', { html: data });
       $('head').append(div);
     }, 'text');
