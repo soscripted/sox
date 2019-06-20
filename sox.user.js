@@ -80,7 +80,7 @@
     }
 
     // Send a GET request for the sprites SVG (so it is cached) & insert into head
-    $.get('https://gist.githack.com/shu8/f1ba4cacaa39b1f6b33d6973f21ea3e0/raw/8e027c0c838b36fb78020e8a733ade0082bb1248/sox.sprites.svg', null, data => {
+    $.get('https://gist.githack.com/shu8/f1ba4cacaa39b1f6b33d6973f21ea3e0/raw/57744c2fdcde8b5b905947de3fad7dafee6e0efb/sox.sprites.svg', null, data => {
       const div = $('<div/>', { html: data });
       $('head').append(div);
     }, 'text');
