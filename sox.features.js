@@ -1636,14 +1636,16 @@
         flagCount += Number($groupHeader.next().find(`li:contains("${type}")`)
           .find('div:last')
           .text()
-          .replace(',', ''));
+          .replace(/[\D]/g, '')); // Strip any non-digit characters (e.g. commas)
         return flagCount;
       }
 
-      // add percentages
+      // Add percentages
       for (const groupKey in group) {
         const item = group[groupKey];
-        const total = +$(`li > a[href="?group=${item}"]`).find('div:last').text();
+
+        // Strip any non-digit characters (e.g. commas)
+        const total = +$(`li > a[href="?group=${item}"]`).find('div:last').text().replace(/[\D]/g, '');
 
         for (const typeKey in type) {
           const typeItem = type[typeKey];
