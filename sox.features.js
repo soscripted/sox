@@ -70,7 +70,7 @@
           anchors.filter(el => el.href.contains(`/users/${userId}/`)).forEach(el => {
             $(el).append($('<span/>', {
               title: 'employee (added by SOX)',
-            }).append($icon));
+            }).append($icon.clone()));
           });
         }
       });
