@@ -491,11 +491,15 @@
     float: right;
     position: sticky;
     top: 0;
+
+    /* z-index for compatibility with https://github.com/SmartManoj/SmartUserScripts/blob/master/SO_Lines.user.js */
+    z-index: 50;
     display: none;
     /* relative position prevents code from being in front of button */
     position: relative;
     background-color: #eff0f1;
     margin-left: -15px;
+
 }
 
 .sox-copyCodeTextarea {
