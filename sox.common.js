@@ -134,6 +134,28 @@
     };
   }
 
+  sox.sprites = {
+    getSvg: function (name, tooltip, css) {
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+      const title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+
+      if (tooltip) {
+        svg.setAttribute('title', tooltip);
+        title.textContent = tooltip;
+        svg.appendChild(title);
+      }
+
+      use.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', `#sox_${name}`);
+      svg.appendChild(use);
+
+      if (css) $(svg).css(css);
+      svg.classList.add('sox-sprite');
+      svg.classList.add(`sox-sprite-${name}`);
+      return $(svg);
+    },
+  };
+
   sox.helpers = {
     getFromAPI: function (details, callback) {
       let {

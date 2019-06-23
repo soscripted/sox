@@ -1,6 +1,6 @@
 [![Join the chat at https://gitter.im/soscripted/sox](https://badges.gitter.im/soscripted/sox.svg)](https://gitter.im/soscripted/sox?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-### SOX v2.5.0
+### SOX v2.5.0 DEV
 
 Stack Overflow Extras (*SOX*) is a project that stemmed from the [Stack Overflow Optional Features (SOOF)](https://github.com/shu8/Stack-Overflow-Optional-Features) project.
 

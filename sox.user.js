@@ -3,7 +3,7 @@
 // @namespace    https://github.com/soscripted/sox
 // @homepage     https://github.com/soscripted/sox
 // @homepageURL  https://github.com/soscripted/sox
-// @version      2.5.0
+// @version      2.5.12 DEV
 // @description  Extra optional features for Stack Overflow and Stack Exchange sites
 // @contributor  ᴉʞuǝ (https://stackoverflow.com/users/1454538/, https://github.com/mezmi)
 // @contributor  ᔕᖺᘎᕊ (https://stackexchange.com/users/4337810/, https://github.com/shu8)
@@ -79,11 +79,13 @@
       sox.debug('----------------end saved variables---------------------');
     }
 
+    // Send a GET request for the sprites SVG (so it is cached) & insert into head
+    $.get('https://cdn.jsdelivr.net/gh/soscripted/sox@dev/sox.sprites.svg', null, data => {
+      const div = $('<div/>', { html: data });
+      $('head').append(div);
+    }, 'text');
+
     GM_addStyle(GM_getResourceText('css'));
-    $('<link/>', {
-      rel: 'stylesheet',
-      href: 'https://use.fontawesome.com/releases/v5.1.0/css/all.css',
-    }).appendTo('head');
 
     const settings = sox.settings.load();
     //returns undefined if not set
