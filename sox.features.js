@@ -528,14 +528,17 @@
         if (!popup) return;
 
         // Do nothing if the function's already done its thing
-        const origHtml = popup.innerHTML;
-        if (origHtml.indexOf(toRemove) == -1) return;
-
-        popup.innerHTML = origHtml.replace(toRemove, '');
+        const popupTextInfo = popup.querySelector('.js-text');
+        const origText = popupTextInfo.innerText;
+        if (origText.indexOf(toRemove) == -1) return;
 
         const input = popup.querySelector('input');
         const origLink = input.value;
-        input.value = origLink.match(/.+\/(q|a)\/[0-9]+/g);
+        const newLink = origLink.match(/.+\/(q|a)\/[0-9]+/g)[0];
+
+        popupTextInfo.innerText = origText.replace(toRemove, '');
+
+        input.value = newLink;
         input.select();
       });
     },
