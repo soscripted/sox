@@ -226,6 +226,13 @@
             "meta": "https://meta.stackexchange.com/q/312794",
             "match": "*://*/questions*,*://*/review*",
             "exclude": "*://*/questions/ask"
+        }, {
+            "name": "openImagesAsModals",
+            "desc": "Open imgur images as larger modals on click",
+            "extended_description": "When clicking on an image that is hosted on Stack Exchange's imgur account, a modal will open showing a larger version of the image. If you still want to open the image in a new tab, there is a 'source' link in the modal.",
+            "meta": "",
+            "match": "*://*/questions*,*://*/review/*",
+            "exclude": ""
         }],
         "Editing": [{
             "name": "addSBSBtn",

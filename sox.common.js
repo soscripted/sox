@@ -393,9 +393,10 @@
         'class': 's-modal--dialog js-modal-dialog ',
         'style': 'min-width: 568px;',// top: 227.736px; left: 312.653px;',
       });
+      if (params.css) $dialogInnerContainer.css(params.css);
       const $header = $('<h1/>', {
-        'class': 's-modal--header fs-headline1 fw-bold mr48 js-first-tabbable',
-        'text': params.header,
+        'class': 's-modal--header fs-headline1 fw-bold mr48 js-first-tabbable sox-custom-dialog-header',
+        'html': params.header,
       });
       const $mainContent = $('<div/>', {
         'class': 's-modal--body sox-custom-dialog-content',
