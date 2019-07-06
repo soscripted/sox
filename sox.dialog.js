@@ -27,10 +27,9 @@
 
       // Array of HTML strings that will be displayed as `li` items if the user has installed a new version.
       const changes = [
-        'Only inject into Github issues if you are on the SOX repo',
         'Fix bugs in various features',
-        'Improve SOX\'s performance by making lots of behind-the-scenes improvements',
-        'Deprecated the \'Hide HNQ\'s\' feature; it is now implemented natively!',
+        'Add feature to open imgur images in a modal on click',
+        'Removed dependency on Font Awesome for icons, use SVG sprites instead',
       ];
 
       function addCategory(name) {
