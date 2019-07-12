@@ -1546,7 +1546,7 @@
       const PROCESSED_CLASS = 'sox-authorNameAdded';
       const MAX_PROCESSED_AT_ONCE = 20;
 
-      const target = document.querySelector('.-dialog-container');
+      const target = document.querySelector('.js-secondary-topbar-links');
       if (target) {
         sox.helpers.observe(target, '.inbox-item', () => {
           const inboxDialog = document.getElementsByClassName(inboxClass)[0];
