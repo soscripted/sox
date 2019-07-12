@@ -3,7 +3,7 @@
 // @namespace    https://github.com/soscripted/sox
 // @homepage     https://github.com/soscripted/sox
 // @homepageURL  https://github.com/soscripted/sox
-// @version      2.5.17 DEV
+// @version      2.5.18 DEV
 // @description  Extra optional features for Stack Overflow and Stack Exchange sites
 // @contributor  ᴉʞuǝ (https://stackoverflow.com/users/1454538/, https://github.com/mezmi)
 // @contributor  ᔕᖺᘎᕊ (https://stackexchange.com/users/4337810/, https://github.com/shu8)
@@ -38,6 +38,7 @@
 // @resource     dialog sox.dialog.html
 // @resource     featuresJSON sox.features.info.json
 // @resource     common sox.common.info.json
+// @resource     sprites sox.sprites.svg
 
 // @grant        GM_setValue
 // @grant        GM_getValue
@@ -79,11 +80,8 @@
       sox.debug('----------------end saved variables---------------------');
     }
 
-    // Send a GET request for the sprites SVG (so it is cached) & insert into head
-    $.get('https://cdn.jsdelivr.net/gh/soscripted/sox@dev/sox.sprites.svg', null, data => {
-      const div = $('<div/>', { html: data });
-      $('head').append(div);
-    }, 'text');
+    const spritesDiv = $('<div/>', { html: GM_getResourceText('sprites') });
+    $('head').append(spritesDiv);
 
     GM_addStyle(GM_getResourceText('css'));
 
