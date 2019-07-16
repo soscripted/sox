@@ -2804,10 +2804,8 @@
             e.preventDefault();
             // Create modal on click instead of outside; modal is removed when closed
             // so reference would become invalid
-            const $modal = sox.helpers.createModal({
-              ...modalAttributes,
-              header: `SOX: Linked Image <a class='sox-openImagesAsModals-sourceLink' target='_blank' rel='noopener noreferrer' href='${img.src}'>source</a>`,
-            });
+            modalAttributes.header = `SOX: Linked Image <a class='sox-openImagesAsModals-sourceLink' target='_blank' rel='noopener noreferrer' href='${img.src}'>source</a>`;
+            const $modal = sox.helpers.createModal(modalAttributes);
             $modal.find('.sox-custom-dialog-content').html(`<img width='100%' height='100%' src='${img.src}' />`);
             if (!document.getElementById('#sox-linked-image-modal')) $('body').append($modal);
           });
