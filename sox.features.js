@@ -2193,7 +2193,7 @@
       });
 
       function checkAndAddReminder() {
-        if (!sox.user.loggedIn && !sox.location.match('winterbash')) {
+        if (!sox.user.loggedIn && !sox.location.on('winterbash')) {
           if (!$('#loggedInReminder').length) $('.container').append(div);
         } else {
           $('#loggedInReminder').remove();
