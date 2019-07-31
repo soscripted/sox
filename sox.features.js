@@ -222,65 +222,13 @@
         return node.value.substring(node.selectionStart, node.selectionEnd);
       }
 
-      function surroundSelectedText(textarea, start, end) {
-        // same wrapper code on either side (`$...$`)
-        if (typeof end === 'undefined') end = start;
-
-        /*--- Expected behavior:
-          When there is some text selected: (unwrap it if already wrapped)
-          "]text["         --> "**]text[**"
-          "**]text[**"     --> "]text["
-          "]**text**["     --> "**]**text**[**"
-          "**]**text**[**" --> "]**text**["
-          When there is no text selected:
-          "]["             --> "**placeholder text**"
-          "**][**"         --> ""
-          Note that `]` and `[` denote the selected text here.
-      */
-
-        const selS = textarea.selectionStart;
-        const selE = textarea.selectionEnd;
-        const value = textarea.value;
-        const startLen = start.length;
-        const endLen = end.length;
-
-        let valBefore = value.substring(0, selS);
-        let valMid = value.substring(selS, selE);
-        let valAfter = value.substring(selE);
-        let generatedWrapper;
-
-        // handle trailing spaces
-        const trimmedSelection = valMid.match(/^(\s*)(\S?(?:.|\n|\r)*\S)(\s*)$/) || ['', '', '', ''];
-
-        // determine if text is currently wrapped
-        if (valBefore.endsWith(start) && valAfter.startsWith(end)) {
-          textarea.value = valBefore.substring(0, valBefore.length - startLen) + valMid + valAfter.substring(endLen);
-          textarea.selectionStart = valBefore.length - startLen;
-          textarea.selectionEnd = (valBefore + valMid).length - startLen;
-          textarea.focus();
-        } else {
-          valBefore += trimmedSelection[1];
-          valAfter = trimmedSelection[3] + valAfter;
-          valMid = trimmedSelection[2];
-
-          generatedWrapper = start + valMid + end;
-
-          textarea.value = valBefore + generatedWrapper + valAfter;
-          textarea.selectionStart = valBefore.length + start.length;
-          textarea.selectionEnd = (valBefore + generatedWrapper).length - end.length;
-          textarea.focus();
-        }
-
-        sox.Stack.MarkdownEditor.refreshAllPreviews();
-      }
-
       function addBullets(node) {
         const list = '- ' + getSelection(node).split('\n').join('\n- ');
         replaceSelectedText(node, list);
       }
 
       function addKbd(node) {
-        surroundSelectedText(node, '<kbd>', '</kbd>');
+        sox.helpers.surroundSelectedText(node, '<kbd>', '</kbd>');
         node.focus();
       }
 
@@ -567,21 +515,25 @@
     commentShortcuts: function() {
       // Description: For adding support in comments for Ctrl+K,I,B to add code backticks, italicise, bolden selection
 
-      $('.comments').on('keydown', 'textarea', function(e) {
-        if (e.which == 75 && e.ctrlKey) { //ctrl+k (code)
-          $(this).surroundSelectedText('`', '`');
+      $('.comments').on('keydown', 'textarea', function (e) {
+        const el = $(this).get(0);
+
+        if (e.which == 75 && e.ctrlKey) { // Ctrl+k (code backticks)
+          sox.helpers.surroundSelectedText(el, '`', '`');
           e.stopPropagation();
           e.preventDefault();
           return false;
         }
-        if (e.which == 73 && e.ctrlKey) { //ctrl+i (italics)
-          $(this).surroundSelectedText('*', '*');
+
+        if (e.which == 73 && e.ctrlKey) { // Ctrl+i (italicize)
+          sox.helpers.surroundSelectedText(el, '*', '*');
           e.stopPropagation();
           e.preventDefault();
           return false;
         }
-        if (e.which == 66 && e.ctrlKey) { //ctrl+b (bold)
-          $(this).surroundSelectedText('**', '**');
+
+        if (e.which == 66 && e.ctrlKey) { // Ctrl+b (bolden)
+          sox.helpers.surroundSelectedText(el, '**', '**');
           e.stopPropagation();
           e.preventDefault();
           return false;
