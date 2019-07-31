@@ -749,13 +749,9 @@
       }
 
       function addHotText() {
-        if (!document.getElementsByClassName('sox-hot').length) {
-          document.getElementById('feed').innerHTML = '<p>SOX: One of the 100 hot network questions!</p>';
-          $(document.getElementById('question-header')).prepend(getHotDiv());
-        }
+        if (document.getElementsByClassName('sox-hot').length) return;
+        $(document.getElementById('question-header')).prepend(getHotDiv());
       }
-
-      $(document.getElementById('qinfo')).after('<div id="feed"></div>');
 
       if (sox.location.on('/questions') || $('.question-summary').length) {
         const proxyUrl = 'https://cors-anywhere.herokuapp.com/'; //CORS proxy
