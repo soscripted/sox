@@ -2055,31 +2055,19 @@
         return new RegExp('\\b' + list.replace(',', '|').replace(' ', '') + '\\b', 'i');
       }
 
-      function insertTagsList(anchor) {
-        if ($(anchor).parent().find('.sox-hnq-question-tags-tooltip').length) return;
-        $(anchor).after('<span class="sox-hnq-question-tags-tooltip">' + anchor.dataset.tags + '</span>');
-      }
-
       const WORDS_TO_BLOCK = settings.wordsToBlock;
       let SITES_TO_BLOCK = settings.sitesToBlock;
       const TITLES_TO_HIDE = settings.titlesToHideRegex && settings.titlesToHideRegex.split(',');
-      const FILTER_QUESTION_TAGS = '!)5IW-5Quf*cV5LToe(J0BjSBXW19';
 
       if (SITES_TO_BLOCK) SITES_TO_BLOCK = SITES_TO_BLOCK.split(',');
 
-      $('#hot-network-questions h4').css('display', 'inline').after($('<span/>', {
-        'style': 'color:  grey; display: block; margin-bottom: 10px;',
-        'text': 'SOX: hover over titles to show tags',
-      }));
-
       $('#hot-network-questions li a').each(function() {
         let i;
-        const id = sox.helpers.getIDFromAnchor(this);
-        const sitename = sox.helpers.getSiteNameFromAnchor(this);
 
-        //NOTE: to hide questions, we use a class that has 'display: none !important'.
-        //This is to make sure questions that were previously hidden don't appear after the user clicks 'more hot questions',
-        //because the questions are *already* on the page before the button is clicked, but just hidden!
+        // NOTE: to hide questions, we use a class that has 'display: none !important'.
+        // This is to make sure questions that were previously hidden don't appear after
+        // the user clicks 'more hot questions', because the questions are *already* on
+        // the page before the button is clicked, but just hidden!
 
         if (WORDS_TO_BLOCK) {
           if (createRegex(WORDS_TO_BLOCK).test(this.innerText)) $(this).parent().addClass('sox-hot-network-question-filter-hide');
@@ -2102,32 +2090,6 @@
             }
           }
         }
-
-        const PLACEHOLDER = 'fetching tags...';
-
-        this.addEventListener('mouseenter', function() {
-          if (!this.dataset.tags) {
-            sox.helpers.getFromAPI({
-              endpoint: 'questions',
-              ids: id,
-              sitename,
-              filter: FILTER_QUESTION_TAGS,
-              useCache: false, // Single ID, so no point
-            }, items => {
-              this.dataset.tags = items[0].tags.join(', ');
-              insertTagsList(this);
-            });
-            this.dataset.tags = PLACEHOLDER;
-          } else if (typeof this.dataset.tags !== 'undefined' && this.dataset.tags !== PLACEHOLDER) {
-            insertTagsList(this);
-          } else {
-            insertTagsList(this, PLACEHOLDER);
-          }
-        });
-        this.addEventListener('mouseleave', function() {
-          const tooltip = this.parentNode.querySelector('.sox-hnq-question-tags-tooltip');
-          if (tooltip) tooltip.remove();
-        });
       });
     },
 
@@ -2757,6 +2719,53 @@
             $modal.find('.sox-custom-dialog-content').html(`<img width='100%' height='100%' src='${img.src}' />`);
             if (!document.getElementById('#sox-linked-image-modal')) $('body').append($modal);
           });
+        });
+      });
+    },
+
+    addTagsToHNQs: function () {
+      // Description: Show HNQ tags on hover in the sidebar
+
+      const FILTER_QUESTION_TAGS = '!)5IW-5Quf*cV5LToe(J0BjSBXW19';
+      const PLACEHOLDER = 'fetching tags...';
+
+      function insertTagsList(anchor) {
+        if ($(anchor).parent().find('.sox-hnq-question-tags-tooltip').length) return;
+        $(anchor).after('<span class="sox-hnq-question-tags-tooltip">' + anchor.dataset.tags + '</span>');
+      }
+
+      $('#hot-network-questions h4').css('display', 'inline').after($('<span/>', {
+        'style': 'color:  grey; display: block; margin-bottom: 10px;',
+        'text': 'SOX: hover over titles to show tags',
+      }));
+
+      [...document.querySelectorAll('#hot-network-questions li a')].forEach(el => {
+        const id = sox.helpers.getIDFromAnchor(el);
+        const sitename = sox.helpers.getSiteNameFromAnchor(el);
+
+        el.addEventListener('mouseenter', () => {
+          if (!el.dataset.tags) {
+            sox.helpers.getFromAPI({
+              endpoint: 'questions',
+              ids: id,
+              sitename,
+              filter: FILTER_QUESTION_TAGS,
+              useCache: false, // Single ID, so no point
+            }, items => {
+              el.dataset.tags = items[0].tags.join(', ');
+              insertTagsList(el);
+            });
+            el.dataset.tags = PLACEHOLDER;
+          } else if (typeof el.dataset.tags !== 'undefined' && el.dataset.tags !== PLACEHOLDER) {
+            insertTagsList(el);
+          } else {
+            insertTagsList(el, PLACEHOLDER);
+          }
+        });
+
+        el.addEventListener('mouseleave', () => {
+          const tooltip = el.parentNode.querySelector('.sox-hnq-question-tags-tooltip');
+          if (tooltip) tooltip.remove();
         });
       });
     },
