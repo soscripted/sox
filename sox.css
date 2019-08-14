@@ -556,7 +556,7 @@
 /* thanks @Makyen <https://meta.stackexchange.com/questions/312794/312800#comment1024746_312794> */
 
 .sox-onlyShowCommentActionsOnHover:not(:hover) .comment-up-off,
-.sox-onlyShowCommentActionsOnHover:not(:hover) .comment-flag:not(.flag-on) {
+.sox-onlyShowCommentActionsOnHover:not(:hover) .js-comment-flag:not(.fc-red-500) {
     visibility: hidden;
 }
 
