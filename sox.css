@@ -182,6 +182,24 @@
     opacity: 0.5;
 }
 
+#sox-settings-dialog.dark-mode .sox-settings-dialog-feature-pack:hover {
+    background-color: #3b9de2 !important;
+}
+
+#sox-settings-dialog.dark-mode .sox-settings-dialog-feature-pack,
+#sox-settings-dialog.dark-mode #sox-settings-dialog-features .modal-content div:hover {
+    background-color: black !important;
+}
+
+#sox-settings-dialog.dark-mode .sox-feature-settings,
+#sox-settings-dialog.dark-mode .sox-feature-info {
+    background-color: black;
+}
+
+#sox-settings-dialog.dark-mode .sox-sprite {
+    fill: #ccc;
+}
+
 /* -------- sox specific features' CSS ------- */
 
 #sox-scrollToTop {

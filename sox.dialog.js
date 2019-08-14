@@ -289,6 +289,15 @@
         },
       });
 
+      // Very basic 'dark theme' support. See https://github.com/soscripted/sox/issues/406
+      // Not sure what the best way to detect dark mode is; the following just checks to
+      // see if <body>'s text color is #ccc (grey/rgb(204,204,204)). Might need changing
+      // in future
+      if ($('body').css('color') === 'rgb(204, 204, 204)') {
+        sox.debug('Dark mode detected, tweaking SOX CSS');
+        $soxSettingsDialog.addClass('dark-mode');
+      }
+
       const $icon = sox.sprites.getSvg('settings', 'Change your SOX settings', {
         fill: $('.top-bar .-secondary .-link').css('color'),
         width: '25px',
