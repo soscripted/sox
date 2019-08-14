@@ -2696,6 +2696,8 @@
     },
 
     openImagesAsModals: function () {
+      // Description: When clicking on imgur images, show a larger version in a modal
+
       const modalAttributes = {
         header: 'SOX: Linked Image',
         css: {
