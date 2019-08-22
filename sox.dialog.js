@@ -354,7 +354,7 @@
 
       // add dialog to corral and sox button to topbar
       $soxSettingsButton.append($icon);
-      $('.-secondary > .-item:not(:has(.my-profile)):eq(1)').before($('<li/>').addClass('-item').append($soxSettingsButton));
+      $('.-secondary > .-item:eq(1)').after($('<li/>').addClass('-item').append($soxSettingsButton));
 
       $soxSettingsDialog.css({
         'top': $('.top-bar').height(),
