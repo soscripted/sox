@@ -1003,7 +1003,15 @@
 
       const NEWQUESTIONS = 'metaNewQuestionAlert-lastQuestions';
       const favicon = sox.site.icon;
-      const metaName = 'meta.' + sox.site.currentApiParameter;
+      const sitename = sox.site.currentApiParameter;
+
+      // If it is a special site, add 'meta' before it, if not, replace the 'stackexchange' from the URL with 'meta'.
+      if (sitename.match(/stackoverflow|superuser|serverfault|askubuntu|stackapps|mathoverflow/)) {
+        var metaName = 'meta.' + sitename;
+      } else {
+        metaName = sitename.replace('stackexchange','meta');
+      }
+
       const FILTER_QUESTION_TITLE_LINK = '!BHMIbze0EQ*ved8LyoO6rNk25qGESy';
       const $dialog = $('<div/>', {
         id: 'metaNewQuestionAlertDialog',
