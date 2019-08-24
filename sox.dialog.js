@@ -354,7 +354,12 @@
 
       // add dialog to corral and sox button to topbar
       $soxSettingsButton.append($icon);
-      $('.-secondary > .-item:eq(1)').after($('<li/>').addClass('-item').append($soxSettingsButton));
+      // The following check is because SO doesn't have inbox, achievements help centre and site switcher items
+      if ($('.inbox-button-item').length) {
+          $('.inbox-button-item').before($('<li/>').addClass('-item').append($soxSettingsButton));
+      } else {
+          $('.js-searchbar-trigger').after($('<li/>').addClass('-item').append($soxSettingsButton));
+      }
 
       $soxSettingsDialog.css({
         'top': $('.top-bar').height(),
