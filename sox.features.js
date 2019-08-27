@@ -81,7 +81,7 @@
       // Test on e.g. https://meta.stackexchange.com/questions/125439/
 
       function copyLinks() {
-        $('.js-show-link.comments-link').each(function() {
+        $('.js-show-link').each(function() {
           if (!$(this).parent().prev().find('.comment-text').length) return; // https://github.com/soscripted/sox/issues/196
 
           const $existingClonedBtn = $(this).parent().parent().find('.sox-copyCommentsLinkClone');
@@ -116,7 +116,7 @@
         });
       }
 
-      // copyLinks();
+      copyLinks();
       $(document).on('sox-new-comment', copyLinks);
     },
 
