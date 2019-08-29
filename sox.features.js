@@ -468,27 +468,10 @@
     shareLinksPrivacy: function() {
       // Description: Remove your user ID from the 'share' link
 
-      const questionTarget = document.getElementById('question');
-      const answersTargets = document.getElementsByClassName('answer');
-      sox.helpers.observe([questionTarget, ...answersTargets], '.share-tip', () => {
-        const toRemove = ' (includes your user id)';
-        const popup = document.getElementsByClassName('share-tip')[0];
-        if (!popup) return;
-
-        // Do nothing if the function's already done its thing
-        const popupTextInfo = popup.querySelector('.js-text');
-        const origText = popupTextInfo.innerText;
-        if (origText.indexOf(toRemove) == -1) return;
-
-        const input = popup.querySelector('input');
-        const origLink = input.value;
-        const newLink = origLink.match(/.+\/(q|a)\/[0-9]+/g)[0];
-
-        popupTextInfo.innerText = origText.replace(toRemove, '');
-
-        input.value = newLink;
-        input.select();
-      });
+      $('.js-subtitle').remove(); // Remove the 'includes your user id' string
+      for (let i = 0; i < $('.js-share-link').length; i++) {
+          document.getElementsByClassName('js-share-link')[i].href = document.getElementsByClassName('js-share-link')[i].href.match(/.+\/(q|a)\/[0-9]+/)[0];
+      }
     },
 
     shareLinksMarkdown: function() {
