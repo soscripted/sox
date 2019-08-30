@@ -496,22 +496,15 @@
     shareLinksMarkdown: function() {
       // Description: For changing the 'share' button link to the format [name](link)
 
-      const questionTarget = document.getElementById('question');
-      const answersTargets = document.getElementsByClassName('answer');
-      sox.helpers.observe([questionTarget, ...answersTargets], '.share-tip', () => {
-        const input = document.querySelector('.share-tip input');
-        if (!input) return;
-
-        const title = document.querySelector('meta[name="twitter:title"]').getAttribute('content').replace(/\[(.*?)\]/g, '[$1]'); // https://github.com/soscripted/sox/issues/226, https://github.com/soscripted/sox/issues/292
-        const link = input.value;
-
-        // Do nothing if the function's already done its thing
-        if (link.indexOf(title) !== -1) return;
-
-        input.value = `[${title}](${link})`;
-        input.select();
-        document.execCommand('copy'); // https://github.com/soscripted/sox/issues/177
-      });
+      const title = $('.fs-headline1.fl1').contents().html().replace(/\[(on\shold|duplicate)\]/g, '($1)'); // https://github.com/soscripted/sox/issues/226, https://github.com/soscripted/sox/issues/292
+      for (let i = 0; i < $('.js-share-link').length; i++) {
+        const link = 'https://' + sox.site.url + $('.js-share-link:eq(' + i + ')').attr("href");
+        $('.js-share-link:eq(' + i + ')').click(function() {
+          $('.js-input').val(`[${title}](${link})`);
+          $('.js-input:eq(' + i + ')').select();
+          document.execCommand('copy'); // https://github.com/soscripted/sox/issues/177
+        });
+      }
     },
 
     commentShortcuts: function() {
