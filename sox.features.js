@@ -470,7 +470,7 @@
 
       $('.js-subtitle').remove(); // Remove the 'includes your user id' string
       for (let i = 0; i < $('.js-share-link').length; i++) {
-          document.getElementsByClassName('js-share-link')[i].href = document.getElementsByClassName('js-share-link')[i].href.match(/.+\/(q|a)\/[0-9]+/)[0];
+          $('.js-share-link:eq(' + i + ')').attr("href", $('.js-share-link:eq(' + i + ')').attr('href').match(/\/(q|a)\/[0-9]+/)[0]);
       }
     },
 
