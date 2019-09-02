@@ -497,14 +497,14 @@
       // Description: For changing the 'share' button link to the format [name](link)
 
       const title = $('.fs-headline1.fl1').contents().html().replace(/\[(on\shold|duplicate)\]/g, '($1)'); // https://github.com/soscripted/sox/issues/226, https://github.com/soscripted/sox/issues/292
-      for (let i = 0; i < $('.js-share-link').length; i++) {
-        const link = 'https://' + sox.site.url + $('.js-share-link:eq(' + i + ')').attr("href");
-        $('.js-share-link:eq(' + i + ')').click(function() {
-          $('.js-input').val(`[${title}](${link})`);
-          $('.js-input:eq(' + i + ')').select();
+      $('.js-share-link').each((i, el) => {
+        const inputEl = $('.js-input:eq(' + i + ')');
+        $(el).click(function() {
+          inputEl.val(`[${title}](${el.href})`);
+          inputEl.select();
           document.execCommand('copy'); // https://github.com/soscripted/sox/issues/177
         });
-      }
+      });
     },
 
     commentShortcuts: function() {
