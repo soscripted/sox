@@ -711,10 +711,10 @@
         const postId = window.location.pathname.split('/')[2]
         apiCall(postId, sitename);
       } else if ($('.question-summary').length) {
-          $('.question-summary').each(function() {
-              const postID = $(this).attr('id').split('-')[2];
-              apiCall(postID, sitename, this);
-          });
+        $('.question-summary').each(function() {
+          const postID = $(this).attr('id').split('-')[2];
+          apiCall(postID, sitename, this);
+        });
       }
       function apiCall(postID, sitename, el) {
         sox.helpers.getFromAPI({
