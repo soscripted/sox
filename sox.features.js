@@ -716,23 +716,23 @@
               apiCall(postID, sitename, this);
           });
       }
-        function apiCall(postID, sitename, el) {
-            sox.helpers.getFromAPI({
-                endpoint: 'posts',
-                childEndpoint: 'revisions',
-                sitename: sitename,
-                filter: '!5RC-)9_aw3mg*i)3*vUhU3Wfl',
-                ids: postID,
-                featureId: 'isQuestionHot',
-                cacheDuration: 60 * 8, // Cache for 8 hours
-            }, results => {
-                $.each(results, (i, o) => {
-                    if (results[i].comment === "<b>Became Hot Network Question</b> " && new Date().getTime() / 1000 - results[i].creation_date <= 259200) { // Questions stay hot for 3 days. Check if they are hot now (Note SE works with secs, not millisecs!)
-                        sox.location.on('/questions') ? addHotText() : $(el).find('.summary h3').prepend(getHotDiv('question-list'))
-                    }
-                });
-            });
-        }
+      function apiCall(postID, sitename, el) {
+        sox.helpers.getFromAPI({
+          endpoint: 'posts',
+          childEndpoint: 'revisions',
+          sitename: sitename,
+          filter: '!5RC-)9_aw3mg*i)3*vUhU3Wfl',
+          ids: postID,
+          featureId: 'isQuestionHot',
+          cacheDuration: 60 * 8, // Cache for 8 hours
+        }, results => {
+          $.each(results, (i, o) => {
+            if (results[i].comment === "<b>Became Hot Network Question</b> " && new Date().getTime() / 1000 - results[i].creation_date <= 259200) { // Questions stay hot for 3 days. Check if they are hot now (Note SE works with secs, not millisecs!)
+              sox.location.on('/questions') ? addHotText() : $(el).find('.summary h3').prepend(getHotDiv('question-list'))
+            }
+          });
+        });
+      }
     },
 
     localTimestamps: function(settings) {
