@@ -377,7 +377,7 @@
       return idMatch ? +idMatch[1] : null;
     },
     getSiteNameFromLink: function(link) {
-      const siteRegex = /(((.+)\.)?(stackexchange|stackoverflow|superuser|serverfault|askubuntu|stackapps|mathoverflow|programmers|bitcoin))\.com/;
+      const siteRegex = /(((.+)\.)?(((stackexchange|stackoverflow|superuser|serverfault|askubuntu|stackapps))(?=\.com))|mathoverflow\.net)/;
       const siteMatch = link.replace(/https?:\/\//, '').match(siteRegex);
       return siteMatch ? siteMatch[1] : null;
     },
