@@ -468,7 +468,7 @@
     shareLinksPrivacy: function() {
       // Description: Remove your user ID from the 'share' link
 
-      $('.js-subtitle').remove(); // Remove the 'includes your user id' string
+      $('.post-menu .js-subtitle').remove(); // Remove the 'includes your user id' string
       for (let i = 0; i < $('.js-share-link').length; i++) {
           $('.js-share-link:eq(' + i + ')').attr("href", $('.js-share-link:eq(' + i + ')').attr('href').match(/\/(q|a)\/[0-9]+/)[0]);
       }
