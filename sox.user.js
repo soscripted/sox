@@ -23,6 +23,7 @@
 
 // @exclude      *://data.stackexchange.com/*
 // @exclude      *://api.stackexchange.com/*
+// @exclude      *://stackoverflow.com/c/*
 
 // @require      https://code.jquery.com/jquery-3.3.1.min.js
 // @require      https://code.jquery.com/ui/1.12.1/jquery-ui.min.js
