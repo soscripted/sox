@@ -186,12 +186,12 @@
           const cell = answerCells[i];
           const answererID = cell.querySelector('.post-signature:nth-last-of-type(1) a').href.match(/\d+/)[0];
           const comments = document.getElementsByClassName('comments')[i + 1];
-          const commentUsers = $(comments).find(".comment-user");
+          const commentUsers = $(comments).find('.comment-user');
 
           for (let c = 0; c < commentUsers.length; c++) {
-              if (commentUsers[c].href.contains(`users/${answererID}`)) {
-                  commentUsers[c].classList.add('sox-answerer');
-              }
+            if (commentUsers[c].href.contains(`users/${answererID}`)) {
+              commentUsers[c].classList.add('sox-answerer');
+            }
           }
         }
       }
