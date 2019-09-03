@@ -470,9 +470,12 @@
     shareLinksPrivacy: function() {
       // Description: Remove your user ID from the 'share' link
 
-      $('.post-menu .js-subtitle').remove(); // Remove the 'includes your user id' string
       $('.js-share-link').each((i, el) => {
-          el.href = el.href.match(/\/(q|a)\/[0-9]+/)[0];
+        el.href = el.href.match(/\/(q|a)\/[0-9]+/)[0];
+      }).click(function () {
+        // Remove the 'includes your user id' string, do it on click because
+        // SE's code seems to re-add the element when the share tip is shown
+        $(this).parent().find('.js-subtitle').remove();
       });
     },
 
