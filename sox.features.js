@@ -1754,7 +1754,7 @@
 
       $(':not(.deleted-answer) .answercell').slice(1).sort(compareByScore).slice(0, 5).each(function() {
         count++;
-        const id = $(this).find('.short-link').attr('id').replace('link-post-', '');
+        const id = $(this).closest('.answer').attr('data-answerid');
         const score = $(this).prev().find('.js-vote-count').text();
         let icon = 'vote-up-off';
 
