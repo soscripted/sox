@@ -81,7 +81,7 @@
             "desc": "Add the SO logo after employee names to make them stand out",
             "meta": "http://meta.stackexchange.com/questions/246678/should-se-staff-have-a-special-character-in-their-user-name",
             "match": "",
-            "exclude": "*://chat.*.com/*,SE1.0,*://*/questions/ask,*://stackoverflow.com/c/*",
+            "exclude": "*://chat.*.com/*,SE1.0,*://*/questions/ask",
             "feature_packs": ["major_ui", "key_feature", "power_user"],
             "usesApi": true
         }, {
