@@ -480,13 +480,19 @@
       // Description: For changing the 'share' button link to the format [name](link)
 
       const title = $('.fs-headline1.fl1').text().replace(/\[(on\shold|duplicate)\]/g, '($1)'); // https://github.com/soscripted/sox/issues/226, https://github.com/soscripted/sox/issues/292
-      $('.js-share-link').each((i, el) => {
-        const inputEl = $('.js-input:eq(' + i + ')');
-        $(el).click(function() {
-          inputEl.val(`[${title}](${el.href})`);
-          inputEl.select();
+      $('.js-share-link').click(function () {
+        const $inputEl = $(this).parent().find('.js-input');
+
+        // TODO: is there a way to do this without a hacky setTimeout?
+        // Seems like SE has some JS that populates the input field which overwrites
+        // anything we do unless there's a setTimeout
+        setTimeout(() => {
+          // $(this).attr('href') is relative, so make it absolute
+          const href = new URL($(this).attr('href'), window.location.href).href;
+          $inputEl.val(`[${title}](${href})`);
+          $inputEl.select();
           document.execCommand('copy'); // https://github.com/soscripted/sox/issues/177
-        });
+        }, 0);
       });
     },
 
