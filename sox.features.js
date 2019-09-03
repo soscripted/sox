@@ -726,8 +726,8 @@
           featureId: 'isQuestionHot',
           cacheDuration: 60 * 8, // Cache for 8 hours
         }, results => {
-          $.each(results, (i, o) => {
-            if (results[i].comment === "<b>Became Hot Network Question</b> " && new Date().getTime() / 1000 - results[i].creation_date <= 259200) { // Questions stay hot for 3 days. Check if they are hot now (Note SE works with secs, not millisecs!)
+          results.forEach(data => {
+            if (data.comment === "<b>Became Hot Network Question</b> " && new Date().getTime() / 1000 - data.creation_date <= 259200) { // Questions stay hot for 3 days. Check if they are hot now (Note SE works with secs, not millisecs!)
               sox.location.on('/questions') ? addHotText() : $(el).find('.summary h3').prepend(getHotDiv('question-list'))
             }
           });
