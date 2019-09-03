@@ -712,8 +712,11 @@
         apiCall(postId, sitename);
       } else if ($('.question-summary').length) {
         $('.question-summary').each(function() {
-          const postID = $(this).attr('id').split('-')[2];
-          apiCall(postID, sitename, this);
+          // Check if .question-summary has an id attribute - SO Teams posts (at the top of the page, if any) don't!
+          if ($(this).attr('id')) {
+            var postID = $(this).attr('id').split('-')[2];
+            apiCall(postID, sitename, this);
+          }
         });
       }
       function apiCall(postID, sitename, el) {
