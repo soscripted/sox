@@ -692,26 +692,35 @@
         $(document.getElementById('question-header')).prepend(getHotDiv());
       }
 
-      if (sox.location.on('/questions') || $('.question-summary').length) {
-        const proxyUrl = 'https://cors-anywhere.herokuapp.com/'; //CORS proxy
-        const hnqJSONUrl = 'https://stackexchange.com/hot-questions-for-mobile';
-        const requestUrl = proxyUrl + hnqJSONUrl;
+      const sitename = sox.site.currentApiParameter;
 
-        $.get(requestUrl, results => {
-          if (sox.location.on('/questions/')) {
-            $.each(results, (i, o) => {
-              if (document.URL.indexOf(o.site + '/questions/' + o.question_id) > -1) addHotText();
-            });
-          } else {
-            $('.question-summary').each(function() {
-              const id = $(this).attr('id').split('-')[2];
-              if (results.filter(d => {
-                return d.question_id == id;
-              }).length) {
-                $(this).find('.summary h3').prepend(getHotDiv('question-list'));
-              }
-            });
+      if (sox.location.on('/questions')) {
+        const postId = window.location.pathname.split('/')[2]
+        apiCall(postId, sitename);
+      } else if ($('.question-summary').length) {
+        $('.question-summary').each(function() {
+          // Check if .question-summary has an id attribute - SO Teams posts (at the top of the page, if any) don't!
+          if ($(this).attr('id')) {
+            var postID = $(this).attr('id').split('-')[2];
+            apiCall(postID, sitename, this);
           }
+        });
+      }
+      function apiCall(postID, sitename, el) {
+        sox.helpers.getFromAPI({
+          endpoint: 'posts',
+          childEndpoint: 'revisions',
+          sitename: sitename,
+          filter: '!5RC-)9_aw3mg*i)3*vUhU3Wfl',
+          ids: postID,
+          featureId: 'isQuestionHot',
+          cacheDuration: 60 * 8, // Cache for 8 hours
+        }, results => {
+          results.forEach(data => {
+            if (data.comment === "<b>Became Hot Network Question</b> " && new Date().getTime() / 1000 - data.creation_date <= 259200) { // Questions stay hot for 3 days. Check if they are hot now (Note SE works with secs, not millisecs!)
+              sox.location.on('/questions') ? addHotText() : $(el).find('.summary h3').prepend(getHotDiv('question-list'))
+            }
+          });
         });
       }
     },
