@@ -184,16 +184,15 @@
         const answerCells = [...document.getElementsByClassName('answercell')];
         for (let i = 0; i < answerCells.length; i++) {
           const cell = answerCells[i];
-          const answererID = cell.querySelector('.post-signature:nth-last-of-type(1) a').href.match(/\d+/)[0];
-          const comments = document.getElementsByClassName('comments')[i + 1];
-          const commentUsers = $(comments).find('.comment-user');
+          const answerer = cell.querySelector('.post-signature:nth-last-of-type(1) a');
+          if (!answerer) continue;
+          const answererID = answerer.href.match(/\d+/)[0];
+          const commentUsers = $(cell).next().next().find('.comments .comment-user');
 
-          for (let c = 0; c < commentUsers.length; c++) {
-            if (commentUsers[c].href.contains(`users/${answererID}`)) {
-              commentUsers[c].classList.add('sox-answerer');
-            }
-          }
-        }
+          commentUsers.each(function() {
+            if (this.href.contains(`users/${answererID}`)) this.classList.add('sox-answerer');
+          });
+        };
       }
 
       color();
