@@ -443,8 +443,8 @@
         Note that `]` and `[` denote the selected text here.
     */
 
-      const selS = textarea.selectionStart;
-      const selE = textarea.selectionEnd;
+      const selS = textarea.selectionStart < textarea.selectionEnd ? textarea.selectionStart : textarea.selectionEnd;
+      const selE = textarea.selectionStart > textarea.selectionEnd ? textarea.selectionStart : textarea.selectionEnd;
       const value = textarea.value;
       const startLen = start.length;
       const endLen = end.length;
