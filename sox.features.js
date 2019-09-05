@@ -2270,7 +2270,7 @@
     showMetaReviewCount: function() {
       // Description: Adds the total count of meta reviews on the main site on the /review page
 
-      //CORS proxy
+      // CORS proxy
       const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
       const metaUrl = sox.Stack.options.site.childUrl;
       const requestUrl = proxyUrl + metaUrl + '/review';
@@ -2278,22 +2278,30 @@
       $.get(requestUrl, d => {
         const $doc = $(d);
         let total = 0;
-        const $metaDashboardEl = $('.dashboard-item').last().find('.dashboard-count');
 
-        $doc.find('.dashboard-num').each(function() {
-          total += +$(this).text();
-        });
+        $doc.find('#content .grid.bt .fs-subheading').each(() => total += +$(this).text());
 
-        $metaDashboardEl.append($('<div/>', {
-          text: total,
-          'title': total,
-          'class': 'dashboard-num',
-        }));
+        const $lastReviewRow = $('#content .grid.bt').last();
 
-        $metaDashboardEl.append($('<div/>', {
-          text: (total == 1 ? 'post' : 'posts'),
-          'class': 'dashboard-unit',
-        }));
+        // Clone the existing bottom-most review div
+        const $metaDashboardEl = $lastReviewRow.clone();
+
+        // Cache the left and right sections, get immediate divs only with `>`
+        const $sections = $metaDashboardEl.find('>div');
+
+        const $leftSection = $sections.first();
+        // Set number of reviews
+        $leftSection.find('.fs-subheading').text(total).attr('title', total);
+        // Set 'reviews' text (instead of e.g. 'edits')
+        $leftSection.find('.mt2').text('reviews');
+
+        const $rightSection = $sections.last();
+        $rightSection.find('a').first().text('Meta Reviews').attr('href', `${metaUrl}/review`);
+        $rightSection.find('.fs-body2').text('SOX: Total reviews available on this site\'s meta at the moment');
+        // Remove the user avatars from the new row
+        $rightSection.find('>div').last().remove();
+
+        $lastReviewRow.after($metaDashboardEl);
       });
     },
 
