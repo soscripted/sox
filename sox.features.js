@@ -192,7 +192,7 @@
           commentUsers.each(function() {
             if (this.href.contains(`users/${answererID}`)) this.classList.add('sox-answerer');
           });
-        };
+        }
       }
 
       color();
@@ -694,7 +694,7 @@
       const sitename = sox.site.currentApiParameter;
 
       if (sox.location.on('/questions')) {
-        const postId = window.location.pathname.split('/')[2]
+        const postId = window.location.pathname.split('/')[2];
         apiCall(postId, sitename);
       } else if ($('.question-summary').length) {
         $('.question-summary').each(function() {
@@ -705,6 +705,7 @@
           }
         });
       }
+
       function apiCall(postID, sitename, el) {
         sox.helpers.getFromAPI({
           endpoint: 'posts',
@@ -716,8 +717,9 @@
           cacheDuration: 60 * 8, // Cache for 8 hours
         }, results => {
           results.forEach(data => {
-            if (data.comment === "<b>Became Hot Network Question</b> " && new Date().getTime() / 1000 - data.creation_date <= 259200) { // Questions stay hot for 3 days. Check if they are hot now (Note SE works with secs, not millisecs!)
-              sox.location.on('/questions') ? addHotText() : $(el).find('.summary h3').prepend(getHotDiv('question-list'))
+            // Questions stay hot for 3 days. Check if they are hot now (Note SE works with secs, not millisecs!)
+            if (data.comment === '<b>Became Hot Network Question</b> ' && new Date().getTime() / 1000 - data.creation_date <= 259200) {
+              sox.location.on('/questions') ? addHotText() : $(el).find('.summary h3').prepend(getHotDiv('question-list'));
             }
           });
         });
