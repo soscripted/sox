@@ -29,7 +29,9 @@
       const changes = [
         'Fix bugs in various features',
         'Add feature to open imgur images in a modal on click',
+        'Update many features to work with recent SE HTML markup/CSS changes',
         'Removed dependency on Font Awesome for icons, use SVG sprites instead',
+        'Add support for StylishThemes/StackOverflow-Dark theme',
       ];
 
       function addCategory(name) {
