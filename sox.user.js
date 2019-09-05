@@ -9,6 +9,7 @@
 // @contributor  ᔕᖺᘎᕊ (https://stackexchange.com/users/4337810/, https://github.com/shu8)
 // @contributor  Sir-Cumference (https://stackexchange.com/users/4119142/, https://github.com/Sir-Cumference)
 // @contributor  GaurangTandon (https://github.com/GaurangTandon)
+// @contributor  double-beep (https://stackexchange.com/users/14688437/double-beep, https://github.com/double-beep)
 // @updateURL    https://cdn.jsdelivr.net/gh/soscripted/sox@dev/sox.user.js
 
 // @match        *://*.stackoverflow.com/*
