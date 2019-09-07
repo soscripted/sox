@@ -358,9 +358,9 @@
       $soxSettingsButton.append($icon);
       // The following check is because SO doesn't have inbox, achievements help centre and site switcher items
       if ($('.inbox-button-item').length) {
-          $('.inbox-button-item').before($('<li/>').addClass('-item').append($soxSettingsButton));
+        $('.inbox-button-item').before($('<li/>').addClass('-item').append($soxSettingsButton));
       } else {
-          $('.js-searchbar-trigger').after($('<li/>').addClass('-item').append($soxSettingsButton));
+        $('.js-searchbar-trigger').after($('<li/>').addClass('-item').append($soxSettingsButton));
       }
 
       $soxSettingsDialog.css({
@@ -372,5 +372,4 @@
       if ($('#soxSettingsButton').length) $('.js-topbar-dialog-corral').append($soxSettingsDialog);
     },
   };
-
 })(window.sox = window.sox || {}, jQuery);
