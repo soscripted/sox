@@ -3,12 +3,13 @@
 // @namespace    https://github.com/soscripted/sox
 // @homepage     https://github.com/soscripted/sox
 // @homepageURL  https://github.com/soscripted/sox
-// @version      2.5.0
+// @version      2.6.0
 // @description  Extra optional features for Stack Overflow and Stack Exchange sites
 // @contributor  ᴉʞuǝ (https://stackoverflow.com/users/1454538/, https://github.com/mezmi)
 // @contributor  ᔕᖺᘎᕊ (https://stackexchange.com/users/4337810/, https://github.com/shu8)
 // @contributor  Sir-Cumference (https://stackexchange.com/users/4119142/, https://github.com/Sir-Cumference)
 // @contributor  GaurangTandon (https://github.com/GaurangTandon)
+// @contributor  double-beep (https://stackexchange.com/users/14688437/double-beep, https://github.com/double-beep)
 // @updateURL    https://cdn.jsdelivr.net/gh/soscripted/sox@dev/sox.user.js
 
 // @match        *://*.stackoverflow.com/*
@@ -23,6 +24,7 @@
 
 // @exclude      *://data.stackexchange.com/*
 // @exclude      *://api.stackexchange.com/*
+// @exclude      *://stackoverflow.com/c/*
 
 // @require      https://code.jquery.com/jquery-3.3.1.min.js
 // @require      https://code.jquery.com/ui/1.12.1/jquery-ui.min.js
@@ -38,6 +40,7 @@
 // @resource     dialog sox.dialog.html
 // @resource     featuresJSON sox.features.info.json
 // @resource     common sox.common.info.json
+// @resource     sprites sox.sprites.svg
 
 // @grant        GM_setValue
 // @grant        GM_getValue
@@ -79,11 +82,10 @@
       sox.debug('----------------end saved variables---------------------');
     }
 
+    const spritesDiv = $('<div/>', { html: GM_getResourceText('sprites') });
+    $('head').append(spritesDiv);
+
     GM_addStyle(GM_getResourceText('css'));
-    $('<link/>', {
-      rel: 'stylesheet',
-      href: 'https://use.fontawesome.com/releases/v5.1.0/css/all.css',
-    }).appendTo('head');
 
     const settings = sox.settings.load();
     //returns undefined if not set

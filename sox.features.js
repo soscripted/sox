@@ -38,14 +38,14 @@
       // Description: Adds an Stack Overflow logo next to users that *ARE* a Stack Overflow Employee
 
       const anchors = [...document.querySelectorAll('.comment a, .deleted-answer-info a, .employee-name a, .user-details a, .question-summary .started a')].filter(el => {
-        return el.href.startsWith('/users/');
+        return el.href.contains('/users/');
       });
       const ids = [];
 
       for (let i = 0; i < anchors.length; i++) {
         const href = anchors[i].href;
-        const id = href.split('/')[2];
-        if (ids.indexOf(id) === -1) ids.push(id);
+        const idMatch = href.match(/(\d+)/);
+        if (idMatch && ids.indexOf(idMatch[1]) === -1) ids.push(idMatch[1]);
       }
       sox.debug('markEmployees user IDs', ids);
 
@@ -65,8 +65,12 @@
           const isEmployee = items[i].is_employee;
           if (!isEmployee) continue;
 
-          anchors.filter(el => el.href.startsWith(`/users/${userId}/`)).forEach(el => {
-            el.insertAdjacentHTML('afterend', '<span class="fab fa-stack-overflow" title="employee (added by SOX)" style="padding: 0 5px; color: ' + $('.mod-flair').css('color') + '"></span>');
+          const $icon = $('<svg aria-hidden="true" class="sox-markEmployees-logo sox-sprite svg-icon iconStackExchange" width="18" height="18" viewBox="0 0 18 18"><path d="M15 1H3a2 2 0 0 0-2 2v2h16V3a2 2 0 0 0-2-2zM1 13c0 1.1.9 2 2 2h8v3l3-3h1a2 2 0 0 0 2-2v-2H1v2zm16-7H1v4h16V6z"></path></svg>');
+          $icon.css('color', $('.mod-flair').css('color'));
+          anchors.filter(el => el.href.contains(`/users/${userId}/`)).forEach(el => {
+            $(el).append($('<span/>', {
+              title: 'employee (added by SOX)',
+            }).append($icon.clone()));
           });
         }
       });
@@ -77,7 +81,7 @@
       // Test on e.g. https://meta.stackexchange.com/questions/125439/
 
       function copyLinks() {
-        $('.js-show-link.comments-link').each(function() {
+        $('.js-show-link').each(function() {
           if (!$(this).parent().prev().find('.comment-text').length) return; // https://github.com/soscripted/sox/issues/196
 
           const $existingClonedBtn = $(this).parent().parent().find('.sox-copyCommentsLinkClone');
@@ -112,7 +116,7 @@
         });
       }
 
-      // copyLinks();
+      copyLinks();
       $(document).on('sox-new-comment', copyLinks);
     },
 
@@ -170,7 +174,7 @@
         title: name,
         text: name,
       });
-      $span.insertBefore('.gravatar-wrapper-24');
+      $span.insertBefore('.top-bar .gravatar-wrapper-24');
     },
 
     colorAnswerer: function() {
@@ -180,13 +184,14 @@
         const answerCells = [...document.getElementsByClassName('answercell')];
         for (let i = 0; i < answerCells.length; i++) {
           const cell = answerCells[i];
-          const answererID = cell.querySelector('.post-signature:nth-last-of-type(1) a').href.match(/\d+/)[0];
-          const commentUsers = [...cell.nextElementSibling.getElementsByClassName('comment-user')]
-            .filter(c => c.href && c.href.contains(`/users/${answererID}/`));
+          const answerer = cell.querySelector('.post-signature:nth-last-of-type(1) a');
+          if (!answerer) continue;
+          const answererID = answerer.href.match(/\d+/)[0];
+          const commentUsers = $(cell).next().next().find('.comments .comment-user');
 
-          for (let c = 0; c < commentUsers.length; c++) {
-            commentUsers[c].classList.add('sox-answerer');
-          }
+          commentUsers.each(function() {
+            if (this.href.contains(`users/${answererID}`)) this.classList.add('sox-answerer');
+          });
         }
       }
 
@@ -218,65 +223,13 @@
         return node.value.substring(node.selectionStart, node.selectionEnd);
       }
 
-      function surroundSelectedText(textarea, start, end) {
-        // same wrapper code on either side (`$...$`)
-        if (typeof end === 'undefined') end = start;
-
-        /*--- Expected behavior:
-          When there is some text selected: (unwrap it if already wrapped)
-          "]text["         --> "**]text[**"
-          "**]text[**"     --> "]text["
-          "]**text**["     --> "**]**text**[**"
-          "**]**text**[**" --> "]**text**["
-          When there is no text selected:
-          "]["             --> "**placeholder text**"
-          "**][**"         --> ""
-          Note that `]` and `[` denote the selected text here.
-      */
-
-        const selS = textarea.selectionStart;
-        const selE = textarea.selectionEnd;
-        const value = textarea.value;
-        const startLen = start.length;
-        const endLen = end.length;
-
-        let valBefore = value.substring(0, selS);
-        let valMid = value.substring(selS, selE);
-        let valAfter = value.substring(selE);
-        let generatedWrapper;
-
-        // handle trailing spaces
-        const trimmedSelection = valMid.match(/^(\s*)(\S?(?:.|\n|\r)*\S)(\s*)$/) || ['', '', '', ''];
-
-        // determine if text is currently wrapped
-        if (valBefore.endsWith(start) && valAfter.startsWith(end)) {
-          textarea.value = valBefore.substring(0, valBefore.length - startLen) + valMid + valAfter.substring(endLen);
-          textarea.selectionStart = valBefore.length - startLen;
-          textarea.selectionEnd = (valBefore + valMid).length - startLen;
-          textarea.focus();
-        } else {
-          valBefore += trimmedSelection[1];
-          valAfter = trimmedSelection[3] + valAfter;
-          valMid = trimmedSelection[2];
-
-          generatedWrapper = start + valMid + end;
-
-          textarea.value = valBefore + generatedWrapper + valAfter;
-          textarea.selectionStart = valBefore.length + start.length;
-          textarea.selectionEnd = (valBefore + generatedWrapper).length - end.length;
-          textarea.focus();
-        }
-
-        sox.Stack.MarkdownEditor.refreshAllPreviews();
-      }
-
       function addBullets(node) {
         const list = '- ' + getSelection(node).split('\n').join('\n- ');
         replaceSelectedText(node, list);
       }
 
       function addKbd(node) {
-        surroundSelectedText(node, '<kbd>', '</kbd>');
+        sox.helpers.surroundSelectedText(node, '<kbd>', '</kbd>');
         node.focus();
       }
 
@@ -516,65 +469,57 @@
     shareLinksPrivacy: function() {
       // Description: Remove your user ID from the 'share' link
 
-      const questionTarget = document.getElementById('question');
-      const answersTargets = document.getElementsByClassName('answer');
-      sox.helpers.observe([questionTarget, ...answersTargets], '.share-tip', () => {
-        const toRemove = ' (includes your user id)';
-        const popup = document.getElementsByClassName('share-tip')[0];
-        if (!popup) return;
-
-        // Do nothing if the function's already done its thing
-        const origHtml = popup.innerHTML;
-        if (origHtml.indexOf(toRemove) == -1) return;
-
-        popup.innerHTML = origHtml.replace(toRemove, '');
-
-        const input = popup.querySelector('input');
-        const origLink = input.value;
-        input.value = origLink.match(/.+\/(q|a)\/[0-9]+/g);
-        input.select();
+      $('.js-share-link').each((i, el) => {
+        el.href = el.href.match(/\/(q|a)\/[0-9]+/)[0];
+      }).click(function () {
+        // Remove the 'includes your user id' string, do it on click because
+        // SE's code seems to re-add the element when the share tip is shown
+        $(this).parent().find('.js-subtitle').remove();
       });
     },
 
     shareLinksMarkdown: function() {
       // Description: For changing the 'share' button link to the format [name](link)
 
-      const questionTarget = document.getElementById('question');
-      const answersTargets = document.getElementsByClassName('answer');
-      sox.helpers.observe([questionTarget, ...answersTargets], '.share-tip', () => {
-        const input = document.querySelector('.share-tip input');
-        if (!input) return;
+      const title = $('.fs-headline1.fl1').text().replace(/\[(on\shold|duplicate)\]/g, '($1)'); // https://github.com/soscripted/sox/issues/226, https://github.com/soscripted/sox/issues/292
+      $('.js-share-link').click(function () {
+        const $inputEl = $(this).parent().find('.js-input');
 
-        const title = document.querySelector('meta[name="twitter:title"]').getAttribute('content').replace(/\[(.*?)\]/g, '[$1]'); // https://github.com/soscripted/sox/issues/226, https://github.com/soscripted/sox/issues/292
-        const link = input.value;
-
-        // Do nothing if the function's already done its thing
-        if (link.indexOf(title) !== -1) return;
-
-        input.value = `[${title}](${link})`;
-        input.select();
-        document.execCommand('copy'); // https://github.com/soscripted/sox/issues/177
+        // TODO: is there a way to do this without a hacky setTimeout?
+        // Seems like SE has some JS that populates the input field which overwrites
+        // anything we do unless there's a setTimeout
+        setTimeout(() => {
+          // $(this).attr('href') is relative, so make it absolute
+          const href = new URL($(this).attr('href'), window.location.href).href;
+          $inputEl.val(`[${title}](${href})`);
+          $inputEl.select();
+          document.execCommand('copy'); // https://github.com/soscripted/sox/issues/177
+        }, 0);
       });
     },
 
     commentShortcuts: function() {
       // Description: For adding support in comments for Ctrl+K,I,B to add code backticks, italicise, bolden selection
 
-      $('.comments').on('keydown', 'textarea', function(e) {
-        if (e.which == 75 && e.ctrlKey) { //ctrl+k (code)
-          $(this).surroundSelectedText('`', '`');
+      $('.comments').on('keydown', 'textarea', function (e) {
+        const el = $(this).get(0);
+
+        if (e.which == 75 && e.ctrlKey) { // Ctrl+k (code backticks)
+          sox.helpers.surroundSelectedText(el, '`', '`');
           e.stopPropagation();
           e.preventDefault();
           return false;
         }
-        if (e.which == 73 && e.ctrlKey) { //ctrl+i (italics)
-          $(this).surroundSelectedText('*', '*');
+
+        if (e.which == 73 && e.ctrlKey) { // Ctrl+i (italicize)
+          sox.helpers.surroundSelectedText(el, '*', '*');
           e.stopPropagation();
           e.preventDefault();
           return false;
         }
-        if (e.which == 66 && e.ctrlKey) { //ctrl+b (bold)
-          $(this).surroundSelectedText('**', '**');
+
+        if (e.which == 66 && e.ctrlKey) { // Ctrl+b (bolden)
+          sox.helpers.surroundSelectedText(el, '**', '**');
           e.stopPropagation();
           e.preventDefault();
           return false;
@@ -734,36 +679,49 @@
     isQuestionHot: function() {
       // Description: For adding some text to questions that are in the hot network questions list
 
-      function addHotText() {
-        if (!document.getElementsByClassName('sox-hot').length) {
-          document.getElementById('feed').innerHTML = '<p>SOX: One of the 100 hot network questions!</p>';
-
-          //display:block to fix https://github.com/soscripted/sox/issues/243:
-          $(document.getElementById('question-header')).css('display', 'block').prepend('<div title="SOX: this is a hot network question!" ' + (sox.location.on('english.stackexchange.com') ? 'style="padding:13px"' : '') + ' class="sox-hot"><i class="fab fa-free-code-camp"></i><div>');
-        }
+      function getHotDiv(className) {
+        return $('<div/>', {
+          title: 'SOX: this is a hot network question!',
+          'class': `sox-hot ${className || ''}`,
+        }).append(sox.sprites.getSvg('hot'));
       }
-      $(document.getElementById('qinfo')).after('<div id="feed"></div>');
 
-      if (sox.location.on('/questions') || $('.question-summary').length) {
-        const proxyUrl = 'https://cors-anywhere.herokuapp.com/'; //CORS proxy
-        const hnqJSONUrl = 'https://stackexchange.com/hot-questions-for-mobile';
-        const requestUrl = proxyUrl + hnqJSONUrl;
+      function addHotText() {
+        if (document.getElementsByClassName('sox-hot').length) return;
+        $(document.getElementById('question-header')).prepend(getHotDiv());
+      }
 
-        $.get(requestUrl, results => {
-          if (sox.location.on('/questions/')) {
-            $.each(results, (i, o) => {
-              if (document.URL.indexOf(o.site + '/questions/' + o.question_id) > -1) addHotText();
-            });
-          } else {
-            $('.question-summary').each(function() {
-              const id = $(this).attr('id').split('-')[2];
-              if (results.filter(d => {
-                return d.question_id == id;
-              }).length) {
-                $(this).find('.summary h3').prepend('<div title="SOX: this question is a hot network question!" class="sox-hot" style="font-size:x-large;float:none;display:inline"><i class="fab fa-free-code-camp"></i></div>');
-              }
-            });
+      const sitename = sox.site.currentApiParameter;
+
+      if (sox.location.on('/questions')) {
+        const postId = window.location.pathname.split('/')[2];
+        apiCall(postId, sitename);
+      } else if ($('.question-summary').length) {
+        $('.question-summary').each(function() {
+          // Check if .question-summary has an id attribute - SO Teams posts (at the top of the page, if any) don't!
+          if ($(this).attr('id')) {
+            var postID = $(this).attr('id').split('-')[2];
+            apiCall(postID, sitename, this);
           }
+        });
+      }
+
+      function apiCall(postID, sitename, el) {
+        sox.helpers.getFromAPI({
+          endpoint: 'posts',
+          childEndpoint: 'revisions',
+          sitename: sitename,
+          filter: '!5RC-)9_aw3mg*i)3*vUhU3Wfl',
+          ids: postID,
+          featureId: 'isQuestionHot',
+          cacheDuration: 60 * 8, // Cache for 8 hours
+        }, results => {
+          results.forEach(data => {
+            // Questions stay hot for 3 days. Check if they are hot now (Note SE works with secs, not millisecs!)
+            if (data.comment === '<b>Became Hot Network Question</b> ' && new Date().getTime() / 1000 - data.creation_date <= 259200) {
+              sox.location.on('/questions') ? addHotText() : $(el).find('.summary h3').prepend(getHotDiv('question-list'));
+            }
+          });
         });
       }
     },
@@ -812,7 +770,7 @@
 
         const newTimestamp = (new Date()).getFullYear() == date.getFullYear() ? month + ' ' + date.getDate() + ' at ' + hour + ':' + minute + dayTime : month + ' ' + date.getDate() + ' \'' + year + ' at ' + hour + ':' + minute + dayTime;
 
-        $(this).attr('title', newTimestamp).text(newTimestamp);
+        $(this).text(newTimestamp);
       }
     },
 
@@ -948,6 +906,11 @@
 
     titleEditDiff: function() {
       // Description: For showing the new version of a title in a diff separately rather than loads of crossing outs in red and additions in green
+      // Example URL to test on: https://meta.stackexchange.com/review/suggested-edits/65403
+
+      function getSprite(state) {
+        return sox.sprites.getSvg(`toggle_${state}`, 'toggle SOX better title diff').addClass('sox-better-title-toggle');
+      }
 
       function betterTitle() {
         sox.debug('titleEditDiff: running betterTitle');
@@ -961,7 +924,7 @@
 
         if ($questionHyperlinkOriginal.find('.diff-delete, .diff-add').length && !($('.sox-better-title').length)) {
           if (!$('.sox-better-title-toggle').length) {
-            $('.summary h2 .question-hyperlink').before('<i class="sox-better-title-toggle fa fa-toggle-on" title="toggle SOX better title diff"></i>');
+            $('.summary h2 .question-hyperlink').before(getSprite('off'));
           }
           $questionHyperlinkOriginal.addClass('sox-original-title-diff').hide();
           $questionHyperlinkOriginal.after('<a href="' + link + '" class="question-hyperlink sox-better-title"><span class="diff-delete">' + removed + '</span><span class="diff-add">' + added + '</span></a>');
@@ -972,11 +935,11 @@
       $(document).on('click', '.sox-better-title-toggle', function() {
         const $soxOriginalTitleDiff = $('.sox-original-title-diff');
         if ($soxOriginalTitleDiff.is(':visible')) {
-          $(this).addClass('fa-toggle-on').removeClass('fa-toggle-off');
+          $(this).replaceWith(getSprite('on'));
           $soxOriginalTitleDiff.hide();
           $('.sox-better-title').show();
         } else {
-          $(this).removeClass('fa-toggle-on').addClass('fa-toggle-off');
+          $(this).replaceWith(getSprite('off'));
           $soxOriginalTitleDiff.show();
           $('.sox-better-title').hide();
         }
@@ -1037,7 +1000,15 @@
 
       const NEWQUESTIONS = 'metaNewQuestionAlert-lastQuestions';
       const favicon = sox.site.icon;
-      const metaName = 'meta.' + sox.site.currentApiParameter;
+      const sitename = sox.site.currentApiParameter;
+
+      // If it is a special site, add 'meta' before it, if not, replace the 'stackexchange' from the URL with 'meta'.
+      if (sitename.match(/stackoverflow|superuser|serverfault|askubuntu|stackapps|mathoverflow/)) {
+        var metaName = 'meta.' + sitename;
+      } else {
+        metaName = sitename.replace('stackexchange','meta');
+      }
+
       const FILTER_QUESTION_TITLE_LINK = '!BHMIbze0EQ*ved8LyoO6rNk25qGESy';
       const $dialog = $('<div/>', {
         id: 'metaNewQuestionAlertDialog',
@@ -1528,7 +1499,7 @@
       const PROCESSED_CLASS = 'sox-authorNameAdded';
       const MAX_PROCESSED_AT_ONCE = 20;
 
-      const target = document.querySelector('.-dialog-container');
+      const target = document.querySelector('.js-secondary-topbar-links');
       if (target) {
         sox.helpers.observe(target, '.inbox-item', () => {
           const inboxDialog = document.getElementsByClassName(inboxClass)[0];
@@ -1567,9 +1538,7 @@
           }, 50);
           return false;
         },
-      }).append($('<i/>', {
-        'class': 'fa fa-angle-double-up fa-3x',
-      })).appendTo('body');
+      }).append(sox.sprites.getSvg('top', 'Scroll to top (SOX)')).appendTo('body');
 
       if ($(window).scrollTop() < 200) $('#sox-scrollToTop').hide();
 
@@ -1623,14 +1592,16 @@
         flagCount += Number($groupHeader.next().find(`li:contains("${type}")`)
           .find('div:last')
           .text()
-          .replace(',', ''));
+          .replace(/[\D]/g, '')); // Strip any non-digit characters (e.g. commas)
         return flagCount;
       }
 
-      // add percentages
+      // Add percentages
       for (const groupKey in group) {
         const item = group[groupKey];
-        const total = +$(`li > a[href="?group=${item}"]`).find('div:last').text();
+
+        // Strip any non-digit characters (e.g. commas)
+        const total = +$(`li > a[href="?group=${item}"]`).find('div:last').text().replace(/[\D]/g, '');
 
         for (const typeKey in type) {
           const typeItem = type[typeKey];
@@ -1793,7 +1764,7 @@
 
       $(':not(.deleted-answer) .answercell').slice(1).sort(compareByScore).slice(0, 5).each(function() {
         count++;
-        const id = $(this).find('.short-link').attr('id').replace('link-post-', '');
+        const id = $(this).closest('.answer').attr('data-answerid');
         const score = $(this).prev().find('.js-vote-count').text();
         let icon = 'vote-up-off';
 
@@ -1873,6 +1844,10 @@
     linkedToFrom: function() {
       // Description: Add an arrow to linked posts in the sidebar to show whether they are linked to or linked from
 
+      function getSprite(state, tooltip) {
+        return sox.sprites.getSvg(`chevron_${state}`, tooltip).addClass('sox-linkedToFrom-chevron');
+      }
+
       const currentPageId = +location.href.match(/\/(\d+)\//)[1];
       sox.helpers.getFromAPI({
         endpoint: 'questions',
@@ -1889,20 +1864,20 @@
           if ($('a[href*="' + id + '"]').not('#sidebar a').length) {
             // If a link from 'linked questions' does exist elsewhere on this page
             // Then we know that this page definitely references the linked post
-            $(this).append('<i class="fa fa-chevron-right sox-linkedToFrom-chevron" title="Current page links to this question"></i>');
+            $(this).append(getSprite('right', 'Current page links to this question'));
 
             // However, the linked post _might_ also reference the current page, so let's check:
             if (pagesThatLinkToThisPage.find(question => question.question_id === currentPageId && question.qustion_id === id)) {
               // The current page is linked to from question_id (which is also the current anchor in the loop)
               sox.debug(`linkedToFrom: link to current page (${currentPageId}) exists on question ${id}`);
-              $(this).append('<i class="fa fa-chevron-left sox-linkedToFrom-chevron" title="This question links to the current page"></i>');
+              $(this).append(getSprite('left', 'This question links to the current page'));
             } else {
               sox.debug(`linkedToFrom: link to current page not found on question ${id}`);
             }
           } else {
             // If a link from 'linked questions' doesn't exist on the rest of the page
             // Then it must be there _only_ due to the fact that the linked post references the current page
-            $(this).append('<i class="fa fa-chevron-left sox-linkedToFrom-chevron" title="This question links to the current page"></i>');
+            $(this).append(getSprite('left', 'This question links to the current page'));
           }
         });
       });
@@ -1972,12 +1947,19 @@
           const lastSeenDate = new Date(userDetailsFromAPI[id].last_seen);
           const type = userDetailsFromAPI[id].type === 'unregistered' ? ' (unregistered)' : '';
 
-          $(this).find('.user-info').last().append(
-            '<div style=\'color: #848d95; font-size: 11px; padding-top: 38px\' title=\'last seen\'><i class=\'fas fa-user-clock\'></i>&nbsp;<time class=\'timeago sox-last-seen\' datetime=\'' +
-                        lastSeenDate.toISOString() + '\' title=\'' + //datetime
-                        lastSeenDate.toJSON().replace('T', ' ').replace('.000', '') + '\'>' + //title, https://github.com/soscripted/sox/issues/204 hacky but short way '.000' always works because SE doesn't do such precise times
-                        lastSeenDate.toLocaleString() + '</time>' + type //contents of tag
-          );
+          const $div = $('<div/>', {
+            'class': 'sox-quickAuthorInfo-details',
+            title: 'last seen',
+            text: type,
+          }).append(sox.sprites.getSvg('access_time'))
+            .append($('<time/>', {
+              'class': 'timeago sox-last-seen',
+              datetime: lastSeenDate.toISOString(),
+              title: lastSeenDate.toJSON().replace('T', ' ').replace('.000', ''), // https://github.com/soscripted/sox/issues/204: hacky but short way '.000' always works because SE doesn't do such precise times
+              value: lastSeenDate.toLocaleString(),
+            }));
+
+          $(this).find('.user-info').last().append($div);
         });
 
         $('time.timeago').timeago();
@@ -2078,31 +2060,19 @@
         return new RegExp('\\b' + list.replace(',', '|').replace(' ', '') + '\\b', 'i');
       }
 
-      function insertTagsList(anchor) {
-        if ($(anchor).parent().find('.sox-hnq-question-tags-tooltip').length) return;
-        $(anchor).after('<span class="sox-hnq-question-tags-tooltip">' + anchor.dataset.tags + '</span>');
-      }
-
       const WORDS_TO_BLOCK = settings.wordsToBlock;
       let SITES_TO_BLOCK = settings.sitesToBlock;
       const TITLES_TO_HIDE = settings.titlesToHideRegex && settings.titlesToHideRegex.split(',');
-      const FILTER_QUESTION_TAGS = '!)5IW-5Quf*cV5LToe(J0BjSBXW19';
 
       if (SITES_TO_BLOCK) SITES_TO_BLOCK = SITES_TO_BLOCK.split(',');
 
-      $('#hot-network-questions h4').css('display', 'inline').after($('<span/>', {
-        'style': 'color:  grey; display: block; margin-bottom: 10px;',
-        'text': 'SOX: hover over titles to show tags',
-      }));
-
       $('#hot-network-questions li a').each(function() {
         let i;
-        const id = sox.helpers.getIDFromAnchor(this);
-        const sitename = sox.helpers.getSiteNameFromAnchor(this);
 
-        //NOTE: to hide questions, we use a class that has 'display: none !important'.
-        //This is to make sure questions that were previously hidden don't appear after the user clicks 'more hot questions',
-        //because the questions are *already* on the page before the button is clicked, but just hidden!
+        // NOTE: to hide questions, we use a class that has 'display: none !important'.
+        // This is to make sure questions that were previously hidden don't appear after
+        // the user clicks 'more hot questions', because the questions are *already* on
+        // the page before the button is clicked, but just hidden!
 
         if (WORDS_TO_BLOCK) {
           if (createRegex(WORDS_TO_BLOCK).test(this.innerText)) $(this).parent().addClass('sox-hot-network-question-filter-hide');
@@ -2125,32 +2095,6 @@
             }
           }
         }
-
-        const PLACEHOLDER = 'fetching tags...';
-
-        this.addEventListener('mouseenter', function() {
-          if (!this.dataset.tags) {
-            sox.helpers.getFromAPI({
-              endpoint: 'questions',
-              ids: id,
-              sitename,
-              filter: FILTER_QUESTION_TAGS,
-              useCache: false, // Single ID, so no point
-            }, items => {
-              this.dataset.tags = items[0].tags.join(', ');
-              insertTagsList(this);
-            });
-            this.dataset.tags = PLACEHOLDER;
-          } else if (typeof this.dataset.tags !== 'undefined' && this.dataset.tags !== PLACEHOLDER) {
-            insertTagsList(this);
-          } else {
-            insertTagsList(this, PLACEHOLDER);
-          }
-        });
-        this.addEventListener('mouseleave', function() {
-          const tooltip = this.parentNode.querySelector('.sox-hnq-question-tags-tooltip');
-          if (tooltip) tooltip.remove();
-        });
       });
     },
 
@@ -2164,7 +2108,7 @@
       });
 
       function checkAndAddReminder() {
-        if (!sox.user.loggedIn && !sox.location.match('winterbash')) {
+        if (!sox.user.loggedIn && !sox.location.on('winterbash')) {
           if (!$('#loggedInReminder').length) $('.container').append(div);
         } else {
           $('#loggedInReminder').remove();
@@ -2317,17 +2261,18 @@
                       width: ${percentHelpful}%;
                     }`);
 
-        $('#flag-summary-filter').after('<h3 id=\'sox-flagPercentHelpful\' title=\'only helpful and declined flags are counted\'><span id=\'percent\'>' + percentHelpful + '%</span> helpful</h3>');
+        $('#flag-summary-filter').after('<h3 id=\'sox-flagPercentHelpful\' title=\'only helpful and declined flags are counted\' class=\'wrap-div\'><span id=\'percent\'>' + percentHelpful + '%</span> helpful</h3>');
         $('#sox-flagPercentHelpful span#percent').css('color', percentColor);
 
-        $('#sox-flagPercentHelpful').after('<div id=\'sox-flagPercentProgressBar\'></div>');
+        $('#sox-flagPercentHelpful').after('<div id=\'sox-flagPercentProgressBar\' class=\'wrap-div\'></div>');
+        $('.wrap-div').wrapAll('<div class=\'sox-flagPercentProgressBar-container\'></div>');
       }
     },
 
     showMetaReviewCount: function() {
       // Description: Adds the total count of meta reviews on the main site on the /review page
 
-      //CORS proxy
+      // CORS proxy
       const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
       const metaUrl = sox.Stack.options.site.childUrl;
       const requestUrl = proxyUrl + metaUrl + '/review';
@@ -2335,22 +2280,30 @@
       $.get(requestUrl, d => {
         const $doc = $(d);
         let total = 0;
-        const $metaDashboardEl = $('.dashboard-item').last().find('.dashboard-count');
 
-        $doc.find('.dashboard-num').each(function() {
-          total += +$(this).text();
-        });
+        $doc.find('#content .grid.bt .fs-subheading').each(() => total += +$(this).text());
 
-        $metaDashboardEl.append($('<div/>', {
-          text: total,
-          'title': total,
-          'class': 'dashboard-num',
-        }));
+        const $lastReviewRow = $('#content .grid.bt').last();
 
-        $metaDashboardEl.append($('<div/>', {
-          text: (total == 1 ? 'post' : 'posts'),
-          'class': 'dashboard-unit',
-        }));
+        // Clone the existing bottom-most review div
+        const $metaDashboardEl = $lastReviewRow.clone();
+
+        // Cache the left and right sections, get immediate divs only with `>`
+        const $sections = $metaDashboardEl.find('>div');
+
+        const $leftSection = $sections.first();
+        // Set number of reviews
+        $leftSection.find('.fs-subheading').text(total).attr('title', total);
+        // Set 'reviews' text (instead of e.g. 'edits')
+        $leftSection.find('.mt2').text('reviews');
+
+        const $rightSection = $sections.last();
+        $rightSection.find('a').first().text('Meta Reviews').attr('href', `${metaUrl}/review`);
+        $rightSection.find('.fs-body2').text('SOX: Total reviews available on this site\'s meta at the moment');
+        // Remove the user avatars from the new row
+        $rightSection.find('>div').last().remove();
+
+        $lastReviewRow.after($metaDashboardEl);
       });
     },
 
@@ -2362,7 +2315,7 @@
         //https://github.com/soscripted/sox/issues/218#issuecomment-281148327 reason for selector:
         //http://stackoverflow.com/a/11061657/3541881
 
-        $('pre:not(:has(.sox-copyCodeButton))').before('<i class="fa fa-clipboard sox-copyCodeButton" style="display: none; position: relative; background-color: #eff0f1; margin-left: -15px"></i>'); //relative position prevents code from being in front of button
+        $('pre:not(:has(.sox-copyCodeButton))').before(sox.sprites.getSvg('copy', 'Copy code to clipboard (SOX)').addClass('sox-copyCodeButton'));
 
         $('pre').hover(function() {
           $(this).prev('.sox-copyCodeButton').show();
@@ -2447,7 +2400,7 @@
           const href = $(this).attr('href');
           for (let i = 0; i < settings.length; i++) {
             if (sox.location.matchWithPattern(settings[i], href)) {
-              $(this).prepend('<i class="fa fa-external-link openLinksInNewTab-externalLink"></i>');
+              $(this).append(sox.sprites.getSvg('launch', 'SOX: this link will open in a new tab').addClass('sox-openLinksInNewTab-externalLink'));
               $(this).prop('target', '_blank');
             }
           }
@@ -2581,12 +2534,13 @@
     addTimelineAndRevisionLinks: function() {
       // Description: Add timeline and revision links to the bottom of each post for quick access to them
 
-      $('.question, .answer').each(function() {
+      $('.question, .answer').each(function () {
+        const id = $(this).attr('data-questionid') || $(this).attr('data-answerid');
         $(this).find('.post-menu').append($('<a/>', {
-          'href': '//' + sox.site.url + '/posts/' + sox.site.href.split('/')[4] + '/revisions',
+          'href': '//' + sox.site.url + '/posts/' + id + '/revisions',
           'text': 'revisions',
         })).append($('<a/>', {
-          'href': '//' + sox.site.url + '/posts/' + sox.site.href.split('/')[4] + '/timeline',
+          'href': '//' + sox.site.url + '/posts/' + id + '/timeline',
           'text': 'timeline',
         }));
       });
@@ -2711,7 +2665,7 @@
         const $settingsDialog = sox.helpers.createModal({
           'header': 'SOX: Magic Link Settings',
           'css': {
-            'min- width': '50%',
+            'min-width': '50%',
           },
           'html': '<i>the table cells below are editable; be sure to save any changes!</i><br><br><div class="table-container"></div>',
         });
@@ -2751,6 +2705,83 @@
         'click': function () {
           createSettingsDialog(magicLinks);
         },
+      });
+    },
+
+    openImagesAsModals: function () {
+      // Description: When clicking on imgur images, show a larger version in a modal
+
+      const modalAttributes = {
+        header: 'SOX: Linked Image',
+        css: {
+          'min-width': '90%',
+          'min-height': '90%',
+        },
+        id: 'sox-linked-image-modal',
+      };
+
+      const posts = [...document.querySelectorAll('.question, .answer')];
+      posts.forEach(post => {
+        [...post.querySelectorAll('img')].forEach(img => {
+          if (!img.src || !img.src.includes('i.stack.imgur.com')) return;
+
+          img.addEventListener('click', e => {
+            e.preventDefault();
+            // Create modal on click instead of outside; modal is removed when closed
+            // so reference would become invalid
+            modalAttributes.header = `SOX: Linked Image <a class='sox-openImagesAsModals-sourceLink' target='_blank' rel='noopener noreferrer' href='${img.src}'>source</a>`;
+            const $modal = sox.helpers.createModal(modalAttributes);
+            $modal.find('.sox-custom-dialog-content').html(`<img width='100%' height='100%' src='${img.src}' />`);
+            if (!document.getElementById('#sox-linked-image-modal')) $('body').append($modal);
+          });
+        });
+      });
+    },
+
+    addTagsToHNQs: function () {
+      // Description: Show HNQ tags on hover in the sidebar
+
+      const FILTER_QUESTION_TAGS = '!)5IW-5Quf*cV5LToe(J0BjSBXW19';
+      const PLACEHOLDER = 'fetching tags...';
+
+      function insertTagsList(anchor) {
+        if ($(anchor).parent().find('.sox-hnq-question-tags-tooltip').length) return;
+        $(anchor).after('<span class="sox-hnq-question-tags-tooltip">' + anchor.dataset.tags + '</span>');
+      }
+
+      $('#hot-network-questions h4').css('display', 'inline').after($('<span/>', {
+        'style': 'color:  grey; display: block; margin-bottom: 10px;',
+        'text': 'SOX: hover over titles to show tags',
+      }));
+
+      [...document.querySelectorAll('#hot-network-questions li a')].forEach(el => {
+        const id = sox.helpers.getIDFromAnchor(el);
+        const sitename = sox.helpers.getSiteNameFromAnchor(el);
+
+        el.addEventListener('mouseenter', () => {
+          if (!el.dataset.tags) {
+            sox.helpers.getFromAPI({
+              endpoint: 'questions',
+              ids: id,
+              sitename,
+              filter: FILTER_QUESTION_TAGS,
+              useCache: false, // Single ID, so no point
+            }, items => {
+              el.dataset.tags = items[0].tags.join(', ');
+              insertTagsList(el);
+            });
+            el.dataset.tags = PLACEHOLDER;
+          } else if (typeof el.dataset.tags !== 'undefined' && el.dataset.tags !== PLACEHOLDER) {
+            insertTagsList(el);
+          } else {
+            insertTagsList(el, PLACEHOLDER);
+          }
+        });
+
+        el.addEventListener('mouseleave', () => {
+          const tooltip = el.parentNode.querySelector('.sox-hnq-question-tags-tooltip');
+          if (tooltip) tooltip.remove();
+        });
       });
     },
   };

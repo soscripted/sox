@@ -1,6 +1,6 @@
 [![Join the chat at https://gitter.im/soscripted/sox](https://badges.gitter.im/soscripted/sox.svg)](https://gitter.im/soscripted/sox?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-### SOX v2.5.0
+### SOX v2.6.0
 
 Stack Overflow Extras (*SOX*) is a project that stemmed from the [Stack Overflow Optional Features (SOOF)](https://github.com/shu8/Stack-Overflow-Optional-Features) project.
 
@@ -22,7 +22,7 @@ Note: This project has no relation to Stack Overflow or Stack Exchange; it is si
 
 2. Install the script. Clicking on 'install' below will make Tampermonkey prompt you automatically to install it.
 
-    - Official Version: <kbd>[install](https://github.com/soscripted/sox/raw/v2.5.0/sox.user.js)</kbd>. <kbd>[view source](https://github.com/soscripted/sox/blob/v2.5.0/sox.user.js)</kbd>
+    - Official Version: <kbd>[install](https://github.com/soscripted/sox/raw/v2.6.0/sox.user.js)</kbd>. <kbd>[view source](https://github.com/soscripted/sox/blob/v2.6.0/sox.user.js)</kbd>
     - Development Version: <kbd>[install](https://github.com/soscripted/sox/raw/dev/sox.user.js)</kbd>. <kbd>[view source](https://github.com/soscripted/sox/blob/dev/sox.user.js)</kbd>
 
 3. Go to any site in the Stack Exchange Network (e.g. [Super User](http://superuser.com/) or [Stack Overflow](http://stackoverflow.com/)). You will automatically be asked to choose and save your settings. A toggle button (gears icon) will be added to your topbar where you can change these later on:

@@ -62,7 +62,7 @@
             "desc": "Add a label on questions which are hot-network questions",
             "extended_description": "If the question you are currently viewing is HOT, a flame icon is added next to the title",
             "meta": "http://meta.stackexchange.com/questions/245390/let-mods-and-10k-know-when-questions-go-hot",
-            "match": "*://*/questions/*",
+            "match": "*://*/questions/*,*://*/search*,*://*/?",
             "exclude": "SE1.0,*://*/questions/ask"
         }, {
             "name": "localTimestamps",
@@ -116,8 +116,8 @@
             "desc": "Add highlighted tags to closed/on hold/duplicate/migrated questions on question lists",
             "extended_description": "Adds a coloured box at the end of a title (that replaces the standard [duplicate], etc.) in question lists to more easily tell what the state of a question is",
             "meta": "http://meta.stackexchange.com/questions/257021/proposal-to-make-duplicate-closed-and-migrated-in-the-title-more-obvious",
-            "match": "",
-            "exclude": "*://chat.*.com/*,SE1.0,*://*/questions/*,*://*/review*",
+            "match": "*://*.com/,*://*.com/questions,*://*.com/questions/tagged/*",
+            "exclude": "*://chat.*.com/*,SE1.0,*://*/review*",
             "feature_packs": ["major_ui, key_feature", "power_user"],
             "usesApi": true
         }, {
@@ -164,6 +164,13 @@
             "desc": "Hide the 'How to ask/format/tag' yellow boxes that appear when asking a question whilst zoomed in",
             "meta": "",
             "match": "*://*/questions/ask",
+            "exclude": ""
+        }, {
+            "name": "openImagesAsModals",
+            "desc": "Open imgur images as larger modals on click",
+            "extended_description": "When clicking on an image that is hosted on Stack Exchange's imgur account, a modal will open showing a larger version of the image. If you still want to open the image in a new tab, there is a 'source' link in the modal.",
+            "meta": "",
+            "match": "*://*/questions*,*://*/review/*",
             "exclude": ""
         }],
         "Comments": [{
@@ -362,6 +369,13 @@
             }],
             "feature_packs": ["key_feature"],
             "usesApi": true
+        }, {
+            "name": "addTagsToHNQs",
+            "desc": "Show HNQ tags on hover in the sidebar",
+            "extended_description": "When hovering over a question title in the Hot Network Questions sidebar, the question's tags from the originating site will be shown",
+            "meta": "",
+            "match": "*://*/questions/*",
+            "exclude": "SE1.0"
         }],
         "Chat": [{
             "name": "chatEasyAccess",

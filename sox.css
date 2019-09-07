@@ -1,3 +1,9 @@
+/* sprites */
+.sox-sprite {
+    width: 15px;
+    height: 15px;
+}
+
 /* -------- sox settings dialog  ------- */
 
 #sox-settings-dialog {
@@ -31,12 +37,18 @@
     min-height: 0;
 }
 
-#sox-settings-dialog:not(.new-topbar) #search-container .fa-search {
+#sox-settings-dialog #search-container .sox-sprite-search {
+    width: 20px;
+    height: 20px;
+    top: 5px;
+}
+
+#sox-settings-dialog:not(.new-topbar) #search-container .sox-sprite-search {
     position: relative;
     left: -485px;
 }
 
-#sox-settings-dialog.new-topbar #search-container .fa-search {
+#sox-settings-dialog.new-topbar #search-container .sox-sprite-search {
     position: relative;
     left: -485px;
 }
@@ -77,11 +89,7 @@
 
 #sox-settings-dialog-actions .action {
     float: right;
-    padding: 14px;
-}
-
-#sox-settings-dialog-actions #sox-settings-dialog-access-token {
-    transform: scaleX(-1);
+    padding: 11px;
 }
 
 #sox-settings-dialog .sox-new-version-item {
@@ -129,15 +137,22 @@
     padding: 5px !important;
 }
 
-.sox-feature .fa-info,
-.sox-feature .fa-wrench {
+.sox-feature .sox-sprite-info,
+.sox-feature .sox-sprite-wrench {
     font-size: 12px;
-    padding: 0 5px;
     cursor: pointer;
 }
 
-.sox-feature .fa-info {
+.sox-feature .sox-sprite-wrench {
+    margin-left: 5px;
+    transform: rotate(90deg);
+}
+
+.sox-feature .sox-sprite-info {
     float: right;
+    width: 17px;
+    height: 17px;
+    fill: gray;
 }
 
 #sox-settings-dialog-features-packs {
@@ -167,6 +182,24 @@
     opacity: 0.5;
 }
 
+#sox-settings-dialog.dark-mode .sox-settings-dialog-feature-pack:hover {
+    background-color: #3b9de2 !important;
+}
+
+#sox-settings-dialog.dark-mode .sox-settings-dialog-feature-pack,
+#sox-settings-dialog.dark-mode #sox-settings-dialog-features .modal-content div:hover {
+    background-color: black !important;
+}
+
+#sox-settings-dialog.dark-mode .sox-feature-settings,
+#sox-settings-dialog.dark-mode .sox-feature-info {
+    background-color: black;
+}
+
+#sox-settings-dialog.dark-mode .sox-sprite {
+    fill: #ccc;
+}
+
 /* -------- sox specific features' CSS ------- */
 
 #sox-scrollToTop {
@@ -174,10 +207,13 @@
     right: 0;
     bottom: 0;
     background-color: rgba(200, 200, 200, .7);
-    width: 40px;
-    height: 40px;
     text-align: center;
     cursor: pointer;
+}
+
+#sox-scrollToTop .sox-sprite-top {
+    width: 45px;
+    height: 45px;
 }
 
 /*Main centered divs, SE-style:*/
@@ -249,11 +285,17 @@
 
 /*addHotText for the 'this question is hot' banner */
 
-.sox-hot {
+.sox-hot .sox-sprite-hot {
     float: left;
-    font-size: xx-large;
-    color: red;
-    margin-right: 8px;
+    width: 35px;
+    height: 35px;
+    margin-right: 3px;
+    fill: red;
+}
+
+.sox-hot.question-list .sox-sprite-hot {
+    width: 20px;
+    height: 20px;
 }
 
 /*quickCommentShortcutsMain: */
@@ -430,7 +472,7 @@
 #sox-flagPercentProgressBar {
     background: #ccc;
     height: 10px;
-    width: 220px;
+    width: 250px;
     margin: 6px 10px 10px 0;
     padding: 0px;
     margin: auto;
@@ -447,12 +489,18 @@
     text-align: center;
 }
 
+.sox-flagPercentProgressBar-container {
+    background-color: #fafafb
+}
+
 /*titleEditDiff -- for the toggle button*/
 
 .sox-better-title-toggle {
     float: left;
     margin-right: 10px;
     cursor: pointer;
+    width: 25px;
+    height: 25px;
 }
 
 /*sox-copyCode -- for the button and textarea (completely hide it)*/
@@ -461,6 +509,13 @@
     float: right;
     position: sticky;
     top: 0;
+    /* z-index for compatibility with https://github.com/SmartManoj/SmartUserScripts/blob/master/SO_Lines.user.js */
+    z-index: 50;
+    display: none;
+    /* relative position prevents code from being in front of button */
+    position: relative;
+    background-color: #eff0f1;
+    margin-left: -15px;
 }
 
 .sox-copyCodeTextarea {
@@ -479,9 +534,9 @@
 
 /*openLinksInNewTab -- for the external link sign*/
 
-.openLinksInNewTab-externalLink {
+.sox-openLinksInNewTab-externalLink {
     display: inline !important;
-    padding-right: 3px;
+    margin-left: 3px;
 }
 
 /*colorAnswerer -- for the username*/
@@ -490,6 +545,12 @@
     color: rgba(0, 50, 200, 1);
     background-color: rgba(220, 220, 220, 1);
     padding: 1px 5px !important;
+}
+
+/*hotNetworkQuestionsFiltering -- for the questions to hide*/
+
+.sox-hot-network-question-filter-hide {
+    display: none !important;
 }
 
 /*addAuthorNameToInboxNotifications -- for the author span*/
@@ -519,7 +580,7 @@
 /* thanks @Makyen <https://meta.stackexchange.com/questions/312794/312800#comment1024746_312794> */
 
 .sox-onlyShowCommentActionsOnHover:not(:hover) .comment-up-off,
-.sox-onlyShowCommentActionsOnHover:not(:hover) .comment-flag:not(.flag-on) {
+.sox-onlyShowCommentActionsOnHover:not(:hover) .js-comment-flag:not(.fc-red-500) {
     visibility: hidden;
 }
 
@@ -574,6 +635,33 @@
 
 /* linkedToFrom -- for the >/< chevrons */
 .sox-linkedToFrom-chevron {
-    color: black;
+    width: 22px;
+    height: 22px;
+    float: right;
+}
+
+/* quickAuthorInfo -- for the user details */
+.sox-quickAuthorInfo-details {
+    color: #848d95;
+    font-size: 11px;
+    padding-top: 38px
+}
+
+.sox-quickAuthorInfo-details .sox-sprite-access_time {
+    margin-right: 5px;
+}
+
+/* markEmployees -- for the SE icon */
+.sox-markEmployees-logo {
     margin-left: 5px;
+    height: 13px;
+    width: 13px;
+}
+
+/* openImagesAsModals -- for the small '(source)' link in header */
+.sox-openImagesAsModals-sourceLink {
+    font-size: 18px;
+    margin-left: 10px;
+    font-weight: bold;
+    font-style: italic;
 }

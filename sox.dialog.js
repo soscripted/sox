@@ -27,10 +27,11 @@
 
       // Array of HTML strings that will be displayed as `li` items if the user has installed a new version.
       const changes = [
-        'Only inject into Github issues if you are on the SOX repo',
         'Fix bugs in various features',
-        'Improve SOX\'s performance by making lots of behind-the-scenes improvements',
-        'Deprecated the \'Hide HNQ\'s\' feature; it is now implemented natively!',
+        'Add feature to open imgur images in a modal on click',
+        'Update many features to work with recent SE HTML markup/CSS changes',
+        'Removed dependency on Font Awesome for icons, use SVG sprites instead',
+        'Add support for StylishThemes/StackOverflow-Dark theme',
       ];
 
       function addCategory(name) {
@@ -63,10 +64,7 @@
           'title': blockFeatureSelection ? 'You must get an access token to enable this feature (click the key button at the bottom of the SOX dialog)' : '',
         });
 
-        const $info = $('<i/>', {
-          'class': 'fa fa-info',
-          'aria-hidden': true,
-        }).hover(function() {
+        const $info = sox.sprites.getSvg('info').hover(function() {
           if (extendedDescription && !$(this).parent().find('.sox-feature-info').length) {
             $(this).parent().append($('<div/>', {
               'class': 'sox-feature-info',
@@ -76,7 +74,6 @@
         });
 
         const $label = $('<label/>');
-
         const $input = $('<input/>', {
           id: name,
           type: 'checkbox',
@@ -96,20 +93,16 @@
             style: 'display: none; margin-top: 5px;',
           });
 
-          const $settingsToggle = $('<i/>', {
-            'class': 'fa fa-wrench',
-            click: function(e) {
-              e.preventDefault(); //don't uncheck the checkbox
+          const $settingsToggle = sox.sprites.getSvg('wrench', 'Edit this feature\'s settings').click(e => {
+            e.preventDefault(); //don't uncheck the checkbox
 
-              const $settingsPanel = $('#feature-settings-' + name);
+            const $settingsPanel = $('#feature-settings-' + name);
 
-              if ($settingsPanel.is(':visible')) {
-                $settingsPanel.fadeOut();
-              } else {
-                $settingsPanel.fadeIn();
-              }
-
-            },
+            if ($settingsPanel.is(':visible')) {
+              $settingsPanel.fadeOut();
+            } else {
+              $settingsPanel.fadeIn();
+            }
           });
 
           const optionalSettings = GM_getValue('SOX-' + name + '-settings', -1);
@@ -149,7 +142,7 @@
           const $feature = $soxSettingsDialogFeatures.find('input#' + name).parent();
           $feature.append($settingsToggle);
 
-          if ($div.has('i.fa-info').length) {
+          if ($div.has('.sox-sprite-info').length) {
             $info.after($settingsDiv);
           } else {
             $feature.append($settingsDiv);
@@ -298,8 +291,19 @@
         },
       });
 
-      const $icon = $('<i/>', {
-        class: 'fa fa-cogs',
+      // Very basic 'dark theme' support. See https://github.com/soscripted/sox/issues/406
+      // Not sure what the best way to detect dark mode is; the following just checks to
+      // see if <body>'s text color is #ccc (grey/rgb(204,204,204)). Might need changing
+      // in future
+      if ($('body').css('color') === 'rgb(204, 204, 204)') {
+        sox.debug('Dark mode detected, tweaking SOX CSS');
+        $soxSettingsDialog.addClass('dark-mode');
+      }
+
+      const $icon = sox.sprites.getSvg('settings', 'Change your SOX settings', {
+        fill: $('.top-bar .-secondary .-link').css('color'),
+        width: '25px',
+        height: '25px',
       });
 
       //close dialog if clicked outside it
@@ -352,7 +356,12 @@
 
       // add dialog to corral and sox button to topbar
       $soxSettingsButton.append($icon);
-      $('.-secondary > .-item:not(:has(.my-profile)):eq(1)').before($('<li/>').addClass('-item').append($soxSettingsButton));
+      // The following check is because SO doesn't have inbox, achievements help centre and site switcher items
+      if ($('.inbox-button-item').length) {
+        $('.inbox-button-item').before($('<li/>').addClass('-item').append($soxSettingsButton));
+      } else {
+        $('.js-searchbar-trigger').after($('<li/>').addClass('-item').append($soxSettingsButton));
+      }
 
       $soxSettingsDialog.css({
         'top': $('.top-bar').height(),
@@ -363,5 +372,4 @@
       if ($('#soxSettingsButton').length) $('.js-topbar-dialog-corral').append($soxSettingsDialog);
     },
   };
-
 })(window.sox = window.sox || {}, jQuery);
