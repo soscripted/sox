@@ -1946,12 +1946,10 @@
           if (!id || !(userDetailsFromAPI[id] && !this.getElementsByClassName('sox-last-seen').length)) return;
 
           const lastSeenDate = new Date(userDetailsFromAPI[id].last_seen);
-          const type = userDetailsFromAPI[id].type === 'unregistered' ? ' (unregistered)' : '';
 
           const $div = $('<div/>', {
             'class': 'sox-quickAuthorInfo-details',
-            title: 'last seen',
-            text: type,
+            title: 'SOX: last seen',
           }).append(sox.sprites.getSvg('access_time'))
             .append($('<time/>', {
               'class': 'timeago sox-last-seen',
@@ -1960,7 +1958,11 @@
               value: lastSeenDate.toLocaleString(),
             }));
 
-          $(this).find('.user-info').last().append($div);
+          const $userInfo = $(this).find('.user-info');
+          $userInfo.last().append($div);
+          if (userDetailsFromAPI[id].type === 'unregistered') {
+            $userInfo.find('.user-details a').after('<span title="SOX: this user is unregistered" class="sox-quickAuthorInfo-unregistered">(unregistered)</span>');
+          }
         });
 
         $('time.timeago').timeago();

@@ -651,6 +651,11 @@
     margin-right: 5px;
 }
 
+.sox-quickAuthorInfo-unregistered {
+    margin-left: 5px;
+    font-size: smaller;
+}
+
 /* markEmployees -- for the SE icon */
 .sox-markEmployees-logo {
     margin-left: 5px;
