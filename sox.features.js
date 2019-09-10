@@ -190,6 +190,7 @@
           const commentUsers = $(cell).next().next().find('.comments .comment-user');
 
           commentUsers.each(function() {
+            if (!this.href) return true;
             if (this.href.contains(`users/${answererID}`)) this.classList.add('sox-answerer');
           });
         }
