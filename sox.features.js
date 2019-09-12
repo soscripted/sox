@@ -717,12 +717,16 @@
           featureId: 'isQuestionHot',
           cacheDuration: 60 * 8, // Cache for 8 hours
         }, results => {
-          results.forEach(data => {
-            // Questions stay hot for 3 days. Check if they are hot now (Note SE works with secs, not millisecs!)
-            if (data.comment === '<b>Became Hot Network Question</b> ' && new Date().getTime() / 1000 - data.creation_date <= 259200) {
+          for (let i = 0; i < results.length; i++) {
+            if (!results[i].comment // there's no comment, post was created
+                || results[i].comment.includes('<b>Post Closed</b> as &quot;') // post is closed
+                || results[i].comment.includes('<b>Removed from Hot Network Questions</b> by') // post has been removed from HNQ
+               ) break;
+            if (results[i].comment === '<b>Became Hot Network Question</b> ' // question is HNQ
+                && new Date().getTime() / 1000 - results[i].creation_date <= 259200 ) { // question is 3 days old.
               sox.location.on('/questions') ? addHotText() : $(el).find('.summary h3').prepend(getHotDiv('question-list'));
             }
-          });
+          };
         });
       }
     },
