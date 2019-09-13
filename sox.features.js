@@ -796,7 +796,7 @@
             if (!parent.querySelectorAll('img[src="' + href + '"]').length) {
               //DO NOT USE innerHTML -- it *removes* the old DOM and inserts a new one (https://stackoverflow.com/a/23539150), meaning it won't work for multiple imgur links in the same comment
               //https://github.com/soscripted/sox/issues/360
-              $(parent).append('<br><a href="' + href + '"><img class="sox-autoShowCommentImages-image" src="' + href + '" style="max-width:100%"></a>');
+              $(parent).append('<br><a href="' + href + '"><img class="sox-autoShowCommentImages-image" src="' + href + '" style="max-width:100%"></a><br>');
             }
           }
         });
