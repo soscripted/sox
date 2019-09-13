@@ -718,15 +718,20 @@
           cacheDuration: 60 * 8, // Cache for 8 hours
         }, results => {
           for (let i = 0; i < results.length; i++) {
-            if (!results[i].comment // there's no comment, post was created
-                || results[i].comment.includes('<b>Post Closed</b> as &quot;') // post is closed
-                || results[i].comment.includes('<b>Removed from Hot Network Questions</b> by') // post has been removed from HNQ
-               ) break;
-            if (results[i].comment === '<b>Became Hot Network Question</b> ' // question is HNQ
-                && new Date().getTime() / 1000 - results[i].creation_date <= 259200 ) { // question is 3 days old.
+            const result = results[i];
+            if (!result.comment // there's no comment, post was created
+              || result.comment.includes('<b>Post Closed</b> as &quot;') // post is closed
+              || result.comment.includes('<b>Removed from Hot Network Questions</b> by') // post has been removed from HNQ
+            ) {
+              break;
+            }
+
+            if (result.comment === '<b>Became Hot Network Question</b> ' // question is HNQ
+              && new Date().getTime() / 1000 - result.creation_date <= 259200 // question is 3 days old
+            ) {
               sox.location.on('/questions') ? addHotText() : $(el).find('.summary h3').prepend(getHotDiv('question-list'));
             }
-          };
+          }
         });
       }
     },
