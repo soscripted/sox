@@ -589,6 +589,7 @@
     padding: 2px;
     margin: 2px;
     border: 1px dotted black;
+    display: block;
 }
 
 /* editComment -- for the dialog and checkboxes shown when editing */
