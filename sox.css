@@ -671,3 +671,13 @@
     font-weight: bold;
     font-style: italic;
 }
+
+/* sox-scrollChatRoomsList -- for the user popup scrollbar */
+.user-popup.sox-scrollChatRoomsList {
+    max-height: calc(100vh - 90px);
+}
+
+.user-popup.sox-scrollChatRoomsList ul.no-bullets {
+    max-height: calc(100vh - 250px);
+    overflow-y: auto;
+}

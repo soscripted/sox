@@ -2796,5 +2796,12 @@
         });
       });
     },
+
+    scrollChatRoomsList: function () {
+      sox.helpers.observe(document.body, '.user-popup', el => {
+        if (el.classList.contains('sox-scrollChatRoomsList')) return;
+        el.classList.add('sox-scrollChatRoomsList');
+      });
+    },
   };
 })(window.sox = window.sox || {}, jQuery);

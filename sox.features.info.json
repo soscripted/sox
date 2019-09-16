@@ -395,6 +395,13 @@
             "meta": "http://meta.stackexchange.com/questions/246289/change-the-browser-tab-title-on-chat-pages-to-chat-sitename-or-chat-room-name",
             "match": "*://chat.*.com/*",
             "exclude": ""
+        }, {
+            "name": "scrollChatRoomsList",
+            "desc": "Enable scrolling for room list in usercards when there are many rooms",
+            "extended_desc": "Enable scrolling in the room list within usercards when there's a significant amount of rooms in the list, rather than the list overflowing and hiding some content.",
+            "meta": "https://meta.stackexchange.com/q/183479",
+            "match": "*://chat.*.com/*",
+            "exclude": ""
         }],
         "Voting": [{
             "name": "betterCSS",
