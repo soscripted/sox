@@ -672,12 +672,22 @@
     font-style: italic;
 }
 
-/* sox-scrollChatRoomsList -- for the user popup scrollbar */
-.user-popup.sox-scrollChatRoomsList {
+/* sox-scrollChatRoomsList -- for the user popup and sidebar scrollbar */
+.sox-scrollChatRoomsList-user-popup {
     max-height: calc(100vh - 90px);
 }
 
-.user-popup.sox-scrollChatRoomsList ul.no-bullets {
+.sox-scrollChatRoomsList-user-popup ul.no-bullets {
     max-height: calc(100vh - 250px);
     overflow-y: auto;
+}
+
+.sox-scrollChatRoomsList-sidebar {
+    max-height: calc(40vh);
+    overflow: auto;
+}
+
+.sox-scrollChatRoomsList-sidebar > #my-rooms {
+    height: 100%;
+    overflow: auto;
 }

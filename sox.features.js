@@ -2797,10 +2797,16 @@
     },
 
     scrollChatRoomsList: function () {
+      // Description: Enable scrolling for room list in usercards and sidebar when there are many rooms
+
       $(document).on('sox-chat-user-popup', (e, node) => {
-        if (node.classList.contains('sox-scrollChatRoomsList')) return;
-        node.classList.add('sox-scrollChatRoomsList');
+        if (node.classList.contains('sox-scrollChatRoomsList-user-popup')) return;
+        node.classList.add('sox-scrollChatRoomsList-user-popup');
       });
+
+      const roomsContainer = document.getElementById('my-rooms').parentElement;
+      if (roomsContainer.classList.contains('sox-scrollChatRoomsList-sidebar')) return;
+      roomsContainer.classList.add('sox-scrollChatRoomsList-sidebar');
     },
   };
 })(window.sox = window.sox || {}, jQuery);
