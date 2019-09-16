@@ -178,19 +178,19 @@
     }
 
     //custom events....
-    sox.helpers.observe([...document.getElementsByClassName('post-layout')], '.new_comment, .comment, .comments, .comment-text', target => {
+    sox.helpers.observe([...document.getElementsByClassName('post-layout')], '.new_comment, .comment, .comments, .comment-text', node => {
       sox.debug('sox-new-comment event triggered');
-      $(document).trigger('sox-new-comment', [target]);
+      $(document).trigger('sox-new-comment', [node]);
     });
 
-    sox.helpers.observe(document.body, 'textarea[id^="wmd-input"]', target => {
+    sox.helpers.observe(document.body, 'textarea[id^="wmd-input"]', node => {
       sox.debug('sox-edit-window event triggered');
-      $(document).trigger('sox-edit-window', [target]);
+      $(document).trigger('sox-edit-window', [node]);
     });
 
-    sox.helpers.observe(document.body, '.reviewable-post, .review-content', target => {
+    sox.helpers.observe(document.body, '.reviewable-post, .review-content', node => {
       sox.debug('sox-new-review-post-appeared event triggered');
-      $(document).trigger('sox-new-review-post-appeared', [target]);
+      $(document).trigger('sox-new-review-post-appeared', [node]);
     });
 
     const chatBody = document.getElementById('chat-body');
