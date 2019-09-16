@@ -1714,8 +1714,7 @@
     chatEasyAccess: function() {
       // Description: Adds options to give a user read/write/no access in chat from their user popup dialog
 
-      const target = document.getElementById('chat-body');
-      sox.helpers.observe(target, '.user-popup', node => {
+      $(document).on('sox-chat-user-popup', (e, node) => {
         const $node = $(node).parent();
         const id = $node.find('a')[0].href.split('/')[4];
 
@@ -2798,9 +2797,9 @@
     },
 
     scrollChatRoomsList: function () {
-      sox.helpers.observe(document.body, '.user-popup', el => {
-        if (el.classList.contains('sox-scrollChatRoomsList')) return;
-        el.classList.add('sox-scrollChatRoomsList');
+      $(document).on('sox-chat-user-popup', (e, node) => {
+        if (node.classList.contains('sox-scrollChatRoomsList')) return;
+        node.classList.add('sox-scrollChatRoomsList');
       });
     },
   };

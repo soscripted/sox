@@ -193,6 +193,14 @@
       $(document).trigger('sox-new-review-post-appeared', [target]);
     });
 
+    const chatBody = document.getElementById('chat-body');
+    if (chatBody) {
+      sox.helpers.observe(chatBody, '.user-popup', node => {
+        sox.debug('sox-chat-user-popup event triggered');
+        $(document).trigger('sox-chat-user-popup', [node]);
+      });
+    }
+
     if (GM_getValue('SOX-accessToken', -1) == -1) { //set access token
       //This was originally a series of IIFEs appended to the head which used the SE API JS SDK but
       //it was very uncertain and often caused issues, especially in FF
