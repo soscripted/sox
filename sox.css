@@ -678,7 +678,7 @@
 }
 
 .sox-scrollChatRoomsList-user-popup ul.no-bullets {
-    max-height: calc(100vh - 250px);
+    max-height: calc(100vh - 500px);
     overflow-y: auto;
 }
 
