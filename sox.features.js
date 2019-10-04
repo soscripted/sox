@@ -2545,6 +2545,10 @@
     addTimelineAndRevisionLinks: function() {
       // Description: Add timeline and revision links to the bottom of each post for quick access to them
 
+      // Wrap the post menu so it shows on multiple lines
+      // Without this, the post-signatures would show on two lines instead
+      $('.post-menu').addClass('sox-addTimelineAndRevisionLinks-wrap');
+
       $('.question, .answer').each(function () {
         const id = $(this).attr('data-questionid') || $(this).attr('data-answerid');
         $(this).find('.post-menu').append($('<a/>', {
