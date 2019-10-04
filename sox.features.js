@@ -548,11 +548,11 @@
       function addSpoilerTip() {
         const $spoiler = $('.spoiler');
 
-        $spoiler.prepend('<div id="isSpoiler" style="color:red; font-size:smaller; float:right;">hover to show spoiler<div>');
+        $spoiler.prepend('<div class="isSpoiler">hover to show spoiler<div>');
         $spoiler.hover(function() {
-          $(this).find('#isSpoiler').hide(500);
+          $(this).find('.isSpoiler').hide(500);
         }, function() {
-          $(this).find('#isSpoiler').show(500);
+          $(this).find('.isSpoiler').show(500);
         });
       }
       addSpoilerTip();

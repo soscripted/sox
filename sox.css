@@ -460,6 +460,15 @@
     background: black;
 }
 
+/* spoilerTip -- for the red 'hover to show spoiler' text */
+
+.isSpoiler {
+    color: red;
+    font-size: smaller;
+    float: right;
+    opacity: 1 !important;
+}
+
 /*commentReplies -- for the reply buttons*/
 
 .soxReplyLink {
