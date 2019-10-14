@@ -1946,12 +1946,11 @@
       // Description: Shows when the post's author was last active and their registration state
 
       function addLastSeen(userDetailsFromAPI) {
-        $('.question, .answer, .reviewable-post').each(function() {
-          const anchor = this.querySelector('.post-signature:last-child .user-details a[href^="/users"]');
-          if (!anchor) return;
+        $('.user-details a[href^="/users"]').each(function() {
 
-          const id = sox.helpers.getIDFromAnchor(anchor);
-          if (!id || !(userDetailsFromAPI[id] && !this.getElementsByClassName('sox-last-seen').length)) return;
+          const parentDIV = $(this).parent().parent();
+          const id = sox.helpers.getIDFromAnchor(this);
+          if (!id || !(userDetailsFromAPI[id] && !parentDIV.find('.sox-last-seen').length)) return;
 
           const lastSeenDate = new Date(userDetailsFromAPI[id].last_seen);
 
@@ -1966,10 +1965,9 @@
               value: lastSeenDate.toLocaleString(),
             }));
 
-          const $userInfo = $(this).find('.user-info');
-          $userInfo.last().append($div);
+          $(parentDIV).last().append($div);
           if (userDetailsFromAPI[id].type === 'unregistered') {
-            $userInfo.find('.user-details a').after('<span title="SOX: this user is unregistered" class="sox-quickAuthorInfo-unregistered">(unregistered)</span>');
+            $(this).after('<span title="SOX: this user is unregistered" class="sox-quickAuthorInfo-unregistered">(unregistered)</span>');
           }
         });
 
@@ -1979,14 +1977,13 @@
       function getIdsAndAddDetails(postAuthors) {
         const FILTER_USER_LASTSEEN_TYPE = '!*MxL2H2Vp3iPIKLu';
 
-        $('.question, .answer, .reviewable-post').each(function() {
-          const userDetailsAnchor = this.querySelector('.post-signature:last-child .user-details a[href^="/users"]');
+        $('.user-details a[href^="/users"]').each(function() {
 
           let userid; let username;
 
-          if (userDetailsAnchor) {
-            userid = sox.helpers.getIDFromAnchor(userDetailsAnchor);
-            username = userDetailsAnchor.innerText;
+          if (this) {
+            userid = sox.helpers.getIDFromAnchor(this);
+            username = this.innerText;
 
             if (userid !== 0) postAuthors[userid] = username;
           } else {
