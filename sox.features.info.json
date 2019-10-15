@@ -387,7 +387,7 @@
             "name": "replyToOwnChatMessages",
             "desc": "Add reply signs to your own chat messages",
             "meta": "",
-            "match": "*://chat.*.com/*",
+            "match": "*://chat.*.com/rooms/*",
             "exclude": ""
         }, {
             "name": "renameChat",
@@ -400,7 +400,7 @@
             "desc": "Enable scrolling for room list in usercards and sidebar when there are many rooms",
             "extended_desc": "Enable scrolling in the room list within usercards and sidebar when there's a significant amount of rooms in the list, rather than the list overflowing and hiding some content.",
             "meta": "https://meta.stackexchange.com/q/183479",
-            "match": "*://chat.*.com/*",
+            "match": "*://chat.*.com/rooms/*",
             "exclude": ""
         }],
         "Voting": [{
