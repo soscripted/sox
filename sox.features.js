@@ -403,8 +403,8 @@
               const newEditComment = $editCommentField.val(); //Remove the last space and last semicolon
               $editCommentField.val(newEditComment).focus();
             } else { //Remove it from the summary
-              $editCommentField.val($editCommentField.val().replace(new RegExp(reason_value + ';? ?'), '')); //for start values
               $editCommentField.val($editCommentField.val().replace('; ' + reason_value, '')); //for middle and end values
+              $editCommentField.val($editCommentField.val().replace(new RegExp(reason_value + ';? ?'), '')); //for start values
             }
           });
         }
