@@ -38,7 +38,7 @@
       // Description: Adds an Stack Overflow logo next to users that *ARE* a Stack Overflow Employee
 
       const anchors = [...document.querySelectorAll('.comment a, .deleted-answer-info a, .employee-name a, .user-details a, .question-summary .started a')].filter(el => {
-        return el.href.contains('/users/');
+        if (!el.parentElement.classList.contains('user-gravatar32')) return el.href.contains('/users/');
       });
       const ids = [];
 
