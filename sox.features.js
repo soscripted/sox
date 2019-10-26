@@ -285,12 +285,12 @@
       // Description: For adding checkboxes when editing to add pre-defined edit reasons
 
       const DEFAULT_OPTIONS = [
-        { 'formatting': 'Improved Formatting' },
-        { 'spelling': 'Corrected Spelling' },
-        { 'grammar': 'Fixed grammar' },
-        { 'greetings': 'Removed thanks/greetings' },
-        { 'retag': 'Improved usage of tags' },
-        { 'title': 'Improved title' },
+        { 'formatting': 'improved formatting' },
+        { 'spelling': 'corrected spelling' },
+        { 'grammar': 'fixed grammar' },
+        { 'greetings': 'removed thanks/greetings' },
+        { 'retag': 'improved usage of tags' },
+        { 'title': 'improved title' },
       ];
 
       function toLocaleSentenceCase(str) {
@@ -393,18 +393,18 @@
           });
 
           $reasons.find('input[type="checkbox"]').change(function() {
+            const reason_value = $(this).val();
             if (this.checked) { //Add it to the summary
               if ($editCommentField.val()) {
-                $editCommentField.val($editCommentField.val() + '; ' + $(this).val());
+                $editCommentField.val($editCommentField.val() + '; ' + reason_value);
               } else {
-                $editCommentField.val(toLocaleSentenceCase($(this).val()));
+                $editCommentField.val(toLocaleSentenceCase(reason_value));
               }
               const newEditComment = $editCommentField.val(); //Remove the last space and last semicolon
               $editCommentField.val(newEditComment).focus();
             } else { //Remove it from the summary
-              $editCommentField.val(toLocaleSentenceCase($editCommentField.val().replace(new RegExp(toLocaleSentenceCase($(this).val()) + ';? ?'), ''))); //for beginning values
-              $editCommentField.val($editCommentField.val().replace($(this).val() + '; ', '')); //for middle values
-              $editCommentField.val($editCommentField.val().replace(new RegExp(';? ?' + $(this).val()), '')); //for last value
+              $editCommentField.val($editCommentField.val().replace(new RegExp(reason_value + ';? ?'), '')); //for start values
+              $editCommentField.val($editCommentField.val().replace('; ' + reason_value, '')); //for middle and end values
             }
           });
         }
