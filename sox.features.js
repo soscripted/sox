@@ -1985,7 +1985,7 @@
             userid = sox.helpers.getIDFromAnchor(this);
             username = this.innerText;
 
-            if (userid !== 0) postAuthors[userid] = username;
+            if (userid > 0) postAuthors[userid] = username;
           } else {
             sox.loginfo('Could not find user user link for: ', this);
           }
