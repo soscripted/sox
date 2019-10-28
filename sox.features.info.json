@@ -431,7 +431,8 @@
             "extended_description": "Adds a button next to links to posts on the same site that expand to show the post inline",
             "meta": "",
             "match": "*://*/questions*,*://*/review*",
-            "exclude": "SE1.0"
+            "exclude": "SE1.0",
+            "usesApi": true
         }, {
             "name": "parseCrossSiteLinks",
             "desc": "Parse titles to links cross-SE-sites",
