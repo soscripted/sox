@@ -1645,7 +1645,6 @@
           // https://github.com/soscripted/sox/issues/205 -- check link's location is to same site, eg if on SU, don't allow on M.SU
           // http://stackoverflow.com/a/4815665/3541881
           if (url &&
-              $('<a>').prop('href', url).prop('hostname') == location.hostname &&
               !url.includes('#comment') &&
               !url.includes('/edit/') && // https://github.com/soscripted/sox/issues/281
               !url.includes('/tagged/') &&
@@ -1669,9 +1668,17 @@
           $(this).addClass('expander-arrow-small-show');
           const $that = $(this);
           const id = getIdFromUrl($(this).next().attr('href'));
-          $.get(location.protocol + '//' + sox.site.url + '/posts/' + id + '/body', d => {
-            const div = '<div class="linkedPostsInline-loaded-body-sox">' + d + '</div>';
-            $that.next().after(div);
+          var url = $(this).next().attr('href');
+          if (!url.match(/https?:\/\//)) url = sox.site.url + url;
+          sox.helpers.getFromAPI({
+            endpoint: 'posts',
+            ids: id,
+            sitename: sox.helpers.getSiteNameFromLink(url),
+            filter: '!3tz1WcRHkskgvLqh9',
+            featureId: 'linkedPostsInline',
+            cacheDuration: 60, // Cache for 60 minutes
+          }, results => {
+            $that.next().after('<div class="linkedPostsInline-loaded-body-sox">' + results[0].body + '</div>');
           });
         }
       });
