@@ -631,15 +631,13 @@
     confirmNavigateAway: function() {
       // Description: For adding a 'are you ure you want to go away' confirmation on pages where you have started writing something
 
-      if (window.location.href.indexOf('questions/') >= 0) {
-        $(window).bind('beforeunload', () => {
-          const textarea = document.querySelector('.comment-form textarea');
-          if (textarea && textarea.value) {
-            return 'Do you really want to navigate away? Anything you have written will be lost!';
-          }
-          return;
-        });
-      }
+      $(window).bind('beforeunload', () => {
+        const textarea = document.querySelector('.comment-form textarea');
+        if (textarea && textarea.value) {
+          return 'Do you really want to navigate away? Anything you have written will be lost!';
+        }
+        return;
+      });
     },
 
     sortByBountyAmount: function() {
