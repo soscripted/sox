@@ -35,7 +35,7 @@
             "extended_description": "Highlight the username of a commenter if they have posted an answer on that page.",
             "meta": "https://meta.stackexchange.com/q/19574",
             "match": "*://*/questions/*",
-            "exclude": "SE1.0,*://*/questions/ask,*://*/questions*?tab*,*://chat.*.com/*",
+            "exclude": "SE1.0,*://*/questions/ask,*://*/questions*tab=*,*://chat.*.com/*",
             "feature_packs": ["major_ui", "key_feature", "power_user"]
         }, {
             "name": "displayName",
@@ -48,7 +48,7 @@
             "desc": "Make bounty box draggable",
             "meta": "https://meta.stackexchange.com/q/170125",
             "match": "*://*/questions/*",
-            "exclude": "SE1.0,*://*/questions/ask,*://*/questions*?tab*,*://chat.*.com/*"
+            "exclude": "SE1.0,*://*/questions/ask,*://*/questions*tab=*,*://chat.*.com/*"
         }, {
             "name": "highlightQuestions",
             "desc": "Change highlighting for questions with favourite tags",
@@ -111,7 +111,7 @@
             "desc": "Differentiate spoilers from empty blockquotes",
             "meta": "https://meta.stackexchange.com/q/104085",
             "match": "*://*/questions/*,*://*/review*",
-            "exclude": "SE1.0,*://*/questions*?tab*,*://chat.*.com/*"
+            "exclude": "SE1.0,*://*/questions*tab=*,*://chat.*.com/*"
         }, {
             "name": "standOutDupeCloseMigrated",
             "desc": "Add highlighted tags to closed/on hold/duplicate/migrated questions on question lists",
@@ -133,19 +133,19 @@
             "desc": "Improve answer visibility by listing top answers",
             "meta": "",
             "match": "*://*/questions/*",
-            "exclude": "SE1.0,*://*/questions/ask,*://*/questions*?tab*,*://chat.*.com/*"
+            "exclude": "SE1.0,*://*/questions/ask,*://*/questions*tab=*,*://chat.*.com/*"
         }, {
             "name": "unspoil",
             "desc": "Add a link to the bottom of a post to reveal all spoilers in a post",
             "meta": "https://meta.stackexchange.com/q/249808",
-            "match": "*://*/questions/*,*://*/questions*?tab*,*://chat.*.com/*",
+            "match": "*://*/questions/*,*://*/questions*tab=*,*://chat.*.com/*",
             "exclude": "SE1.0"
         }, {
             "name": "addTimelineAndRevisionLinks",
             "desc": "Add timeline and revision links to the bottom of each post for quick access to them",
             "meta": "",
             "match": "*://*/questions/*,*://*/review*",
-            "exclude": "*://*/questions/ask,*://*/questions*?tab*,*://chat.*.com/*",
+            "exclude": "*://*/questions/ask,*://*/questions*tab=*,*://chat.*.com/*",
             "feature_packs": ["power_user"]
         }, {
             "name": "showTagWikiLinkOnTagPopup",
@@ -172,7 +172,7 @@
             "extended_description": "When clicking on an image that is hosted on Stack Exchange's imgur account, a modal will open showing a larger version of the image. If you still want to open the image in a new tab, there is a 'source' link in the modal.",
             "meta": "",
             "match": "*://*/questions/*,*://*/review/*",
-            "exclude": "*://*/questions*?tab*,*://chat.*.com/*"
+            "exclude": "*://*/questions*tab=*,*://chat.*.com/*"
         }],
         "Comments": [{
             "name": "autoShowCommentImages",
@@ -180,39 +180,39 @@
             "extended_description": "This feature will automatically detect comments with links to imgur and will display them inline",
             "meta": "",
             "match": "*://*/questions/*,*://*/review*",
-            "exclude": "SE1.0,*://*/questions/ask,*://*/questions*?tab*,*://chat.*.com/*",
+            "exclude": "SE1.0,*://*/questions/ask,*://*/questions*tab=*,*://chat.*.com/*",
             "feature_packs": ["major_ui, key_feature", "power_user"]
         }, {
             "name": "commentReplies",
             "desc": "Add reply links to comments for quick replying (without having to type someone's username)",
             "meta": "https://meta.stackexchange.com/q/74778",
             "match": "*://*/questions/*,*://*/review*",
-            "exclude": "SE1.0,*://*/questions/ask,*://*/questions*?tab*,*://chat.*.com/*",
+            "exclude": "SE1.0,*://*/questions/ask,*://*/questions*tab=*,*://chat.*.com/*",
             "feature_packs": ["power_user"]
         }, {
             "name": "commentShortcuts",
             "desc": "Use Ctrl+I,B,K (to italicise, bolden and add code backticks) in comments",
             "meta": "https://meta.stackexchange.com/q/14756",
             "match": "*://*/questions/*",
-            "exclude": "SE1.0,*://*/questions/ask,*://*/questions*?tab*,*://chat.*.com/*"
+            "exclude": "SE1.0,*://*/questions/ask,*://*/questions*tab=*,*://chat.*.com/*"
         }, {
             "name": "confirmNavigateAway",
             "desc": "Add a confirmation dialog when navigating away on pages whilst still typing a comment",
             "meta": "https://meta.stackexchange.com/q/252205",
             "match": "*://*/questions/*",
-            "exclude": "SE1.0,*://*/questions*?tab*,*://chat.*.com/*"
+            "exclude": "SE1.0,*://*/questions*tab=*,*://chat.*.com/*"
         }, {
             "name": "copyCommentsLink",
             "desc": "Copy 'show x more comments' link to the top",
             "meta": "https://meta.stackexchange.com/q/55020",
             "match": "*://*/questions/*",
-            "exclude": "SE1.0,*://*/questions*?tab*,*://chat.*.com/*"
+            "exclude": "SE1.0,*://*/questions*tab=*,*://chat.*.com/*"
         }, {
             "name": "moveBounty",
             "desc": "Move the 'start a bounty' link to before the comments",
             "meta": "https://meta.stackexchange.com/q/234095",
             "match": "*://*/questions/*",
-            "exclude": "SE1.0,*://*/questions*?tab*,*://chat.*.com/*"
+            "exclude": "SE1.0,*://*/questions*tab=*,*://chat.*.com/*"
         }, {
             "name": "showCommentScores",
             "desc": "Show your comment and comment replies scores in your profile tabs",
@@ -226,14 +226,14 @@
             "desc": "Add a darker border underneath comments if there are some hidden after it",
             "meta": "https://meta.stackoverflow.com/q/296582",
             "match": "*://*/questions/*,*://*/review*",
-            "exclude": "SE1.0,*://*/questions*?tab*,*://chat.*.com/*",
+            "exclude": "SE1.0,*://*/questions*tab=*,*://chat.*.com/*",
             "feature_packs": ["power_user"]
         }, {
             "name": "onlyShowCommentActionsOnHover",
             "desc": "Only show the comment actions (flag/upvote) when hovering over a comment",
             "meta": "https://meta.stackexchange.com/q/312794",
             "match": "*://*/questions/*,*://*/review*",
-            "exclude": "*://*/questions/ask,*://*/questions*?tab*,*://chat.*.com/*"
+            "exclude": "*://*/questions/ask,*://*/questions*tab=*,*://chat.*.com/*"
         }],
         "Editing": [{
             "name": "addSBSBtn",
@@ -241,7 +241,7 @@
             "extended_description": "An 'SBS' button is added to the right of the markdown editor toolbar. Clicking it will make the markdown and the preview appear side-by-side",
             "meta": "https://meta.stackexchange.com/q/253112",
             "match": "*://*/questions/*",
-            "exclude": "*://chat.*.com/*,SE1.0,*://*/questions*?tab*",
+            "exclude": "*://chat.*.com/*,SE1.0,*://*/questions*tab=*",
             "settings": [{
                 "id": "sbsByDefault",
                 "type": "checkbox",
@@ -254,7 +254,7 @@
             "extended_description": "Adds checkboxes to add canned messages for edit revisions when editing. You can make *your own* canned responses by clicking the 'Edit Reasons' button that is added to the Help dropdown menu in the topbar",
             "meta": "https://meta.stackexchange.com/q/190461",
             "match": "*://*/questions/*",
-            "exclude": "*://chat.*.com/*,SE1.0,*://*/questions/ask,*://*/questions*?tab*",
+            "exclude": "*://chat.*.com/*,SE1.0,*://*/questions/ask,*://*/questions*tab=*",
             "feature_packs": ["power_user"]
         }, {
             "name": "editReasonTooltip",
@@ -262,7 +262,7 @@
             "extended_description": "When a post is edited, the editor is displayed underneath the post. This feature will show what the last revision's comment was as a tooltip when you hover over 'edited' underneath a post in 'edited [date] at [time]'",
             "meta": "https://meta.stackexchange.com/q/2315",
             "match": "*://*/questions/*,*://*/review*",
-            "exclude": "SE1.0,*://*/questions/ask,*://*/questions*?tab*,*://chat.*.com/*",
+            "exclude": "SE1.0,*://*/questions/ask,*://*/questions*tab=*,*://chat.*.com/*",
             "feature_packs": ["power_user"],
             "usesApi": true
         }, {
@@ -271,14 +271,14 @@
             "extended_description": "",
             "meta": "",
             "match": "*://*/questions/*,*://*/review*",
-            "exclude": "SE1.0,*://*/questions*?tab*,*://chat.*.com/*"
+            "exclude": "SE1.0,*://*/questions*tab=*,*://chat.*.com/*"
         }, {
             "name": "kbdAndBullets",
             "desc": "Add KBD and list buttons to editor toolbar",
             "extended_description": "Adds a kbd and bullet icon to the markdown editor toolbar that lets you surround the selected text with KBD tags or listify's the current selection",
             "meta": "https://meta.stackexchange.com/q/102841",
             "match": "*://*/questions/*,*://*/review*",
-            "exclude": "*://chat.*.com/*,SE1.0,*://*/questions*?tab*"
+            "exclude": "*://chat.*.com/*,SE1.0,*://*/questions*tab=*"
         }, {
             "name": "titleEditDiff",
             "desc": "Make title edits show separately rather than merged in edit suggestions",
@@ -291,7 +291,7 @@
             "extended_description": "Enables the inline editor on all sites, even if you don't have 2k rep there yet. Note: this feature may not work on Firefox.",
             "meta": "",
             "match": "*://*/questions/*",
-            "exclude": "*://*/questions/ask,*://*/questions*?tab*,*://chat.*.com/*"
+            "exclude": "*://*/questions/ask,*://*/questions*tab=*,*://chat.*.com/*"
         }],
         "Flags": [{
             "name": "flagOutcomeTime",
@@ -349,7 +349,7 @@
             "desc": "Add an arrow to linked posts in the sidebar to show whether they are linked to or linked from",
             "meta": "https://meta.stackexchange.com/q/276235",
             "match": "*://*/questions/*",
-            "exclude": "*://*/questions*?tab*,*://chat.*.com/*,SE1.0",
+            "exclude": "*://*/questions*tab=*,*://chat.*.com/*,SE1.0",
             "usesApi": true
         }, {
             "name": "hotNetworkQuestionsFiltering",
@@ -413,21 +413,21 @@
             "extended_description": "Pulse effect when hovering over the upvote/downvote/favourite buttons. Currently only implemented natively on Android.SE.",
             "meta": "https://meta.stackexchange.com/q/252685",
             "match": "*://*/questions/*,*://*/review*",
-            "exclude": "SE1.0,*://*/questions*?tab*,*://chat.*.com/*",
+            "exclude": "SE1.0,*://*/questions*tab=*,*://chat.*.com/*",
             "feature_packs": ["major_ui"]
         }, {
             "name": "stickyVoteButtons",
             "desc": "Make vote buttons next to posts sticky whilst scrolling on that post",
             "meta": "https://meta.stackexchange.com/a/35047",
             "match": "*://*/questions/*,*://*/review*",
-            "exclude": "SE1.0,*://*/questions/ask,*://*/questions*?tab*,*://chat.*.com/*",
+            "exclude": "SE1.0,*://*/questions/ask,*://*/questions*tab=*,*://chat.*.com/*",
             "feature_packs": ["major_ui, key_feature", "power_user"]
         }, {
             "name": "disableVoteButtons",
             "desc": "Disable vote buttons on your own posts and deleted posts, which you cannot vote on",
             "meta": "",
             "match": "*://*/questions/*",
-            "exclude": "SE1.0,*://*/questions/ask,*://*/questions*?tab*,*://chat.*.com/*"
+            "exclude": "SE1.0,*://*/questions/ask,*://*/questions*tab=*,*://chat.*.com/*"
         }],
         "Extras": [{
             "name": "linkedPostsInline",
@@ -435,14 +435,15 @@
             "extended_description": "Adds a button next to links to posts on the same site that expand to show the post inline",
             "meta": "",
             "match": "*://*/questions/*,*://*/review*",
-            "exclude": "SE1.0,*://*/questions*?tab*,*://chat.*.com/*"
+            "exclude": "SE1.0,*://*/questions*tab=*,*://chat.*.com/*",
+            "usesApi": true
         }, {
             "name": "parseCrossSiteLinks",
             "desc": "Parse titles to links cross-SE-sites",
             "extended_description": "Detects links to other questions on SE sites and converts them to their title",
             "meta": "https://meta.stackexchange.com/q/251183",
             "match": "*://*/questions/*,*://*/review*",
-            "exclude": "SE1.0,*://*/questions*?tab*,*://chat.*.com/*",
+            "exclude": "SE1.0,*://*/questions*tab=*,*://chat.*.com/*",
             "usesApi": true
         }, {
             "name": "quickAuthorInfo",
@@ -458,7 +459,7 @@
             "extended_description": "When you click 'share' under a post, this displays a referral link, which incorporates your user ID. This option strips your user ID from the displayed link, preventing inadvertent privacy leaks when disseminating the link via copy-paste. The social-media sharing buttons are unaffected, since the lack of privacy is obvious.",
             "meta": "https://meta.stackexchange.com/q/74274",
             "match": "*://*/questions/*,*://*/review*",
-            "exclude": "SE1.0,*://*/questions/ask,*://*/questions*?tab*,*://chat.*.com/*",
+            "exclude": "SE1.0,*://*/questions/ask,*://*/questions*tab=*,*://chat.*.com/*",
             "feature_packs": ["power_user"]
         }, {
             "name": "shareLinksMarkdown",
@@ -466,7 +467,7 @@
             "extended_description": "When you click 'share' under a post, this will convert the URL given to a markdown-friendly version, with the post name as the link text. This feature also automatically copies the converted string to your clipboard",
             "meta": "https://meta.stackexchange.com/q/126544",
             "match": "*://*/questions/*,*://*/review*",
-            "exclude": "SE1.0,*://*/questions/ask,*://*/questions*?tab*,*://chat.*.com/*"
+            "exclude": "SE1.0,*://*/questions/ask,*://*/questions*tab=*,*://chat.*.com/*"
         }, {
             "name": "sortByBountyAmount",
             "desc": "Add an option to filter bounties by their amount",
@@ -517,7 +518,7 @@
             "desc": "Add a button to code in posts to let you copy it",
             "meta": "",
             "match": "*://*/questions/*,*://*/review*",
-            "exclude": "*://*/questions*?tab*,*://chat.*.com/*"
+            "exclude": "*://*/questions*tab=*,*://chat.*.com/*"
         }, {
             "name": "dailyReviewBar",
             "desc": "Add a progress bar showing how many reviews you have left in the day",
