@@ -1648,6 +1648,7 @@
               !url.includes('#comment') &&
               !url.includes('/edit/') && // https://github.com/soscripted/sox/issues/281
               !url.includes('/tagged/') &&
+              !url.includes('web.archive.org') && // Make sure this isn't a Web Archive URL
               getIdFromUrl(url) && // getIdFromUrl(url) makes sure it won't fail later on
               !$(this).prev().is('.expand-post-sox')) {
             $(this).before('<a class="expander-arrow-small-hide expand-post-sox" style="border-bottom:0"></a>');
