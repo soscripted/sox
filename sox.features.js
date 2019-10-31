@@ -1648,7 +1648,7 @@
               !url.includes('#comment') &&
               !url.includes('/edit/') && // https://github.com/soscripted/sox/issues/281
               !url.includes('/tagged/') &&
-              !url.includes('web.archive.org') && // Make sure this isn't a Web Archive URL
+              !url.includes('web.archive.org') &&  // Make sure this isn't a Web Archive URL
               getIdFromUrl(url) && // getIdFromUrl(url) makes sure it won't fail later on
               !$(this).prev().is('.expand-post-sox')) {
             $(this).before('<a class="expander-arrow-small-hide expand-post-sox" style="border-bottom:0"></a>');
@@ -1670,16 +1670,20 @@
           const $that = $(this);
           const id = getIdFromUrl($(this).next().attr('href'));
           var url = $(this).next().attr('href');
-          if (!url.match(/https?:\/\//)) url = sox.site.url + url;
+          if (!url.match(/https?:\/\//)) url = 'https://' + url;
           sox.helpers.getFromAPI({
             endpoint: 'posts',
             ids: id,
             sitename: sox.helpers.getSiteNameFromLink(url),
-            filter: '!3tz1WcRHkskgvLqh9',
+            filter: '!)qFc_3CbvFS40DqE0ROu',
             featureId: 'linkedPostsInline',
             cacheDuration: 60, // Cache for 60 minutes
           }, results => {
-            $that.next().after('<div class="linkedPostsInline-loaded-body-sox">' + results[0].body + '</div>');
+            if (results.length) {
+              $that.next().after('<div class="linkedPostsInline-loaded-body-sox"><div style="text-align:center">' + results[0].title + '</div><br>' + results[0].body + '</div>');
+            } else {
+              $that.next().after('<div class="linkedPostsInline-loaded-body-sox"><strong>Post was not found through the API. It may have been deleted</3></strong>');
+            }
           });
         }
       });
