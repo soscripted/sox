@@ -1642,13 +1642,13 @@
         $('.post-text a, .comments .comment-copy a').each(function() {
           const url = $(this).attr('href');
 
-          // https://github.com/soscripted/sox/issues/205 -- check link's location is to same site, eg if on SU, don't allow on M.SU
           // http://stackoverflow.com/a/4815665/3541881
           if (url &&
               !url.includes('#comment') &&
               !url.includes('/edit/') && // https://github.com/soscripted/sox/issues/281
               !url.includes('/tagged/') &&
               !url.includes('web.archive.org') &&  // Make sure this isn't a Web Archive URL
+              !url.includes('/c/') && // Make sure it's not a SO Teams post
               getIdFromUrl(url) && // getIdFromUrl(url) makes sure it won't fail later on
               !$(this).prev().is('.expand-post-sox')) {
             $(this).before('<a class="expander-arrow-small-hide expand-post-sox" style="border-bottom:0"></a>');
