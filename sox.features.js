@@ -1669,7 +1669,7 @@
           $(this).addClass('expander-arrow-small-show');
           const $that = $(this);
           const id = getIdFromUrl($(this).next().attr('href'));
-          var url = $(this).next().attr('href');
+          const url = $(this).next().attr('href');
           if (!url.match(/https?:\/\//)) url = 'https://' + url;
           sox.helpers.getFromAPI({
             endpoint: 'posts',
