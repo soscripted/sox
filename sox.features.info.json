@@ -432,7 +432,7 @@
         "Extras": [{
             "name": "linkedPostsInline",
             "desc": "Display linked posts inline by clicking on an arrow",
-            "extended_description": "Adds a button next to links to posts on the same site that expand to show the post inline",
+            "extended_description": "Adds a button next to Stack Exchange posts that expand to show the post inline",
             "meta": "",
             "match": "*://*/questions/*,*://*/review*",
             "exclude": "SE1.0,*://*/questions/ask,*://*/questions/tagged*,*://*/questions/greatest-hits*",

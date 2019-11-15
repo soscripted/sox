@@ -1640,13 +1640,13 @@
         $('.post-text a, .comments .comment-copy a').each(function() {
           const url = $(this).attr('href');
 
-          // https://github.com/soscripted/sox/issues/205 -- check link's location is to same site, eg if on SU, don't allow on M.SU
           // http://stackoverflow.com/a/4815665/3541881
           if (url &&
-              $('<a>').prop('href', url).prop('hostname') == location.hostname &&
               !url.includes('#comment') &&
               !url.includes('/edit/') && // https://github.com/soscripted/sox/issues/281
               !url.includes('/tagged/') &&
+              !url.includes('web.archive.org') &&  // Make sure this isn't a Web Archive URL
+              !url.includes('/c/') && // Make sure it's not a SO Teams post
               getIdFromUrl(url) && // getIdFromUrl(url) makes sure it won't fail later on
               !$(this).prev().is('.expand-post-sox')) {
             $(this).before('<a class="expander-arrow-small-hide expand-post-sox" style="border-bottom:0"></a>');
@@ -1667,9 +1667,21 @@
           $(this).addClass('expander-arrow-small-show');
           const $that = $(this);
           const id = getIdFromUrl($(this).next().attr('href'));
-          $.get(location.protocol + '//' + sox.site.url + '/posts/' + id + '/body', d => {
-            const div = '<div class="linkedPostsInline-loaded-body-sox">' + d + '</div>';
-            $that.next().after(div);
+          const url = $(this).next().attr('href');
+          if (!url.match(/https?:\/\//)) url = 'https://' + url;
+          sox.helpers.getFromAPI({
+            endpoint: 'posts',
+            ids: id,
+            sitename: sox.helpers.getSiteNameFromLink(url),
+            filter: '!)qFc_3CbvFS40DqE0ROu',
+            featureId: 'linkedPostsInline',
+            cacheDuration: 60, // Cache for 60 minutes
+          }, results => {
+            if (results.length) {
+              $that.next().after('<div class="linkedPostsInline-loaded-body-sox"><div style="text-align:center">' + results[0].title + '</div><br>' + results[0].body + '</div>');
+            } else {
+              $that.next().after('<div class="linkedPostsInline-loaded-body-sox"><strong>Post was not found through the API. It may have been deleted</3></strong>');
+            }
           });
         }
       });
