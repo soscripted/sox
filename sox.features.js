@@ -2571,11 +2571,15 @@
     hideWelcomeBackMessage: function() {
       // Description: Hide the 'welcome back...don't forget to vote' message when visiting a site after a while
 
-      sox.helpers.observe(document.body, '#overlay-header', el => {
+      function removeMessage(el) {
+        if (!el) return;
         if ($(el).text().match(/welcome back/gi)) {
           $(el).remove();
         }
-      });
+      }
+
+      sox.helpers.observe(document.body, '#overlay-header', el => removeMessage(el));
+      removeMessage(document.getElementById('overlay-header'));
     },
 
     hideHowToAskWhenZoomed: function() {
