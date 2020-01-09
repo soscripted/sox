@@ -3,7 +3,7 @@
 // @namespace    https://github.com/soscripted/sox
 // @homepage     https://github.com/soscripted/sox
 // @homepageURL  https://github.com/soscripted/sox
-// @version      2.6.18 DEV
+// @version      2.6.19 DEV
 // @description  Extra optional features for Stack Overflow and Stack Exchange sites
 // @contributor  ᴉʞuǝ (https://stackoverflow.com/users/1454538/, https://github.com/mezmi)
 // @contributor  ᔕᖺᘎᕊ (https://stackexchange.com/users/4337810/, https://github.com/shu8)
@@ -12,13 +12,13 @@
 // @contributor  double-beep (https://stackexchange.com/users/14688437/double-beep, https://github.com/double-beep)
 // @updateURL    https://cdn.jsdelivr.net/gh/soscripted/sox@dev/sox.user.js
 
-// @match        *://*.stackoverflow.com/*
-// @match        *://*.stackexchange.com/*
-// @match        *://*.superuser.com/*
-// @match        *://*.serverfault.com/*
-// @match        *://*.askubuntu.com/*
-// @match        *://*.stackapps.com/*
-// @match        *://*.mathoverflow.net/*
+// @match        https://*.stackoverflow.com/*
+// @match        https://*.stackexchange.com/*
+// @match        https://*.superuser.com/*
+// @match        https://*.serverfault.com/*
+// @match        https://*.askubuntu.com/*
+// @match        https://*.stackapps.com/*
+// @match        https://*.mathoverflow.net/*
 // @match        *://github.com/soscripted/*
 // @match        *://soscripted.github.io/sox/*
 
