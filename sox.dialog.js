@@ -28,10 +28,9 @@
       // Array of HTML strings that will be displayed as `li` items if the user has installed a new version.
       const changes = [
         'Fix bugs in various features',
-        'Add feature to open imgur images in a modal on click',
-        'Update many features to work with recent SE HTML markup/CSS changes',
-        'Removed dependency on Font Awesome for icons, use SVG sprites instead',
-        'Add support for StylishThemes/StackOverflow-Dark theme',
+        'Add feature to  copy markdown for comments',
+        'Add feature to add scrolling to room list in usercards in chat',
+        'Only run SOX on HTTPS',
       ];
 
       function addCategory(name) {
