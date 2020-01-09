@@ -2823,5 +2823,50 @@
       if (roomsContainer.classList.contains('sox-scrollChatRoomsList-sidebar')) return;
       roomsContainer.classList.add('sox-scrollChatRoomsList-sidebar');
     },
+
+    copyCommentMarkdown: function () {
+      // Description: Adds button to copy the markdown of a comment next to them
+
+      $('.comment-body').each(function () {
+        const $comment = $(this);
+        const $soxReplyLink = $comment.find('.soxReplyLink');
+        const $copyBtn = sox.sprites.getSvg('copy', 'SOX: copy comment markdown', {
+          cursor: 'pointer',
+          display: 'none',
+        });
+
+        const commentId = +$comment.parent().parent().attr('data-comment-id');
+        $copyBtn.on('click', function () {
+          sox.helpers.getFromAPI({
+            endpoint: 'comments',
+            ids: [commentId],
+            filter: '!*JxbB6N6w(LGV_JR',
+            sitename: sox.site.url,
+            featureId: 'copyCommentMarkdown',
+            cacheDuration: 10, // Cache for 10 minutes
+          }, items => {
+            if (items[0] && items[0].body_markdown) {
+              GM_setClipboard(items[0].body_markdown);
+              window.alert('Copied comment markdown to clipboard!');
+            } else {
+              window.alert('There was an error getting the comment markdown. Please raise an issue on GitHub!');
+              sox.error('copyCommentMarkdown: could not get markdown from API. Returned data for comment ID ' + commentId +' was', items);
+            }
+          });
+        });
+
+        if ($soxReplyLink.length) {
+          $soxReplyLink.before($copyBtn);
+        } else {
+          $comment.find('span').last().after($copyBtn);
+        }
+
+        $comment.hover(function () {
+          $copyBtn.show();
+        }, function () {
+          $copyBtn.hide();
+        });
+      });
+    }
   };
 })(window.sox = window.sox || {}, jQuery);

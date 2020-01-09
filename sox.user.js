@@ -3,7 +3,7 @@
 // @namespace    https://github.com/soscripted/sox
 // @homepage     https://github.com/soscripted/sox
 // @homepageURL  https://github.com/soscripted/sox
-// @version      2.6.19 DEV
+// @version      2.6.20 DEV
 // @description  Extra optional features for Stack Overflow and Stack Exchange sites
 // @contributor  ᴉʞuǝ (https://stackoverflow.com/users/1454538/, https://github.com/mezmi)
 // @contributor  ᔕᖺᘎᕊ (https://stackexchange.com/users/4337810/, https://github.com/shu8)
@@ -49,6 +49,7 @@
 // @grant        GM_getResourceText
 // @grant        GM_addStyle
 // @grant        GM_info
+// @grant        GM_setClipboard
 // ==/UserScript==
 /*jshint loopfunc: true*/
 (function(sox, $) {

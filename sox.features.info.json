@@ -234,6 +234,14 @@
             "meta": "https://meta.stackexchange.com/q/312794",
             "match": "*://*/questions/*,*://*/review*",
             "exclude": "*://*/questions/ask,*://*/questions/tagged*,*://*/questions/greatest-hits*"
+        }, {
+            "name": "copyCommentMarkdown",
+            "desc": "Add a button to copy the markdown of a comment next to them",
+            "meta": "",
+            "match": "*://*/questions/*,*://*/review*",
+            "exclude": "*://*/questions/ask,*://*/questions/tagged*,*://*/questions/greatest-hits*",
+            "usesApi": true,
+            "feature_packs": ["power_user"]
         }],
         "Editing": [{
             "name": "addSBSBtn",
