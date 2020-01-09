@@ -492,9 +492,10 @@
         setTimeout(() => {
           // $(this).attr('href') is relative, so make it absolute
           const href = new URL($(this).attr('href'), window.location.href).href;
-          $inputEl.val(`[${title}](${href})`);
+          const textToCopy = `[${title}](${href})`;
+          $inputEl.val(textToCopy);
           $inputEl.select();
-          document.execCommand('copy'); // https://github.com/soscripted/sox/issues/177
+          GM_setClipboard(textToCopy); // https://github.com/soscripted/sox/issues/177
         }, 0);
       });
     },
@@ -2352,19 +2353,16 @@
       $(document).on('sox-new-review-post-appeared', addButton);
 
       $(document).on('click', '.sox-copyCodeButton', function() {
-        try {
-          const copyCodeTextareas = document.getElementsByClassName('sox-copyCodeTextarea');
-          if (!copyCodeTextareas.length) $('body').append('<textarea class="sox-copyCodeTextarea">');
+        const copyCodeTextareas = document.getElementsByClassName('sox-copyCodeTextarea');
+        if (!copyCodeTextareas.length) $('body').append('<textarea class="sox-copyCodeTextarea">');
 
-          copyCodeTextareas[0].value = $(this).next('pre').text();
-          copyCodeTextareas[0].select();
-          document.execCommand('copy');
-          $(this).effect('highlight', {
-            color: 'white',
-          }, 3000);
-        } catch (e) {
-          sox.info('Browser doesn\'t support execComand for copyCode feature');
-        }
+        const textToCopy = $(this).next('pre').text();
+        copyCodeTextareas[0].value = textToCopy;
+        copyCodeTextareas[0].select();
+        GM_setClipboard(textToCopy);
+        $(this).effect('highlight', {
+          color: 'white',
+        }, 3000);
       });
     },
 
