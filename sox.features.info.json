@@ -79,7 +79,7 @@
             }]
          }, {
             "name": "markEmployees",
-            "desc": "Add the SO logo after employee names to make them stand out",
+            "desc": "Adds the Stack Exchange logo after employee names to make them stand out",
             "meta": "https://meta.stackexchange.com/q/246678",
             "match": "",
             "exclude": "*://chat.*.com/*,SE1.0,*://*/questions/ask",
