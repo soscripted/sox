@@ -35,7 +35,7 @@
     },
 
     markEmployees: function () {
-      // Description: Adds an Stack Overflow logo next to users that *ARE* a Stack Overflow Employee
+      // Description: Adds the Stack Exchange logo next to users that *ARE* Stack Exchange employees
 
       const anchors = [...document.querySelectorAll('.comment a, .deleted-answer-info a, .employee-name a, .user-details a, .question-summary .started a')].filter(el => {
         return !el.parentElement.classList.contains('user-gravatar32') && el.href && el.href.contains('/users/');
