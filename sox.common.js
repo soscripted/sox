@@ -171,6 +171,7 @@
         sitename,
         filter,
         limit,
+        page,
         featureId,
         cacheDuration = 3, // Minutes to cache data for
       } = details;
@@ -197,6 +198,7 @@
       if (filter) queryParams.push(`filter=${filter}`);
       if (order) queryParams.push(`order=${order}`);
       if (limit) queryParams.push(`pagesize=${limit}`);
+      if (page) queryParams.push(`page=${page}`)
       queryParams.push(`sort=${sort}`);
       queryParams.push(`site=${sitename}`);
       queryParams.push(`key=${sox.info.apikey}`);
