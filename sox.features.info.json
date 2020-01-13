@@ -245,7 +245,7 @@
         }],
         "Editing": [{
             "name": "addSBSBtn",
-            "desc": "Add a button to the editor toolbar to start side-by-side editing",
+            "desc": "Add a button to the editor toolbar to start side-by-side editing with the markdown editor and preview",
             "extended_description": "An 'SBS' button is added to the right of the markdown editor toolbar. Clicking it will make the markdown and the preview appear side-by-side",
             "meta": "https://meta.stackexchange.com/q/253112",
             "match": "*://*/questions/*",
