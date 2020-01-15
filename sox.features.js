@@ -84,6 +84,7 @@
         })
       }
 
+      getIds();
       $(document).on('sox-new-comment', getIds);
       $(document).on('sox-new-review-post-appeared', getIds);
     },
