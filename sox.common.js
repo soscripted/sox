@@ -198,7 +198,7 @@
       if (filter) queryParams.push(`filter=${filter}`);
       if (order) queryParams.push(`order=${order}`);
       if (limit) queryParams.push(`pagesize=${limit}`);
-      if (page) queryParams.push(`page=${page}`)
+      if (page) queryParams.push(`page=${page}`);
       queryParams.push(`sort=${sort}`);
       queryParams.push(`site=${sitename}`);
       queryParams.push(`key=${sox.info.apikey}`);
