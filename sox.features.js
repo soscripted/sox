@@ -42,7 +42,7 @@
 
       function getIds() {
         const anchors = [...document.querySelectorAll('.comment a, .deleted-answer-info a, .employee-name a, .user-details a, .question-summary .started a')].filter(el => {
-          return !el.parentElement.classList.contains('user-gravatar32') && $(el).find('.sox-markEmployees-logo') && el.href && el.href.contains('/users/');
+          return !el.parentElement.classList.contains('user-gravatar32') && !$(el).find('.sox-markEmployees-logo').length && el.href && el.href.contains('/users/');
         });
         const ids = [];
 
@@ -74,14 +74,12 @@
             if (!items[i].is_employee) continue;
 
             anchors.filter(el => el.href.contains(`/users/${userId}/`)).forEach(el => {
-              if (!$(el).find('.sox-markEmployees-logo').length) {
-                $(el).append($('<span/>', {
-                  title: 'employee (added by SOX)',
-                }).append($icon.clone()));
-              }
+              $(el).append($('<span/>', {
+                title: 'employee (added by SOX)',
+              }).append($icon.clone()));
             });
           }
-        })
+        });
       }
 
       getIds();
