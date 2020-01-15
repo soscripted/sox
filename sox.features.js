@@ -64,7 +64,7 @@
           sitename: sox.site.url,
           filter: '!*MxJcsv91Tcz6yRH',
           limit: 100,
-          page: page,
+          page,
           featureId: 'markEmployees',
           cacheDuration: 60 * 24, // Cache for 24 hours (in minutes)
         }, items => {
