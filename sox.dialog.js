@@ -28,9 +28,10 @@
       // Array of HTML strings that will be displayed as `li` items if the user has installed a new version.
       const changes = [
         'Fix bugs in various features',
-        'Add feature to  copy markdown for comments',
+        'Add feature to copy markdown for comments',
         'Add feature to add scrolling to room list in usercards in chat',
         'Only run SOX on HTTPS',
+        'Deprecate "add timeline button" feature (now natively implemented!)',
       ];
 
       function addCategory(name) {

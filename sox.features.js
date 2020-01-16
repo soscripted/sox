@@ -2548,20 +2548,18 @@
     },
 
     addTimelineAndRevisionLinks: function() {
-      // Description: Add timeline and revision links to the bottom of each post for quick access to them
+      // Description: Add revision link to the bottom of each post for quick access
 
-      // Wrap the post menu so it shows on multiple lines
-      // Without this, the post-signatures would show on two lines instead
-      $('.post-menu').addClass('sox-addTimelineAndRevisionLinks-wrap');
+      // Note: This feature used to add a timeline button too, but this was natively
+      // implemented as of 2020-16-01, see https://meta.stackexchange.com/a/342316.
+      // The function name is unchanged to newer versions don't auto-remove the feature
+      // for users with it enabled
 
       $('.question, .answer').each(function () {
         const id = $(this).attr('data-questionid') || $(this).attr('data-answerid');
         $(this).find('.post-menu').append($('<a/>', {
           'href': '//' + sox.site.url + '/posts/' + id + '/revisions',
           'text': 'revisions',
-        })).append($('<a/>', {
-          'href': '//' + sox.site.url + '/posts/' + id + '/timeline',
-          'text': 'timeline',
         }));
       });
     },

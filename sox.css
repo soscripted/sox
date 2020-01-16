@@ -585,12 +585,6 @@
     white-space: normal;
 }
 
-/* addTimelineAndRevisionLinks -- for wrapping the post-menu links */
-
-.sox-addTimelineAndRevisionLinks-wrap {
-    flex-wrap: wrap;
-}
-
 /* onlyShowCommentActionsOnHover -- the function just adds this CSS to avoid having to do it in JS*/
 /* thanks @Makyen <https://meta.stackexchange.com/questions/312794/312800#comment1024746_312794> */
 

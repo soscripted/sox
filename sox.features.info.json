@@ -142,7 +142,7 @@
             "exclude": "SE1.0,*://*/questions/ask,*://*/questions/tagged*,*://*/questions/greatest-hits*"
         }, {
             "name": "addTimelineAndRevisionLinks",
-            "desc": "Add timeline and revision links to the bottom of each post for quick access to them",
+            "desc": "Add a revision link to the bottom of each post for quick access",
             "meta": "",
             "match": "*://*/questions/*,*://*/review*",
             "exclude": "*://*/questions/ask,*://*/questions/tagged*,*://*/questions/greatest-hits*",
