@@ -35,45 +35,56 @@
     },
 
     markEmployees: function () {
-      // Description: Adds an Stack Overflow logo next to users that *ARE* a Stack Overflow Employee
+      // Description: Adds the Stack Exchange logo next to users that *ARE* Stack Exchange employees
 
-      const anchors = [...document.querySelectorAll('.comment a, .deleted-answer-info a, .employee-name a, .user-details a, .question-summary .started a')].filter(el => {
-        return !el.parentElement.classList.contains('user-gravatar32') && el.href && el.href.contains('/users/');
-      });
-      const ids = [];
+      const $icon = $('<svg aria-hidden="true" class="sox-markEmployees-logo sox-sprite svg-icon iconStackExchange" width="18" height="18" viewBox="0 0 18 18"><path d="M15 1H3a2 2 0 0 0-2 2v2h16V3a2 2 0 0 0-2-2zM1 13c0 1.1.9 2 2 2h8v3l3-3h1a2 2 0 0 0 2-2v-2H1v2zm16-7H1v4h16V6z"></path></svg>');
+      $icon.css('color', $('.mod-flair').css('color'));
 
-      for (let i = 0; i < anchors.length; i++) {
-        const href = anchors[i].href;
-        const idMatch = href.match(/(\d+)/);
-        if (idMatch && ids.indexOf(idMatch[1]) === -1) ids.push(idMatch[1]);
-      }
-      sox.debug('markEmployees user IDs', ids);
+      function getIds() {
+        const anchors = [...document.querySelectorAll('.comment a, .deleted-answer-info a, .employee-name a, .user-details a, .question-summary .started a')].filter(el => {
+          return !el.parentElement.classList.contains('user-gravatar32') && !$(el).find('.sox-markEmployees-logo').length && el.href && el.href.contains('/users/');
+        });
+        const ids = [];
 
-      // TODO is pagination needed?
-      sox.helpers.getFromAPI({
-        endpoint: 'users',
-        ids,
-        sitename: sox.site.url,
-        filter: '!*MxJcsv91Tcz6yRH',
-        limit: 100,
-        featureId: 'markEmployees',
-        cacheDuration: 60 * 24, // Cache for 24 hours (in minutes)
-      }, items => {
-        sox.debug('markEmployees returned data', items);
-        for (let i = 0; i < items.length; i++) {
-          const userId = items[i].user_id;
-          const isEmployee = items[i].is_employee;
-          if (!isEmployee) continue;
-
-          const $icon = $('<svg aria-hidden="true" class="sox-markEmployees-logo sox-sprite svg-icon iconStackExchange" width="18" height="18" viewBox="0 0 18 18"><path d="M15 1H3a2 2 0 0 0-2 2v2h16V3a2 2 0 0 0-2-2zM1 13c0 1.1.9 2 2 2h8v3l3-3h1a2 2 0 0 0 2-2v-2H1v2zm16-7H1v4h16V6z"></path></svg>');
-          $icon.css('color', $('.mod-flair').css('color'));
-          anchors.filter(el => el.href.contains(`/users/${userId}/`)).forEach(el => {
-            $(el).append($('<span/>', {
-              title: 'employee (added by SOX)',
-            }).append($icon.clone()));
-          });
+        for (let i = 0; i < anchors.length; i++) {
+          const idMatch = anchors[i].href.match(/(\d+)/);
+          if (idMatch && ids.indexOf(idMatch[1]) === -1) ids.push(idMatch[1]);
         }
-      });
+        sox.debug('markEmployees user IDs', ids);
+
+        for (let i = 0; i < Math.ceil(ids.length / 100); i++) {
+          apiCall(i + 1, ids.slice(i * 100, (i * 100) + 100), anchors);
+        }
+      }
+
+      function apiCall(page, ids, anchors) {
+        sox.helpers.getFromAPI({
+          endpoint: 'users',
+          ids,
+          sitename: sox.site.url,
+          filter: '!*MxJcsv91Tcz6yRH',
+          limit: 100,
+          page,
+          featureId: 'markEmployees',
+          cacheDuration: 60 * 24, // Cache for 24 hours (in minutes)
+        }, items => {
+          sox.debug('markEmployees returned data', items);
+          for (let i = 0; i < items.length; i++) {
+            const userId = items[i].user_id;
+            if (!items[i].is_employee) continue;
+
+            anchors.filter(el => el.href.contains(`/users/${userId}/`)).forEach(el => {
+              $(el).append($('<span/>', {
+                title: 'employee (added by SOX)',
+              }).append($icon.clone()));
+            });
+          }
+        });
+      }
+
+      getIds();
+      $(document).on('sox-new-comment', getIds);
+      $(document).on('sox-new-review-post-appeared', getIds);
     },
 
     copyCommentsLink: function() {
