@@ -52,8 +52,8 @@
         }
         sox.debug('markEmployees user IDs', ids);
 
-        for (let i = 1; i < Math.trunc(ids.length / 100) + 2; i++) {
-          apiCall(i, ids.slice(i * 100 - 100, i * 100), anchors);
+        for (let i = 0; i < Math.ceil(ids.length / 100); i++) {
+          apiCall(i + 1, ids.slice(i * 100, (i * 100) + 100), anchors);
         }
       }
 
