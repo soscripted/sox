@@ -2384,7 +2384,7 @@
         const urlToGet = `https://${location.hostname}/review/${location.pathname.split('/')[2]}/stats`;
         $.get(urlToGet, d => {
           const count = +$(d).find('.review-stats-count-current-user').first().text().trim();
-          const width = (count / 20) * 100;
+          const width = count <= 20 ? (count / 20) * 100 : (count / 40) * 100
           const $soxDailyReviewCount = $('#sox-daily-review-count');
           if ($soxDailyReviewCount.length) {
             $soxDailyReviewCount.find('#badge-progress-bar').css('width', width);
