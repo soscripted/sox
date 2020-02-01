@@ -2381,16 +2381,7 @@
       // Description: Adds a progress bar showing how many reviews you have left in the day
 
       function addBar() {
-        const currentUrl = location.href.split('/');
-        const sliced = currentUrl.slice(0, currentUrl.length - 1).join('/');
-        let urlToGet;
-
-        if ($('.reviewable-post').length) {
-          urlToGet = sliced + '/stats';
-        } else {
-          urlToGet = currentUrl.join('/') + '/stats';
-        }
-
+        const urlToGet = `https://${location.hostname}/review/${location.pathname.split('/')[2]}/stats`;
         $.get(urlToGet, d => {
           const count = +$(d).find('.review-stats-count-current-user').first().text().trim();
           const width = (count / 20) * 100;
@@ -2399,14 +2390,15 @@
             $soxDailyReviewCount.find('#badge-progress-bar').css('width', width);
             $soxDailyReviewCount.find('#badge-progress-count').text(count);
           } else {
-            $('.subheader.tools-rev').append(`<div id="sox-daily-review-count" title="your daily review cap in this queue" class="review-badge-progress">
-                            <div class="meter" style="width: 100px;margin-top: 14px;margin-right: 15px;height: 9px;float: right;">
-                                <div id="badge-progress-bar" style="width: ` + width + `%;">
-                                    <div id="badge-progress-bar-vis" style="border:none"></div>
-                                </div>
-                            </div>
-                            <div id="badge-progress-count">` + count + `</div>
-                        </div>`);
+            $('.subheader.tools-rev').append(
+            `<div id="sox-daily-review-count" title="your daily review cap in this queue" class="review-badge-progress">
+               <div class="meter" style="width: 100px;margin-top: 14px;margin-right: 15px;height: 9px;float: right;">
+                 <div id="badge-progress-bar" style="width: ${width}%;">
+                   <div id="badge-progress-bar-vis" style="border:none"></div>
+                 </div>
+               </div>
+               <div id="badge-progress-count">${count}</div>
+             </div>`);
           }
         });
       }
