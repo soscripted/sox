@@ -700,3 +700,11 @@
     height: 100%;
     overflow: auto;
 }
+
+/* tabularReviewerStats -- for the table with user's stats */
+.sox-tabularReviewerStats-table tr,
+.sox-tabularReviewerStats-table th,
+.sox-tabularReviewerStats-table td:not(:first-child) {
+  border: 1px solid #cccccc;
+  border-collapse: collapse;
+}
