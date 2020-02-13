@@ -2381,8 +2381,7 @@
       // Description: Adds a progress bar showing how many reviews you have left in the day
 
       function addBar() {
-        const urlToGet = `https://${location.hostname}/review/${location.pathname.split('/')[2]}/stats`;
-        $.get(urlToGet, d => {
+        $.get(`https://${location.hostname}/review/${location.pathname.split('/')[2]}/stats`, d => {
           const count = +$(d).find('.review-stats-count-current-user').first().text().trim();
           const width = count <= 20 ? (count / 20) * 100 : (count / 40) * 100
           const $soxDailyReviewCount = $('#sox-daily-review-count');
@@ -2390,15 +2389,17 @@
             $soxDailyReviewCount.find('#badge-progress-bar').css('width', width);
             $soxDailyReviewCount.find('#badge-progress-count').text(count);
           } else {
-            $('.subheader.tools-rev').append(
-            `<div id="sox-daily-review-count" title="your daily review cap in this queue" class="review-badge-progress">
-               <div class="meter" style="width: 100px;margin-top: 14px;margin-right: 15px;height: 9px;float: right;">
-                 <div id="badge-progress-bar" style="width: ${width}%;">
-                   <div id="badge-progress-bar-vis" style="border:none"></div>
+            if ($('#sox-dailyReviewBar').length) return;
+            $('#badge-progress').after(
+            `<div class="grid c-pointer float-right mt16 h12" id="sox-dailyReviewBar">
+               <div class="grid--cell mr4 fs-caption">${count}</div>
+                 <div class="grid--cell h12 pt2">
+                 <div class="s-progress mr16 h8 ws1">
+                   <div class="s-progress--bar h8" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: ${width}%"></div>
                  </div>
                </div>
-               <div id="badge-progress-count">${count}</div>
-             </div>`);
+             </div>`
+            );
           }
         });
       }
