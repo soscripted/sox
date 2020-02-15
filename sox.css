@@ -19,7 +19,6 @@
 }
 
 #sox-settings-dialog .modal-content {
-    /* max-height: calc(100vh - 175px); */
     max-height: none;
     min-height: inherit;
 }
@@ -59,7 +58,7 @@
 }
 
 #sox-settings-dialog-features {
-    /* padding: 0 10px 10px 10px; */
+    padding: 0 10px 10px 10px;
     overflow-y: scroll;
     height: calc(100vh - 250px);
 }
