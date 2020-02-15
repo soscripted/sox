@@ -198,7 +198,7 @@
           const answerer = cell.querySelector('.post-signature:nth-last-of-type(1) a');
           if (!answerer) continue;
           const answererID = answerer.href.match(/\d+/)[0];
-          const commentUsers = $(cell).next().next().find('.comments .comment-user');
+          const commentUsers = $(cell).next().find('.comments .comment-user');
 
           commentUsers.each(function() {
             if (!this.href) return true;
