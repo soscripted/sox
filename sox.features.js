@@ -2383,24 +2383,20 @@
       function addBar() {
         $.get(`https://${location.hostname}/review/${location.pathname.split('/')[2]}/stats`, d => {
           const count = +$(d).find('.review-stats-count-current-user').first().text().trim();
-          const width = count <= 20 ? (count / 20) * 100 : (count / 40) * 100
+          const width = count <= 20 ? (count / 20) * 100 : (count / 40) * 100;
           const $soxDailyReviewCount = $('#sox-daily-review-count');
-          if ($soxDailyReviewCount.length) {
-            $soxDailyReviewCount.find('#badge-progress-bar').css('width', width);
-            $soxDailyReviewCount.find('#badge-progress-count').text(count);
-          } else {
-            if ($('#sox-dailyReviewBar').length) return;
-            $('#badge-progress').after(
+
+          if ($('#sox-dailyReviewBar').length) return;
+          $('#badge-progress').after(
             `<div class="grid c-pointer float-right mt16 h12" id="sox-dailyReviewBar">
-               <div class="grid--cell mr4 fs-caption">${count}</div>
-                 <div class="grid--cell h12 pt2">
-                 <div class="s-progress mr16 h8 ws1">
-                   <div class="s-progress--bar h8" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: ${width}%"></div>
-                 </div>
-               </div>
-             </div>`
-            );
-          }
+              <div class="grid--cell mr4 fs-caption">${count}</div>
+                <div class="grid--cell h12 pt2">
+                <div class="s-progress mr16 h8 ws1">
+                  <div class="s-progress--bar h8" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: ${width}%"></div>
+                </div>
+              </div>
+            </div>`
+          );
         });
       }
 
