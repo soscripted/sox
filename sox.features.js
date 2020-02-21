@@ -1839,7 +1839,7 @@
         if ($('.sox-tabularReviewerStats-table').length || $('.review-actions').children().length == 5) return;
         let table = '<table class="sox-tabularReviewerStats-table"><tbody><tr><th align="center">User</th><th>Approved</th><th>Rejected</th><th>Improved</th></tr>';
 
-        $('.review-more-instructions ul li').each(function() {
+        $('.js-review-more-instructions ul li').each(function() {
           const $this = $(this);
           const username = $this.find('a').text() ? $this.find('a').text() : 'Anonymous</span>'
           const link = $this.find('a').attr('href') ? `a href="${$this.find('a').attr('href')}"` : 'span'
@@ -1848,13 +1848,13 @@
         });
         table += '</tbody></table>';
 
-        $('.review-more-instructions *').remove();
-        $('.review-more-instructions').append(table);
+        $('.js-review-more-instructions *').remove();
+        $('.js-review-more-instructions').append(table);
         $('.sox-tabularReviewerStats-table *').css('padding', '4px');
       }
 
       displayStats();
-      sox.helpers.observe(target, '.review-more-instructions', () => {displayStats()});
+      sox.helpers.observe(target, '.js-review-more-instructions', () => {displayStats()});
     },
 
     linkedToFrom: function() {
