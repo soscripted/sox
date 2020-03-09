@@ -1850,7 +1850,6 @@
 
         $('.js-review-more-instructions *').remove();
         $('.js-review-more-instructions').append(table);
-        $('.sox-tabularReviewerStats-table *').css('padding', '4px');
       }
 
       displayStats();

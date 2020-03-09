@@ -707,3 +707,7 @@
   border: 1px solid #cccccc;
   border-collapse: collapse;
 }
+
+.sox-tabularReviewerStats-table th, .sox-tabularReviewerStats-table td {
+    padding: 4px;
+}
