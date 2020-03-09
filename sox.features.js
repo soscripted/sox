@@ -1831,45 +1831,30 @@
 
     tabularReviewerStats: function() {
       // Description: Display reviewer stats on /review/suggested-edits in table form
-      // Idea by lolreppeatlol @ http://meta.stackexchange.com/a/277446/260841 :)
+      // Idea by lolreppeatlol @ http://meta.stackexchange.com/a/277446 :)
 
       const target = document.querySelector('.mainbar-full');
-      sox.helpers.observe(target, '.review-more-instructions', () => {
-        const info = {};
-        $('.review-more-instructions ul:eq(0) li').each(function() {
-          const text = $(this).text();
-          const username = $(this).find('a').text();
-          const link = $(this).find('a').attr('href');
-          const approved = text.match(/approved (.*?)[a-zA-Z]/)[1];
-          const rejected = text.match(/rejected (.*?)[a-zA-Z]/)[1];
-          const improved = text.match(/improved (.*?)[a-zA-Z]/)[1];
-          info[username] = {
-            'link': link,
-            'approved': approved,
-            'rejected': rejected,
-            'improved': improved,
-          };
-        });
-        const $editor = $('.review-more-instructions ul:eq(1) li');
-        if (!$editor.length) return;
-        const editorName = $editor.find('a').text();
-        const editorLink = $editor.find('a').attr('href');
-        const editorApproved = $editor.clone().find('a').remove().end().text().match(/([0-9]+)/g)[0];
-        //`+` matches 'one or more' to make sure it works on multi-digit numbers!
-        const editorRejected = $editor.clone().find('a').remove().end().text().match(/([0-9]+)/g)[1]; //https://stackoverflow.com/q/11347779/3541881 for fixing https://github.com/soscripted/sox/issues/279
-        info[editorName] = {
-          'link': editorLink,
-          'approved': editorApproved,
-          'rejected': editorRejected,
-        };
-        let table = '<table><tbody><tr><th style=\'padding: 4px;\'>User</th><th style=\'padding: 4px;\'>Approved</th><th style=\'padding: 4px;\'>Rejected</th><th style=\'padding: 4px;\'>Improved</th style=\'padding: 4px;\'></tr>';
-        $.each(info, (user, details) => {
-          table += '<tr><td style=\'padding: 4px;\'><a href=\'' + details.link + '\'>' + user + '</a></td><td style=\'padding: 4px;\'>' + details.approved + '</td><td style=\'padding: 4px;\'>' + details.rejected + '</td><td style=\'padding: 4px;\'>' + (details.improved ? details.improved : 'N/A') + '</td></tr>';
+
+      function displayStats() {
+        if ($('.sox-tabularReviewerStats-table').length || $('.review-actions').children().length == 5) return;
+        let table = '<table class="sox-tabularReviewerStats-table"><tbody><tr><th align="center">User</th><th>Approved</th><th>Rejected</th><th>Improved</th></tr>';
+
+        $('.js-review-more-instructions ul li').each(function() {
+          const $this = $(this);
+          const username = $this.find('a').text() ? $this.find('a').text() : 'Anonymous</span>'
+          const link = $this.find('a').attr('href') ? `a href="${$this.find('a').attr('href')}"` : 'span'
+          const state = $this.text().match(/\d+(?=\sedit\ssuggestions?)/g);
+          table += `<tr><td><${link}>${username}</td><td>${state[0]}</td><td>${state[1]}</td><td>${state[2] ? state[2] : 'N/A'}</td></tr>`;
         });
         table += '</tbody></table>';
-        $('.review-more-instructions p, .review-more-instructions ul').remove();
-        $('.review-more-instructions').append(table);
-      });
+
+        $('.js-review-more-instructions *').remove();
+        $('.js-review-more-instructions').append(table);
+        $('.sox-tabularReviewerStats-table *').css('padding', '4px');
+      }
+
+      displayStats();
+      sox.helpers.observe(target, '.js-review-more-instructions', () => {displayStats()});
     },
 
     linkedToFrom: function() {
