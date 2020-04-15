@@ -198,7 +198,7 @@
           const answerer = cell.querySelector('.post-signature:nth-last-of-type(1) a');
           if (!answerer) continue;
           const answererID = answerer.href.match(/\d+/)[0];
-          const commentUsers = $(cell).next().next().find('.comments .comment-user');
+          const commentUsers = $(cell).next().find('.comments .comment-user');
 
           commentUsers.each(function() {
             if (!this.href) return true;
@@ -1831,45 +1831,29 @@
 
     tabularReviewerStats: function() {
       // Description: Display reviewer stats on /review/suggested-edits in table form
-      // Idea by lolreppeatlol @ http://meta.stackexchange.com/a/277446/260841 :)
+      // Idea by lolreppeatlol @ http://meta.stackexchange.com/a/277446 :)
 
       const target = document.querySelector('.mainbar-full');
-      sox.helpers.observe(target, '.review-more-instructions', () => {
-        const info = {};
-        $('.review-more-instructions ul:eq(0) li').each(function() {
-          const text = $(this).text();
-          const username = $(this).find('a').text();
-          const link = $(this).find('a').attr('href');
-          const approved = text.match(/approved (.*?)[a-zA-Z]/)[1];
-          const rejected = text.match(/rejected (.*?)[a-zA-Z]/)[1];
-          const improved = text.match(/improved (.*?)[a-zA-Z]/)[1];
-          info[username] = {
-            'link': link,
-            'approved': approved,
-            'rejected': rejected,
-            'improved': improved,
-          };
-        });
-        const $editor = $('.review-more-instructions ul:eq(1) li');
-        if (!$editor.length) return;
-        const editorName = $editor.find('a').text();
-        const editorLink = $editor.find('a').attr('href');
-        const editorApproved = $editor.clone().find('a').remove().end().text().match(/([0-9]+)/g)[0];
-        //`+` matches 'one or more' to make sure it works on multi-digit numbers!
-        const editorRejected = $editor.clone().find('a').remove().end().text().match(/([0-9]+)/g)[1]; //https://stackoverflow.com/q/11347779/3541881 for fixing https://github.com/soscripted/sox/issues/279
-        info[editorName] = {
-          'link': editorLink,
-          'approved': editorApproved,
-          'rejected': editorRejected,
-        };
-        let table = '<table><tbody><tr><th style=\'padding: 4px;\'>User</th><th style=\'padding: 4px;\'>Approved</th><th style=\'padding: 4px;\'>Rejected</th><th style=\'padding: 4px;\'>Improved</th style=\'padding: 4px;\'></tr>';
-        $.each(info, (user, details) => {
-          table += '<tr><td style=\'padding: 4px;\'><a href=\'' + details.link + '\'>' + user + '</a></td><td style=\'padding: 4px;\'>' + details.approved + '</td><td style=\'padding: 4px;\'>' + details.rejected + '</td><td style=\'padding: 4px;\'>' + (details.improved ? details.improved : 'N/A') + '</td></tr>';
+
+      function displayStats() {
+        if ($('.sox-tabularReviewerStats-table').length || $('.review-actions').children().length == 5) return;
+        let table = '<table class="sox-tabularReviewerStats-table"><tbody><tr><th align="center">User</th><th>Approved</th><th>Rejected</th><th>Improved</th></tr>';
+
+        $('.js-review-more-instructions ul li').each(function() {
+          const $this = $(this);
+          const username = $this.find('a').text() ? $this.find('a').text() : 'Anonymous</span>'
+          const link = $this.find('a').attr('href') ? `a href="${$this.find('a').attr('href')}"` : 'span'
+          const state = $this.text().match(/\d+(?=\sedit\ssuggestions?)/g);
+          table += `<tr><td><${link}>${username}</td><td>${state[0]}</td><td>${state[1]}</td><td>${state[2] ? state[2] : 'N/A'}</td></tr>`;
         });
         table += '</tbody></table>';
-        $('.review-more-instructions p, .review-more-instructions ul').remove();
-        $('.review-more-instructions').append(table);
-      });
+
+        $('.js-review-more-instructions *').remove();
+        $('.js-review-more-instructions').append(table);
+      }
+
+      displayStats();
+      sox.helpers.observe(target, '.js-review-more-instructions', () => {displayStats()});
     },
 
     linkedToFrom: function() {
@@ -2381,33 +2365,22 @@
       // Description: Adds a progress bar showing how many reviews you have left in the day
 
       function addBar() {
-        const currentUrl = location.href.split('/');
-        const sliced = currentUrl.slice(0, currentUrl.length - 1).join('/');
-        let urlToGet;
-
-        if ($('.reviewable-post').length) {
-          urlToGet = sliced + '/stats';
-        } else {
-          urlToGet = currentUrl.join('/') + '/stats';
-        }
-
-        $.get(urlToGet, d => {
+        $.get(`https://${location.hostname}/review/${location.pathname.split('/')[2]}/stats`, d => {
           const count = +$(d).find('.review-stats-count-current-user').first().text().trim();
-          const width = (count / 20) * 100;
+          const width = count <= 20 ? (count / 20) * 100 : (count / 40) * 100;
           const $soxDailyReviewCount = $('#sox-daily-review-count');
-          if ($soxDailyReviewCount.length) {
-            $soxDailyReviewCount.find('#badge-progress-bar').css('width', width);
-            $soxDailyReviewCount.find('#badge-progress-count').text(count);
-          } else {
-            $('.subheader.tools-rev').append(`<div id="sox-daily-review-count" title="your daily review cap in this queue" class="review-badge-progress">
-                            <div class="meter" style="width: 100px;margin-top: 14px;margin-right: 15px;height: 9px;float: right;">
-                                <div id="badge-progress-bar" style="width: ` + width + `%;">
-                                    <div id="badge-progress-bar-vis" style="border:none"></div>
-                                </div>
-                            </div>
-                            <div id="badge-progress-count">` + count + `</div>
-                        </div>`);
-          }
+
+          if ($('#sox-dailyReviewBar').length) return;
+          $('#badge-progress').after(
+            `<div class="grid c-pointer float-right mt16 h12" id="sox-dailyReviewBar">
+              <div class="grid--cell mr4 fs-caption">${count}</div>
+                <div class="grid--cell h12 pt2">
+                <div class="s-progress mr16 h8 ws1">
+                  <div class="s-progress--bar h8" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: ${width}%"></div>
+                </div>
+              </div>
+            </div>`
+          );
         });
       }
 

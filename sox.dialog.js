@@ -285,6 +285,7 @@
           $('#sox-settings-dialog').toggle();
           if ($soxSettingsDialog.is(':visible')) {
             $(this).addClass('topbar-icon-on');
+            $soxSettingsDialog.find('#search').focus();
           } else {
             $(this).removeClass('topbar-icon-on');
           }
