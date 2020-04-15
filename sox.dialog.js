@@ -98,12 +98,7 @@
             e.preventDefault(); //don't uncheck the checkbox
 
             const $settingsPanel = $('#feature-settings-' + name);
-
-            if ($settingsPanel.is(':visible')) {
-              $settingsPanel.fadeOut();
-            } else {
-              $settingsPanel.fadeIn();
-            }
+            $settingsPanel.is(':visible') ? $settingsPanel.fadeOut() : $settingsPanel.fadeIn();
           });
 
           const optionalSettings = GM_getValue('SOX-' + name + '-settings', -1);
@@ -143,21 +138,12 @@
 
           const $feature = $soxSettingsDialogFeatures.find('input#' + name).parent();
           $feature.append($settingsToggle);
-
-          if ($div.has('.sox-sprite-info').length) {
-            $info.after($settingsDiv);
-          } else {
-            $feature.append($settingsDiv);
-          }
+          $div.has('.sox-sprite-info').length ? $info.after($settingsDiv) : $feature.append($settingsDiv);
         }
       }
 
       // display sox version number in the dialog
-      if (version != 'unknown' && version !== null) {
-        $soxSettingsDialogVersion.text(' v' + (version ? version.toLowerCase() : ''));
-      } else {
-        $soxSettingsDialogVersion.text('');
-      }
+      version != 'unknown' && version !== null ? $soxSettingsDialogVersion.text(' v' + (version ? version.toLowerCase() : '')) : $soxSettingsDialogVersion.text('');
 
       if (version !== lastVersionInstalled) {
         GM_setValue('SOX-lastVersionInstalled', version);
@@ -222,12 +208,7 @@
         const $icon = $(this).find('i');
 
         const checked = $icon.hasClass('fas');
-
-        if (checked) {
-          $icon.removeClass('fas').addClass('far');
-        } else {
-          $icon.removeClass('far').addClass('fas');
-        }
+        checked ? $icon.removeClass('fas').addClass('far') : $icon.removeClass('far').addClass('fas');
 
         $soxSettingsDialogFeatures.find('input').prop('checked', !checked);
       });
@@ -259,11 +240,7 @@
           const searchQuery = $(this).val();
           $('.sox-new-version-details').hide();
           $('#sox-settings-dialog .sox-feature').each(function() {
-            if ($(this).find('label').text().toLowerCase().indexOf(searchQuery) == -1) {
-              $(this).hide();
-            } else {
-              $(this).show();
-            }
+            $(this).find('label').text().match(new RegExp(searchQuery, 'i')) ? $(this).show() : $(this).hide();
           });
         } else {
           $('.category, .features, #sox-settings-dialog .sox-feature, .sox-new-version-details').fadeIn();
