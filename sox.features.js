@@ -349,9 +349,9 @@
           const [[name, text]] = Object.entries(opt);
           $('#currentValues').append(`
           <div>
-            ${name} - <i>${text}</i>
-            <button class="grid--cell s-btn s-btn__muted discard-question sox-editComment-editDialogButton" data-name="${name}">Edit</button>
-            <button class="grid--cell s-btn s-btn__danger discard-question sox-editComment-deleteDialogButton" data-name="${name}">Delete</button>
+            <section>${name}</section><i><section style="padding-left: 10px">${text}</section></i>
+            <button class="grid--cell s-btn sox-editComment-editDialogButton" data-name="${name}">Edit</button>
+            <button class="grid--cell s-btn s-btn__danger sox-editComment-deleteDialogButton" data-name="${name}">Delete</button>
           </div>`);
         });
         addCheckboxes();
@@ -366,13 +366,27 @@
           },
           'html': `<div id="currentValues" class="sox-editComment-currentValues"></div>
                   <br />
-                  <h3>Add a custom reason</h3>
-                  Display Reason:	<input type="text" id="displayReason">
-                  <br />
-                  Actual Reason: <input type="text" id="actualReason">
-                  <br />
-                  <input type="button" id="submitUpdate" value="Submit">
-                  <input type="button" id="resetEditReasons" style="float:right;" value="Reset">`,
+                  <h3 style="color: var(--fc-dark)">Add a custom reason</h3>
+
+                  <div class="grid gs4 gsy fd-column" style="display: inline">
+                      <div class="grid--cell" style="float: left">
+                          <label class="d-block s-label" style="padding-top: 5px">Display reason: </label>
+                      </div>
+                      <div class="grid ps-relative" style="padding-left: 5px">
+                          <input class="s-input" type="text" style="width: 40% !important" id="displayReason">
+                      </div>
+                  </div>
+                  <div class="grid gs4 gsy fd-column" style="display: inline">
+                      <div class="grid--cell" style="float: left">
+                          <label class="d-block s-label" style="padding-top: 5px">Actual reason: </label>
+                      </div>
+                      <div class="grid ps-relative" style="padding-left: 5px">
+                          <input class="s-input" type="text" style="width: 40% !important" id="actualReason">
+                      </div>
+                  </div>
+
+                  <input class="s-btn s-btn__primary" type="button" id="submitUpdate" value="Submit">
+                  <input class="s-btn s-btn__primary" type="button" id="resetEditReasons" style="float:right;" value="Reset">`,
         });
 
         $(document).on('click', '#resetEditReasons', () => { //manual reset
@@ -399,7 +413,7 @@
           options.forEach(opt => {
             const [[name, text]] = Object.entries(opt);
             $reasons.append(`
-              <label class="sox-editComment-reason"><input type="checkbox" value="${text}"</input>${name}</label>&nbsp;
+              <label class="sox-editComment-reason"><input class="s-checkbox" type="checkbox" value="${text}"</input>${name}</label>&nbsp;
             `);
           });
 
@@ -435,15 +449,16 @@
         const options = getOptions();
         const index = options.findIndex(opt => opt[optionToEdit]);
 
-        const [[name, text]] = Object.entries(options[index]);
-        const newName = window.prompt('Enter new name', name);
-        const newText = window.prompt('Enter new text', text);
+        $(this).html('Save').addClass('sox-editComment-saveDialogButton').parent().find('section').attr('contenteditable', true).css('border', '1px solid var(--black-200)');
+        $(document).on('click', '.sox-editComment-saveDialogButton', function() {
+          $(this).html('Edit').removeClass('sox-editComment-saveDialogButton').parent().find('section').attr('contenteditable', true).css('border', 'none');
+          const newName = $(this).parent().find('section').first().html();
+          const newText = $(this).parent().find('section').eq(1).html();
 
-        if (!newName || !newText) return;
-
-        options[index] = { [newName]: newText };
-        saveOptions(options);
-        addOptionsToDialog(); //display the items again (update them)
+          options[index] = { [newName]: newText };
+          saveOptions(options);
+          addOptionsToDialog(); //display the items again (update them)
+        });
       });
 
       $(document).on('click', '#dialogEditReasons #submitUpdate', () => { //Click handler to update the array with custom value
