@@ -1449,10 +1449,12 @@
 
     addAuthorNameToInboxNotifications: function(settings) {
       // Description: To add the author's name to inbox notifications
+
       function setAuthorName(node) {
         //for https://github.com/soscripted/sox/issues/347
         const prependToMessage = Object.keys(settings).length !== 0 ? settings.addNameBeforeMessageOrAtTop : false;
         const link = node.firstElementChild.href;
+        if (!link) return;
         let id;
         const matches = {
           comments: ['posts/comments', '!SWJnaN4ZecdHc*iADu'],
@@ -1461,13 +1463,9 @@
         };
 
         let filter;
-
-        if (!link) return;
-
         const sitename = sox.helpers.getSiteNameFromLink(link);
 
         let apiCallType = null;
-
         for (const key in matches) {
           if (matches.hasOwnProperty(key) && link.indexOf(matches[key][0]) > -1) {
             apiCallType = key;
@@ -1519,7 +1517,7 @@
       const PROCESSED_CLASS = 'sox-authorNameAdded';
       const MAX_PROCESSED_AT_ONCE = 20;
 
-      const target = document.querySelector('.js-secondary-topbar-links');
+      const target = document.querySelector('.-secondary');
       if (target) {
         sox.helpers.observe(target, '.inbox-item', () => {
           const inboxDialog = document.getElementsByClassName(inboxClass)[0];
