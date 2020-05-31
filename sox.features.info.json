@@ -161,12 +161,6 @@
             "match": "*://*/questions*",
             "exclude": "*://*/questions/ask"
         }, {
-            "name": "hideHowToAskWhenZoomed",
-            "desc": "Hide the 'How to ask/format/tag' yellow boxes that appear when asking a question whilst zoomed in",
-            "meta": "",
-            "match": "*://*/questions/ask",
-            "exclude": ""
-        }, {
             "name": "openImagesAsModals",
             "desc": "Open imgur images as larger modals on click",
             "extended_description": "When clicking on an image that is hosted on Stack Exchange's imgur account, a modal will open showing a larger version of the image. If you still want to open the image in a new tab, there is a 'source' link in the modal.",
