@@ -2713,10 +2713,10 @@
         id: 'sox-linked-image-modal',
       };
 
-      const posts = [...document.querySelectorAll('.question, .answer')];
-      posts.forEach(post => {
-        [...post.querySelectorAll('img')].forEach(img => {
-          if (!img.src || !img.src.includes('i.stack.imgur.com')) return;
+      function showModalOnclick() {
+        const posts = [...document.querySelectorAll('.post-text img, .comment-copy img')];
+        posts.forEach(img => {
+          if (!img.src || !img.src.match(/i(?:\.stack)?\.imgur\.com\/[a-zA-Z0-9]*\.png$/)) return;
 
           img.addEventListener('click', e => {
             e.preventDefault();
@@ -2725,10 +2725,11 @@
             modalAttributes.header = `SOX: Linked Image <a class='sox-openImagesAsModals-sourceLink' target='_blank' rel='noopener noreferrer' href='${img.src}'>source</a>`;
             const $modal = sox.helpers.createModal(modalAttributes);
             $modal.find('.sox-custom-dialog-content').html(`<img width='100%' height='100%' src='${img.src}' />`);
-            if (!document.getElementById('#sox-linked-image-modal')) $('body').append($modal);
+            if (!document.getElementById('sox-linked-image-modal')) $('body').append($modal);
           });
         });
-      });
+      }
+      setTimeout(showModalOnclick, 2500); // autoShowCommentImages runs after 2 seconds, so this actually never executes!
     },
 
     addTagsToHNQs: function () {
