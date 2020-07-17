@@ -1706,13 +1706,13 @@
     hideCommunityBulletin: function() {
       // Description: Hides the Community Bulletin module from the sidebar
 
-      $('#sidebar .community-bulletin').remove();
+      $('#sidebar').children().first().remove();
     },
 
     hideJustHotMetaPosts: function() {
       // Description: Hide just the 'Hot Meta Posts' sections in the Community Bulletin
 
-      const $hotMetaPostsHeader = $('#sidebar .community-bulletin .related').find('div:contains("Hot Meta Posts")');
+      const $hotMetaPostsHeader = $('#sidebar div:contains("Hot Meta Posts"):eq(1)');
       if ($hotMetaPostsHeader.length) {
         $hotMetaPostsHeader.nextAll().remove();
         $hotMetaPostsHeader.remove();
