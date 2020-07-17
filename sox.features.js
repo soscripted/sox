@@ -2560,17 +2560,6 @@
       removeMessage(document.getElementById('overlay-header'));
     },
 
-    hideHowToAskWhenZoomed: function() {
-      // Description: Hides the 'How to ask/format/tag' yellow boxes that appear when asking a question whilst zoomed in
-
-      const target = document.getElementById('question-form');
-      sox.helpers.observe(target, '.js-help-pointer', el => {
-        if ($(el).text().match(/(How to Ask)|(How to Format)|(How to Tag)/gi)) {
-          $(el).remove();
-        }
-      });
-    },
-
     addOnTopicLinkToSiteSwitcher: function() {
       // Description: Replaces 'help' with an 'on-topic' link in the site switcher dropdown
 
