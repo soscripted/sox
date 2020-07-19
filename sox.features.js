@@ -37,19 +37,17 @@
     markEmployees: function () {
       // Description: Adds the Stack Exchange logo next to users that *ARE* Stack Exchange employees
 
-      const $icon = $('<svg aria-hidden="true" class="sox-markEmployees-logo sox-sprite svg-icon iconStackExchange" width="18" height="18" viewBox="0 0 18 18"><path d="M15 1H3a2 2 0 0 0-2 2v2h16V3a2 2 0 0 0-2-2zM1 13c0 1.1.9 2 2 2h8v3l3-3h1a2 2 0 0 0 2-2v-2H1v2zm16-7H1v4h16V6z"></path></svg>');
-      $icon.css('color', $('.mod-flair').css('color'));
+      const $icon = '<svg style="color:' + $('.mod-flair').css('color') + '" aria-hidden="true" class="sox-markEmployees-logo sox-sprite svg-icon iconStackExchange" width="18" height="18" viewBox="0 0 18 18"><path d="M15 1H3a2 2 0 0 0-2 2v2h16V3a2 2 0 0 0-2-2zM1 13c0 1.1.9 2 2 2h8v3l3-3h1a2 2 0 0 0 2-2v-2H1v2zm16-7H1v4h16V6z"></path></svg>';
+      const logoSpan = document.createElement('span');
+      logoSpan.className = 'sox-markEmployees';
+      logoSpan.title = 'employee (added by SOX)';
+      logoSpan.innerHTML = $icon;
 
       function getIds() {
-        const anchors = [...document.querySelectorAll('.comment a, .deleted-answer-info a, .employee-name a, .user-details a, .question-summary .started a')].filter(el => {
-          return !el.parentElement.classList.contains('user-gravatar32') && !$(el).find('.sox-markEmployees-logo').length && el.href && el.href.contains('/users/');
+        const anchors = [...document.querySelectorAll('a.comment-user, .user-details a, .question-summary .started a')].filter(el => {
+          return ![...el.children].filter(el => el.classList.contains('sox-markEmployees')).length && el.href && el.href.match(/\/users\/\d+/);
         });
-        const ids = [];
-
-        for (let i = 0; i < anchors.length; i++) {
-          const idMatch = anchors[i].href.match(/(\d+)/);
-          if (idMatch && ids.indexOf(idMatch[1]) === -1) ids.push(idMatch[1]);
-        }
+        const ids = [...new Set(anchors.map(el => el.href.match(/(\d+)/)[0]))];
         sox.debug('markEmployees user IDs', ids);
 
         for (let i = 0; i < Math.ceil(ids.length / 100); i++) {
@@ -70,13 +68,10 @@
         }, items => {
           sox.debug('markEmployees returned data', items);
           for (let i = 0; i < items.length; i++) {
-            const userId = items[i].user_id;
             if (!items[i].is_employee) continue;
-
+            const userId = items[i].user_id;
             anchors.filter(el => el.href.contains(`/users/${userId}/`)).forEach(el => {
-              $(el).append($('<span/>', {
-                title: 'employee (added by SOX)',
-              }).append($icon.clone()));
+              el.appendChild(logoSpan.cloneNode(true));
             });
           }
         });
