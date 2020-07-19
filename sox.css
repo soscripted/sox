@@ -709,3 +709,13 @@
 .sox-tabularReviewerStats-table th, .sox-tabularReviewerStats-table td {
     padding: 4px;
 }
+
+/* stickyVoteButtons -- for the vote buttons on the left of the post */
+.sox-stickyVoteButtons > .js-voting-container {
+    position: -webkit-sticky;
+    position: sticky;
+}
+
+.sox-stickyVoteButtons .s-popover {
+    width: max-content;
+}

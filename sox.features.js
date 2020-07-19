@@ -911,12 +911,11 @@
       // https://github.com/shu8/SE_OptionalFeatures/pull/14:
       // https://github.com/shu8/Stack-Overflow-Optional-Features/issues/28: Thanks @SnoringFrog for fixing this!
 
-      $('.votecell > .js-voting-container').css({ //.votecell is necessary; e.g., the number of votes of questions on the Questions list for a site uses the .vote class too
-        'position': '-webkit-sticky',
-        // eslint-disable-next-line no-dupe-keys
-        'position': 'sticky',
-        'top': parseInt($('.container').css('margin-top'), 10) + parseInt($('body').css('padding-top'), 10), //Seems like most sites use margin-top on the container, but Meta and SO use padding on the body
-      });
+      // .votecell is necessary; e.g., the number of votes of questions on the Questions list for a site uses the .vote class too
+      $('.votecell').addClass('sox-stickyVoteButtons');
+      $('.votecell > .js-voting-container').css('top',
+        parseInt($('.container').css('margin-top'), 10) + parseInt($('body').css('padding-top'), 10), // Seems like most sites use margin-top on the container, but Meta and SO use padding on the body
+      );
     },
 
     titleEditDiff: function() {
