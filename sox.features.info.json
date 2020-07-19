@@ -379,7 +379,7 @@
             "desc": "Show HNQ tags on hover in the sidebar",
             "extended_description": "When hovering over a question title in the Hot Network Questions sidebar, the question's tags from the originating site will be shown",
             "meta": "",
-            "match": "*://*/questions/*",
+            "match": "*://*/*",
             "exclude": "SE1.0",
             "usesApi": true
         }],

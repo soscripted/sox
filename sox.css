@@ -34,6 +34,8 @@
 
 #sox-settings-dialog #search-container {
     min-height: 0;
+    width: 570px;
+    left: 10px;
 }
 
 #sox-settings-dialog #search-container .sox-sprite-search {
@@ -53,8 +55,7 @@
 }
 
 #sox-settings-dialog #search-container #search {
-    width: 490px;
-    text-indent: 20px;
+    max-width: 90%;
 }
 
 #sox-settings-dialog-features {
@@ -69,7 +70,7 @@
 }
 
 #sox-settings-dialog-features .modal-content div:hover {
-    background-color: #f7f8f8;
+    background-color: var(--black-075);
 }
 
 #sox-settings-dialog-features .modal-content label>input {
@@ -88,7 +89,7 @@
 
 #sox-settings-dialog-actions .action {
     float: right;
-    padding: 11px;
+    padding: 13px 11px;
 }
 
 #sox-settings-dialog .sox-new-version-item {
@@ -108,10 +109,6 @@
     height: 24px !important;
 }
 
-.sox-settings-button:hover {
-    color: #999;
-}
-
 #sox-settings-dialog-check-toggle>i {
     padding: 14px 0;
 }
@@ -127,7 +124,7 @@
 
 .sox-feature-info,
 .sox-feature-settings {
-    background-color: whitesmoke;
+    background-color: var(--black-025);
     border-radius: 9px;
     margin-left: 20px;
     padding: 8px;
@@ -169,6 +166,7 @@
     padding: 10px;
     border-radius: 9px;
     background-color: lightgrey;
+    color: #3c4146; /* dark mode compatibility */
     cursor: pointer;
 }
 

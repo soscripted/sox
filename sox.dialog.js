@@ -46,7 +46,7 @@
 
         const $content = $('<div/>', {
           id: name,
-          class: 'modal-content features',
+          'class': 'modal-content features',
         });
         $div.append($h3);
 
@@ -76,6 +76,7 @@
         const $label = $('<label/>');
         const $input = $('<input/>', {
           id: name,
+          'class': 's-checkbox',
           type: 'checkbox',
         }).prop('disabled', blockFeatureSelection);
 
@@ -110,19 +111,20 @@
           for (let i = 0; i < featureSettings.length; i++) {
             const currentSetting = featureSettings[i];
             $settingsDiv
-              .append(currentSetting.desc)
-              .append('<br>')
               .append(sox.helpers.newElement(currentSetting.type, { //use newElement helper so the type can be things like 'checkbox' or 'radio'
                 id: currentSetting.id,
-                'class': 'featureSetting',
+                'class': currentSetting.type === 'textarea' ? 'featureSetting s-input' : 'featureSetting s-checkbox',
+                'style': 'margin-right: 5px',
                 'checked': (currentSetting.type === 'checkbox' ? JSON.parse(optionalSettings)[currentSetting.id] : false),
                 value: (optionalSettings === -1 ? '' : JSON.parse(optionalSettings)[currentSetting.id]),
               }))
+              .append(currentSetting.desc)
               .append('<br>');
           }
 
           const $saveFeatureSettings = $('<a/>', {
             id: 'saveSettings-' + name,
+            'class': 'action s-btn s-btn__secondary s-btn__sm',
             text: 'Save Settings',
             click: function(e) {
               e.preventDefault(); //don't uncheck the checkbox
@@ -277,7 +279,7 @@
       // create sox settings button
       const $soxSettingsButton = $('<a/>', {
         id: 'soxSettingsButton',
-        class: 'sox-settings-button -link',
+        'class': 'sox-settings-button -link',
         title: 'Change SOX settings',
         href: '#',
         click: function(e) {
