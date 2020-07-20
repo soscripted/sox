@@ -1254,11 +1254,22 @@
         });
       }
 
-      addLabels();
+      function addQuestionStateInReview() {
+        sox.warn("called")
+        const $anchor = $('.summary h2 a');
+        const $aText = $anchor.html();
+        sox.warn($aText)
+        if ($('[class^="standOutDupeCloseMigrated"]').length || !$anchor.length || !$aText.match(/closed|duplicate/)) return;
 
+        $anchor.html($aText.replace(/ \[(closed|duplicate)\]/, ''));
+        $anchor.after(`&nbsp;<span class="standOutDupeCloseMigrated-${$aText.match(/closed|duplicate/)[0]}">${$aText.match(/closed|duplicate/)[0]}</span></a>`);
+      }
+
+      addLabels();
       const targetMainPage = document.getElementById('question-mini-list');
       const targetQuestionsPage = document.getElementById('questions');
       sox.helpers.observe([targetMainPage, targetQuestionsPage], '#questions, #question-mini-list', addLabels);
+      $(document).on('sox-new-review-post-appeared', addQuestionStateInReview);
     },
 
     editReasonTooltip: function() {
@@ -2404,43 +2415,6 @@
           }
         });
       }
-    },
-
-    showQuestionStateInSuggestedEditReviewQueue: function() {
-      // Description: Show question's current state in the suggested edit review queue (duplicate, off-topic, etc.)
-
-      const PROCESSED_ID = 'sox-showQuestionStateInSuggestedEditReviewQueue-checked';
-      $(document).on('sox-new-review-post-appeared', () => {
-        if (document.getElementById(PROCESSED_ID)) return;
-
-        const $anchor = $('.summary h2 a');
-        if (!$anchor.length) return;
-        const postId = sox.helpers.getIDFromAnchor($anchor[0]);
-        const QUESTION_STATE_FILTER = '!-MOiNm40B3fle5H6oLVI3nx6UQo(vNstn';
-
-        sox.helpers.getFromAPI({
-          endpoint: 'questions',
-          ids: postId,
-          sitename: sox.site.currentApiParameter,
-          filter: QUESTION_STATE_FILTER,
-          sort: 'creation',
-          useCache: false, // Single ID, so no point
-        }, items => {
-          $('body').append($('<div/>', {
-            'id': PROCESSED_ID,
-            'style': 'display: none',
-          }));
-
-          if (!items[0].closed_reason) return;
-          if (items[0].closed_reason === 'duplicate') {
-            $anchor.after('&nbsp;<span class=\'standOutDupeCloseMigrated-duplicate\'>&nbsp;duplicate&nbsp;</span></a>');
-          } else if (items[0].closed_details.on_hold === true) { //on-hold
-            $anchor.after('&nbsp;<span class="standOutDupeCloseMigrated-onhold">&nbsp;on hold&nbsp;</span>');
-          } else if (items[0].closed_details.on_hold === false && items[0].closed_reason == 'off-topic') { //closed
-            $anchor.after('&nbsp;<span class="standOutDupeCloseMigrated-closed">&nbsp;closed&nbsp;</span>');
-          }
-        });
-      });
     },
 
     findAndReplace: function() { //Salvaged from old 'enhanced editor' feature
