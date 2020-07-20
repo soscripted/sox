@@ -627,6 +627,11 @@
     color: white;
 }
 
+#currentValues section {
+    display: inline-block !important;
+    padding: 0px 10px;
+}
+
 /* customMagicLinks -- for the settings table in the dialog */
 .sox-customMagicLinks-settings-table {
     margin-bottom: 10px;
