@@ -349,7 +349,7 @@
           const [[name, text]] = Object.entries(opt);
           $('#currentValues').append(`
           <div>
-            <section>${name}</section><i><section style="padding-left: 10px">${text}</section></i>
+            <section>${name}</section>&nbsp;<i><section>${text}</section></i>
             <button class="grid--cell s-btn sox-editComment-editDialogButton" data-name="${name}">Edit</button>
             <button class="grid--cell s-btn s-btn__danger sox-editComment-deleteDialogButton" data-name="${name}">Delete</button>
           </div>`);
@@ -367,7 +367,6 @@
           'html': `<div id="currentValues" class="sox-editComment-currentValues"></div>
                   <br />
                   <h3 style="color: var(--fc-dark)">Add a custom reason</h3>
-
                   <div class="grid gs4 gsy fd-column" style="display: inline">
                       <div class="grid--cell" style="float: left">
                           <label class="d-block s-label" style="padding-top: 5px">Display reason: </label>
@@ -384,7 +383,6 @@
                           <input class="s-input" type="text" style="width: 40% !important" id="actualReason">
                       </div>
                   </div>
-
                   <input class="s-btn s-btn__primary" type="button" id="submitUpdate" value="Submit">
                   <input class="s-btn s-btn__primary" type="button" id="resetEditReasons" style="float:right;" value="Reset">`,
         });
@@ -451,7 +449,7 @@
 
         $(this).html('Save').addClass('sox-editComment-saveDialogButton').parent().find('section').attr('contenteditable', true).css('border', '1px solid var(--black-200)');
         $(document).on('click', '.sox-editComment-saveDialogButton', function() {
-          $(this).html('Edit').removeClass('sox-editComment-saveDialogButton').parent().find('section').attr('contenteditable', true).css('border', 'none');
+          $(this).html('Edit').removeClass('sox-editComment-saveDialogButton').parent().find('section').attr('contenteditable', false).css('border', 'none');
           const newName = $(this).parent().find('section').first().html();
           const newText = $(this).parent().find('section').eq(1).html();
 
