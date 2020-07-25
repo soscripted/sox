@@ -1255,10 +1255,8 @@
       }
 
       function addQuestionStateInReview() {
-        sox.warn("called")
         const $anchor = $('.summary h2 a');
         const $aText = $anchor.html();
-        sox.warn($aText)
         if ($('[class^="standOutDupeCloseMigrated"]').length || !$anchor.length || !$aText.match(/closed|duplicate/)) return;
 
         $anchor.html($aText.replace(/ \[(closed|duplicate)\]/, ''));
