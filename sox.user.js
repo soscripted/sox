@@ -3,7 +3,7 @@
 // @namespace    https://github.com/soscripted/sox
 // @homepage     https://github.com/soscripted/sox
 // @homepageURL  https://github.com/soscripted/sox
-// @version      2.6.0
+// @version      2.7.0
 // @description  Extra optional features for Stack Overflow and Stack Exchange sites
 // @contributor  ᴉʞuǝ (https://stackoverflow.com/users/1454538/, https://github.com/mezmi)
 // @contributor  ᔕᖺᘎᕊ (https://stackexchange.com/users/4337810/, https://github.com/shu8)
@@ -12,13 +12,13 @@
 // @contributor  double-beep (https://stackexchange.com/users/14688437/double-beep, https://github.com/double-beep)
 // @updateURL    https://cdn.jsdelivr.net/gh/soscripted/sox@dev/sox.user.js
 
-// @match        *://*.stackoverflow.com/*
-// @match        *://*.stackexchange.com/*
-// @match        *://*.superuser.com/*
-// @match        *://*.serverfault.com/*
-// @match        *://*.askubuntu.com/*
-// @match        *://*.stackapps.com/*
-// @match        *://*.mathoverflow.net/*
+// @match        https://*.stackoverflow.com/*
+// @match        https://*.stackexchange.com/*
+// @match        https://*.superuser.com/*
+// @match        https://*.serverfault.com/*
+// @match        https://*.askubuntu.com/*
+// @match        https://*.stackapps.com/*
+// @match        https://*.mathoverflow.net/*
 // @match        *://github.com/soscripted/*
 // @match        *://soscripted.github.io/sox/*
 
@@ -49,6 +49,7 @@
 // @grant        GM_getResourceText
 // @grant        GM_addStyle
 // @grant        GM_info
+// @grant        GM_setClipboard
 // ==/UserScript==
 /*jshint loopfunc: true*/
 (function(sox, $) {
@@ -178,20 +179,28 @@
     }
 
     //custom events....
-    sox.helpers.observe([...document.getElementsByClassName('post-layout')], '.new_comment, .comment, .comments, .comment-text', target => {
+    sox.helpers.observe([...document.getElementsByClassName('post-layout')], '.new_comment, .comment, .comments, .comment-text', node => {
       sox.debug('sox-new-comment event triggered');
-      $(document).trigger('sox-new-comment', [target]);
+      $(document).trigger('sox-new-comment', [node]);
     });
 
-    sox.helpers.observe(document.body, 'textarea[id^="wmd-input"]', target => {
+    sox.helpers.observe(document.body, 'textarea[id^="wmd-input"]', node => {
       sox.debug('sox-edit-window event triggered');
-      $(document).trigger('sox-edit-window', [target]);
+      $(document).trigger('sox-edit-window', [node]);
     });
 
-    sox.helpers.observe(document.body, '.reviewable-post, .review-content', target => {
+    sox.helpers.observe(document.body, '.reviewable-post, .review-content', node => {
       sox.debug('sox-new-review-post-appeared event triggered');
-      $(document).trigger('sox-new-review-post-appeared', [target]);
+      $(document).trigger('sox-new-review-post-appeared', [node]);
     });
+
+    const chatBody = document.getElementById('chat-body');
+    if (chatBody) {
+      sox.helpers.observe(chatBody, '.user-popup', node => {
+        sox.debug('sox-chat-user-popup event triggered');
+        $(document).trigger('sox-chat-user-popup', [node]);
+      });
+    }
 
     if (GM_getValue('SOX-accessToken', -1) == -1) { //set access token
       //This was originally a series of IIFEs appended to the head which used the SE API JS SDK but

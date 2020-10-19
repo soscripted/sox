@@ -35,45 +35,51 @@
     },
 
     markEmployees: function () {
-      // Description: Adds an Stack Overflow logo next to users that *ARE* a Stack Overflow Employee
+      // Description: Adds the Stack Exchange logo next to users that *ARE* Stack Exchange employees
 
-      const anchors = [...document.querySelectorAll('.comment a, .deleted-answer-info a, .employee-name a, .user-details a, .question-summary .started a')].filter(el => {
-        return el.href.contains('/users/');
-      });
-      const ids = [];
+      const $icon = '<svg style="color:' + $('.mod-flair').css('color') + '" aria-hidden="true" class="sox-markEmployees-logo sox-sprite svg-icon iconStackExchange" width="18" height="18" viewBox="0 0 18 18"><path d="M15 1H3a2 2 0 0 0-2 2v2h16V3a2 2 0 0 0-2-2zM1 13c0 1.1.9 2 2 2h8v3l3-3h1a2 2 0 0 0 2-2v-2H1v2zm16-7H1v4h16V6z"></path></svg>';
+      const logoSpan = document.createElement('span');
+      logoSpan.className = 'sox-markEmployees';
+      logoSpan.title = 'employee (added by SOX)';
+      logoSpan.innerHTML = $icon;
 
-      for (let i = 0; i < anchors.length; i++) {
-        const href = anchors[i].href;
-        const idMatch = href.match(/(\d+)/);
-        if (idMatch && ids.indexOf(idMatch[1]) === -1) ids.push(idMatch[1]);
-      }
-      sox.debug('markEmployees user IDs', ids);
+      function getIds() {
+        const anchors = [...document.querySelectorAll('a.comment-user, .user-details a, .question-summary .started a')].filter(el => {
+          return ![...el.children].filter(el => el.classList.contains('sox-markEmployees')).length && el.href && el.href.match(/\/users\/\d+/);
+        });
+        const ids = [...new Set(anchors.map(el => el.href.match(/(\d+)/)[0]))];
+        sox.debug('markEmployees user IDs', ids);
 
-      // TODO is pagination needed?
-      sox.helpers.getFromAPI({
-        endpoint: 'users',
-        ids,
-        sitename: sox.site.url,
-        filter: '!*MxJcsv91Tcz6yRH',
-        limit: 100,
-        featureId: 'markEmployees',
-        cacheDuration: 60 * 24, // Cache for 24 hours (in minutes)
-      }, items => {
-        sox.debug('markEmployees returned data', items);
-        for (let i = 0; i < items.length; i++) {
-          const userId = items[i].user_id;
-          const isEmployee = items[i].is_employee;
-          if (!isEmployee) continue;
-
-          const $icon = $('<svg aria-hidden="true" class="sox-markEmployees-logo sox-sprite svg-icon iconStackExchange" width="18" height="18" viewBox="0 0 18 18"><path d="M15 1H3a2 2 0 0 0-2 2v2h16V3a2 2 0 0 0-2-2zM1 13c0 1.1.9 2 2 2h8v3l3-3h1a2 2 0 0 0 2-2v-2H1v2zm16-7H1v4h16V6z"></path></svg>');
-          $icon.css('color', $('.mod-flair').css('color'));
-          anchors.filter(el => el.href.contains(`/users/${userId}/`)).forEach(el => {
-            $(el).append($('<span/>', {
-              title: 'employee (added by SOX)',
-            }).append($icon.clone()));
-          });
+        for (let i = 0; i < Math.ceil(ids.length / 100); i++) {
+          apiCall(i + 1, ids.slice(i * 100, (i * 100) + 100), anchors);
         }
-      });
+      }
+
+      function apiCall(page, ids, anchors) {
+        sox.helpers.getFromAPI({
+          endpoint: 'users',
+          ids,
+          sitename: sox.site.url,
+          filter: '!*MxJcsv91Tcz6yRH',
+          limit: 100,
+          page,
+          featureId: 'markEmployees',
+          cacheDuration: 60 * 24, // Cache for 24 hours (in minutes)
+        }, items => {
+          sox.debug('markEmployees returned data', items);
+          for (let i = 0; i < items.length; i++) {
+            if (!items[i].is_employee) continue;
+            const userId = items[i].user_id;
+            anchors.filter(el => el.href.contains(`/users/${userId}/`)).forEach(el => {
+              el.appendChild(logoSpan.cloneNode(true));
+            });
+          }
+        });
+      }
+
+      getIds();
+      $(document).on('sox-new-comment', getIds);
+      $(document).on('sox-new-review-post-appeared', getIds);
     },
 
     copyCommentsLink: function() {
@@ -187,9 +193,10 @@
           const answerer = cell.querySelector('.post-signature:nth-last-of-type(1) a');
           if (!answerer) continue;
           const answererID = answerer.href.match(/\d+/)[0];
-          const commentUsers = $(cell).next().next().find('.comments .comment-user');
+          const commentUsers = $(cell).next().find('.comments .comment-user');
 
           commentUsers.each(function() {
+            if (!this.href) return true;
             if (this.href.contains(`users/${answererID}`)) this.classList.add('sox-answerer');
           });
         }
@@ -284,12 +291,12 @@
       // Description: For adding checkboxes when editing to add pre-defined edit reasons
 
       const DEFAULT_OPTIONS = [
-        { 'formatting': 'Improved Formatting' },
-        { 'spelling': 'Corrected Spelling' },
-        { 'grammar': 'Fixed grammar' },
-        { 'greetings': 'Removed thanks/greetings' },
-        { 'retag': 'Improved usage of tags' },
-        { 'title': 'Improved title' },
+        { 'formatting': 'improved formatting' },
+        { 'spelling': 'corrected spelling' },
+        { 'grammar': 'fixed grammar' },
+        { 'greetings': 'removed thanks/greetings' },
+        { 'retag': 'improved usage of tags' },
+        { 'title': 'improved title' },
       ];
 
       function toLocaleSentenceCase(str) {
@@ -337,9 +344,9 @@
           const [[name, text]] = Object.entries(opt);
           $('#currentValues').append(`
           <div>
-            ${name} - <i>${text}</i>
-            <button class="grid--cell s-btn s-btn__muted discard-question sox-editComment-editDialogButton" data-name="${name}">Edit</button>
-            <button class="grid--cell s-btn s-btn__danger discard-question sox-editComment-deleteDialogButton" data-name="${name}">Delete</button>
+            <section>${name}</section>&nbsp;<i><section>${text}</section></i>
+            <button class="grid--cell s-btn sox-editComment-editDialogButton" data-name="${name}">Edit</button>
+            <button class="grid--cell s-btn s-btn__danger sox-editComment-deleteDialogButton" data-name="${name}">Delete</button>
           </div>`);
         });
         addCheckboxes();
@@ -354,13 +361,25 @@
           },
           'html': `<div id="currentValues" class="sox-editComment-currentValues"></div>
                   <br />
-                  <h3>Add a custom reason</h3>
-                  Display Reason:	<input type="text" id="displayReason">
-                  <br />
-                  Actual Reason: <input type="text" id="actualReason">
-                  <br />
-                  <input type="button" id="submitUpdate" value="Submit">
-                  <input type="button" id="resetEditReasons" style="float:right;" value="Reset">`,
+                  <h3 style="color: var(--fc-dark)">Add a custom reason</h3>
+                  <div class="grid gs4 gsy fd-column" style="display: inline">
+                      <div class="grid--cell" style="float: left">
+                          <label class="d-block s-label" style="padding-top: 5px">Display reason: </label>
+                      </div>
+                      <div class="grid ps-relative" style="padding-left: 5px">
+                          <input class="s-input" type="text" style="width: 40% !important" id="displayReason">
+                      </div>
+                  </div>
+                  <div class="grid gs4 gsy fd-column" style="display: inline">
+                      <div class="grid--cell" style="float: left">
+                          <label class="d-block s-label" style="padding-top: 5px">Actual reason: </label>
+                      </div>
+                      <div class="grid ps-relative" style="padding-left: 5px">
+                          <input class="s-input" type="text" style="width: 40% !important" id="actualReason">
+                      </div>
+                  </div>
+                  <input class="s-btn s-btn__primary" type="button" id="submitUpdate" value="Submit">
+                  <input class="s-btn s-btn__primary" type="button" id="resetEditReasons" style="float:right;" value="Reset">`,
         });
 
         $(document).on('click', '#resetEditReasons', () => { //manual reset
@@ -387,23 +406,23 @@
           options.forEach(opt => {
             const [[name, text]] = Object.entries(opt);
             $reasons.append(`
-              <label class="sox-editComment-reason"><input type="checkbox" value="${text}"</input>${name}</label>&nbsp;
+              <label class="sox-editComment-reason"><input class="s-checkbox" type="checkbox" value="${text}"</input>${name}</label>&nbsp;
             `);
           });
 
           $reasons.find('input[type="checkbox"]').change(function() {
+            const reason_value = $(this).val();
             if (this.checked) { //Add it to the summary
               if ($editCommentField.val()) {
-                $editCommentField.val($editCommentField.val() + '; ' + $(this).val());
+                $editCommentField.val($editCommentField.val() + '; ' + reason_value);
               } else {
-                $editCommentField.val(toLocaleSentenceCase($(this).val()));
+                $editCommentField.val(toLocaleSentenceCase(reason_value));
               }
               const newEditComment = $editCommentField.val(); //Remove the last space and last semicolon
               $editCommentField.val(newEditComment).focus();
             } else { //Remove it from the summary
-              $editCommentField.val(toLocaleSentenceCase($editCommentField.val().replace(new RegExp(toLocaleSentenceCase($(this).val()) + ';? ?'), ''))); //for beginning values
-              $editCommentField.val($editCommentField.val().replace($(this).val() + '; ', '')); //for middle values
-              $editCommentField.val($editCommentField.val().replace(new RegExp(';? ?' + $(this).val()), '')); //for last value
+              $editCommentField.val($editCommentField.val().replace('; ' + reason_value, '')); //for middle and end values
+              $editCommentField.val($editCommentField.val().replace(new RegExp(reason_value + ';? ?', 'i'), '')); //for start values
             }
           });
         }
@@ -423,15 +442,16 @@
         const options = getOptions();
         const index = options.findIndex(opt => opt[optionToEdit]);
 
-        const [[name, text]] = Object.entries(options[index]);
-        const newName = window.prompt('Enter new name', name);
-        const newText = window.prompt('Enter new text', text);
+        $(this).html('Save').addClass('sox-editComment-saveDialogButton').parent().find('section').attr('contenteditable', true).css('border', '1px solid var(--black-200)');
+        $(document).on('click', '.sox-editComment-saveDialogButton', function() {
+          $(this).html('Edit').removeClass('sox-editComment-saveDialogButton').parent().find('section').attr('contenteditable', false).css('border', 'none');
+          const newName = $(this).parent().find('section').first().html();
+          const newText = $(this).parent().find('section').eq(1).html();
 
-        if (!newName || !newText) return;
-
-        options[index] = { [newName]: newText };
-        saveOptions(options);
-        addOptionsToDialog(); //display the items again (update them)
+          options[index] = { [newName]: newText };
+          saveOptions(options);
+          addOptionsToDialog(); //display the items again (update them)
+        });
       });
 
       $(document).on('click', '#dialogEditReasons #submitUpdate', () => { //Click handler to update the array with custom value
@@ -491,9 +511,10 @@
         setTimeout(() => {
           // $(this).attr('href') is relative, so make it absolute
           const href = new URL($(this).attr('href'), window.location.href).href;
-          $inputEl.val(`[${title}](${href})`);
+          const textToCopy = `[${title}](${href})`;
+          $inputEl.val(textToCopy);
           $inputEl.select();
-          document.execCommand('copy'); // https://github.com/soscripted/sox/issues/177
+          GM_setClipboard(textToCopy); // https://github.com/soscripted/sox/issues/177
         }, 0);
       });
     },
@@ -547,11 +568,11 @@
       function addSpoilerTip() {
         const $spoiler = $('.spoiler');
 
-        $spoiler.prepend('<div id="isSpoiler" style="color:red; font-size:smaller; float:right;">hover to show spoiler<div>');
+        $spoiler.prepend('<div class="isSpoiler">hover to show spoiler<div>');
         $spoiler.hover(function() {
-          $(this).find('#isSpoiler').hide(500);
+          $(this).find('.isSpoiler').hide(500);
         }, function() {
-          $(this).find('#isSpoiler').show(500);
+          $(this).find('.isSpoiler').show(500);
         });
       }
       addSpoilerTip();
@@ -630,15 +651,13 @@
     confirmNavigateAway: function() {
       // Description: For adding a 'are you ure you want to go away' confirmation on pages where you have started writing something
 
-      if (window.location.href.indexOf('questions/') >= 0) {
-        $(window).bind('beforeunload', () => {
-          const textarea = document.querySelector('.comment-form textarea');
-          if (textarea && textarea.value) {
-            return 'Do you really want to navigate away? Anything you have written will be lost!';
-          }
-          return;
-        });
-      }
+      $(window).bind('beforeunload', () => {
+        const textarea = document.querySelector('.comment-form textarea');
+        if (textarea && textarea.value) {
+          return 'Do you really want to navigate away? Anything you have written will be lost!';
+        }
+        return;
+      });
     },
 
     sortByBountyAmount: function() {
@@ -716,12 +735,21 @@
           featureId: 'isQuestionHot',
           cacheDuration: 60 * 8, // Cache for 8 hours
         }, results => {
-          results.forEach(data => {
-            // Questions stay hot for 3 days. Check if they are hot now (Note SE works with secs, not millisecs!)
-            if (data.comment === '<b>Became Hot Network Question</b> ' && new Date().getTime() / 1000 - data.creation_date <= 259200) {
+          for (let i = 0; i < results.length; i++) {
+            const result = results[i];
+            if (!result.comment // there's no comment, post was created
+              || result.comment.includes('<b>Post Closed</b> as &quot;') // post is closed
+              || result.comment.includes('<b>Removed from Hot Network Questions</b> by') // post has been removed from HNQ
+            ) {
+              break;
+            }
+
+            if (result.comment === '<b>Became Hot Network Question</b> ' // question is HNQ
+              && new Date().getTime() / 1000 - result.creation_date <= 259200 // question is 3 days old
+            ) {
               sox.location.on('/questions') ? addHotText() : $(el).find('.summary h3').prepend(getHotDiv('question-list'));
             }
-          });
+          }
         });
       }
     },
@@ -786,7 +814,7 @@
             if (!parent.querySelectorAll('img[src="' + href + '"]').length) {
               //DO NOT USE innerHTML -- it *removes* the old DOM and inserts a new one (https://stackoverflow.com/a/23539150), meaning it won't work for multiple imgur links in the same comment
               //https://github.com/soscripted/sox/issues/360
-              $(parent).append('<br><a href="' + href + '"><img class="sox-autoShowCommentImages-image" src="' + href + '" style="max-width:100%"></a>');
+              $(parent).append('<a href="' + href + '"><img class="sox-autoShowCommentImages-image" src="' + href + '" style="max-width:100%"></a>');
             }
           }
         });
@@ -896,12 +924,11 @@
       // https://github.com/shu8/SE_OptionalFeatures/pull/14:
       // https://github.com/shu8/Stack-Overflow-Optional-Features/issues/28: Thanks @SnoringFrog for fixing this!
 
-      $('.votecell > .js-voting-container').css({ //.votecell is necessary; e.g., the number of votes of questions on the Questions list for a site uses the .vote class too
-        'position': '-webkit-sticky',
-        // eslint-disable-next-line no-dupe-keys
-        'position': 'sticky',
-        'top': parseInt($('.container').css('margin-top'), 10) + parseInt($('body').css('padding-top'), 10), //Seems like most sites use margin-top on the container, but Meta and SO use padding on the body
-      });
+      // .votecell is necessary; e.g., the number of votes of questions on the Questions list for a site uses the .vote class too
+      $('.votecell').addClass('sox-stickyVoteButtons');
+      $('.votecell > .js-voting-container').css('top',
+        parseInt($('.container').css('margin-top'), 10) + parseInt($('body').css('padding-top'), 10), // Seems like most sites use margin-top on the container, but Meta and SO use padding on the body
+      );
     },
 
     titleEditDiff: function() {
@@ -1234,11 +1261,20 @@
         });
       }
 
-      addLabels();
+      function addQuestionStateInReview() {
+        const $anchor = $('.summary h2 a');
+        const $aText = $anchor.html();
+        if ($('[class^="standOutDupeCloseMigrated"]').length || !$anchor.length || !$aText.match(/closed|duplicate/)) return;
 
+        $anchor.html($aText.replace(/ \[(closed|duplicate)\]/, ''));
+        $anchor.after(`&nbsp;<span class="standOutDupeCloseMigrated-${$aText.match(/closed|duplicate/)[0]}">${$aText.match(/closed|duplicate/)[0]}</span></a>`);
+      }
+
+      addLabels();
       const targetMainPage = document.getElementById('question-mini-list');
       const targetQuestionsPage = document.getElementById('questions');
       sox.helpers.observe([targetMainPage, targetQuestionsPage], '#questions, #question-mini-list', addLabels);
+      $(document).on('sox-new-review-post-appeared', addQuestionStateInReview);
     },
 
     editReasonTooltip: function() {
@@ -1429,10 +1465,12 @@
 
     addAuthorNameToInboxNotifications: function(settings) {
       // Description: To add the author's name to inbox notifications
+
       function setAuthorName(node) {
         //for https://github.com/soscripted/sox/issues/347
         const prependToMessage = Object.keys(settings).length !== 0 ? settings.addNameBeforeMessageOrAtTop : false;
         const link = node.firstElementChild.href;
+        if (!link) return;
         let id;
         const matches = {
           comments: ['posts/comments', '!SWJnaN4ZecdHc*iADu'],
@@ -1441,13 +1479,9 @@
         };
 
         let filter;
-
-        if (!link) return;
-
         const sitename = sox.helpers.getSiteNameFromLink(link);
 
         let apiCallType = null;
-
         for (const key in matches) {
           if (matches.hasOwnProperty(key) && link.indexOf(matches[key][0]) > -1) {
             apiCallType = key;
@@ -1499,7 +1533,7 @@
       const PROCESSED_CLASS = 'sox-authorNameAdded';
       const MAX_PROCESSED_AT_ONCE = 20;
 
-      const target = document.querySelector('.js-secondary-topbar-links');
+      const target = document.querySelector('.-secondary');
       if (target) {
         sox.helpers.observe(target, '.inbox-item', () => {
           const inboxDialog = document.getElementsByClassName(inboxClass)[0];
@@ -1632,13 +1666,13 @@
         $('.post-text a, .comments .comment-copy a').each(function() {
           const url = $(this).attr('href');
 
-          // https://github.com/soscripted/sox/issues/205 -- check link's location is to same site, eg if on SU, don't allow on M.SU
           // http://stackoverflow.com/a/4815665/3541881
           if (url &&
-              $('<a>').prop('href', url).prop('hostname') == location.hostname &&
               !url.includes('#comment') &&
               !url.includes('/edit/') && // https://github.com/soscripted/sox/issues/281
               !url.includes('/tagged/') &&
+              !url.includes('web.archive.org') &&  // Make sure this isn't a Web Archive URL
+              !url.includes('/c/') && // Make sure it's not a SO Teams post
               getIdFromUrl(url) && // getIdFromUrl(url) makes sure it won't fail later on
               !$(this).prev().is('.expand-post-sox')) {
             $(this).before('<a class="expander-arrow-small-hide expand-post-sox" style="border-bottom:0"></a>');
@@ -1659,9 +1693,21 @@
           $(this).addClass('expander-arrow-small-show');
           const $that = $(this);
           const id = getIdFromUrl($(this).next().attr('href'));
-          $.get(location.protocol + '//' + sox.site.url + '/posts/' + id + '/body', d => {
-            const div = '<div class="linkedPostsInline-loaded-body-sox">' + d + '</div>';
-            $that.next().after(div);
+          const url = $(this).next().attr('href');
+          if (!url.match(/https?:\/\//)) url = 'https://' + url;
+          sox.helpers.getFromAPI({
+            endpoint: 'posts',
+            ids: id,
+            sitename: sox.helpers.getSiteNameFromLink(url),
+            filter: '!)qFc_3CbvFS40DqE0ROu',
+            featureId: 'linkedPostsInline',
+            cacheDuration: 60, // Cache for 60 minutes
+          }, results => {
+            if (results.length) {
+              $that.next().after('<div class="linkedPostsInline-loaded-body-sox"><div style="text-align:center">' + results[0].title + '</div><br>' + results[0].body + '</div>');
+            } else {
+              $that.next().after('<div class="linkedPostsInline-loaded-body-sox"><strong>Post was not found through the API. It may have been deleted</3></strong>');
+            }
           });
         }
       });
@@ -1676,13 +1722,13 @@
     hideCommunityBulletin: function() {
       // Description: Hides the Community Bulletin module from the sidebar
 
-      $('#sidebar .community-bulletin').remove();
+      $('#sidebar').children().first().remove();
     },
 
     hideJustHotMetaPosts: function() {
       // Description: Hide just the 'Hot Meta Posts' sections in the Community Bulletin
 
-      const $hotMetaPostsHeader = $('#sidebar .community-bulletin .related').find('div:contains("Hot Meta Posts")');
+      const $hotMetaPostsHeader = $('#sidebar div:contains("Hot Meta Posts"):eq(1)');
       if ($hotMetaPostsHeader.length) {
         $hotMetaPostsHeader.nextAll().remove();
         $hotMetaPostsHeader.remove();
@@ -1704,8 +1750,7 @@
     chatEasyAccess: function() {
       // Description: Adds options to give a user read/write/no access in chat from their user popup dialog
 
-      const target = document.getElementById('chat-body');
-      sox.helpers.observe(target, '.user-popup', node => {
+      $(document).on('sox-chat-user-popup', (e, node) => {
         const $node = $(node).parent();
         const id = $node.find('a')[0].href.split('/')[4];
 
@@ -1800,45 +1845,29 @@
 
     tabularReviewerStats: function() {
       // Description: Display reviewer stats on /review/suggested-edits in table form
-      // Idea by lolreppeatlol @ http://meta.stackexchange.com/a/277446/260841 :)
+      // Idea by lolreppeatlol @ http://meta.stackexchange.com/a/277446 :)
 
       const target = document.querySelector('.mainbar-full');
-      sox.helpers.observe(target, '.review-more-instructions', () => {
-        const info = {};
-        $('.review-more-instructions ul:eq(0) li').each(function() {
-          const text = $(this).text();
-          const username = $(this).find('a').text();
-          const link = $(this).find('a').attr('href');
-          const approved = text.match(/approved (.*?)[a-zA-Z]/)[1];
-          const rejected = text.match(/rejected (.*?)[a-zA-Z]/)[1];
-          const improved = text.match(/improved (.*?)[a-zA-Z]/)[1];
-          info[username] = {
-            'link': link,
-            'approved': approved,
-            'rejected': rejected,
-            'improved': improved,
-          };
-        });
-        const $editor = $('.review-more-instructions ul:eq(1) li');
-        if (!$editor.length) return;
-        const editorName = $editor.find('a').text();
-        const editorLink = $editor.find('a').attr('href');
-        const editorApproved = $editor.clone().find('a').remove().end().text().match(/([0-9]+)/g)[0];
-        //`+` matches 'one or more' to make sure it works on multi-digit numbers!
-        const editorRejected = $editor.clone().find('a').remove().end().text().match(/([0-9]+)/g)[1]; //https://stackoverflow.com/q/11347779/3541881 for fixing https://github.com/soscripted/sox/issues/279
-        info[editorName] = {
-          'link': editorLink,
-          'approved': editorApproved,
-          'rejected': editorRejected,
-        };
-        let table = '<table><tbody><tr><th style=\'padding: 4px;\'>User</th><th style=\'padding: 4px;\'>Approved</th><th style=\'padding: 4px;\'>Rejected</th><th style=\'padding: 4px;\'>Improved</th style=\'padding: 4px;\'></tr>';
-        $.each(info, (user, details) => {
-          table += '<tr><td style=\'padding: 4px;\'><a href=\'' + details.link + '\'>' + user + '</a></td><td style=\'padding: 4px;\'>' + details.approved + '</td><td style=\'padding: 4px;\'>' + details.rejected + '</td><td style=\'padding: 4px;\'>' + (details.improved ? details.improved : 'N/A') + '</td></tr>';
+
+      function displayStats() {
+        if ($('.sox-tabularReviewerStats-table').length || $('.review-actions').children().length == 5) return;
+        let table = '<table class="sox-tabularReviewerStats-table"><tbody><tr><th align="center">User</th><th>Approved</th><th>Rejected</th><th>Improved</th></tr>';
+
+        $('.js-review-more-instructions ul li').each(function() {
+          const $this = $(this);
+          const username = $this.find('a').text() ? $this.find('a').text() : 'Anonymous</span>'
+          const link = $this.find('a').attr('href') ? `a href="${$this.find('a').attr('href')}"` : 'span'
+          const state = $this.text().match(/\d+(?=\sedit\ssuggestions?)/g);
+          table += `<tr><td><${link}>${username}</td><td>${state[0]}</td><td>${state[1]}</td><td>${state[2] ? state[2] : 'N/A'}</td></tr>`;
         });
         table += '</tbody></table>';
-        $('.review-more-instructions p, .review-more-instructions ul').remove();
-        $('.review-more-instructions').append(table);
-      });
+
+        $('.js-review-more-instructions *').remove();
+        $('.js-review-more-instructions').append(table);
+      }
+
+      displayStats();
+      sox.helpers.observe(target, '.js-review-more-instructions', () => {displayStats()});
     },
 
     linkedToFrom: function() {
@@ -1937,20 +1966,17 @@
       // Description: Shows when the post's author was last active and their registration state
 
       function addLastSeen(userDetailsFromAPI) {
-        $('.question, .answer, .reviewable-post').each(function() {
-          const anchor = this.querySelector('.post-signature:last-child .user-details a[href^="/users"]');
-          if (!anchor) return;
+        $('.user-details a[href^="/users"]').each(function() {
 
-          const id = sox.helpers.getIDFromAnchor(anchor);
-          if (!id || !(userDetailsFromAPI[id] && !this.getElementsByClassName('sox-last-seen').length)) return;
+          const parentDIV = $(this).parent().parent();
+          const id = sox.helpers.getIDFromAnchor(this);
+          if (!id || !(userDetailsFromAPI[id] && !parentDIV.find('.sox-last-seen').length)) return;
 
           const lastSeenDate = new Date(userDetailsFromAPI[id].last_seen);
-          const type = userDetailsFromAPI[id].type === 'unregistered' ? ' (unregistered)' : '';
 
           const $div = $('<div/>', {
             'class': 'sox-quickAuthorInfo-details',
-            title: 'last seen',
-            text: type,
+            title: 'SOX: last seen',
           }).append(sox.sprites.getSvg('access_time'))
             .append($('<time/>', {
               'class': 'timeago sox-last-seen',
@@ -1959,7 +1985,10 @@
               value: lastSeenDate.toLocaleString(),
             }));
 
-          $(this).find('.user-info').last().append($div);
+          $(parentDIV).last().append($div);
+          if (userDetailsFromAPI[id].type === 'unregistered') {
+            $(this).after('<span title="SOX: this user is unregistered" class="sox-quickAuthorInfo-unregistered">(unregistered)</span>');
+          }
         });
 
         $('time.timeago').timeago();
@@ -1968,16 +1997,15 @@
       function getIdsAndAddDetails(postAuthors) {
         const FILTER_USER_LASTSEEN_TYPE = '!*MxL2H2Vp3iPIKLu';
 
-        $('.question, .answer, .reviewable-post').each(function() {
-          const userDetailsAnchor = this.querySelector('.post-signature:last-child .user-details a[href^="/users"]');
+        $('.user-details a[href^="/users"]').each(function() {
 
           let userid; let username;
 
-          if (userDetailsAnchor) {
-            userid = sox.helpers.getIDFromAnchor(userDetailsAnchor);
-            username = userDetailsAnchor.innerText;
+          if (this) {
+            userid = sox.helpers.getIDFromAnchor(this);
+            username = this.innerText;
 
-            if (userid !== 0) postAuthors[userid] = username;
+            if (userid > 0) postAuthors[userid] = username;
           } else {
             sox.loginfo('Could not find user user link for: ', this);
           }
@@ -2136,7 +2164,7 @@
         .find('.user-details:last a')
         .filter('a[href*=' + sox.user.id + ']')
         .closest('.answer, .question')
-        .find('.votecell .vote a[class*="vote"]')
+        .find('.votecell button[class*="js-vote"]')
         .not('[id*="vote-accept"]') //https://github.com/soscripted/sox/issues/165
         .removeClass('sox-better-css')
         .css({
@@ -2334,19 +2362,16 @@
       $(document).on('sox-new-review-post-appeared', addButton);
 
       $(document).on('click', '.sox-copyCodeButton', function() {
-        try {
-          const copyCodeTextareas = document.getElementsByClassName('sox-copyCodeTextarea');
-          if (!copyCodeTextareas.length) $('body').append('<textarea class="sox-copyCodeTextarea">');
+        const copyCodeTextareas = document.getElementsByClassName('sox-copyCodeTextarea');
+        if (!copyCodeTextareas.length) $('body').append('<textarea class="sox-copyCodeTextarea">');
 
-          copyCodeTextareas[0].value = $(this).next('pre').text();
-          copyCodeTextareas[0].select();
-          document.execCommand('copy');
-          $(this).effect('highlight', {
-            color: 'white',
-          }, 3000);
-        } catch (e) {
-          sox.info('Browser doesn\'t support execComand for copyCode feature');
-        }
+        const textToCopy = $(this).next('pre').text();
+        copyCodeTextareas[0].value = textToCopy;
+        copyCodeTextareas[0].select();
+        GM_setClipboard(textToCopy);
+        $(this).effect('highlight', {
+          color: 'white',
+        }, 3000);
       });
     },
 
@@ -2354,33 +2379,22 @@
       // Description: Adds a progress bar showing how many reviews you have left in the day
 
       function addBar() {
-        const currentUrl = location.href.split('/');
-        const sliced = currentUrl.slice(0, currentUrl.length - 1).join('/');
-        let urlToGet;
-
-        if ($('.reviewable-post').length) {
-          urlToGet = sliced + '/stats';
-        } else {
-          urlToGet = currentUrl.join('/') + '/stats';
-        }
-
-        $.get(urlToGet, d => {
+        $.get(`https://${location.hostname}/review/${location.pathname.split('/')[2]}/stats`, d => {
           const count = +$(d).find('.review-stats-count-current-user').first().text().trim();
-          const width = (count / 20) * 100;
+          const width = count <= 20 ? (count / 20) * 100 : (count / 40) * 100;
           const $soxDailyReviewCount = $('#sox-daily-review-count');
-          if ($soxDailyReviewCount.length) {
-            $soxDailyReviewCount.find('#badge-progress-bar').css('width', width);
-            $soxDailyReviewCount.find('#badge-progress-count').text(count);
-          } else {
-            $('.subheader.tools-rev').append(`<div id="sox-daily-review-count" title="your daily review cap in this queue" class="review-badge-progress">
-                            <div class="meter" style="width: 100px;margin-top: 14px;margin-right: 15px;height: 9px;float: right;">
-                                <div id="badge-progress-bar" style="width: ` + width + `%;">
-                                    <div id="badge-progress-bar-vis" style="border:none"></div>
-                                </div>
-                            </div>
-                            <div id="badge-progress-count">` + count + `</div>
-                        </div>`);
-          }
+
+          if ($('#sox-dailyReviewBar').length) return;
+          $('#badge-progress').after(
+            `<div class="grid c-pointer float-right mt16 h12" id="sox-dailyReviewBar">
+              <div class="grid--cell mr4 fs-caption">${count}</div>
+                <div class="grid--cell h12 pt2">
+                <div class="s-progress mr16 h8 ws1">
+                  <div class="s-progress--bar h8" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: ${width}%"></div>
+                </div>
+              </div>
+            </div>`
+          );
         });
       }
 
@@ -2406,43 +2420,6 @@
           }
         });
       }
-    },
-
-    showQuestionStateInSuggestedEditReviewQueue: function() {
-      // Description: Show question's current state in the suggested edit review queue (duplicate, off-topic, etc.)
-
-      const PROCESSED_ID = 'sox-showQuestionStateInSuggestedEditReviewQueue-checked';
-      $(document).on('sox-new-review-post-appeared', () => {
-        if (document.getElementById(PROCESSED_ID)) return;
-
-        const $anchor = $('.summary h2 a');
-        if (!$anchor.length) return;
-        const postId = sox.helpers.getIDFromAnchor($anchor[0]);
-        const QUESTION_STATE_FILTER = '!-MOiNm40B3fle5H6oLVI3nx6UQo(vNstn';
-
-        sox.helpers.getFromAPI({
-          endpoint: 'questions',
-          ids: postId,
-          sitename: sox.site.currentApiParameter,
-          filter: QUESTION_STATE_FILTER,
-          sort: 'creation',
-          useCache: false, // Single ID, so no point
-        }, items => {
-          $('body').append($('<div/>', {
-            'id': PROCESSED_ID,
-            'style': 'display: none',
-          }));
-
-          if (!items[0].closed_reason) return;
-          if (items[0].closed_reason === 'duplicate') {
-            $anchor.after('&nbsp;<span class=\'standOutDupeCloseMigrated-duplicate\'>&nbsp;duplicate&nbsp;</span></a>');
-          } else if (items[0].closed_details.on_hold === true) { //on-hold
-            $anchor.after('&nbsp;<span class="standOutDupeCloseMigrated-onhold">&nbsp;on hold&nbsp;</span>');
-          } else if (items[0].closed_details.on_hold === false && items[0].closed_reason == 'off-topic') { //closed
-            $anchor.after('&nbsp;<span class="standOutDupeCloseMigrated-closed">&nbsp;closed&nbsp;</span>');
-          }
-        });
-      });
     },
 
     findAndReplace: function() { //Salvaged from old 'enhanced editor' feature
@@ -2532,16 +2509,18 @@
     },
 
     addTimelineAndRevisionLinks: function() {
-      // Description: Add timeline and revision links to the bottom of each post for quick access to them
+      // Description: Add revision link to the bottom of each post for quick access
+
+      // Note: This feature used to add a timeline button too, but this was natively
+      // implemented as of 2020-16-01, see https://meta.stackexchange.com/a/342316.
+      // The function name is unchanged to newer versions don't auto-remove the feature
+      // for users with it enabled
 
       $('.question, .answer').each(function () {
         const id = $(this).attr('data-questionid') || $(this).attr('data-answerid');
         $(this).find('.post-menu').append($('<a/>', {
           'href': '//' + sox.site.url + '/posts/' + id + '/revisions',
           'text': 'revisions',
-        })).append($('<a/>', {
-          'href': '//' + sox.site.url + '/posts/' + id + '/timeline',
-          'text': 'timeline',
         }));
       });
     },
@@ -2549,22 +2528,15 @@
     hideWelcomeBackMessage: function() {
       // Description: Hide the 'welcome back...don't forget to vote' message when visiting a site after a while
 
-      sox.helpers.observe(document.body, '#overlay-header', el => {
+      function removeMessage(el) {
+        if (!el) return;
         if ($(el).text().match(/welcome back/gi)) {
           $(el).remove();
         }
-      });
-    },
+      }
 
-    hideHowToAskWhenZoomed: function() {
-      // Description: Hides the 'How to ask/format/tag' yellow boxes that appear when asking a question whilst zoomed in
-
-      const target = document.getElementById('question-form');
-      sox.helpers.observe(target, '.js-help-pointer', el => {
-        if ($(el).text().match(/(How to Ask)|(How to Format)|(How to Tag)/gi)) {
-          $(el).remove();
-        }
-      });
+      sox.helpers.observe(document.body, '#overlay-header', el => removeMessage(el));
+      removeMessage(document.getElementById('overlay-header'));
     },
 
     addOnTopicLinkToSiteSwitcher: function() {
@@ -2720,10 +2692,10 @@
         id: 'sox-linked-image-modal',
       };
 
-      const posts = [...document.querySelectorAll('.question, .answer')];
-      posts.forEach(post => {
-        [...post.querySelectorAll('img')].forEach(img => {
-          if (!img.src || !img.src.includes('i.stack.imgur.com')) return;
+      function showModalOnclick() {
+        const posts = [...document.querySelectorAll('.post-text img, .comment-copy img')];
+        posts.forEach(img => {
+          if (!img.src || !img.src.match(/i(?:\.stack)?\.imgur\.com\/[a-zA-Z0-9]*\.png$/)) return;
 
           img.addEventListener('click', e => {
             e.preventDefault();
@@ -2732,10 +2704,11 @@
             modalAttributes.header = `SOX: Linked Image <a class='sox-openImagesAsModals-sourceLink' target='_blank' rel='noopener noreferrer' href='${img.src}'>source</a>`;
             const $modal = sox.helpers.createModal(modalAttributes);
             $modal.find('.sox-custom-dialog-content').html(`<img width='100%' height='100%' src='${img.src}' />`);
-            if (!document.getElementById('#sox-linked-image-modal')) $('body').append($modal);
+            if (!document.getElementById('sox-linked-image-modal')) $('body').append($modal);
           });
         });
-      });
+      }
+      setTimeout(showModalOnclick, 2500); // autoShowCommentImages runs after 2 seconds, so this actually never executes!
     },
 
     addTagsToHNQs: function () {
@@ -2784,5 +2757,63 @@
         });
       });
     },
+
+    scrollChatRoomsList: function () {
+      // Description: Enable scrolling for room list in usercards and sidebar when there are many rooms
+
+      $(document).on('sox-chat-user-popup', (e, node) => {
+        if (node.classList.contains('sox-scrollChatRoomsList-user-popup')) return;
+        node.classList.add('sox-scrollChatRoomsList-user-popup');
+      });
+
+      const roomsContainer = document.getElementById('my-rooms').parentElement;
+      if (roomsContainer.classList.contains('sox-scrollChatRoomsList-sidebar')) return;
+      roomsContainer.classList.add('sox-scrollChatRoomsList-sidebar');
+    },
+
+    copyCommentMarkdown: function () {
+      // Description: Adds button to copy the markdown of a comment next to them
+
+      $('.comment-body').each(function () {
+        const $comment = $(this);
+        const $soxReplyLink = $comment.find('.soxReplyLink');
+        const $copyBtn = sox.sprites.getSvg('copy', 'SOX: copy comment markdown', {
+          cursor: 'pointer',
+          display: 'none',
+        });
+
+        const commentId = +$comment.parent().parent().attr('data-comment-id');
+        $copyBtn.on('click', function () {
+          sox.helpers.getFromAPI({
+            endpoint: 'comments',
+            ids: [commentId],
+            filter: '!*JxbB6N6w(LGV_JR',
+            sitename: sox.site.url,
+            featureId: 'copyCommentMarkdown',
+            cacheDuration: 10, // Cache for 10 minutes
+          }, items => {
+            if (items[0] && items[0].body_markdown) {
+              GM_setClipboard(items[0].body_markdown);
+              window.alert('Copied comment markdown to clipboard!');
+            } else {
+              window.alert('There was an error getting the comment markdown. Please raise an issue on GitHub!');
+              sox.error('copyCommentMarkdown: could not get markdown from API. Returned data for comment ID ' + commentId +' was', items);
+            }
+          });
+        });
+
+        if ($soxReplyLink.length) {
+          $soxReplyLink.before($copyBtn);
+        } else {
+          $comment.find('span').last().after($copyBtn);
+        }
+
+        $comment.hover(function () {
+          $copyBtn.show();
+        }, function () {
+          $copyBtn.hide();
+        });
+      });
+    }
   };
 })(window.sox = window.sox || {}, jQuery);

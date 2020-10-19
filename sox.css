@@ -19,7 +19,6 @@
 }
 
 #sox-settings-dialog .modal-content {
-    /* max-height: calc(100vh - 175px); */
     max-height: none;
     min-height: inherit;
 }
@@ -35,6 +34,8 @@
 
 #sox-settings-dialog #search-container {
     min-height: 0;
+    width: 570px;
+    left: 10px;
 }
 
 #sox-settings-dialog #search-container .sox-sprite-search {
@@ -54,12 +55,11 @@
 }
 
 #sox-settings-dialog #search-container #search {
-    width: 490px;
-    text-indent: 20px;
+    max-width: 90%;
 }
 
 #sox-settings-dialog-features {
-    /* padding: 0 10px 10px 10px; */
+    padding: 0 10px 10px 10px;
     overflow-y: scroll;
     height: calc(100vh - 250px);
 }
@@ -70,7 +70,7 @@
 }
 
 #sox-settings-dialog-features .modal-content div:hover {
-    background-color: #f7f8f8;
+    background-color: var(--black-075);
 }
 
 #sox-settings-dialog-features .modal-content label>input {
@@ -89,7 +89,7 @@
 
 #sox-settings-dialog-actions .action {
     float: right;
-    padding: 11px;
+    padding: 13px 11px;
 }
 
 #sox-settings-dialog .sox-new-version-item {
@@ -109,10 +109,6 @@
     height: 24px !important;
 }
 
-.sox-settings-button:hover {
-    color: #999;
-}
-
 #sox-settings-dialog-check-toggle>i {
     padding: 14px 0;
 }
@@ -128,7 +124,7 @@
 
 .sox-feature-info,
 .sox-feature-settings {
-    background-color: whitesmoke;
+    background-color: var(--black-025);
     border-radius: 9px;
     margin-left: 20px;
     padding: 8px;
@@ -170,6 +166,7 @@
     padding: 10px;
     border-radius: 9px;
     background-color: lightgrey;
+    color: #3c4146; /* dark mode compatibility */
     cursor: pointer;
 }
 
@@ -460,6 +457,15 @@
     background: black;
 }
 
+/* spoilerTip -- for the red 'hover to show spoiler' text */
+
+.isSpoiler {
+    color: red;
+    font-size: smaller;
+    float: right;
+    opacity: 1 !important;
+}
+
 /*commentReplies -- for the reply buttons*/
 
 .soxReplyLink {
@@ -589,6 +595,7 @@
     padding: 2px;
     margin: 2px;
     border: 1px dotted black;
+    display: block;
 }
 
 /* editComment -- for the dialog and checkboxes shown when editing */
@@ -616,6 +623,11 @@
 .sox-editComment-reason:hover {
     background-color: gray;
     color: white;
+}
+
+#currentValues section {
+    display: inline-block !important;
+    padding: 0px 10px;
 }
 
 /* customMagicLinks -- for the settings table in the dialog */
@@ -651,6 +663,11 @@
     margin-right: 5px;
 }
 
+.sox-quickAuthorInfo-unregistered {
+    margin-left: 5px;
+    font-size: smaller;
+}
+
 /* markEmployees -- for the SE icon */
 .sox-markEmployees-logo {
     margin-left: 5px;
@@ -664,4 +681,46 @@
     margin-left: 10px;
     font-weight: bold;
     font-style: italic;
+}
+
+/* sox-scrollChatRoomsList -- for the user popup and sidebar scrollbar */
+.sox-scrollChatRoomsList-user-popup {
+    max-height: calc(100vh - 90px);
+}
+
+.sox-scrollChatRoomsList-user-popup ul.no-bullets {
+    max-height: calc(100vh - 500px);
+    overflow-y: auto;
+}
+
+.sox-scrollChatRoomsList-sidebar {
+    max-height: calc(40vh);
+    overflow: auto;
+}
+
+.sox-scrollChatRoomsList-sidebar > #my-rooms {
+    height: 100%;
+    overflow: auto;
+}
+
+/* tabularReviewerStats -- for the table with user's stats */
+.sox-tabularReviewerStats-table tr,
+.sox-tabularReviewerStats-table th,
+.sox-tabularReviewerStats-table td:not(:first-child) {
+  border: 1px solid #cccccc;
+  border-collapse: collapse;
+}
+
+.sox-tabularReviewerStats-table th, .sox-tabularReviewerStats-table td {
+    padding: 4px;
+}
+
+/* stickyVoteButtons -- for the vote buttons on the left of the post */
+.sox-stickyVoteButtons > .js-voting-container {
+    position: -webkit-sticky;
+    position: sticky;
+}
+
+.sox-stickyVoteButtons .s-popover {
+    width: max-content;
 }
