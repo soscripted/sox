@@ -27,11 +27,12 @@
 
       // Array of HTML strings that will be displayed as `li` items if the user has installed a new version.
       const changes = [
-        'Fix bugs in various features',
+        'Fix bugs in various features (thanks @double-beep for many of these!)',
         'Add feature to copy markdown for comments',
         'Add feature to add scrolling to room list in usercards in chat',
         'Only run SOX on HTTPS',
         'Deprecate "add timeline button" feature (now natively implemented!)',
+        'Deprecate "show question state in suggested edit review queue" (now native!)'
       ];
 
       function addCategory(name) {
