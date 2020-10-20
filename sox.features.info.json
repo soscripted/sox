@@ -107,12 +107,6 @@
             "match": "",
             "exclude": "*://chat.*.com/*"
         }, {
-            "name": "spoilerTip",
-            "desc": "Differentiate spoilers from empty blockquotes",
-            "meta": "https://meta.stackexchange.com/q/104085",
-            "match": "*://*/questions/*,*://*/review*",
-            "exclude": "SE1.0,*://*/questions/ask,*://*/questions/tagged*,*://*/questions/greatest-hits*"
-        }, {
             "name": "standOutDupeCloseMigrated",
             "desc": "Add highlighted tags to closed/on hold/duplicate/migrated questions on question lists and review",
             "extended_description": "Adds a coloured box at the end of a title (that replaces the standard [duplicate], etc.) in question lists to more easily tell what the state of a question is",
