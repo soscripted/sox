@@ -562,23 +562,6 @@
       });
     },
 
-    spoilerTip: function() {
-      // Description: For adding some text to spoilers to tell people to hover over it
-
-      function addSpoilerTip() {
-        const $spoiler = $('.spoiler');
-
-        $spoiler.prepend('<div class="isSpoiler">hover to show spoiler<div>');
-        $spoiler.hover(function() {
-          $(this).find('.isSpoiler').hide(500);
-        }, function() {
-          $(this).find('.isSpoiler').show(500);
-        });
-      }
-      addSpoilerTip();
-      $(document).on('sox-new-review-post-appeared', addSpoilerTip);
-    },
-
     commentReplies: function() {
       // Description: For adding reply links to comments
 
