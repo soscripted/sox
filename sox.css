@@ -707,6 +707,10 @@
 }
 
 /* stickyVoteButtons -- for the vote buttons on the left of the post */
+.sox-stickyVoteButtons {
+    z-index: 1;
+}
+
 .sox-stickyVoteButtons > .js-voting-container {
     position: -webkit-sticky;
     position: sticky;
