@@ -15,12 +15,6 @@
             "feature_packs": ["power_user"],
             "usesApi": true
         }, {
-            "name": "alignBadgesByClass",
-            "desc": "Align badges by their class on user profile pages",
-            "meta": "https://meta.stackexchange.com/q/254607",
-            "match": "*://*/users/*",
-            "exclude": "SE1.0"
-        }, {
             "name": "answerTagsSearch",
             "desc": "Show tags for the question an answer belongs to on search pages (for better context)",
             "extended_description": "By default, any search results that are answers do not show its question's tags. This feature adds the question's tags underneath the result.",

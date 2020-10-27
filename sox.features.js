@@ -1895,56 +1895,6 @@
       });
     },
 
-    alignBadgesByClass: function() {
-      // Description: Aligns badges by their class (bronze/silver/gold) on user profiles
-
-      const acs = {};
-      const $badges = $('.user-accounts tr .badges');
-
-      $badges.each(function(i) {
-        let b; let s; let g;
-        if ($(this).find('>span[title*="bronze badge"]').length) {
-          b = $(this).find('>span[title*="bronze badge"] .badgecount').text();
-        }
-        if ($(this).find('>span[title*="silver badge"]').length) {
-          s = $(this).find('>span[title*="silver badge"] .badgecount').text();
-        }
-        if ($(this).find('>span[title*="gold badge"]').length) {
-          g = $(this).find('>span[title*="gold badge"] .badgecount').text();
-        }
-        acs[i] = {
-          'bronze': b,
-          'silver': s,
-          'gold': g,
-        };
-      });
-      $.each(acs, k => {
-        const $badgesTd = $badges.eq(k);
-        $badgesTd.html('');
-        if (acs[k].gold) {
-          $badgesTd.append('<span title="' + acs[k].gold + ' gold badges"><span class="badge1"></span><span class="badgecount">' + acs[k].gold + '</span></span>');
-        } else {
-          $badgesTd.append('<span><span class="badge1" style="background-image:none"></span><span class="badgecount"></span></span>');
-        }
-        if (acs[k].silver) {
-          $badgesTd.append('<span title="' + acs[k].silver + ' silver badges"><span class="badge2"></span><span class="badgecount">' + acs[k].silver + '</span></span>');
-        } else {
-          $badgesTd.append('<span><span class="badge1" style="background-image:none"></span><span class="badgecount"></span></span>');
-        }
-        if (acs[k].bronze) {
-          $badgesTd.append('<span title="' + acs[k].bronze + ' bronze badges"><span class="badge3"></span><span class="badgecount">' + acs[k].bronze + '</span></span>');
-        } else {
-          $badgesTd.append('<span><span class="badge1" style="background-image:none"></span><span class="badgecount"></span></span>');
-        }
-      });
-
-      $('.user-accounts .badges span').css({
-        'min-width': '20px',
-        'display': 'inline-block',
-      });
-
-    },
-
     quickAuthorInfo: function() {
       // Description: Shows when the post's author was last active and their registration state
 
