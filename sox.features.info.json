@@ -49,7 +49,7 @@
             "extended_description": "Changes the favourite tag question highlighting to be a more subtle, coloured left-border",
             "meta": "https://meta.stackexchange.com/q/238591",
             "match": "",
-            "exclude": "*://chat.*.com/*,*://*/questions/*,*://*/questions/ask",
+            "exclude": "*://chat.*.com/*,*://*/questions/ask",
             "feature_packs": ["major_ui", "key_feature", "power_user"]
         }, {
             "name": "isQuestionHot",
@@ -456,7 +456,7 @@
             "desc": "Change 'share' link to format of [post-name](url)",
             "extended_description": "When you click 'share' under a post, this will convert the URL given to a markdown-friendly version, with the post name as the link text. This feature also automatically copies the converted string to your clipboard",
             "meta": "https://meta.stackexchange.com/q/126544",
-            "match": "*://*/questions/*,*://*/review*",
+            "match": "*://*/questions/*",
             "exclude": "SE1.0,*://*/questions/ask,*://*/questions/tagged*,*://*/questions/greatest-hits*"
         }, {
             "name": "sortByBountyAmount",
@@ -501,7 +501,7 @@
             "name": "showMetaReviewCount",
             "desc": "Add how many reviews are available on Meta to the main site review page",
             "meta": "",
-            "match": "*://*/review",
+            "match": "*://*/review$",
             "exclude": "*://meta.*.com/*"
         }, {
             "name": "copyCode",
@@ -544,4 +544,3 @@
         }]
     }
 }
-
