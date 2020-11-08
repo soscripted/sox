@@ -1,3 +1,4 @@
+/* globals Notifier, fkey, jQuery */
 (function(sox, $) {
   'use strict';
 
@@ -39,11 +40,14 @@
     markEmployees: function () {
       // Description: Adds the Stack Exchange logo next to users that *ARE* Stack Exchange employees
 
-      const $icon = '<svg style="color:' + $('.mod-flair').css('color') + '" aria-hidden="true" class="sox-markEmployees-logo sox-sprite svg-icon iconStackExchange" width="18" height="18" viewBox="0 0 18 18"><path d="M15 1H3a2 2 0 0 0-2 2v2h16V3a2 2 0 0 0-2-2zM1 13c0 1.1.9 2 2 2h8v3l3-3h1a2 2 0 0 0 2-2v-2H1v2zm16-7H1v4h16V6z"></path></svg>';
+      const icon = sox.sprites.getSvg('se_logo');
+      icon.classList.add('iconStackExchange');
+      icon.classList.add('svg-icon');
+      icon.classList.add('sox-markEmployees-logo');
       const logoSpan = document.createElement('span');
       logoSpan.className = 'sox-markEmployees';
       logoSpan.title = 'employee (added by SOX)';
-      logoSpan.innerHTML = $icon;
+      logoSpan.appendChild(icon);
 
       function getIds() {
         const anchors = [...document.querySelectorAll('a.comment-user, .user-details a, .question-summary .started a')].filter(el => {
@@ -72,9 +76,7 @@
           for (let i = 0; i < items.length; i++) {
             if (!items[i].is_employee) continue;
             const userId = items[i].user_id;
-            anchors.filter(el => el.href.contains(`/users/${userId}/`)).forEach(el => {
-              el.appendChild(logoSpan.cloneNode(true));
-            });
+            anchors.filter(el => el.href.contains(`/users/${userId}/`)).forEach(el => el.appendChild(logoSpan.cloneNode(true)));
           }
         });
       }
@@ -221,7 +223,9 @@
       }
 
       const kbdBtn = '<li class="wmd-button wmd-kbd-button-sox" title="surround selected text with <kbd> tags"><span style="background-image:none;">kbd</span></li>';
-      const listBtn = '<li class="wmd-button wmd-bullet-button-sox" title="add dashes (\'-\') before every line to make a bullet list"><span style="background-image:none;">&#x25cf;</span></li>';
+      const listBtn = `<li class="wmd-button wmd-bullet-button-sox" title="add "-" before every line to make a bullet list">
+                         <span style="background-image:none;">&#x25cf;</span>
+                       </li>`;
 
       function loopAndAddHandlers() {
         const redoButtons = [...document.querySelectorAll('[id^="wmd-redo-button"]')];
@@ -328,12 +332,9 @@
       }
 
       function createDialogEditReasons() {
-        const $settingsDialog = sox.helpers.createModal({
+        const settingsDialog = sox.helpers.createModal({
           'header': 'SOX: View/Remove Edit Reasons',
           'id': 'dialogEditReasons',
-          'css': {
-            'min- width': '50%',
-          },
           'html': `<div id="currentValues" class="sox-editComment-currentValues"></div>
                   <br />
                   <h3 style="color: var(--fc-dark)">Add a custom reason</h3>
@@ -364,7 +365,7 @@
           }
         });
 
-        $('body').append($settingsDialog);
+        document.body.appendChild(settingsDialog);
         $('#dialogEditReasons').show(500);
       }
 
@@ -417,7 +418,8 @@
         const options = getOptions();
         const index = options.findIndex(opt => opt[optionToEdit]);
 
-        $(this).html('Save').addClass('sox-editComment-saveDialogButton').parent().find('section').attr('contenteditable', true).css('border', '1px solid var(--black-200)');
+        $(this).html('Save').addClass('sox-editComment-saveDialogButton').parent()
+               .find('section').attr('contenteditable', true).css('border', '1px solid var(--black-200)');
         $(document).on('click', '.sox-editComment-saveDialogButton', function() {
           $(this).html('Edit').removeClass('sox-editComment-saveDialogButton').parent().find('section').attr('contenteditable', false).css('border', 'none');
           const newName = $(this).parent().find('section').first().html();
@@ -630,9 +632,11 @@
     sortByBountyAmount: function() {
       // Description: For adding some buttons to sort bounty's by size
 
-      const sortButton = `<button class="s-btn s-btn__muted s-btn__outlined s-btn__sm s-btn__dropdown" role="button" data-controller="s-popover" data-action="s-popover#toggle"
-                           data-target="se-uql.bountyAmount" aria-haspopup="true" aria-expanded="false" aria-controls="sox-bounty-popover">SOX: sort by bounty</button>`
-      const sortPopover = `<div class="s-popover z-dropdown ws2" id="sox-bounty-popover" data-target="se-uql.bountyAmount" style="margin: 0px;" data-popper-placement="bottom">
+      const sortButton = `<button class="s-btn s-btn__muted s-btn__outlined s-btn__sm s-btn__dropdown" role="button" data-controller="s-popover"
+                                  data-action="s-popover#toggle" data-target="se-uql.bountyAmount" aria-haspopup="true"
+                                  aria-expanded="false" aria-controls="sox-bounty-popover">SOX: sort by bounty</button>`
+      const sortPopover = `<div class="s-popover z-dropdown ws2" id="sox-bounty-popover" data-target="se-uql.bountyAmount"
+                                style="margin: 0px;" data-popper-placement="bottom">
                                <div class="s-popover--arrow" style="position: absolute; left: 0px; transform: translate(99px, 0px);"></div>
                                <ul class="list-reset mtn8 mbn8 js-uql-navigation">
                                    <li class="uql-item my0"><a id="largestFirst" class="mln12 mrn12 px12 py6 fl1 s-block-link">Largest first</a></li>
@@ -682,7 +686,7 @@
         const divToReturn = document.createElement('div');
         divToReturn.title = 'SOX: this is a hot network question!';
         divToReturn.className = `sox-hot ${className || ''}`;
-        $(divToReturn).append(sox.sprites.getSvg('hot'));
+        divToReturn.appendChild(sox.sprites.getSvg('hot'));
         return divToReturn;
       }
 
@@ -714,6 +718,7 @@
           featureId: 'isQuestionHot',
           cacheDuration: 60 * 8, // Cache for 8 hours
         }, results => {
+          if (!results) return;
           for (let i = 0; i < results.length; i++) {
             const result = results[i];
             if (!result.comment // there's no comment, post was created
@@ -771,11 +776,12 @@
           if (hour === 0) hour += 12;
         }
 
-        const newTimestamp = month + ' ' + date.getDate() + (new Date().getFullYear() == date.getFullYear() ? '' : ' \'' + year) + ' at ' + hour + ':' + minute + dayTime;
+        const newTimestamp = month + ' ' + date.getDate() + (new Date().getFullYear() == date.getFullYear() ? '' : ' \'' + year) +' at ' + hour + ':' + minute + dayTime;
         element.innerText = newTimestamp;
       }
 
-      [...document.querySelectorAll('span.relativetime, span.relativetime-clean')].filter(el => el.innerText.contains('at')).forEach(element => updateTimestamps(element));
+      [...document.querySelectorAll('span.relativetime, span.relativetime-clean')].filter(el => el.innerText.contains('at'))
+                                                                                  .forEach(element => updateTimestamps(element));
     },
 
     autoShowCommentImages: function() {
@@ -901,8 +907,8 @@
       // https://github.com/shu8/SE_OptionalFeatures/pull/14:
       // https://github.com/shu8/Stack-Overflow-Optional-Features/issues/28: Thanks @SnoringFrog for fixing this!
 
-      const containerTopMargin = window.getComputedStyle(document.querySelector('.container')).getPropertyValue('margin-top');
-      const bodyTopPadding = window.getComputedStyle(document.body).getPropertyValue('padding-top');
+      const containerTopMargin = sox.helpers.getCssProperty(document.querySelector('.container'), 'margin-top');
+      const bodyTopPadding = sox.helpers.getCssProperty(document.body, 'padding-top');
       // .votecell is necessary; e.g., the number of votes of questions on the Questions list for a site uses the .vote class too
       [...document.querySelectorAll('.votecell')].forEach(votecell => votecell.classList.add('sox-stickyVoteButtons'));
       // Seems like most sites use margin-top on the container, but Meta and SO use padding on the body
@@ -917,7 +923,8 @@
 
       function betterTitle() {
         if (document.querySelector('.sox-new-title') || document.body.classList.contains('soup-mse248646-fixed')) return; // title already added || conflicts with SOUP
-        [...document.querySelectorAll('.suggested-edit div.summary h2 a.question-hyperlink')].filter(el => el.querySelector('.diff-delete, .diff-add')).forEach(element => {
+        [...document.querySelectorAll('.suggested-edit div.summary h2 a.question-hyperlink')]
+                    .filter(el => el.querySelector('.diff-delete, .diff-add')).forEach(element => {
           const oldTitle = element.parentNode;
           const oldTitleClone = oldTitle.cloneNode(true);
           oldTitleClone.classList.add('sox-new-title');
@@ -950,7 +957,8 @@
             chatLink = 'https://chat.meta.stackexchange.com';
           } else if (href.indexOf('meta') > -1) { // For the usual meta sites
             link = 'https://' + href.split('meta.').shift() + href.split('meta.').pop();
-            chatLink = 'https://chat.stackexchange.com?tab=site&host=' + href.split('meta.').shift() + href.split('meta.').pop().split('/').shift(); // We don't need "meta." in the chat links
+            // We don't need "meta." in the chat links
+            chatLink = 'https://chat.stackexchange.com?tab=site&host=' + href.split('meta.').shift() + href.split('meta.').pop().split('/').shift();
           } else if (href.indexOf('.stackexchange.com') > -1 || href.indexOf('.stackoverflow.com') > -1) { // For the majority of SE sites, and other languages of SO
             link = 'https://' + href.split('.').shift() + '.meta' + href.split(href.split('.').shift()).pop();
           } else if (href.indexOf('stackapps') == -1) { // For sites that have unique URLs, e.g. serverfault.com (except StackApps, which has no meta)
@@ -1026,8 +1034,9 @@
       diamond.className = '-link';
       diamond.title = 'Moderator inbox (recent meta questions)';
 
-      const diamondSvg = '<svg aria-hidden="true" class="svg-icon" viewbox="0 0 18 18" style="width: 18px; height: 18px;"><path d="M8.4.78c.33-.43.87-.43 1.3 0l5.8 7.44c.33.43.33 1.13 0 1.56l-5.8 7.44c-.33.43-.87.43-1.2 0L2.6 9.78a1.34 1.34 0 0 1 0-0.156L8.4.78z"></path></svg>'
-      diamond.insertAdjacentHTML('beforeend', diamondSvg);
+      const diamondSvg = sox.sprites.getSvg('diamond');
+      diamondSvg.classList.add('svg-icon');
+      diamond.insertAdjacentElement('beforeend', diamondSvg);
 
       diamond.innerHTML = diamond.innerHTML; //Reloads the diamond icon, which is necessary when adding an SVG using jQuery.
       dialog.appendChild(header);
@@ -1039,11 +1048,11 @@
       dialogLi.appendChild(diamond);
       document.querySelector('.my-profile').parentElement.insertAdjacentElement('afterend', dialogLi);
 
-      dialog.style.top = window.getComputedStyle(document.querySelector('.top-bar')).getPropertyValue('height');
+      dialog.style.top = sox.helpers.getCssProperty(document.querySelector('.top-bar'), 'height');
       if (document.querySelector('#metaNewQuestionAlertButton')) document.querySelector('.js-topbar-dialog-corral').appendChild(dialog);
 
       window.addEventListener('mouseup', event => {
-        const dialogDisplay = window.getComputedStyle(dialog).getPropertyValue('display');
+        const dialogDisplay = sox.helpers.getCssProperty(dialog, 'display');
         if (event.target.closest('#metaNewQuestionAlertButton') == diamond) { // diamond has been clicked!
           event.preventDefault();
           diamond.classList.toggle('topbar-icon-on');
@@ -1196,7 +1205,8 @@
               const users = details.by_users.reduce((str, user) => str + ', ' + user.display_name, '').substr(2);
               const closureDate = new Date(questionDetails.closed_date * 1000);
               const timestamp = closureDate.toLocaleString();
-              const buttonHtml = `&nbsp;<span class="standOutDupeCloseMigrated-closed" title="closed as ${details.reason} by ${users} on ${timestamp}">&nbsp;closed&nbsp;</span>`;
+              const buttonHtml = `&nbsp;<span class="standOutDupeCloseMigrated-closed" title="closed as ${details.reason}
+                                                                                                     by ${users} on ${timestamp}">&nbsp;closed&nbsp;</span>`;
 
               question.anchor.insertAdjacentHTML('afterend', buttonHtml);
               break;
@@ -1532,7 +1542,7 @@
           scrollTop: 0,
         }, 50);
       });
-      scrollDiv.appendChild(scrollSprite.get(0));
+      scrollDiv.appendChild(scrollSprite);
       document.body.appendChild(scrollDiv);
 
       if (window.pageYOffset < 150) document.querySelector('#sox-scrollToTop').style.display = 'none';
@@ -1694,7 +1704,7 @@
     chatEasyAccess: function() {
       // Description: Adds options to give a user read/write/no access in chat from their user popup dialog
 
-      const currentUserObject = CHAT.RoomUsers.current();
+      const currentUserObject = sox.Chat.RoomUsers.current();
       if (!(currentUserObject.is_owner || currentUserObject.is_moderator)) return; // only ROs and mods can grant access to other users
       const accessButtons = '<div class="chatEasyAccess">give <b id="read-only">read</b> / <b id="read-write">write</b> / <b id="remove">no</b> access</div>';
 
@@ -1809,7 +1819,9 @@
       // Description: Add an arrow to linked posts in the sidebar to show whether they are linked to or linked from
 
       function getSprite(state, tooltip) {
-        return sox.sprites.getSvg(`chevron_${state}`, tooltip).addClass('sox-linkedToFrom-chevron');
+        const linkedToSprite = sox.sprites.getSvg(`chevron_${state}`, tooltip)
+        linkedToSprite.classList.add('sox-linkedToFrom-chevron');
+        return linkedToSprite;
       }
 
       const currentPageId = +location.href.match(/\/(\d+)\//)[1];
@@ -1828,20 +1840,20 @@
           if ([...document.querySelectorAll('a[href*="' + id + '"]')].filter(el => document.querySelector('#sidebar a') !== el).length > 2) {
             // If a link from 'linked questions' does exist elsewhere on this page (except from the linked section!)
             // then we know that this page definitely references the linked post
-            anchor.insertAdjacentHTML('beforeend', getSprite('right', 'Current page links to this question')[0].outerHTML);
+            anchor.appendChild(getSprite('right', 'Current page links to this question'));
 
             // However, the linked post might also reference the current page, so let's check:
             if (pagesThatLinkToThisPage.find(question => question.question_id === currentPageId && question.qustion_id === id)) {
               // The current page is linked to from question_id (which is also the current anchor in the loop)
               sox.debug(`linkedToFrom: link to current page (${currentPageId}) exists on question ${id}`);
-              anchor.insertAdjacentHTML('beforeend', getSprite('left', 'This question links to the current page')[0].outerHTML);
+              anchor.appendChild(getSprite('left', 'This question links to the current page'));
             } else {
               sox.debug(`linkedToFrom: link to current page not found on question ${id}`);
             }
           } else {
             // If a link from 'linked questions' doesn't exist on the rest of the page
             // Then it must be there _only_ due to the fact that the linked post references the current page
-            anchor.insertAdjacentHTML('beforeend', getSprite('left', 'This question links to the current page')[0].outerHTML);
+            anchor.appendChild(getSprite('left', 'This question links to the current page'));
           }
         });
       });
@@ -1870,7 +1882,7 @@
                                   title="${lastSeenDate.toJSON().replace('T', ' ').replace('.000', '')}"
                                   value="${lastSeenDate.toLocaleString()}"></time>`;
 
-          infoDiv.appendChild(sox.sprites.getSvg('access_time')[0]);
+          infoDiv.appendChild(sox.sprites.getSvg('access_time'));
           infoDiv.insertAdjacentHTML('beforeend', timeHtml);
 
           parentDiv.appendChild(infoDiv);
@@ -2053,7 +2065,7 @@
         //Remove excess spacing to the left of the button (by emptying .meta, which has "&nbsp" in it), and set the button color to the background color
         const metaElement = this.parentElement.querySelector('.meta');
         metaElement.innerHTML = '';
-        metaElement.style.backgroundColor = window.getComputedStyle(this.parentElement).getPropertyValue('background-color')
+        metaElement.style.backgroundColor = sox.helpers.getCssProperty(this.parentElement, 'background-color')
         metaElement.style.paddingRight = '1px'; // The "padding-right: 1px" is to avoid some weird bug I can't figure out how to fix
         metaElement.appendChild(replySpan);
         metaElement.style.display = 'block';
@@ -2076,7 +2088,9 @@
       if (settings.duplicate || settings.closed || settings.migrated || settings.onHold) {
         [...document.querySelectorAll('.question-summary')].forEach(summary => { // Find the questions and add their id's and statuses to an object
           const text = summary.querySelectorAll('.summary a')[0].innerText.trim();
-          if ((text.match(/\[duplicate\]$/) && settings.duplicate) || (text.match(/\[closed\]$/) && settings.closed) || (text.match(/\[migrate\]$/) && settings.migrated)) {
+          if ((text.match(/\[duplicate\]$/) && settings.duplicate)
+              || (text.match(/\[closed\]$/) && settings.closed)
+              || (text.match(/\[migrate\]$/) && settings.migrated)) {
             summary.style.display = 'none';
           }
         });
@@ -2200,10 +2214,11 @@
         // https://github.com/soscripted/sox/issues/218#issuecomment-281148327 reason for selector:
         // http://stackoverflow.com/a/11061657/3541881
 
-        const copySprite = sox.sprites.getSvg('copy', 'Copy code to clipboard (SOX)').addClass('sox-copyCodeButton');
+        const copySprite = sox.sprites.getSvg('copy', 'Copy code to clipboard (SOX)')
+        copySprite.classList.add('sox-copyCodeButton');
 
         [...document.querySelectorAll('pre')].filter(el => !el.previousElementSibling.classList.contains('sox-copyCodeButton'))
-                                             .forEach(element => element.insertAdjacentHTML('beforebegin', copySprite[0].outerHTML));
+                                             .forEach(element => element.insertAdjacentHTML('beforebegin', copySprite));
 
         [...document.querySelectorAll('pre')].forEach(pre => {
           pre.addEventListener('mouseover', () => { pre.previousElementSibling.style.display = 'block'; });
@@ -2270,7 +2285,8 @@
     openLinksInNewTab: function(settings) {
       // Description: Open any links to the specified sites in a new tab by default
 
-      const openSprite = sox.sprites.getSvg('launch', 'SOX: this link will open in a new tab').addClass('sox-openLinksInNewTab-externalLink');
+      const openSprite = sox.sprites.getSvg('launch', 'SOX: this link will open in a new tab');
+      openSprite.classList.add('sox-openLinksInNewTab-externalLink');
       settings = settings.linksToOpenInNewTab;
       if (!settings) return;
       settings = settings.replace(' ', '').split(',');
@@ -2431,53 +2447,60 @@
       }
 
       function generateSettingsTableHtml(magicLinks) {
-        const $magicLinksTable = $(`
-        <table class='sox-customMagicLinks-settings-table'>
-          <tr>
-            <th>Text</th>
-            <th>Replacement</th>
-            <th>Link</th>
-          </tr>
-        </table>`);
-        for (let i = 0; i < magicLinks.length; i++) {
-          const currentLink = magicLinks[i];
-          const $saveButton = $('<button/>', {
-            'text': 'save',
-            'click': function () {
-              const $parentTr = $(this).parent().parent();
-              const index = $parentTr.attr('data-magic-link-index');
-              magicLinks[index].text = $parentTr.find('.magic-link-text').text();
-              magicLinks[index].replacement = $parentTr.find('.magic-link-replacement').text();
-              magicLinks[index].link = $parentTr.find('.magic-link-link').text();
-              window.alert('Your changes were saved!');
-              updateGMValue(magicLinks);
-            },
+        const magicLinksTable = document.createElement('table');
+        magicLinksTable.className = 'sox-customMagicLinks-settings-table s-table';
+        magicLinksTable.innerHTML = `<tr>
+                                       <th>Text</th>
+                                       <th>Replacement</th>
+                                       <th>Link</th>
+                                     </tr>`;
+
+        magicLinks.forEach((currentLink, i) => {
+          const saveButton = document.createElement('button');
+          saveButton.innerText = 'save';
+          saveButton.addEventListener('click', function() {
+            const parentTr = this.parentElement.parentElement;
+            const index = parentTr.getAttribute('data-magic-link-index');
+            magicLinks[index].text = parentTr.querySelector('.magic-link-text').innerText;
+            magicLinks[index].replacement = parentTr.querySelector('.magic-link-replacement').innerText;
+            magicLinks[index].link = parentTr.querySelector('.magic-link-link').innerText;
+            window.alert('Your changes were saved!');
+            updateGMValue(magicLinks);
           });
-          const $deleteButton = $('<button/>', {
-            'text': 'delete',
-            'click': function () {
-              magicLinks.splice($(this).parent().attr('data-magic-link-index'), 1);
-              $(this).parent().parent().remove();
-              updateGMValue(magicLinks);
-            },
+
+          const deleteButton = document.createElement('button');
+          deleteButton.innerText = 'delete';
+          deleteButton.addEventListener('click', function() {
+            magicLinks.splice(this.parentElement.getAttribute('data-magic-link-index'), 1);
+            this.parentElement.parentElement.remove();
+            updateGMValue(magicLinks);
           });
-          const $linkDetails = $(
-            `<tr class='sox-magic-link-details' data-magic-link-index=${i}>
-              <td contenteditable class='magic-link-text'>${currentLink.text}</td>
-              <td contenteditable class='magic-link-replacement'>${currentLink.replacement}</td>
-              <td contenteditable class='magic-link-link'>${currentLink.link}</td>
-            </tr>`);
-          $linkDetails.append($('<td/>').append($saveButton)).append($('<td/>').append($deleteButton));
-          $magicLinksTable.append($linkDetails);
-        }
-        return $magicLinksTable;
+
+          const linkDetails = document.createElement('tr');
+          linkDetails.className = 'sox-magic-link-details';
+          linkDetails.setAttribute('data-magic-link-index', i);
+          linkDetails.innerHTML = `<td contenteditable class='magic-link-text'>${currentLink.text}</td>
+                                   <td contenteditable class='magic-link-replacement'>${currentLink.replacement}</td>
+                                   <td contenteditable class='magic-link-link'>${currentLink.link}</td>`;
+
+          const saveButtonTd = document.createElement('td');
+          saveButtonTd.appendChild(saveButton);
+          const deleteButtonTd = document.createElement('td');
+          deleteButtonTd.appendChild(deleteButton);
+
+          linkDetails.appendChild(saveButtonTd)
+          linkDetails.appendChild(deleteButtonTd);
+          magicLinksTable.appendChild(linkDetails);
+        });
+
+        return magicLinksTable;
       }
 
-      function replacePlaceholders(text, $textarea) {
-        const baseUrl = $(location).attr('protocol') + '//' + $(location).attr('hostname');
-        const localMetaBase = $(location).attr('protocol') + '//meta.' + $(location).attr('hostname');
-        const questionId = $('.question').data('questionid');
-        const answerId = $textarea.closest('.answer').data('answerid');
+      function replacePlaceholders(text, textarea) {
+        const baseUrl = location.protocol + '//' + location.hostname;
+        const localMetaBase = location.protocol + '//meta.' + location.hostname;
+        const questionId = document.querySelector('.question').getAttribute('data-questionid');
+        const answerId = textarea.closest('.answer').getAttribute('data-answerid');
 
         return text
           .replace(/\$BASEURL\$/ig, baseUrl)
@@ -2486,63 +2509,60 @@
           .replace(/\$ANSWERID\$/ig, answerId);
       }
 
-      function magicLink($el) {
-        const $textarea = $el.is('textarea') ? $el : $el.parents('form').find('textarea').eq(0);
-        let newVal = $textarea.val();
-        for (let i = 0; i < magicLinks.length; i++) {
-          const currentMagicLink = magicLinks[i];
+      function magicLink(el) {
+        const textarea = el.nodeName == 'TEXTAREA' ? el : el.closest('form').querySelectorAll('textarea')[0];
+        let newVal = textarea.value;
+
+        magicLinks.forEach(currentMagicLink => {
           const replacementText = currentMagicLink.replacement;
-          const url = replacePlaceholders(currentMagicLink.link, $textarea);
+          const url = replacePlaceholders(currentMagicLink.link, textarea);
           const regex = new RegExp('\\[' + currentMagicLink.text + '\\]', 'g');
-          newVal = newVal.replace(regex, '[' + replacementText + '](' + url + ')');
-        }
-        $textarea.val(newVal);
+          newVal = newVal.replace(regex, `[${replacementText}](${url})`);
+        });
+
+        textarea.value = newVal;
       }
 
       if (sox.site.href.indexOf('/questions') !== -1) {
-        $(document).on('keydown', '.comment-form textarea', function (e) {
-          if (e.keyCode == 13) magicLink($(this));
+        $(document).on('keydown', '.comment-form textarea', function(e) {
+          if (e.keyCode == 13) magicLink(e.target);
         });
-        $(document).on('click', '.comment-form input[type="submit"], .form-submit #submit-button, form.inline-post button[id*="submit-button-"]', function () {
-          magicLink($(this));
+        $(document).on('click', '.comment-form input[type="submit"], .form-submit #submit-button, form.inline-post button[id*="submit-button-"]', function() {
+          magicLink(this);
         });
       }
 
       function createSettingsDialog(magicLinks) {
-        const $settingsDialog = sox.helpers.createModal({
+        const settingsDialog = sox.helpers.createModal({
           'header': 'SOX: Magic Link Settings',
-          'css': {
-            'min-width': '50%',
-          },
           'html': '<i>the table cells below are editable; be sure to save any changes!</i><br><br><div class="table-container"></div>',
         });
-        const $settingsDialogContent = $settingsDialog.find('.sox-custom-dialog-content');
+        const settingsDialogContent = settingsDialog.querySelector('.sox-custom-dialog-content');
 
-        const $newMagicLinkButton = $('<button/>', {
-          'text': 'new link',
-          'click': function () {
-            const text = window.prompt('Enter the magic link text (e.g. edit/q)');
-            const replacement = window.prompt('Enter the text you would like the link to show as (e.g. Edit Question)');
-            const link = window.prompt('Enter the replacement link, using the placeholders as required');
+        const newMagicLinkButton = document.createElement('button');
+        newMagicLinkButton.innerText = 'new link';
+        newMagicLinkButton.onclick = function() {
+          const text = window.prompt('Enter the magic link text (e.g. edit/q)');
+          const replacement = window.prompt('Enter the text you would like the link to show as (e.g. Edit Question)');
+          const link = window.prompt('Enter the replacement link, using the placeholders as required');
 
-            if (text && replacement && link) {
-              magicLinks.push({
-                text,
-                replacement,
-                link,
-              });
-              updateGMValue(magicLinks);
-              $settingsDialogContent.find('.table-container table').remove();
-              $settingsDialogContent.find('.table-container').append(generateSettingsTableHtml(magicLinks));
-            } else {
-              window.alert('Please enter details for all three fields');
-            }
-          },
-        });
-        $settingsDialogContent.find('.table-container').append(generateSettingsTableHtml(magicLinks));
-        $settingsDialogContent.append($newMagicLinkButton);
+          if (text && replacement && link) {
+            magicLinks.push({
+              text,
+              replacement,
+              link,
+            });
+            updateGMValue(magicLinks);
+            settingsDialogContent.querySelector('.table-container table').remove();
+            settingsDialogContent.querySelector('.table-container').appendChild(generateSettingsTableHtml(magicLinks));
+          } else {
+            window.alert('Please enter details for all three fields');
+          }
+        }
+        settingsDialogContent.querySelector('.table-container').appendChild(generateSettingsTableHtml(magicLinks));
+        settingsDialogContent.appendChild(newMagicLinkButton);
 
-        $('body').append($settingsDialog);
+        document.body.appendChild(settingsDialog);
       }
 
       sox.helpers.addButtonToHelpMenu({
@@ -2560,10 +2580,6 @@
 
       const modalAttributes = {
         header: 'SOX: Linked Image',
-        css: {
-          'min-width': '90%',
-          'min-height': '90%',
-        },
         id: 'sox-linked-image-modal',
       };
 
@@ -2576,10 +2592,11 @@
             e.preventDefault();
             // Create modal on click instead of outside; modal is removed when closed
             // so reference would become invalid
-            modalAttributes.header = `SOX: Linked Image <a class='sox-openImagesAsModals-sourceLink' target='_blank' rel='noopener noreferrer' href='${img.src}'>source</a>`;
-            const $modal = sox.helpers.createModal(modalAttributes);
-            $modal.find('.sox-custom-dialog-content').html(`<img width='100%' height='100%' src='${img.src}' />`);
-            if (!document.getElementById('sox-linked-image-modal')) document.body.append($modal);
+            modalAttributes.header = `SOX: Linked Image <a class="sox-openImagesAsModals-sourceLink" target="_blank"
+                                                             rel="noopener noreferrer" href="${img.src}">source</a>`;
+            const modal = sox.helpers.createModal(modalAttributes);
+            modal.querySelector('.sox-custom-dialog-content').innerHTML = `<img width="100%" height="100%" src="${img.src}"/>`;
+            if (!document.getElementById('sox-linked-image-modal')) document.body.appendChild(modal);
           });
         });
       }
@@ -2650,17 +2667,16 @@
 
       [...document.querySelectorAll('.comment-body')].forEach(comment => {
         const soxReplyLink = comment.querySelector('.soxReplyLink');
-        const copyButton = sox.sprites.getSvg('copy', 'SOX: copy comment markdown', {
-          cursor: 'pointer',
-          display: 'none',
-        });
+        const copyButton = sox.sprites.getSvg('copy', 'SOX: copy comment markdown');
+        copyButton.style.cursor = 'pointer';
+        copyButton.style.display = 'd-none';
         const commentId = +comment.parentElement.parentElement.getAttribute('data-comment-id');
 
-        soxReplyLink ? $(soxReplyLink).append(copyButton) : $(comment).append(copyButton);
-        comment.addEventListener('mouseover', () => { copyButton.show(); });
-        comment.addEventListener('mouseleave', () => { copyButton.hide(); });
+        soxReplyLink ? soxReplyLink.appendChild(copyButton) : comment.appendChild(copyButton);
+        comment.addEventListener('mouseover', () => { copyButton.style.display = 'block'; });
+        comment.addEventListener('mouseleave', () => { copyButton.style.display = 'none'; });
 
-        copyButton.click(function() {
+        copyButton.addEventListener('click', function() {
           sox.helpers.getFromAPI({
             endpoint: 'comments',
             ids: [commentId],
