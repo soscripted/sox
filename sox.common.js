@@ -4,6 +4,7 @@
   const SOX_SETTINGS = 'SOXSETTINGS';
   const commonInfo = JSON.parse(GM_getResourceText('common'));
   const lastVersionInstalled = GM_getValue('SOX-lastVersionInstalled');
+  var hookAjaxObject = {};
 
   sox.info = {
     version: (typeof GM_info !== 'undefined' ? GM_info.script.version : 'unknown'),
@@ -483,6 +484,24 @@
     },
     getCssProperty: function(element, propertyValue) {
       return window.getComputedStyle(element).getPropertyValue(propertyValue);
+    },
+    runAjaxHooks: function() {
+      let originalOpen = XMLHttpRequest.prototype.open;
+      XMLHttpRequest.prototype.open = function() {
+        this.addEventListener('load', function() {
+          for (const key in hookAjaxObject) {
+            if (this.responseURL.match(new RegExp(key))) hookAjaxObject[key](); // if the URL matches the regex, then execute the respective function
+          }
+        });
+        originalOpen.apply(this, arguments);
+      }
+    },
+    addAjaxListener: function(regexToMatch, functionToExecute) {
+      if (!regexToMatch) { // all information has been inserted in hookAjaxObject
+        sox.helpers.runAjaxHooks();
+        return;
+      }
+      hookAjaxObject[regexToMatch] = functionToExecute;
     },
   };
 

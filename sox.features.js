@@ -15,16 +15,17 @@
     dragBounty: function() {
       // Description: Makes the bounty window draggable
 
-      const target = document.getElementById('question');
-      sox.helpers.observe(target, '#start-bounty-popup', () => {
-        $('#start-bounty-popup').draggable({
+      sox.helpers.addAjaxListener('\\/posts\\/bounty\\/\\d+', () => {
+        const bountyPopup = document.querySelector('#start-bounty-popup');
+        $(bountyPopup).draggable({
           drag: function() {
             $(this).css({
               'width': 'auto',
               'height': 'auto',
             });
           },
-        }).css('cursor', 'move');
+        })
+        bountyPopup.style.cursor = 'move';
       });
     },
 
@@ -82,8 +83,8 @@
       }
 
       getIds();
-      $(document).on('sox-new-comment', getIds);
-      $(document).on('sox-new-review-post-appeared', getIds);
+      window.addEventListener('sox-new-comment', getIds);
+      window.addEventListener('sox-new-review-post-appeared', getIds);
     },
 
     copyCommentsLink: function() {
@@ -108,7 +109,7 @@
       }
 
       copyLinks();
-      $(document).on('sox-new-comment', copyLinks);
+      window.addEventListener('sox-new-comment', copyLinks);
     },
 
     highlightQuestions: function() {
@@ -148,7 +149,7 @@
       if (document.getElementsByClassName('question-summary').length) {
         const targetMainPage = document.getElementById('question-mini-list');
         const targetQuestionsPage = document.getElementById('questions');
-        sox.helpers.observe([targetMainPage, targetQuestionsPage], '.question-summary', highlight);
+        sox.helpers.addEventListener('\\/posts\\/ajax-load-realtime-list', highlight);
       }
     },
 
@@ -180,7 +181,7 @@
       }
 
       color();
-      $(document).on('sox-new-comment', color);
+      window.addEventListener('sox-new-comment', color);
     },
 
     kbdAndBullets: function() {
@@ -244,7 +245,7 @@
         }
       }
 
-      $(document).on('sox-edit-window', loopAndAddHandlers);
+      window.addEventListener('sox-edit-window', loopAndAddHandlers);
 
       loopAndAddHandlers();
 
@@ -460,7 +461,7 @@
       });
 
       addCheckboxes();
-      $(document).on('sox-edit-window', addCheckboxes);
+      window.addEventListener('sox-edit-window', addCheckboxes);
     },
 
     shareLinksPrivacy: function() {
@@ -579,8 +580,8 @@
 
       addReplyLinks();
 
-      $(document).on('sox-new-comment', addReplyLinks);
-      $(document).on('sox-new-review-post-appeared', addReplyLinks);
+      window.addEventListener('sox-new-comment', addReplyLinks);
+      window.addEventListener('sox-new-review-post-appeared', addReplyLinks);
     },
 
     parseCrossSiteLinks: function() {
@@ -614,7 +615,7 @@
       }
 
       expandLinks();
-      $(document).on('sox-new-review-post-appeared', expandLinks);
+      window.addEventListener('sox-new-review-post-appeared', expandLinks);
     },
 
     confirmNavigateAway: function() {
@@ -804,8 +805,8 @@
 
       setTimeout(showImages, 2000); // setTimeout needed because FF refuses to load the feature on page load and does it before so the comment isn't detected.
 
-      $(document).on('sox-new-comment', showImages);
-      $(document).on('sox-new-review-post-appeared', showImages);
+      window.addEventListener('sox-new-comment', showImages);
+      window.addEventListener('sox-new-review-post-appeared', showImages);
     },
 
     showCommentScores: function() {
@@ -841,8 +842,7 @@
       }
 
       addLabelsAndHandlers();
-      const target = document.getElementById('mainbar-full');
-      if (target) sox.helpers.observe(target, '.history-table', addLabelsAndHandlers);
+      sox.helpers.addAjaxListener('\\/ajax\\/users\\/tab\\/\\d+\\?tab=activity&sort=comments', addLabelsAndHandlers);
     },
 
     answerTagsSearch: function() {
@@ -941,7 +941,7 @@
       }
 
       betterTitle();
-      $(document).on('sox-new-review-post-appeared', betterTitle);
+      window.addEventListener('sox-new-review-post-appeared', betterTitle);
     },
 
     metaChatBlogStackExchangeButton: function() {
@@ -1134,7 +1134,7 @@
         document.head.insertAdjacentHTML('beforeend', betterCssSource);
       }
       addCSS();
-      $(document).on('sox-new-review-post-appeared', addCSS);
+      window.addEventListener('sox-new-review-post-appeared', addCSS);
     },
 
     standOutDupeCloseMigrated: function() {
@@ -1244,8 +1244,8 @@
       addLabels();
       const targetMainPage = document.getElementById('question-mini-list');
       const targetQuestionsPage = document.getElementById('questions');
-      sox.helpers.observe([targetMainPage, targetQuestionsPage], '#questions, #question-mini-list', addLabels);
-      $(document).on('sox-new-review-post-appeared', addQuestionStateInReview);
+      sox.helpers.addAjaxListener('\\/posts\\/ajax-load-realtime-list', addLabels);
+      window.addEventListener('sox-new-review-post-appeared', addQuestionStateInReview);
     },
 
     editReasonTooltip: function() {
@@ -1285,7 +1285,7 @@
       }
 
       addTooltips();
-      $(document).on('sox-new-review-post-appeared', addTooltips);
+      window.addEventListener('sox-new-review-post-appeared', addTooltips);
     },
 
     addSBSBtn: function(settings) {
@@ -1424,9 +1424,10 @@
       }
 
       //event listener for adding the sbs toggle button for posting new questions or answers
-      $(document).on('sox-edit-window', (e, target) => {
-        if ($(target).is('.wmd-button-bar')) return; //don't want to catch extra mutation event for button bar
-        SBS(target);
+      window.addEventListener('sox-edit-window', () => {
+        const target = [...document.querySelectorAll('.question, .answer')].filter(post => !post.querySelector('.sox-sbs-toggle'))[0];
+        if (!target) return;
+        SBS(target.querySelector('textarea'));
       });
 
     },
@@ -1504,20 +1505,17 @@
       const PROCESSED_CLASS = 'sox-authorNameAdded';
       const MAX_PROCESSED_AT_ONCE = 20;
 
-      const target = document.querySelector('.-secondary');
-      if (target) {
-        sox.helpers.observe(target, '.inbox-item', () => {
-          const inboxDialog = document.getElementsByClassName(inboxClass)[0];
-          let eligibleElements = [...inboxDialog.querySelectorAll('.inbox-item')];
-          eligibleElements = eligibleElements.slice(0, MAX_PROCESSED_AT_ONCE);
+      sox.helpers.addAjaxListener('\\/topbar\\/inbox', () => {
+        const inboxDialog = document.getElementsByClassName(inboxClass)[0];
+        let eligibleElements = [...inboxDialog.querySelectorAll('.inbox-item')];
+        eligibleElements = eligibleElements.slice(0, MAX_PROCESSED_AT_ONCE);
 
-          const unprocessedElements = eligibleElements.filter(e => !e.classList.contains(PROCESSED_CLASS));
-          unprocessedElements.forEach(element => {
-            setAuthorName(element);
-            element.classList.add(PROCESSED_CLASS);
-          });
+        const unprocessedElements = eligibleElements.filter(e => !e.classList.contains(PROCESSED_CLASS));
+        unprocessedElements.forEach(element => {
+          setAuthorName(element);
+          element.classList.add(PROCESSED_CLASS);
         });
-      }
+      });
     },
 
     flagOutcomeTime: function() {
@@ -1635,7 +1633,7 @@
       }
 
       addButton();
-      $(document).on('sox-new-review-post-appeared', addButton);
+      window.addEventListener('sox-new-review-post-appeared', addButton);
 
       [...document.querySelectorAll('a.expand-post-sox')].forEach(arrow => {
         arrow.addEventListener('click', function() {
@@ -1708,7 +1706,8 @@
       if (!(currentUserObject.is_owner || currentUserObject.is_moderator)) return; // only ROs and mods can grant access to other users
       const accessButtons = '<div class="chatEasyAccess">give <b id="read-only">read</b> / <b id="read-write">write</b> / <b id="remove">no</b> access</div>';
 
-      $(document).on('sox-chat-user-popup', (e, node) => {
+      window.addEventListener('sox-chat-user-popup', () => {
+        const node = document.querySelector('.popup.user-popup');
         const nodeParent = node.parentElement;
         const id = nodeParent.querySelector('a').href.split('/')[4];
 
@@ -1793,8 +1792,6 @@
       // Description: Display reviewer stats on /review/suggested-edits in table form
       // Idea by lolreppeatlol @ http://meta.stackexchange.com/a/277446 :)
 
-      const target = document.querySelector('.mainbar-full');
-
       function displayStats() {
         if (document.querySelector('.sox-tabularReviewerStats-table') || document.querySelector('.js-review-actions').children.length == 5) return;
         let table = '<table class="sox-tabularReviewerStats-table"><tbody><tr><th align="center">User</th><th>Approved</th><th>Rejected</th><th>Improved</th></tr>';
@@ -1812,7 +1809,7 @@
       }
 
       displayStats();
-      sox.helpers.observe(target, '.js-review-more-instructions', displayStats);
+      window.addEventListener('sox-new-review-post-appeared', displayStats);
     },
 
     linkedToFrom: function() {
@@ -1927,7 +1924,7 @@
           sox.debug('quickAuthorInfo userDetailsFromAPI', userDetailsFromAPI);
           addLastSeen(userDetailsFromAPI);
 
-          $(document).on('sox-new-comment', () => { //make sure it doesn't disappear when adding a new comment!
+          window.addEventListener('sox-new-comment', () => { // make sure it doesn't disappear when adding a new comment!
             addLastSeen(userDetailsFromAPI);
           });
         });
@@ -1936,7 +1933,7 @@
       // key: id, value :username
       const postAuthors = {};
 
-      $(document).on('sox-new-review-post-appeared', () => {
+      window.addEventListener('sox-new-review-post-appeared', () => {
         getIdsAndAddDetails(postAuthors);
       });
 
@@ -2232,7 +2229,7 @@
       }
 
       addButton();
-      $(document).on('sox-new-review-post-appeared', addButton);
+      window.addEventListener('sox-new-review-post-appeared', addButton);
 
       $(document).on('click', '.sox-copyCodeButton', function() {
         const copyCodeTextareas = document.getElementsByClassName('sox-copyCodeTextarea');
@@ -2252,7 +2249,6 @@
       // Description: Adds a progress bar showing how many reviews you have left in the day
 
       function generateBarHtml(count, width) {
-        sox.warn(count, width)
         const badgeProgressClone = document.querySelector('#badge-progress').cloneNode(true);
         badgeProgressClone.id = 'sox-dailyReviewBar';
         badgeProgressClone.querySelector('.js-badge-progress-count').innerText = count;
@@ -2279,7 +2275,7 @@
       }
 
       addBar();
-      $(document).on('sox-new-review-post-appeared', addBar);
+      window.addEventListener('sox-new-review-post-appeared', addBar);
     },
 
     openLinksInNewTab: function(settings) {
@@ -2366,7 +2362,7 @@
         });
       }
 
-      $(document).on('sox-edit-window', startLoop);
+      window.addEventListener('sox-edit-window', startLoop);
       startLoop();
     },
 
@@ -2378,7 +2374,7 @@
         setTimeout(() => [...document.querySelectorAll('.comment')].forEach(comment => comment.classList.add('sox-onlyShowCommentActionsOnHover')), 100);
       }
 
-      $(document).on('sox-new-comment', addCSS);
+      window.addEventListener('sox-new-comment', addCSS);
       addCSS();
     },
 
@@ -2397,7 +2393,7 @@
         document.querySelectorAll('.tag-popup .mr8')[1].insertAdjacentElement('afterend', spanToAppend);
       }
 
-      sox.helpers.observe(document.body, '.tag-popup', addWikiLink);
+      sox.helpers.addAjaxListener('\\/tags\\/[^/]+\\/popup', addWikiLink);
     },
 
     addTimelineAndRevisionLinks: function() {
@@ -2650,7 +2646,8 @@
     scrollChatRoomsList: function () {
       // Description: Enable scrolling for room list in usercards and sidebar when there are many rooms
 
-      $(document).on('sox-chat-user-popup', (e, node) => {
+      window.addEventListener('sox-chat-user-popup', () => {
+        const node = document.querySelector('.popup.user-popup');
         if (node.classList.contains('sox-scrollChatRoomsList-user-popup')) return;
         node.classList.add('sox-scrollChatRoomsList-user-popup');
       });
