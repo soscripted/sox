@@ -293,14 +293,14 @@
             "name": "flagPercentages",
             "desc": "Show flagging percentages for each type in the Flag Summary",
             "meta": "",
-            "match": "*://*/users/*",
+            "match": "*://*/users/flag-summary/*",
             "exclude": "*://chat.*.com/*,SE1.0",
             "feature_packs": ["power_user"]
         }, {
             "name": "flagPercentageBar",
             "desc": "Show the total percentage of helpful flags as a coloured bar on the Flag Summary Page",
             "meta": "https://meta.stackoverflow.com/q/310881",
-            "match": "*://*/users/*",
+            "match": "*://*/users/flag-summary/*",
             "exclude": "*://chat.*.com/*,SE1.0",
             "feature_packs": ["power_user"]
         }],
@@ -309,7 +309,7 @@
             "desc": "Hide the Community Bulletin module",
             "meta": "",
             "match": "",
-            "exclude": "*://chat.*.com/*"
+            "exclude": "*://chat.*.com/*,*://*/users/*"
         }, {
             "name": "hideJustHotMetaPosts",
             "desc": "Hide just the 'Hot Meta Posts' sections in the Community Bulletin",
@@ -462,7 +462,7 @@
             "name": "sortByBountyAmount",
             "desc": "Add an option to filter bounties by their amount",
             "meta": "https://meta.stackexchange.com/q/7753",
-            "match": "",
+            "match": "*://*/questions",
             "exclude": "*://*/users/*,*://chat.*.com/*,SE1.0,*://*/questions/*,*://*/review*"
         }, {
             "name": "warnNotLoggedIn",

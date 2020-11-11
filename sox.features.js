@@ -6,7 +6,9 @@
     moveBounty: function() {
       // Description: For moving bounty to the top
 
-      const bountyLinkDiv = document.querySelector('.bounty-link.bounty').parentElement.parentElement;
+      const bountyLink = document.querySelector('.bounty-link.bounty');
+      if (!bountyLink) return; // question not eliglible for bounty
+      const bountyLinkDiv = bountyLink.parentElement.parentElement;
       const cloneBounty = bountyLinkDiv.cloneNode(true);
       bountyLinkDiv.previousElementSibling.insertAdjacentElement('beforebegin', cloneBounty);
       bountyLinkDiv.remove();
@@ -93,18 +95,18 @@
 
       function copyLinks() {
         [...document.querySelectorAll('.js-show-link')].forEach(element => {
-          const $btnToAdd = element.cloneNode(true);
-          $btnToAdd.classList.add('sox-copyCommentsLinkClone');
-          $btnToAdd.addEventListener('click', event => {
+          const btnToAdd = element.cloneNode(true);
+          btnToAdd.classList.add('sox-copyCommentsLinkClone');
+          btnToAdd.addEventListener('click', event => {
             event.preventDefault();
-            $btnToAdd.hide();
+            btnToAdd.style.display = 'none';
           });
 
-          element.parentElement.parentElement.prepend($btnToAdd);
-          element.addEventListener('click', event => $btnToAdd.hide()); // also hide the clone when the other button is clicked!
+          element.parentElement.parentElement.prepend(btnToAdd);
+          element.addEventListener('click', event => { btnToAdd.style.display = 'none'; }); // also hide the clone when the other button is clicked!
 
           const addCommentLink = element.parentElement.querySelector('.js-add-link');
-          addCommentLink.addEventListener('click', event => element.hide()); // https://github.com/soscripted/sox/issues/239
+          addCommentLink.addEventListener('click', event => { element.style.display = 'none'; }); // https://github.com/soscripted/sox/issues/239
         });
       }
 
@@ -116,7 +118,7 @@
       // Description: For highlighting only the tags of favorite questions
 
       function highlight() {
-        [...document.querySelector('.tagged-interesting')].forEach(interestingQuestion => {
+        [...document.querySelectorAll('.tagged-interesting')].forEach(interestingQuestion => {
           interestingQuestion.classList.remove('tagged-interesting');
           interestingQuestion.classList.add('sox-tagged-interesting');
         });
@@ -149,7 +151,7 @@
       if (document.getElementsByClassName('question-summary').length) {
         const targetMainPage = document.getElementById('question-mini-list');
         const targetQuestionsPage = document.getElementById('questions');
-        sox.helpers.addEventListener('\\/posts\\/ajax-load-realtime-list', highlight);
+        sox.helpers.addAjaxListener('\\/posts\\/ajax-load-realtime-list', highlight);
       }
     },
 
@@ -681,8 +683,6 @@
     isQuestionHot: function() {
       // Description: For adding some text to questions that are in the hot network questions list
 
-      const sitename = sox.site.currentApiParameter;
-
       function getHotDiv(className) {
         const divToReturn = document.createElement('div');
         divToReturn.title = 'SOX: this is a hot network question!';
@@ -696,46 +696,49 @@
         document.getElementById('question-header').prepend(getHotDiv());
       }
 
-      if (sox.location.on('/questions')) {
-        const postId = window.location.pathname.split('/')[2];
-        apiCall(postId, sitename);
-      } else if (document.querySelector('.question-summary')) {
-        [...document.querySelectorAll('.question-summary')].forEach(summary => {
-          // Check if .question-summary has an id attribute - SO Teams posts (at the top of the page, if any) don't!
-          if (summary.id) {
-            var postID = summary.id.split('-')[2];
-            apiCall(postID, sitename, summary);
-          }
-        });
+      function addHotTextInSummary(summaryElement) {
+        summaryElement.querySelector('.summary h3').prepend(getHotDiv('question-list'));
       }
 
-      function apiCall(postID, sitename, el) {
+      function questionMatchesCriteria(revisionObject) {
+        return revisionObject.comment // there's comment, post was not created at that revision
+        && !revisionObject.comment.includes('<b>Post Closed</b> as &quot;') // post is not closed
+        && !revisionObject.comment.includes('<b>Removed from Hot Network Questions</b> by') // post has not been removed from HNQ
+        && revisionObject.comment === '<b></b> ' && new Date().getTime() / 1000 - revisionObject.creation_date <= 259200; // question is HNQ AND not 3 days old
+      }
+
+      if (sox.location.on('/questions')) {
+        const postId = window.location.pathname.split('/')[2];
+        getIsQuestionHot(postId);
+      } else if (document.querySelector('.question-summary')) {
+        const questionIds = [];
+        [...document.querySelectorAll('.question-summary')].forEach(summary => {
+          // Check if .question-summary has an id attribute - SO Teams posts (at the top of the page, if any) don't!
+          if (!summary.id) return;
+          questionIds.push(summary.id.split('-')[2]);
+        });
+        getIsQuestionHot(questionIds);
+      }
+
+
+      function getIsQuestionHot(postIds) {
         sox.helpers.getFromAPI({
           endpoint: 'posts',
           childEndpoint: 'revisions',
-          sitename: sitename,
-          filter: '!5RC-)9_aw3mg*i)3*vUhU3Wfl',
-          ids: postID,
+          sitename: sox.site.currentApiParameter,
+          filter: '!SWJaL5tfbL4Ta*2*G*',
+          ids: postIds,
           featureId: 'isQuestionHot',
           cacheDuration: 60 * 8, // Cache for 8 hours
         }, results => {
           if (!results) return;
-          for (let i = 0; i < results.length; i++) {
-            const result = results[i];
-            if (!result.comment // there's no comment, post was created
-              || result.comment.includes('<b>Post Closed</b> as &quot;') // post is closed
-              || result.comment.includes('<b>Removed from Hot Network Questions</b> by') // post has been removed from HNQ
-            ) {
-              break;
-            }
+          // There are two cases:
+          // 1. We are in a question page (/questions/\d+) and we want to check only 1 question => 1 API call
+          // 2. We are in a page with many questions (e.g. /questions). We collect or ids to reduce the API calls and avoid throttling
+          // In both cases, we return an array with the ids of the HNQs. Then, the icons are added where necessary
 
-            if (result.comment === '<b></b> ' // question is HNQ
-              && new Date().getTime() / 1000 - result.creation_date <= 259200 // question is not 3 days old
-            ) {
-              sox.location.on('/questions') ? addHotText() : el.querySelector('.summary h3').prepend(getHotDiv('question-list'));
-              break;
-            }
-          }
+          results.filter(result => questionMatchesCriteria(result))
+                 .forEach(item => sox.location.on('/questions') ? addHotText() : addHotTextInSummary(document.querySelector(`#question-summary-${item.post_id}`)));
         });
       }
     },
@@ -1680,7 +1683,9 @@
     hideJustHotMetaPosts: function() {
       // Description: Hide just the 'Hot Meta Posts' sections in the Community Bulletin
 
-      const bulletinArray = [...document.querySelector('#sidebar .s-sidebarwidget').children[0].children];
+      const sidebar = document.querySelector('#sidebar .s-sidebarwidget');
+      if (!sidebar) return; // probably the user has another feature that removes the whole bulletin
+      const bulletinArray = [...sidebar.children[0].children];
       const hotMetaPostsIndex = bulletinArray.findIndex(item => item.innerText.contains("Hot Meta Posts"));
       bulletinArray.splice(hotMetaPostsIndex).forEach(element => element.remove());
     },
@@ -2124,12 +2129,12 @@
 
       let helpfulFlags = 0;
       [...document.querySelectorAll('li a div')].filter(div => div.innerText == 'helpful').forEach(element => {
-        helpfulFlags += parseInt(element.nextElementSibling.innerText.replace(',', ''));
+        helpfulFlags += parseInt(element.parentElement.lastElementChild.innerText.replace(',', ''));
       });
 
       let declinedFlags = 0;
       [...document.querySelectorAll('li a div')].filter(div => div.innerText == 'declined').forEach(element => {
-        declinedFlags += parseInt(element.nextElementSibling.innerText.replace(',', ''));
+        declinedFlags += parseInt(element.parentElement.lastElementChild.innerText.replace(',', ''));
       });
 
       if (helpfulFlags < 0) return;
@@ -2211,13 +2216,12 @@
         // https://github.com/soscripted/sox/issues/218#issuecomment-281148327 reason for selector:
         // http://stackoverflow.com/a/11061657/3541881
 
-        const copySprite = sox.sprites.getSvg('copy', 'Copy code to clipboard (SOX)')
+        const copySprite = sox.sprites.getSvg('copy', 'Copy code to clipboard (SOX)');
         copySprite.classList.add('sox-copyCodeButton');
 
-        [...document.querySelectorAll('pre')].filter(el => !el.previousElementSibling.classList.contains('sox-copyCodeButton'))
-                                             .forEach(element => element.insertAdjacentHTML('beforebegin', copySprite));
-
-        [...document.querySelectorAll('pre')].forEach(pre => {
+        [...document.querySelectorAll('pre')].filter(el => !el.previousElementSibling || !el.previousElementSibling.classList.contains('sox-copyCodeButton'))
+                                             .forEach(pre => {
+          pre.insertAdjacentElement('beforebegin', copySprite.cloneNode(true));
           pre.addEventListener('mouseover', () => { pre.previousElementSibling.style.display = 'block'; });
           pre.addEventListener('mouseleave', () => { pre.previousElementSibling.style.display = 'none'; });
         });
@@ -2603,7 +2607,6 @@
       // Description: Show HNQ tags on hover in the sidebar
 
       const FILTER_QUESTION_TAGS = '!)5IW-5Quf*cV5LToe(J0BjSBXW19';
-      const PLACEHOLDER = 'fetching tags...';
       const tagsSpan = document.createElement('span');
       tagsSpan.style.innerText = 'SOX: hover over titles to show tags';
       tagsSpan.className = 'sox-addTagsToHNQs-span';
@@ -2624,6 +2627,12 @@
         const sitename = sox.helpers.getSiteNameFromAnchor(el);
 
         el.addEventListener('mouseenter', () => {
+          // sort of caching: hide the tooltip on mouseleave and show it - if it exists on mouseenter
+          const tooltip = el.parentElement.querySelector('.sox-hnq-question-tags-tooltip');
+          if (tooltip) {
+            tooltip.style.display = 'block';
+            return;
+          }
           sox.helpers.getFromAPI({
             endpoint: 'questions',
             ids: id,
