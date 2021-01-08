@@ -2258,13 +2258,19 @@
         badgeProgressClone.querySelector('.js-badge-progress-count').innerText = count;
         badgeProgressClone.querySelector('.js-badge-progress-bar').style.width = width + '%';
         badgeProgressClone.querySelector('.bc-black-500').remove(); // remove the black separator in the bar
+
+        // SE JS also updates the clone. Remove js-* classes to avoid that
+        badgeProgressClone.querySelector('.js-badge-progress-count').classList.add('sox-progress-count');
+        badgeProgressClone.querySelector('.js-badge-progress-count').classList.remove('js-badge-progress-count');
+        badgeProgressClone.querySelector('.js-badge-progress-bar').classList.add('sox-progress-bar');
+        badgeProgressClone.querySelector('.js-badge-progress-bar').classList.remove('js-badge-progress-bar');
         return badgeProgressClone;
       }
 
       function updateBar(newCount, newWidth) {
         const bar = document.querySelector('#sox-dailyReviewBar');
-        bar.querySelector('.js-badge-progress-count').innerText = newCount;
-        bar.querySelector('.js-badge-progress-bar').style.width = newWidth + '%';
+        bar.querySelector('.sox-progress-count').innerText = newCount;
+        bar.querySelector('.sox-progress-bar').style.width = newWidth + '%';
       }
 
       function addBar() {
