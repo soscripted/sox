@@ -1626,9 +1626,11 @@
               !url.includes('#comment') &&
               !url.includes('/edit') && // https://github.com/soscripted/sox/issues/281
               !url.includes('/tagged/') &&
-              !url.includes('web.archive.org') && // Make sure this isn't a Web Archive URL
-              !url.includes('/c/') && // Make sure it's not a SO Teams post
+              !url.includes('web.archive.org') && // shouldn't be a Web Archive URL
+              !url.includes('/c/') && // shouldn't be a SO Teams post
               sox.helpers.getIDFromLink(url) && // make sure it won't fail later on
+              sox.helpers.getSiteNameFromLink(url) && // should be a Stack Exchange link!
+              url.match(/\/(q(?:uestions)?|a)\//) && // should be a question or an answer link!
               (!element.previousElementSibling || !element.previousElementSibling.classList.contains('expand-post-sox'))) {
             element.insertAdjacentHTML('beforebegin', '<a class="expander-arrow-small-hide expand-post-sox" style="border-bottom: 0"></a>');
           }
