@@ -44,9 +44,7 @@
       // Description: Adds the Stack Exchange logo next to users that *ARE* Stack Exchange employees
 
       const icon = sox.sprites.getSvg('se_logo');
-      icon.classList.add('iconStackExchange');
-      icon.classList.add('svg-icon');
-      icon.classList.add('sox-markEmployees-logo');
+      icon.classList.add('iconStackExchange', 'svg-icon', 'sox-markEmployees-logo');
       const logoSpan = document.createElement('span');
       logoSpan.className = 'sox-markEmployees';
       logoSpan.title = 'employee (added by SOX)';
@@ -648,7 +646,7 @@
                            </div>`
 
       // Do nothing unless there is at least one bounty on the page
-      if (!document.getElementsByClassName('bounty-indicator')) return;
+      if (!document.getElementsByClassName('bounty-indicator').length) return;
 
       [...document.querySelectorAll('.question-summary')].forEach(summary => {
         const indicator = summary.querySelector('.bounty-indicator');
@@ -1106,9 +1104,9 @@
 
       function addQuestion(title, link, seen) {
         const li = document.createElement('li');
-        const $link = document.createElement('a');
-        $link.href = link
-        $link.style.display = 'flex';
+        const link = document.createElement('a');
+        link.href = link
+        link.style.display = 'flex';
 
         const icon = document.createElement('div');
         icon.className = 'site-icon favicon ' + favicon;
@@ -1121,9 +1119,9 @@
         h4ToAppend.style.fontWeight = seen ? 'normal' : 'bold';
         message.appendChild(h4ToAppend);
 
-        $link.appendChild(icon);
-        $link.appendChild(message);
-        li.appendChild($link);
+        link.appendChild(icon);
+        link.appendChild(message);
+        li.appendChild(link);
         questions.appendChild(li);
       }
     },
@@ -1956,9 +1954,10 @@
         fetch(`${baseUrl}/posts/${postId}/comments`).then(response => response.text()).then(html => {
           const parsedHtml = new DOMParser().parseFromString(html, 'text/html');
           const currentCommentsElements = [...document.querySelectorAll('#comments-' + postId + ' .comment-text')];
-          var missingCommentsElements = [...parsedHtml.querySelectorAll('.comment-text')];
-
-          missingCommentsElements = missingCommentsElements.filter(el => !currentCommentsElements.map(currEl => currEl.parentElement.id).includes(el.parentElement.id));
+          const missingCommentsElements = [...parsedHtml.querySelectorAll('.comment-text')]
+                                                        .filter(el => !currentCommentsElements
+                                                        .map(currEl => currEl.parentElement.id)
+                                                        .includes(el.parentElement.id));
           if (!missingCommentsElements.length) return; // there are no additional comments
 
           for (let el of missingCommentsElements) {
@@ -2090,9 +2089,9 @@
       if (settings.duplicate || settings.closed || settings.migrated || settings.onHold) {
         [...document.querySelectorAll('.question-summary')].forEach(summary => { // Find the questions and add their id's and statuses to an object
           const text = summary.querySelectorAll('.summary a')[0].innerText.trim();
-          if ((text.match(/\[duplicate\]$/) && settings.duplicate)
-              || (text.match(/\[closed\]$/) && settings.closed)
-              || (text.match(/\[migrate\]$/) && settings.migrated)) {
+          if ((text.endsWith("[duplicate]") && settings.duplicate)
+              || (text.endsWith("[closed]") && settings.closed)
+              || (text.endsWith("[migrated]") && settings.migrated)) {
             summary.style.display = 'none';
           }
         });
