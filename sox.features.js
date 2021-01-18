@@ -1624,9 +1624,11 @@
               !url.includes('#comment') &&
               !url.includes('/edit') && // https://github.com/soscripted/sox/issues/281
               !url.includes('/tagged/') &&
-              !url.includes('web.archive.org') && // Make sure this isn't a Web Archive URL
-              !url.includes('/c/') && // Make sure it's not a SO Teams post
+              !url.includes('web.archive.org') && // shouldn't be a Web Archive URL
+              !url.includes('/c/') && // shouldn't be a SO Teams post
               sox.helpers.getIDFromLink(url) && // make sure it won't fail later on
+              sox.helpers.getSiteNameFromLink(url) && // should be a Stack Exchange link!
+              url.match(/\/(q(?:uestions)?|a)\//) && // should be a question or an answer link!
               (!element.previousElementSibling || !element.previousElementSibling.classList.contains('expand-post-sox'))) {
             element.insertAdjacentHTML('beforebegin', '<a class="expander-arrow-small-hide expand-post-sox" style="border-bottom: 0"></a>');
           }
@@ -2257,13 +2259,19 @@
         badgeProgressClone.querySelector('.js-badge-progress-count').innerText = count;
         badgeProgressClone.querySelector('.js-badge-progress-bar').style.width = width + '%';
         badgeProgressClone.querySelector('.bc-black-500').remove(); // remove the black separator in the bar
+
+        // SE JS also updates the clone. Remove js-* classes to avoid that
+        badgeProgressClone.querySelector('.js-badge-progress-count').classList.add('sox-progress-count');
+        badgeProgressClone.querySelector('.js-badge-progress-count').classList.remove('js-badge-progress-count');
+        badgeProgressClone.querySelector('.js-badge-progress-bar').classList.add('sox-progress-bar');
+        badgeProgressClone.querySelector('.js-badge-progress-bar').classList.remove('js-badge-progress-bar');
         return badgeProgressClone;
       }
 
       function updateBar(newCount, newWidth) {
         const bar = document.querySelector('#sox-dailyReviewBar');
-        bar.querySelector('.js-badge-progress-count').innerText = newCount;
-        bar.querySelector('.js-badge-progress-bar').style.width = newWidth + '%';
+        bar.querySelector('.sox-progress-count').innerText = newCount;
+        bar.querySelector('.sox-progress-bar').style.width = newWidth + '%';
       }
 
       function addBar() {
