@@ -1,4 +1,4 @@
-/* globals Notifier, fkey, jQuery */
+/* globals Notifier, fkey */
 (function(sox, $) {
   'use strict';
 
@@ -101,10 +101,10 @@
           });
 
           element.parentElement.parentElement.prepend(btnToAdd);
-          element.addEventListener('click', event => { btnToAdd.style.display = 'none'; }); // also hide the clone when the other button is clicked!
+          element.addEventListener('click', () => { btnToAdd.style.display = 'none'; }); // also hide the clone when the other button is clicked!
 
           const addCommentLink = element.parentElement.querySelector('.js-add-link');
-          addCommentLink.addEventListener('click', event => { element.style.display = 'none'; }); // https://github.com/soscripted/sox/issues/239
+          addCommentLink.addEventListener('click', () => { element.style.display = 'none'; }); // https://github.com/soscripted/sox/issues/239
         });
       }
 
@@ -147,8 +147,6 @@
       highlight();
 
       if (document.getElementsByClassName('question-summary').length) {
-        const targetMainPage = document.getElementById('question-mini-list');
-        const targetQuestionsPage = document.getElementById('questions');
         sox.helpers.addAjaxListener('\\/posts\\/ajax-load-realtime-list', highlight);
       }
     },
@@ -469,7 +467,7 @@
 
       [...document.querySelectorAll('.js-share-link')].forEach(element => {
         element.href = element.href.match(/\/(q|a)\/[0-9]+/)[0];
-        element.addEventListener('click', event => {
+        element.addEventListener('click', () => {
           // Remove the 'includes your user id' string, do it on click because
           // SE's code seems to re-add the element when the share tip is shown
           element.parentElement.querySelector('.js-subtitle').remove();
@@ -483,7 +481,7 @@
       // Remove [] with () in title: https://github.com/soscripted/sox/issues/226, https://github.com/soscripted/sox/issues/292
       const title = document.querySelector('.fs-headline1.fl1').innerText.replace(/\[(closed|duplicate)\]/g, '($1)');
       [...document.querySelectorAll('.js-share-link')].forEach(element => {
-        element.addEventListener('click', event => {
+        element.addEventListener('click', () => {
           const $inputEl = element.parentElement.querySelector('.js-input');
 
           // TODO: is there a way to do this without a hacky setTimeout?
@@ -885,8 +883,6 @@
         featureId: 'answerTagsSearch',
         cacheDuration: 10, // Cache for 10 minutes
       }, items => {
-        const itemsLength = items.length;
-
         items.forEach(item => {
           tagsForQuestionIDs[item.question_id] = item.tags;
         });
@@ -1039,7 +1035,7 @@
       diamondSvg.classList.add('svg-icon');
       diamond.insertAdjacentElement('beforeend', diamondSvg);
 
-      diamond.innerHTML = diamond.innerHTML; //Reloads the diamond icon, which is necessary when adding an SVG using jQuery.
+      //diamond.innerHTML = diamond.innerHTML; //Reloads the diamond icon, which is necessary when adding an SVG using jQuery.
       dialog.appendChild(header);
       content.appendChild(questions);
       dialog.appendChild(content);
@@ -1104,9 +1100,9 @@
 
       function addQuestion(title, link, seen) {
         const li = document.createElement('li');
-        const link = document.createElement('a');
-        link.href = link
-        link.style.display = 'flex';
+        const anchor = document.createElement('a');
+        anchor.href = link
+        anchor.style.display = 'flex';
 
         const icon = document.createElement('div');
         icon.className = 'site-icon favicon ' + favicon;
@@ -1119,9 +1115,9 @@
         h4ToAppend.style.fontWeight = seen ? 'normal' : 'bold';
         message.appendChild(h4ToAppend);
 
-        link.appendChild(icon);
-        link.appendChild(message);
-        li.appendChild(link);
+        anchor.appendChild(icon);
+        anchor.appendChild(message);
+        li.appendChild(anchor);
         questions.appendChild(li);
       }
     },
@@ -1243,8 +1239,6 @@
       }
 
       addLabels();
-      const targetMainPage = document.getElementById('question-mini-list');
-      const targetQuestionsPage = document.getElementById('questions');
       sox.helpers.addAjaxListener('\\/posts\\/ajax-load-realtime-list', addLabels);
       window.addEventListener('sox-new-review-post-appeared', addQuestionStateInReview);
     },
@@ -1453,7 +1447,7 @@
 
         let apiCallType = null;
         for (const key in matches) {
-          if (matches.hasOwnProperty(key) && link.indexOf(matches[key][0]) > -1) {
+          if (Object.prototype.hasOwnProperty.call(matches, key) && link.indexOf(matches[key][0]) > -1) {
             apiCallType = key;
             id = sox.helpers.getIDFromLink(link);
             filter = matches[key][1];
@@ -1647,7 +1641,7 @@
           } else if (arrow.classList.contains('expander-arrow-small-hide')) {
             arrow.classList.remove('expander-arrow-small-hide');
             arrow.classList.add('expander-arrow-small-show');
-            const url = arrow.nextElementSibling.href;
+            let url = arrow.nextElementSibling.href;
             const id = sox.helpers.getIDFromLink(url);
             if (!url.match(/https?:\/\//)) url = 'https://' + url;
             sox.helpers.getFromAPI({
@@ -1968,7 +1962,7 @@
             if (!nearestElement || !document.getElementById(nearestElement.id)) continue; // in case there are two consecutive hidden comments
             const borderDirection = previousElement ? 'bottom' : 'top';
             [...document.getElementById(nearestElement.id).children].forEach(el => { el.style[`border-${borderDirection}-color`] = 'gray'; });
-          };
+          }
         });
       });
     },
@@ -2324,7 +2318,7 @@
       function startLoop() {
         [...document.querySelectorAll('textarea[id^="wmd-input"].processed')].forEach(textarea => main(textarea.id));
         [...document.querySelectorAll('.edit-post')].forEach(button => {
-          button.addEventListener('click', event => {
+          button.addEventListener('click', () => {
             const targetQuestionCells = document.getElementsByClassName('postcell');
             const targetAnswerCells = document.getElementsByClassName('answercell');
             sox.helpers.observe([...targetQuestionCells, ...targetAnswerCells], '#wmd-redo-button-' + button.href.split('/')[2], () => {
