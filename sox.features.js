@@ -26,7 +26,7 @@
               'height': 'auto',
             });
           },
-        })
+        });
         bountyPopup.style.cursor = 'move';
       });
     },
@@ -633,7 +633,7 @@
 
       const sortButton = `<button class="s-btn s-btn__muted s-btn__outlined s-btn__sm s-btn__dropdown" role="button" data-controller="s-popover"
                                   data-action="s-popover#toggle" data-target="se-uql.bountyAmount" aria-haspopup="true"
-                                  aria-expanded="false" aria-controls="sox-bounty-popover">SOX: sort by bounty</button>`
+                                  aria-expanded="false" aria-controls="sox-bounty-popover">SOX: sort by bounty</button>`;
       const sortPopover = `<div class="s-popover z-dropdown ws2" id="sox-bounty-popover" data-target="se-uql.bountyAmount"
                                 style="margin: 0px;" data-popper-placement="bottom">
                                <div class="s-popover--arrow" style="position: absolute; left: 0px; transform: translate(99px, 0px);"></div>
@@ -641,7 +641,7 @@
                                    <li class="uql-item my0"><a id="largestFirst" class="mln12 mrn12 px12 py6 fl1 s-block-link">Largest first</a></li>
                                    <li class="uql-item my0"><a id="smallestFirst" class="mln12 mrn12 px12 py6 fl1 s-block-link">Smallest first</a></li>
                                </ul>
-                           </div>`
+                           </div>`;
 
       // Do nothing unless there is at least one bounty on the page
       if (!document.getElementsByClassName('bounty-indicator').length) return;
@@ -978,14 +978,13 @@
             opacity: 1,
             width: 'toggle',
           }, 200);
-
-        })
+        });
 
         siteAnchor.addEventListener('mouseleave', function() {
           $(this.querySelector('.rep-score')).stop(true).fadeIn(110);
           this.querySelector('.related-links').remove();
         });
-      })
+      });
     },
 
     metaNewQuestionAlert: function() {
@@ -1101,7 +1100,7 @@
       function addQuestion(title, link, seen) {
         const li = document.createElement('li');
         const anchor = document.createElement('a');
-        anchor.href = link
+        anchor.href = link;
         anchor.style.display = 'flex';
 
         const icon = document.createElement('div');
@@ -1166,7 +1165,7 @@
         [...document.querySelectorAll('.question-summary .answer-hyperlink, .question-summary .question-hyperlink, .question-summary .result-link a')].forEach(el => {
           el.style.display = 'inline';
         });
-        [...document.querySelectorAll('.summary h3')].forEach(header => { header.lineHeight = '1.2em' }); // Fixes line height on "Questions" page
+        [...document.querySelectorAll('.summary h3')].forEach(header => { header.lineHeight = '1.2em'; }); // Fixes line height on "Questions" page
 
         sox.helpers.getFromAPI({
           endpoint: 'questions',
@@ -1477,7 +1476,7 @@
 
           const authorElement = document.createElement('span');
           authorElement.className = 'sox-notification-author';
-          authorElement.innerText = (prependToMessage ? '' : ' by ') + unescapedAuthor + (prependToMessage ? ': ' : '') // https://github.com/soscripted/sox/issues/347
+          authorElement.innerText = (prependToMessage ? '' : ' by ') + unescapedAuthor + (prependToMessage ? ': ' : ''); // https://github.com/soscripted/sox/issues/347
 
 
           const header = node.querySelector('.item-header');
@@ -1694,7 +1693,7 @@
     hideLoveThisSite: function() {
       // Description: Hides the "Love This Site?" (weekly newsletter) module from the sidebar
 
-      const loveThisSite = document.querySelector('#sidebar #newsletter-ad')
+      const loveThisSite = document.querySelector('#sidebar #newsletter-ad');
       if (loveThisSite) loveThisSite.remove();
     },
 
@@ -1742,7 +1741,7 @@
       const row = document.createElement('tr');
 
       table.appendChild(row);
-      topAnswers.appendChild(table)
+      topAnswers.appendChild(table);
 
       function score(e) {
         return +e.parentElement.querySelector('.js-vote-count').innerText;
@@ -1777,7 +1776,7 @@
 
         link.appendChild(iconEl);
         link.insertAdjacentHTML('beforeend', 'Score: ' + score);
-        column.appendChild(link)
+        column.appendChild(link);
         row.appendChild(column);
       });
 
@@ -1796,7 +1795,7 @@
         let table = '<table class="sox-tabularReviewerStats-table"><tbody><tr><th align="center">User</th><th>Approved</th><th>Rejected</th><th>Improved</th></tr>';
 
         [...document.querySelectorAll('.js-review-more-instructions ul li')].forEach(element => {
-          const username = element.querySelector('a').innerText ? element.querySelector('a').innerText : 'Anonymous</span>'
+          const username = element.querySelector('a').innerText ? element.querySelector('a').innerText : 'Anonymous</span>';
           const link = element.querySelector('a').href ? `a href="${element.querySelector('a').href}"` : 'span';
           const state = element.innerText.match(/\d+(?=\sedit\ssuggestions?)/g);
           table += `<tr><td><${link}>${username}</td><td>${state[0]}</td><td>${state[1]}</td><td>${state[2] ? state[2] : 'N/A'}</td></tr>`;
@@ -1815,7 +1814,7 @@
       // Description: Add an arrow to linked posts in the sidebar to show whether they are linked to or linked from
 
       function getSprite(state, tooltip) {
-        const linkedToSprite = sox.sprites.getSvg(`chevron_${state}`, tooltip)
+        const linkedToSprite = sox.sprites.getSvg(`chevron_${state}`, tooltip);
         linkedToSprite.classList.add('sox-linkedToFrom-chevron');
         return linkedToSprite;
       }
@@ -2045,7 +2044,7 @@
                                                                                     && user.querySelector('a').href.match(sox.user.id));
       if (!opDetails.length) return;
       [...opDetails.closest('.answer, .question').querySelectorAll('.js-vote-up-btn, .js-vote-down-btn')].forEach(el => {
-        el.classList.remove('sox-better-css')
+        el.classList.remove('sox-better-css');
         el.classList.add('sox-disabled-button');
         el.title = 'You cannot vote on your own posts.';
       });
@@ -2062,7 +2061,7 @@
         //Remove excess spacing to the left of the button (by emptying .meta, which has "&nbsp" in it), and set the button color to the background color
         const metaElement = this.parentElement.querySelector('.meta');
         metaElement.innerHTML = '';
-        metaElement.style.backgroundColor = sox.helpers.getCssProperty(this.parentElement, 'background-color')
+        metaElement.style.backgroundColor = sox.helpers.getCssProperty(this.parentElement, 'background-color');
         metaElement.style.paddingRight = '1px'; // The "padding-right: 1px" is to avoid some weird bug I can't figure out how to fix
         metaElement.appendChild(replySpan);
         metaElement.style.display = 'block';
@@ -2185,7 +2184,7 @@
         const rightSection = metaDashboardEl.children[1];
 
         // Set number of reviews
-        const subheading = leftSection.querySelector('.fs-subheading')
+        const subheading = leftSection.querySelector('.fs-subheading');
         subheading.innerText = total;
         subheading.title = total;
 
@@ -2313,7 +2312,7 @@
                                        <input class="sox-findAndReplace-replace s-input w30" type="text" placeholder="Replace with">
                                        <input class="sox-findAndReplace-replaceGo s-btn s-btn__primary" type="button" value="Go">
                                      </div>`;
-      const findAndReplaceToolbar = '<div class="sox-findReplaceToolbar p8"><span class="sox-findReplace c-pointer">SOX: Find & Replace</span></div>'
+      const findAndReplaceToolbar = '<div class="sox-findReplaceToolbar p8"><span class="sox-findReplace c-pointer">SOX: Find & Replace</span></div>';
 
       function startLoop() {
         [...document.querySelectorAll('textarea[id^="wmd-input"].processed')].forEach(textarea => main(textarea.id));
@@ -2489,7 +2488,7 @@
           const deleteButtonTd = document.createElement('td');
           deleteButtonTd.appendChild(deleteButton);
 
-          linkDetails.appendChild(saveButtonTd)
+          linkDetails.appendChild(saveButtonTd);
           linkDetails.appendChild(deleteButtonTd);
           magicLinksTable.appendChild(linkDetails);
         });
@@ -2559,7 +2558,7 @@
           } else {
             window.alert('Please enter details for all three fields');
           }
-        }
+        };
         settingsDialogContent.querySelector('.table-container').appendChild(generateSettingsTableHtml(magicLinks));
         settingsDialogContent.appendChild(newMagicLinkButton);
 
