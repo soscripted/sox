@@ -179,7 +179,11 @@
     }
 
     if (sox.settings.available) {
-       window.addEventListener('focus', () => runFeatures(settings, featureInfo), { once: true });
+      if (document.hasFocus && document.hasFocus()) {
+        runFeatures(settings, featureInfo);
+      } else {
+        window.addEventListener('focus', () => runFeatures(settings, featureInfo), { once: true });
+      }
     }
 
     //custom events....
