@@ -918,33 +918,6 @@
       });
     },
 
-    titleEditDiff: function() {
-      // Description: For showing the new version of a title in a diff separately rather than loads of crossing outs in red and additions in green
-      // Example URL to test on: https://meta.stackexchange.com/review/suggested-edits/65403
-
-      function betterTitle() {
-        if (document.querySelector('.sox-new-title') || document.body.classList.contains('soup-mse248646-fixed')) return; // title already added || conflicts with SOUP
-        [...document.querySelectorAll('.suggested-edit div.summary h2 a.question-hyperlink')]
-                    .filter(el => el.querySelector('.diff-delete, .diff-add')).forEach(element => {
-          const oldTitle = element.parentNode;
-          const oldTitleClone = oldTitle.cloneNode(true);
-          oldTitleClone.classList.add('sox-new-title');
-          oldTitle.insertAdjacentElement('afterend', oldTitleClone);
-          const newTitle = document.querySelector('.sox-new-title');
-
-          [...oldTitle.querySelectorAll('.diff-add')].forEach(element => element.remove());
-          [...newTitle.querySelectorAll('.diff-delete')].forEach(element => element.remove());
-
-          const wrapperElement = `<table class="sox-better-title"><tr><td>${oldTitle.outerHTML}</td><td width="45%">${newTitle.outerHTML}</td></tr></table>`;
-          [...document.querySelectorAll('.summary h2')].forEach(title => title.remove()); // remove each title to insert the new ones
-          document.querySelector('.summary .revision').insertAdjacentHTML('afterend', wrapperElement);
-        });
-      }
-
-      betterTitle();
-      window.addEventListener('sox-new-review-post-appeared', betterTitle);
-    },
-
     metaChatBlogStackExchangeButton: function() {
       // Description: For adding buttons next to sites under the StackExchange button that lead to that site's meta and chat
 
@@ -2248,45 +2221,6 @@
           color: 'white',
         }, 3000);
       });
-    },
-
-    dailyReviewBar: function() {
-      // Description: Adds a progress bar showing how many reviews you have left in the day
-
-      function generateBarHtml(count, width) {
-        const badgeProgressClone = document.querySelector('#badge-progress').cloneNode(true);
-        badgeProgressClone.id = 'sox-dailyReviewBar';
-        badgeProgressClone.querySelector('.js-badge-progress-count').innerText = count;
-        badgeProgressClone.querySelector('.js-badge-progress-bar').style.width = width + '%';
-        badgeProgressClone.querySelector('.bc-black-500').remove(); // remove the black separator in the bar
-
-        // SE JS also updates the clone. Remove js-* classes to avoid that
-        badgeProgressClone.querySelector('.js-badge-progress-count').classList.add('sox-progress-count');
-        badgeProgressClone.querySelector('.js-badge-progress-count').classList.remove('js-badge-progress-count');
-        badgeProgressClone.querySelector('.js-badge-progress-bar').classList.add('sox-progress-bar');
-        badgeProgressClone.querySelector('.js-badge-progress-bar').classList.remove('js-badge-progress-bar');
-        return badgeProgressClone;
-      }
-
-      function updateBar(newCount, newWidth) {
-        const bar = document.querySelector('#sox-dailyReviewBar');
-        bar.querySelector('.sox-progress-count').innerText = newCount;
-        bar.querySelector('.sox-progress-bar').style.width = newWidth + '%';
-      }
-
-      function addBar() {
-        const badgeProgress = document.querySelector('#badge-progress');
-        fetch(`https://${location.hostname}/review/${location.pathname.split('/')[2]}/stats`).then(response => response.text()).then(htmlResponse => {
-          const parsedHtml = new DOMParser().parseFromString(htmlResponse, 'text/html');
-          const count = +parsedHtml.querySelector('.review-stats-count-current-user').innerText.trim();
-          const width = count <= 20 ? (count / 20) * 100 : (count / 40) * 100; // in some queues, the max reviews/day is 40 and not 20
-
-          document.querySelector('#sox-dailyReviewBar') ? updateBar(count, width) : badgeProgress.insertAdjacentElement('afterend', generateBarHtml(count, width));
-        });
-      }
-
-      addBar();
-      window.addEventListener('sox-new-review-post-appeared', addBar);
     },
 
     openLinksInNewTab: function(settings) {

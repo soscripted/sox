@@ -270,12 +270,6 @@
             "match": "*://*/questions/*,*://*/review*",
             "exclude": "SE1.0,*://*/questions/tagged*,*://*/questions/greatest-hits*"
         }, {
-            "name": "titleEditDiff",
-            "desc": "Make title edits show separately rather than merged in edit suggestions",
-            "meta": "https://meta.stackexchange.com/q/135710",
-            "match": "*://*.*/review/suggested-edits*",
-            "exclude": ""
-        }, {
             "name": "inlineEditorEverywhere",
             "desc": "Inline editor regardless of reputation",
             "extended_description": "Enables the inline editor on all sites, even if you don't have 2k rep there yet. Note: this feature may not work on Firefox.",
@@ -509,12 +503,6 @@
             "meta": "",
             "match": "*://*/questions/*,*://*/review*",
             "exclude": "*://*/questions/ask,*://*/questions/tagged*,*://*/questions/greatest-hits*"
-        }, {
-            "name": "dailyReviewBar",
-            "desc": "Add a progress bar showing how many reviews you have left in the day",
-            "meta": "",
-            "match": "*://*/review*",
-            "exclude": ""
         }, {
             "name": "openLinksInNewTab",
             "desc": "Open any links to the specified sites in a new tab by default",
