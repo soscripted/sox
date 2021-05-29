@@ -2348,10 +2348,10 @@
       [...document.querySelectorAll('.question, .answer')].forEach(post => {
         const id = post.getAttribute('data-questionid') || post.getAttribute('data-answerid');
         const revisionsAnchor = document.createElement('a');
-        revisionsAnchor.innerText = 'revisions';
+        revisionsAnchor.innerText = 'Revisions';
+        revisionsAnchor.classList.add('grid--cell');
         revisionsAnchor.href = `//${sox.site.url}/posts/${id}/revisions`;
-        revisionsAnchor.insertAdjacentElement('beforebegin', document.querySelector('.lsep').cloneNode(true));
-        post.querySelector('.post-menu').appendChild(revisionsAnchor);
+        post.querySelector('.js-post-menu div').appendChild(revisionsAnchor);
       });
     },
 
