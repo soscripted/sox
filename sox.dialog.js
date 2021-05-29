@@ -65,7 +65,7 @@
           'title': blockFeatureSelection ? 'You must get an access token to enable this feature (click the key button at the bottom of the SOX dialog)' : '',
         });
 
-        const $info = sox.sprites.getSvg('info').hover(function() {
+        const $info = $(sox.sprites.getSvg('info')).hover(function() {
           if (extendedDescription && !$(this).parent().find('.sox-feature-info').length) {
             $(this).parent().append($('<div/>', {
               'class': 'sox-feature-info',
@@ -95,7 +95,7 @@
             style: 'display: none; margin-top: 5px;',
           });
 
-          const $settingsToggle = sox.sprites.getSvg('wrench', 'Edit this feature\'s settings').click(e => {
+          const $settingsToggle = $(sox.sprites.getSvg('wrench', 'Edit this feature\'s settings')).click(e => {
             e.preventDefault(); //don't uncheck the checkbox
 
             const $settingsPanel = $('#feature-settings-' + name);
@@ -304,7 +304,7 @@
         $soxSettingsDialog.addClass('dark-mode');
       }
 
-      const $icon = sox.sprites.getSvg('settings', 'Change your SOX settings', {
+      const $icon = $(sox.sprites.getSvg('settings', 'Change your SOX settings')).css({
         fill: $('.top-bar .-secondary .-link').css('color'),
         width: '25px',
         height: '25px',

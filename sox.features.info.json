@@ -49,7 +49,7 @@
             "extended_description": "Changes the favourite tag question highlighting to be a more subtle, coloured left-border",
             "meta": "https://meta.stackexchange.com/q/238591",
             "match": "",
-            "exclude": "*://chat.*.com/*,*://*/questions/*,*://*/questions/ask",
+            "exclude": "*://chat.*.com/*,*://*/questions/ask",
             "feature_packs": ["major_ui", "key_feature", "power_user"]
         }, {
             "name": "isQuestionHot",
@@ -270,12 +270,6 @@
             "match": "*://*/questions/*,*://*/review*",
             "exclude": "SE1.0,*://*/questions/tagged*,*://*/questions/greatest-hits*"
         }, {
-            "name": "titleEditDiff",
-            "desc": "Make title edits show separately rather than merged in edit suggestions",
-            "meta": "https://meta.stackexchange.com/q/135710",
-            "match": "*://*.*/review/suggested-edits*",
-            "exclude": ""
-        }, {
             "name": "inlineEditorEverywhere",
             "desc": "Inline editor regardless of reputation",
             "extended_description": "Enables the inline editor on all sites, even if you don't have 2k rep there yet. Note: this feature may not work on Firefox.",
@@ -293,14 +287,14 @@
             "name": "flagPercentages",
             "desc": "Show flagging percentages for each type in the Flag Summary",
             "meta": "",
-            "match": "*://*/users/*",
+            "match": "*://*/users/flag-summary/*",
             "exclude": "*://chat.*.com/*,SE1.0",
             "feature_packs": ["power_user"]
         }, {
             "name": "flagPercentageBar",
             "desc": "Show the total percentage of helpful flags as a coloured bar on the Flag Summary Page",
             "meta": "https://meta.stackoverflow.com/q/310881",
-            "match": "*://*/users/*",
+            "match": "*://*/users/flag-summary/*",
             "exclude": "*://chat.*.com/*,SE1.0",
             "feature_packs": ["power_user"]
         }],
@@ -309,7 +303,7 @@
             "desc": "Hide the Community Bulletin module",
             "meta": "",
             "match": "",
-            "exclude": "*://chat.*.com/*"
+            "exclude": "*://chat.*.com/*,*://*/users/*"
         }, {
             "name": "hideJustHotMetaPosts",
             "desc": "Hide just the 'Hot Meta Posts' sections in the Community Bulletin",
@@ -456,13 +450,13 @@
             "desc": "Change 'share' link to format of [post-name](url)",
             "extended_description": "When you click 'share' under a post, this will convert the URL given to a markdown-friendly version, with the post name as the link text. This feature also automatically copies the converted string to your clipboard",
             "meta": "https://meta.stackexchange.com/q/126544",
-            "match": "*://*/questions/*,*://*/review*",
+            "match": "*://*/questions/*",
             "exclude": "SE1.0,*://*/questions/ask,*://*/questions/tagged*,*://*/questions/greatest-hits*"
         }, {
             "name": "sortByBountyAmount",
             "desc": "Add an option to filter bounties by their amount",
             "meta": "https://meta.stackexchange.com/q/7753",
-            "match": "",
+            "match": "*://*/questions",
             "exclude": "*://*/users/*,*://chat.*.com/*,SE1.0,*://*/questions/*,*://*/review*"
         }, {
             "name": "warnNotLoggedIn",
@@ -501,7 +495,7 @@
             "name": "showMetaReviewCount",
             "desc": "Add how many reviews are available on Meta to the main site review page",
             "meta": "",
-            "match": "*://*/review",
+            "match": "*://*/review$",
             "exclude": "*://meta.*.com/*"
         }, {
             "name": "copyCode",
@@ -509,12 +503,6 @@
             "meta": "",
             "match": "*://*/questions/*,*://*/review*",
             "exclude": "*://*/questions/ask,*://*/questions/tagged*,*://*/questions/greatest-hits*"
-        }, {
-            "name": "dailyReviewBar",
-            "desc": "Add a progress bar showing how many reviews you have left in the day",
-            "meta": "",
-            "match": "*://*/review*",
-            "exclude": ""
         }, {
             "name": "openLinksInNewTab",
             "desc": "Open any links to the specified sites in a new tab by default",
@@ -544,4 +532,3 @@
         }]
     }
 }
-
