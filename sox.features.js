@@ -2638,6 +2638,14 @@
           });
         });
       });
+    },
+
+    addAnswerCountToQuestionHeader: function () {
+      // Description: Add the post's answer count under the question title
+
+      const answers = document.querySelector("#answers-header h2").innerText.split(' ')[0];
+      const toInsert = '<div class="grid--cell ws-nowrap mb8 ml16"><span class="fc-light mr4">Answers</span> ' + answers + '</div>';
+      document.querySelector(".grid.fw-wrap").insertAdjacentHTML("beforeEnd", toInsert);
     }
   };
 })(window.sox = window.sox || {}, jQuery);

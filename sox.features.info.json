@@ -155,6 +155,13 @@
             "meta": "",
             "match": "*://*/questions/*,*://*/review/*",
             "exclude": "*://*/questions/ask,*://*/questions/tagged*,*://*/questions/greatest-hits*"
+        }, {
+            "name": "addAnswerCountToQuestionHeader",
+            "desc": "Add the post's answer count under the question title",
+            "extended_description": "Add the number of answers the current question has underneath the question header, next to the existing active dates and view count.",
+            "meta": "",
+            "match": "*://*/questions/*",
+            "exclude": "*://*/questions/ask,*://*/questions/tagged*,*://*/questions/greatest-hits*"
         }],
         "Comments": [{
             "name": "autoShowCommentImages",
