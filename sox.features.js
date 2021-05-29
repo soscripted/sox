@@ -966,6 +966,9 @@
       //Do not run on meta, chat, or sites without a meta
       if ((sox.site.type != 'main' && sox.site.type != 'beta') || !document.querySelector('.related-site')) return;
 
+      // Don't run if the user is a moderator
+      if (sox.Stack && sox.Stack.options.user.isModerator) return;
+
       const NEWQUESTIONS = 'metaNewQuestionAlert-lastQuestions';
       const favicon = sox.site.icon;
       const sitename = sox.site.currentApiParameter;
