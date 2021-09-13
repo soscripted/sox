@@ -2370,7 +2370,12 @@
     addOnTopicLinkToSiteSwitcher: function() {
       // Description: Replaces 'help' with an 'on-topic' link in the site switcher dropdown
 
-      document.querySelectorAll('.top-bar .related-links a')[0].outerHTML = '<a href="/help/on-topic">on-topic</a>';
+      const helpLink = document.querySelector('.top-bar .related-links a.js-gps-track'); // The first link
+      const newLink = document.createElement('a');
+      newLink.href = '/help/on-topic';
+      newLink.innerText = 'on-topic';
+
+      helpLink.parentElement.replaceChild(newLink, helpLink);
     },
 
     customMagicLinks: function () {
