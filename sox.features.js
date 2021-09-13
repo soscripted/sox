@@ -93,6 +93,10 @@
 
       function copyLinks() {
         [...document.querySelectorAll('.js-show-link')].forEach(element => {
+          if (element.classList.contains('sox-copyCommentsLinkClone')) { // Don't run on already cloned elements
+            return;
+          }
+
           const btnToAdd = element.cloneNode(true);
           btnToAdd.classList.add('sox-copyCommentsLinkClone');
           btnToAdd.addEventListener('click', event => {
@@ -104,6 +108,10 @@
           element.addEventListener('click', () => { btnToAdd.style.display = 'none'; }); // also hide the clone when the other button is clicked!
 
           const addCommentLink = element.parentElement.querySelector('.js-add-link');
+          if (!addCommentLink) { // Deleted posts don't have an 'add comment' link
+            return;
+          }
+
           addCommentLink.addEventListener('click', () => { element.style.display = 'none'; }); // https://github.com/soscripted/sox/issues/239
         });
       }
