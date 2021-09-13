@@ -72,14 +72,6 @@
                 "desc": "Use 12-hour format?"
             }]
          }, {
-            "name": "markEmployees",
-            "desc": "Adds the Stack Exchange logo after employee names to make them stand out",
-            "meta": "https://meta.stackexchange.com/q/246678",
-            "match": "",
-            "exclude": "*://chat.*.com/*,SE1.0,*://*/questions/ask",
-            "feature_packs": ["major_ui", "key_feature", "power_user"],
-            "usesApi": true
-        }, {
             "name": "metaChatBlogStackExchangeButton",
             "desc": "Show meta and chat buttons on hover of a site under the site switcher button",
             "meta": "https://meta.stackexchange.com/q/256183",

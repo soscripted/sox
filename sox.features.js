@@ -40,53 +40,6 @@
       }
     },
 
-    markEmployees: function () {
-      // Description: Adds the Stack Exchange logo next to users that *ARE* Stack Exchange employees
-
-      const icon = sox.sprites.getSvg('se_logo');
-      icon.classList.add('iconStackExchange', 'svg-icon', 'sox-markEmployees-logo');
-      const logoSpan = document.createElement('span');
-      logoSpan.className = 'sox-markEmployees';
-      logoSpan.title = 'employee (added by SOX)';
-      logoSpan.appendChild(icon);
-
-      function getIds() {
-        const anchors = [...document.querySelectorAll('a.comment-user, .user-details a, .question-summary .started a')].filter(el => {
-          return ![...el.children].filter(el => el.classList.contains('sox-markEmployees')).length && el.href && el.href.match(/\/users\/\d+/);
-        });
-        const ids = [...new Set(anchors.map(el => el.href.match(/(\d+)/)[0]))];
-        sox.debug('markEmployees user IDs', ids);
-
-        for (let i = 0; i < Math.ceil(ids.length / 100); i++) {
-          apiCall(i + 1, ids.slice(i * 100, (i * 100) + 100), anchors);
-        }
-      }
-
-      function apiCall(page, ids, anchors) {
-        sox.helpers.getFromAPI({
-          endpoint: 'users',
-          ids,
-          sitename: sox.site.url,
-          filter: '!*MxJcsv91Tcz6yRH',
-          limit: 100,
-          page,
-          featureId: 'markEmployees',
-          cacheDuration: 60 * 24, // Cache for 24 hours (in minutes)
-        }, items => {
-          sox.debug('markEmployees returned data', items);
-          for (let i = 0; i < items.length; i++) {
-            if (!items[i].is_employee) continue;
-            const userId = items[i].user_id;
-            anchors.filter(el => el.href.contains(`/users/${userId}/`)).forEach(el => el.appendChild(logoSpan.cloneNode(true)));
-          }
-        });
-      }
-
-      getIds();
-      window.addEventListener('sox-new-comment', getIds);
-      window.addEventListener('sox-new-review-post-appeared', getIds);
-    },
-
     copyCommentsLink: function() {
       // Description: Adds the 'show x more comments' link before the commnents
       // Test on e.g. https://meta.stackexchange.com/questions/125439/
