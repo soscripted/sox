@@ -555,7 +555,12 @@
       function addReplyLinks() {
         [...document.querySelectorAll('.comment')].forEach(comment => {
           if (!comment.querySelector('.soxReplyLink')) { // if the link doesn't already exist
-            if (sox.user.name !== comment.querySelector('.comment-text a.comment-user').innerText) { // make sure the link is not added to your own comments
+            const commenterLink = comment.querySelector('.comment-text a.comment-user');
+            if (!commenterLink) { // If the commenter's account is now deleted, there will be no link
+              return;
+            }
+
+            if (sox.user.name !== commenterLink.innerText) { // make sure the link is not added to your own comments
               comment.querySelector('.comment-text').overflowX = 'hidden';
               comment.querySelector('.comment-text .comment-body').insertAdjacentHTML('beforeend', replyButton);
             }
