@@ -529,9 +529,10 @@
 /*colorAnswerer -- for the username*/
 
 .sox-answerer {
-    color: rgba(0, 50, 200, 1);
-    background-color: rgba(220, 220, 220, 1);
+    color: var(--blue-700);
+    background-color: var(--bc-medium);
     padding: 1px 5px !important;
+    border-radius: 3px;
 }
 
 /*hotNetworkQuestionsFiltering -- for the questions to hide*/
