@@ -394,7 +394,7 @@
 /*linkedPostsInline for the displayed post text; https://github.com/shu8/Stack-Overflow-Optional-Features/issues/48 */
 
 .linkedPostsInline-loaded-body-sox {
-    background-color: aliceblue;
+    background-color: var(--blue-050);
     border-radius: 20px;
     overflow-wrap: break-word;
     width: auto;
@@ -501,7 +501,7 @@
     display: none;
     /* relative position prevents code from being in front of button */
     position: relative;
-    background-color: #eff0f1;
+    background-color: var(--highlight-bg);
     margin-left: -15px;
 }
 
