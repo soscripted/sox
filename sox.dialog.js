@@ -3,7 +3,7 @@
 
   sox.dialog = {
     init: function(options) {
-      if (!$('.top-bar').length) return;
+      if (!$('.s-topbar').length) return;
       sox.debug('initializing SOX dialog');
 
       const version = options.version;
@@ -280,17 +280,18 @@
       // create sox settings button
       const $soxSettingsButton = $('<a/>', {
         id: 'soxSettingsButton',
-        'class': 'sox-settings-button -link',
+        'class': 'sox-settings-button -s-topbar--item',
         title: 'Change SOX settings',
         href: '#',
         click: function(e) {
           e.preventDefault();
           $('#sox-settings-dialog').toggle();
           if ($soxSettingsDialog.is(':visible')) {
-            $(this).addClass('topbar-icon-on');
+            $(this).addClass('is-selected');
             $soxSettingsDialog.find('#search').focus();
+            $soxSettingsDialog.css('right', 'calc(95vw - ' + $(e.target).offset().left + 'px)');
           } else {
-            $(this).removeClass('topbar-icon-on');
+            $(this).removeClass('is-selected');
           }
         },
       });
@@ -308,7 +309,7 @@
         fill: $('.top-bar .-secondary .-link').css('color'),
         width: '25px',
         height: '25px',
-      });
+      }).addClass('svg-icon iconInbox');
 
       //close dialog if clicked outside it
       $(document).click(e => { //close dialog if clicked outside it
@@ -318,14 +319,14 @@
 
         if (!isToggle && !isChild) {
           $soxSettingsDialog.hide();
-          $soxSettingsButton.removeClass('topbar-icon-on');
+          $soxSettingsButton.removeClass('is-selected');
         }
       });
 
       //close dialog if one of the links on the topbar is clicked
-      $('.topbar-icon, .-link').not('.sox-settings-button').click(() => {
+      $('.s-topbar--content .s-topbar--item').not('.sox-settings-button').click(() => {
         $soxSettingsDialog.hide();
-        $soxSettingsButton.removeClass('topbar-icon-on');
+        $soxSettingsButton.removeClass('is-selected');
       });
 
       // load features into dialog
@@ -360,12 +361,7 @@
 
       // add dialog to corral and sox button to topbar
       $soxSettingsButton.append($icon);
-      // The following check is because SO doesn't have inbox, achievements help centre and site switcher items
-      if ($('.inbox-button-item').length) {
-        $('.inbox-button-item').before($('<li/>').addClass('-item').append($soxSettingsButton));
-      } else {
-        $('.js-searchbar-trigger').after($('<li/>').addClass('-item').append($soxSettingsButton));
-      }
+      $('.s-topbar--item.s-user-card').parent().after($('<li/>').append($soxSettingsButton));
 
       $soxSettingsDialog.css({
         'top': $('.top-bar').height(),

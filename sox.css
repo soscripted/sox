@@ -7,7 +7,7 @@
 /* -------- sox settings dialog  ------- */
 
 #sox-settings-dialog {
-    top: 34px;
+    top: 47px;
     right: 208px;
     min-height: calc(100vh - 90px);
     width: 550px;
@@ -103,10 +103,12 @@
     color: #9fa6ad;
     min-width: 38px;
     cursor: pointer;
+    text-align: center;
 }
 
-.sox-settings-button:not(.-link) {
-    height: 24px !important;
+.sox-settings-button:hover, .sox-settings-button.is-selected {
+    color: #9fa6ad;
+    background-color: var(--theme-topbar-item-background-hover);
 }
 
 #sox-settings-dialog-check-toggle>i {
