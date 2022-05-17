@@ -669,12 +669,12 @@
         && revisionObject.comment === '<b></b> ' && new Date().getTime() / 1000 - revisionObject.creation_date <= 259200; // question is HNQ AND not 3 days old
       }
 
-      if (sox.location.on('/questions')) {
+      if (sox.location.on('/questions/')) {
         const postId = window.location.pathname.split('/')[2];
         getIsQuestionHot(postId);
-      } else if (document.querySelector('.question-summary')) {
+      } else if (document.querySelector('.s-post-summary')) {
         const questionIds = [];
-        [...document.querySelectorAll('.question-summary')].forEach(summary => {
+        [...document.querySelectorAll('.s-post-summary')].forEach(summary => {
           // Check if .question-summary has an id attribute - SO Teams posts (at the top of the page, if any) don't!
           if (!summary.id) return;
           questionIds.push(summary.id.split('-')[2]);
