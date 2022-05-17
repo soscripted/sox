@@ -949,7 +949,8 @@
       const FILTER_QUESTION_TITLE_LINK = '!BHMIbze0EQ*ved8LyoO6rNk25qGESy';
       const dialog = document.createElement('div');
       dialog.id = 'metaNewQuestionAlertDialog';
-      dialog.className = 'topbar-dialog dno new-topbar';
+      dialog.className = 'topbar-dialog';
+      dialog.style.display = 'none';
 
       const header = document.createElement('div');
       header.className = 'header';
@@ -969,36 +970,32 @@
 
       const diamond = document.createElement('a');
       diamond.id = 'metaNewQuestionAlertButton';
-      diamond.className = '-link';
+      diamond.className = 'sox-settings-button -s-topbar--item';
       diamond.title = 'Moderator inbox (recent meta questions)';
 
       const diamondSvg = sox.sprites.getSvg('diamond');
       diamondSvg.classList.add('svg-icon');
       diamond.insertAdjacentElement('beforeend', diamondSvg);
 
-      //diamond.innerHTML = diamond.innerHTML; //Reloads the diamond icon, which is necessary when adding an SVG using jQuery.
       dialog.appendChild(header);
       content.appendChild(questions);
       dialog.appendChild(content);
 
-      const dialogLi = document.createElement('li');
-      dialogLi.classList.add('-item');
-      dialogLi.appendChild(diamond);
-      document.querySelector('.my-profile').parentElement.insertAdjacentElement('afterend', dialogLi);
+      $('.s-topbar--item.s-user-card').parent().after($('<li/>').append(diamond));
+      dialog.style.top = sox.helpers.getCssProperty(document.querySelector('.s-topbar'), 'height');
 
-      dialog.style.top = sox.helpers.getCssProperty(document.querySelector('.top-bar'), 'height');
       if (document.querySelector('#metaNewQuestionAlertButton')) document.querySelector('.js-topbar-dialog-corral').appendChild(dialog);
 
       window.addEventListener('mouseup', event => {
         const dialogDisplay = sox.helpers.getCssProperty(dialog, 'display');
         if (event.target.closest('#metaNewQuestionAlertButton') == diamond) { // diamond has been clicked!
           event.preventDefault();
-          diamond.classList.toggle('topbar-icon-on');
-          dialog.style.display = dialogDisplay == 'none' ? 'block' : 'none';
+          diamond.classList.toggle('is-selected');
+          dialog.style.display = dialogDisplay === 'none' ? 'block' : 'none';
         } else if (dialogDisplay == 'block' && event.target.closest('#metaNewQuestionAlertDialog') != document.querySelector('#metaNewQuestionAlertDialog')) {
           // if the user has clicked outside the dialog, then hide it
           dialog.style.display = 'none';
-          diamond.classList.toggle('topbar-icon-on');
+          diamond.classList.toggle('is-selected');
         }
       });
 
