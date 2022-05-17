@@ -1082,12 +1082,12 @@
 
       function addLabels() {
         const questions = [];
-        const questionSummaries = [...document.getElementsByClassName('question-summary')];
+        const questionSummaries = [...document.getElementsByClassName('s-post-summary')];
         questionSummaries.forEach(question => {
           // Don't run if tag has already been added to question
           if (question.dataset[QUESTION_STATE_KEY]) return;
 
-          const anchor = question.querySelector('.summary h3 a');
+          const anchor = question.querySelector('h3 a');
           const id = sox.helpers.getIDFromAnchor(anchor);
           const text = anchor.innerText.trim();
 
@@ -1136,12 +1136,12 @@
               break;
             }
             case 'closed': {
-              const details = questionDetails.closed_details;
+                const details = questionDetails.closed_details;
+                console.log(details)
               const users = details.by_users.reduce((str, user) => str + ', ' + user.display_name, '').substr(2);
               const closureDate = new Date(questionDetails.closed_date * 1000);
               const timestamp = closureDate.toLocaleString();
-              const buttonHtml = `&nbsp;<span class="standOutDupeCloseMigrated-closed" title="closed as ${details.reason}
-                                                                                                     by ${users} on ${timestamp}">&nbsp;closed&nbsp;</span>`;
+              const buttonHtml = `&nbsp;<span class="standOutDupeCloseMigrated-closed" title="closed as ${details.reason} by ${users} on ${timestamp}">&nbsp;closed&nbsp;</span>`;
 
               question.anchor.insertAdjacentHTML('afterend', buttonHtml);
               break;
