@@ -2336,7 +2336,7 @@
     addOnTopicLinkToSiteSwitcher: function() {
       // Description: Replaces 'help' with an 'on-topic' link in the site switcher dropdown
 
-      const helpLink = document.querySelector('.top-bar .related-links a.js-gps-track'); // The first link
+      const helpLink = document.querySelector('.s-topbar .related-links a.js-gps-track'); // The first link
       const newLink = document.createElement('a');
       newLink.href = '/help/on-topic';
       newLink.innerText = 'on-topic';
