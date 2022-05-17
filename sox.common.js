@@ -615,8 +615,8 @@
       if (sox.site.type == sox.site.types.chat) {
         return Chat.RoomUsers.current().name;
       } else {
-        const username = document.querySelector('.top-bar div.gravatar-wrapper-24'); // used to be 'body div.topbar div div.topbar-links a div.gravatar-wrapper-24'
-        return (username ? username.title : false);
+        const username = document.querySelector('.s-topbar--item.s-user-card .s-avatar');
+        return (username ? username.title : '');
       }
     },
     get loggedIn() {

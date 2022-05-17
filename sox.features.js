@@ -118,7 +118,7 @@
       if (sox.user.loggedIn) {
         const name = sox.user.name;
         const spanUsernameHtml = `<span class="reputation links-container sox-displayName" title="${name}">${name}</span>`;
-        document.querySelector('.my-profile').insertAdjacentHTML('afterbegin', spanUsernameHtml);
+        document.querySelector('.s-topbar--item.s-user-card').insertAdjacentHTML('afterbegin', spanUsernameHtml);
       }
     },
 
