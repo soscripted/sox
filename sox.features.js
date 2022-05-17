@@ -1982,13 +1982,14 @@
       });
 
       // Grays out votes on own posts
-      const opDetails = [...document.querySelectorAll('.user-details')].filter(user => user.getAttribute('itemprop') && user.querySelector('a')
-                                                                                    && user.querySelector('a').href.match(sox.user.id));
-      if (!opDetails.length) return;
-      [...opDetails.closest('.answer, .question').querySelectorAll('.js-vote-up-btn, .js-vote-down-btn')].forEach(el => {
-        el.classList.remove('sox-better-css');
-        el.classList.add('sox-disabled-button');
-        el.title = 'You cannot vote on your own posts.';
+      [...document.querySelectorAll('.user-details')].forEach(user => {
+        if (user.getAttribute('itemprop') && user.querySelector('a') && user.querySelector('a').href.match(sox.user.id)) {
+          [...user.closest('.answer, .question').querySelectorAll('.js-vote-up-btn, .js-vote-down-btn')].forEach(el => {
+            el.classList.remove('sox-better-css');
+            el.classList.add('sox-disabled-button');
+            el.title = 'You cannot vote on your own posts.';
+          });
+        }
       });
     },
 
