@@ -2306,16 +2306,22 @@
 
       // Note: This feature used to add a timeline button too, but this was natively
       // implemented as of 2020-16-01, see https://meta.stackexchange.com/a/342316.
-      // The function name is unchanged to newer versions don't auto-remove the feature
+      // The function name is unchanged so newer versions don't auto-remove the feature
       // for users with it enabled
 
       [...document.querySelectorAll('.question, .answer')].forEach(post => {
         const id = post.getAttribute('data-questionid') || post.getAttribute('data-answerid');
-        const revisionsAnchor = document.createElement('a');
-        revisionsAnchor.innerText = 'Revisions';
-        revisionsAnchor.classList.add('grid--cell');
-        revisionsAnchor.href = `//${sox.site.url}/posts/${id}/revisions`;
-        post.querySelector('.js-post-menu div').appendChild(revisionsAnchor);
+        const $revisionsEl = sox.helpers.newElement('div', {
+          class: 'flex--item'
+        });
+        const $revisionsBtn = sox.helpers.newElement('a', {
+          class: 's-btn s-btn__link',
+          title: 'SOX: View post revisions',
+          href: `//${sox.site.url}/posts/${id}/revisions`,
+          text: 'Revisions'
+        });
+        $revisionsEl.append($revisionsBtn);
+        post.querySelector('.js-post-menu div').appendChild($revisionsEl.get(0));
       });
     },
 

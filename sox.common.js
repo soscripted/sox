@@ -336,7 +336,7 @@
     },
     newElement: function(type, elementDetails) {
       const extras = {};
-      const allowed = ['text', 'checkbox', 'radio', 'textarea', 'span'];
+      const allowed = ['text', 'checkbox', 'radio', 'textarea', 'span', 'div', 'a'];
 
       if (allowed.indexOf(type) != -1) {
         if (type == 'text') {
