@@ -77,8 +77,8 @@
       // Description: For highlighting only the tags of favorite questions
 
       function highlight() {
-        [...document.querySelectorAll('.tagged-interesting')].forEach(interestingQuestion => {
-          interestingQuestion.classList.remove('tagged-interesting');
+        [...document.querySelectorAll('.s-post-summary__watched')].forEach(interestingQuestion => {
+          interestingQuestion.classList.remove('s-post-summary__watched');
           interestingQuestion.classList.add('sox-tagged-interesting');
         });
       }
