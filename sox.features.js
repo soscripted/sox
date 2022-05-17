@@ -2492,16 +2492,15 @@
       };
 
       function showModalOnclick() {
-        const posts = [...document.querySelectorAll('.post-text img, .comment-copy img')];
+        const posts = [...document.querySelectorAll('.post-layout img, .comment-copy img')];
         posts.forEach(img => {
           if (!img.src || !img.src.match(/i(?:\.stack)?\.imgur\.com\/[a-zA-Z0-9]*\.png$/)) return;
-
           img.addEventListener('click', e => {
             e.preventDefault();
             // Create modal on click instead of outside; modal is removed when closed
             // so reference would become invalid
             modalAttributes.header = `SOX: Linked Image <a class="sox-openImagesAsModals-sourceLink" target="_blank"
-                                                             rel="noopener noreferrer" href="${img.src}">source</a>`;
+            rel="noopener noreferrer" href="${img.src}">source</a>`;
             const modal = sox.helpers.createModal(modalAttributes);
             modal.querySelector('.sox-custom-dialog-content').innerHTML = `<img width="100%" height="100%" src="${img.src}"/>`;
             if (!document.getElementById('sox-linked-image-modal')) document.body.appendChild(modal);
