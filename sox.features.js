@@ -107,7 +107,7 @@
 
       highlight();
 
-      if (document.getElementsByClassName('question-summary').length) {
+      if (document.getElementsByClassName('s-post-summary').length) {
         sox.helpers.addAjaxListener('\\/posts\\/ajax-load-realtime-list', highlight);
       }
     },
