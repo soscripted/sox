@@ -3,7 +3,7 @@
 
   sox.dialog = {
     init: function(options) {
-      if (!$('.top-bar').length) return;
+      if (!$('.s-topbar').length) return;
       sox.debug('initializing SOX dialog');
 
       const version = options.version;
@@ -27,12 +27,11 @@
 
       // Array of HTML strings that will be displayed as `li` items if the user has installed a new version.
       const changes = [
-        'Fix bugs in various features (thanks @double-beep for many of these!)',
-        'Add feature to copy markdown for comments',
-        'Add feature to add scrolling to room list in usercards in chat',
-        'Only run SOX on HTTPS',
-        'Deprecate "add timeline button" feature (now natively implemented!)',
-        'Deprecate "show question state in suggested edit review queue" (now native!)'
+        "Fix bugs in various features due to SE layout changes",
+        "Add feature to add answer count to question header",
+        "Behind-the-scenes performance improvements (e.g., reduce usage of jQuery for efficiency - thanks @double-beep!)",
+        'Deprecate "align badges by their class on user profile pages" feature (now natively implemented!)',
+        'Deprecate "differentiate spoilers from empty blockquotes" (now native!)',
       ];
 
       function addCategory(name) {
@@ -65,7 +64,7 @@
           'title': blockFeatureSelection ? 'You must get an access token to enable this feature (click the key button at the bottom of the SOX dialog)' : '',
         });
 
-        const $info = sox.sprites.getSvg('info').hover(function() {
+        const $info = $(sox.sprites.getSvg('info')).hover(function() {
           if (extendedDescription && !$(this).parent().find('.sox-feature-info').length) {
             $(this).parent().append($('<div/>', {
               'class': 'sox-feature-info',
@@ -95,7 +94,7 @@
             style: 'display: none; margin-top: 5px;',
           });
 
-          const $settingsToggle = sox.sprites.getSvg('wrench', 'Edit this feature\'s settings').click(e => {
+          const $settingsToggle = $(sox.sprites.getSvg('wrench', 'Edit this feature\'s settings')).click(e => {
             e.preventDefault(); //don't uncheck the checkbox
 
             const $settingsPanel = $('#feature-settings-' + name);
@@ -280,17 +279,18 @@
       // create sox settings button
       const $soxSettingsButton = $('<a/>', {
         id: 'soxSettingsButton',
-        'class': 'sox-settings-button -link',
+        'class': 'sox-settings-button s-topbar--item',
         title: 'Change SOX settings',
         href: '#',
         click: function(e) {
           e.preventDefault();
           $('#sox-settings-dialog').toggle();
           if ($soxSettingsDialog.is(':visible')) {
-            $(this).addClass('topbar-icon-on');
+            $(this).addClass('is-selected');
             $soxSettingsDialog.find('#search').focus();
+            $soxSettingsDialog.css('right', 'calc(95vw - ' + $(e.target).offset().left + 'px)');
           } else {
-            $(this).removeClass('topbar-icon-on');
+            $(this).removeClass('is-selected');
           }
         },
       });
@@ -304,11 +304,11 @@
         $soxSettingsDialog.addClass('dark-mode');
       }
 
-      const $icon = sox.sprites.getSvg('settings', 'Change your SOX settings', {
+      const $icon = $(sox.sprites.getSvg('settings', 'Change your SOX settings')).css({
         fill: $('.top-bar .-secondary .-link').css('color'),
         width: '25px',
         height: '25px',
-      });
+      }).addClass('svg-icon iconInbox');
 
       //close dialog if clicked outside it
       $(document).click(e => { //close dialog if clicked outside it
@@ -318,14 +318,14 @@
 
         if (!isToggle && !isChild) {
           $soxSettingsDialog.hide();
-          $soxSettingsButton.removeClass('topbar-icon-on');
+          $soxSettingsButton.removeClass('is-selected');
         }
       });
 
       //close dialog if one of the links on the topbar is clicked
-      $('.topbar-icon, .-link').not('.sox-settings-button').click(() => {
+      $('.s-topbar--content .s-topbar--item').not('.sox-settings-button').click(() => {
         $soxSettingsDialog.hide();
-        $soxSettingsButton.removeClass('topbar-icon-on');
+        $soxSettingsButton.removeClass('is-selected');
       });
 
       // load features into dialog
@@ -360,12 +360,7 @@
 
       // add dialog to corral and sox button to topbar
       $soxSettingsButton.append($icon);
-      // The following check is because SO doesn't have inbox, achievements help centre and site switcher items
-      if ($('.inbox-button-item').length) {
-        $('.inbox-button-item').before($('<li/>').addClass('-item').append($soxSettingsButton));
-      } else {
-        $('.js-searchbar-trigger').after($('<li/>').addClass('-item').append($soxSettingsButton));
-      }
+      $('.s-topbar--item.s-user-card').parent().after($('<li/>').append($soxSettingsButton));
 
       $soxSettingsDialog.css({
         'top': $('.top-bar').height(),

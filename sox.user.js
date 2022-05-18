@@ -3,7 +3,7 @@
 // @namespace    https://github.com/soscripted/sox
 // @homepage     https://github.com/soscripted/sox
 // @homepageURL  https://github.com/soscripted/sox
-// @version      2.7.0
+// @version      2.8.0
 // @description  Extra optional features for Stack Overflow and Stack Exchange sites
 // @contributor  ᴉʞuǝ (https://stackoverflow.com/users/1454538/, https://github.com/mezmi)
 // @contributor  ᔕᖺᘎᕊ (https://stackexchange.com/users/4337810/, https://github.com/shu8)
@@ -55,6 +55,79 @@
 (function(sox, $) {
   'use strict';
 
+  function runFeatures(settings, featureInfo) {
+    // Execute features
+    performance.mark('allFeatures-start');
+    for (let i = 0; i < settings.length; ++i) {
+      const category = settings[i].split('-')[0];
+      const featureId = settings[i].split('-')[1];
+
+      if (!(category in featureInfo.categories)) { //if we ever rename a category
+        sox.loginfo('Deleting feature "' + settings[i] + '" (category rename?)');
+        settings.splice(i, 1);
+        sox.settings.save(settings);
+        continue;
+      }
+
+      const feature = featureInfo.categories[category].filter(obj => {
+        return obj.name == featureId;
+      })[0];
+
+      let runFeature = true;
+      try {
+        //NOTE: there is no else if() because it is possible to have both match and exclude patterns..
+        //which could have minor exceptions making it neccessary to check both
+        if (feature.match !== '') {
+          const sites = feature.match.split(',');
+
+          for (let pattern = 0; pattern < sites.length; pattern++) {
+            if (!sox.location.matchWithPattern(sites[pattern])) {
+              runFeature = false; //none of the patterns match the current site.. yet.
+            } else {
+              runFeature = true;
+              break; //if it does match, then stop looping; we want the feature to run
+            }
+          }
+        }
+        if (feature.exclude !== '') {
+          const sites = feature.exclude.split(',');
+
+          for (let pattern = 0; pattern < sites.length; pattern++) {
+            if (sox.location.matchWithPattern(sites[pattern])) { //if current site is in list, DON'T run feature
+              runFeature = false; //don't run feature
+              break; //no need to keep on looping
+            }
+          }
+        }
+        if (runFeature) {
+          sox.debug('running ' + featureId);
+          performance.mark(`${featureId}-start`);
+          if (feature.settings) {
+            const settingsToPass = GM_getValue('SOX-' + featureId + '-settings') ? JSON.parse(GM_getValue('SOX-' + featureId + '-settings')) : {};
+            sox.features[featureId](settingsToPass); //run the feature if match and exclude conditions are met, pass on settings object
+          } else {
+            sox.features[featureId](); //run the feature if match and exclude conditions are met
+          }
+          performance.mark(`${featureId}-end`);
+          performance.measure(featureId, `${featureId}-start`, `${featureId}-end`);
+        }
+      } catch (err) {
+        if (!sox.features[featureId] || !feature) { //remove deprecated/'corrupt' feature IDs from saved settings
+          sox.loginfo('Deleting feature "' + settings[i] + '" (feature not found)');
+          settings.splice(i, 1);
+          sox.settings.save(settings);
+          $('#sox-settings-dialog-features').find('#' + settings[i].split('-')[1]).parent().parent().remove();
+        } else {
+          $('#sox-settings-dialog-features').find('#' + settings[i].split('-')[1]).parent().css('color', 'red').attr('title', 'There was an error loading this feature. Please raise an issue on GitHub.');
+          sox.error('There was an error loading the feature "' + settings[i] + '". Please raise an issue on GitHub, and copy the following error log:\n' + err);
+        }
+      }
+    }
+    performance.mark('allFeatures-end');
+    performance.measure('allFeatures', 'allFeatures-start', 'allFeatures-end');
+    sox.debug('Performance Data', performance.getEntriesByType('measure'));
+  }
+
   function init() {
     if (sox.location.on('github.com/soscripted')) {
       try {
@@ -105,77 +178,14 @@
       throw ('SOX: There was an error while attempting to initialize the SOX Settings Dialog, please report this on GitHub.\n' + e);
     }
 
-    if (sox.settings.available) {
-      // Execute features
-      performance.mark('allFeatures-start');
-      for (let i = 0; i < settings.length; ++i) {
-        const category = settings[i].split('-')[0];
-        const featureId = settings[i].split('-')[1];
-
-        if (!(category in featureInfo.categories)) { //if we ever rename a category
-          sox.loginfo('Deleting feature "' + settings[i] + '" (category rename?)');
-          settings.splice(i, 1);
-          sox.settings.save(settings);
-          continue;
-        }
-
-        const feature = featureInfo.categories[category].filter(obj => {
-          return obj.name == featureId;
-        })[0];
-
-        let runFeature = true;
-        try {
-          //NOTE: there is no else if() because it is possible to have both match and exclude patterns..
-          //which could have minor exceptions making it neccessary to check both
-          if (feature.match !== '') {
-            const sites = feature.match.split(',');
-
-            for (let pattern = 0; pattern < sites.length; pattern++) {
-              if (!sox.location.matchWithPattern(sites[pattern])) {
-                runFeature = false; //none of the patterns match the current site.. yet.
-              } else {
-                runFeature = true;
-                break; //if it does match, then stop looping; we want the feature to run
-              }
-            }
-          }
-          if (feature.exclude !== '') {
-            const sites = feature.exclude.split(',');
-
-            for (let pattern = 0; pattern < sites.length; pattern++) {
-              if (sox.location.matchWithPattern(sites[pattern])) { //if current site is in list, DON'T run feature
-                runFeature = false; //don't run feature
-                break; //no need to keep on looping
-              }
-            }
-          }
-          if (runFeature) {
-            sox.debug('running ' + featureId);
-            performance.mark(`${featureId}-start`);
-            if (feature.settings) {
-              const settingsToPass = GM_getValue('SOX-' + featureId + '-settings') ? JSON.parse(GM_getValue('SOX-' + featureId + '-settings')) : {};
-              sox.features[featureId](settingsToPass); //run the feature if match and exclude conditions are met, pass on settings object
-            } else {
-              sox.features[featureId](); //run the feature if match and exclude conditions are met
-            }
-            performance.mark(`${featureId}-end`);
-            performance.measure(featureId, `${featureId}-start`, `${featureId}-end`);
-          }
-        } catch (err) {
-          if (!sox.features[featureId] || !feature) { //remove deprecated/'corrupt' feature IDs from saved settings
-            sox.loginfo('Deleting feature "' + settings[i] + '" (feature not found)');
-            settings.splice(i, 1);
-            sox.settings.save(settings);
-            $('#sox-settings-dialog-features').find('#' + settings[i].split('-')[1]).parent().parent().remove();
-          } else {
-            $('#sox-settings-dialog-features').find('#' + settings[i].split('-')[1]).parent().css('color', 'red').attr('title', 'There was an error loading this feature. Please raise an issue on GitHub.');
-            sox.error('There was an error loading the feature "' + settings[i] + '". Please raise an issue on GitHub, and copy the following error log:\n' + err);
-          }
+    window.onload = () => {
+      if (sox.settings.available) {
+        if (document.hasFocus && document.hasFocus()) {
+          runFeatures(settings, featureInfo);
+        } else {
+          window.addEventListener('focus', () => runFeatures(settings, featureInfo), { once: true });
         }
       }
-      performance.mark('allFeatures-end');
-      performance.measure('allFeatures', 'allFeatures-start', 'allFeatures-end');
-      sox.debug('Performance Data', performance.getEntriesByType('measure'));
     }
 
     //custom events....

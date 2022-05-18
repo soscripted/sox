@@ -7,7 +7,7 @@
 /* -------- sox settings dialog  ------- */
 
 #sox-settings-dialog {
-    top: 34px;
+    top: 47px;
     right: 208px;
     min-height: calc(100vh - 90px);
     width: 550px;
@@ -98,15 +98,14 @@
 
 .sox-settings-button {
     background-image: none !important;
-    padding-top: 10px;
     font-size: 14px;
-    color: #9fa6ad;
-    min-width: 38px;
     cursor: pointer;
+    text-align: center;
 }
 
-.sox-settings-button:not(.-link) {
-    height: 24px !important;
+.sox-settings-button:hover, .sox-settings-button.is-selected {
+    color: #9fa6ad;
+    background-color: var(--theme-topbar-item-background-hover);
 }
 
 #sox-settings-dialog-check-toggle>i {
@@ -394,7 +393,7 @@
 /*linkedPostsInline for the displayed post text; https://github.com/shu8/Stack-Overflow-Optional-Features/issues/48 */
 
 .linkedPostsInline-loaded-body-sox {
-    background-color: aliceblue;
+    background-color: var(--blue-050);
     border-radius: 20px;
     overflow-wrap: break-word;
     width: auto;
@@ -457,15 +456,6 @@
     background: black;
 }
 
-/* spoilerTip -- for the red 'hover to show spoiler' text */
-
-.isSpoiler {
-    color: red;
-    font-size: smaller;
-    float: right;
-    opacity: 1 !important;
-}
-
 /*commentReplies -- for the reply buttons*/
 
 .soxReplyLink {
@@ -476,7 +466,7 @@
 /*flagPercentageBar -- for the percentage bar itself*/
 
 #sox-flagPercentProgressBar {
-    background: #ccc;
+    background: var(--black-025);
     height: 10px;
     width: 250px;
     margin: 6px 10px 10px 0;
@@ -496,17 +486,7 @@
 }
 
 .sox-flagPercentProgressBar-container {
-    background-color: #fafafb
-}
-
-/*titleEditDiff -- for the toggle button*/
-
-.sox-better-title-toggle {
-    float: left;
-    margin-right: 10px;
-    cursor: pointer;
-    width: 25px;
-    height: 25px;
+    background-color: var(--black-025);
 }
 
 /*sox-copyCode -- for the button and textarea (completely hide it)*/
@@ -520,7 +500,7 @@
     display: none;
     /* relative position prevents code from being in front of button */
     position: relative;
-    background-color: #eff0f1;
+    background-color: var(--highlight-bg);
     margin-left: -15px;
 }
 
@@ -548,9 +528,10 @@
 /*colorAnswerer -- for the username*/
 
 .sox-answerer {
-    color: rgba(0, 50, 200, 1);
-    background-color: rgba(220, 220, 220, 1);
+    color: var(--blue-700);
+    background-color: var(--bc-medium);
     padding: 1px 5px !important;
+    border-radius: 3px;
 }
 
 /*hotNetworkQuestionsFiltering -- for the questions to hide*/
@@ -668,11 +649,16 @@
     font-size: smaller;
 }
 
+.sox-last-seen {
+    position: relative;
+    bottom: 2.5px;
+}
+
 /* markEmployees -- for the SE icon */
 .sox-markEmployees-logo {
     margin-left: 5px;
-    height: 13px;
-    width: 13px;
+    height: 15px;
+    width: 15px;
 }
 
 /* openImagesAsModals -- for the small '(source)' link in header */
@@ -716,6 +702,10 @@
 }
 
 /* stickyVoteButtons -- for the vote buttons on the left of the post */
+.sox-stickyVoteButtons {
+    z-index: 2;
+}
+
 .sox-stickyVoteButtons > .js-voting-container {
     position: -webkit-sticky;
     position: sticky;
@@ -723,4 +713,51 @@
 
 .sox-stickyVoteButtons .s-popover {
     width: max-content;
+}
+
+/* displayName -- for the CSS of the username */
+.sox-displayName {
+    color: color(--white);
+    padding-right: 12px;
+    font-size: 13px;
+}
+
+/* flagPercentages -- for the percentages */
+.sox-percentage-span {
+    margin-left: 5px;
+    color: #999;
+    font-size: 12px;
+}
+
+/* topAnswers -- for the scores of the answers */
+#sox-top-answers {
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eaebec;
+}
+
+/* warnNotLoggedIn -- for the div warning the user */
+#loggedInReminder {
+    position: fixed;
+    right: 0;
+    bottom: 50px;
+    background-color: rgba(200, 200, 200, 1);
+    width: 200px;
+    text-align: center;
+    padding: 5px;
+    color: black;
+    font-weight: bold;
+}
+
+/* disableVoteButtons -- for the CSS of the disabled voting buttons */
+.sox-disabled-button {
+    cursor: default;
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+/* addTagsToHNQs -- for the tags' span */
+.sox-addTagsToHNQs-span {
+    color: grey;
+    display: block;
+    margin-bottom: 10px;
 }

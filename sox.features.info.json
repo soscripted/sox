@@ -15,12 +15,6 @@
             "feature_packs": ["power_user"],
             "usesApi": true
         }, {
-            "name": "alignBadgesByClass",
-            "desc": "Align badges by their class on user profile pages",
-            "meta": "https://meta.stackexchange.com/q/254607",
-            "match": "*://*/users/*",
-            "exclude": "SE1.0"
-        }, {
             "name": "answerTagsSearch",
             "desc": "Show tags for the question an answer belongs to on search pages (for better context)",
             "extended_description": "By default, any search results that are answers do not show its question's tags. This feature adds the question's tags underneath the result.",
@@ -55,7 +49,7 @@
             "extended_description": "Changes the favourite tag question highlighting to be a more subtle, coloured left-border",
             "meta": "https://meta.stackexchange.com/q/238591",
             "match": "",
-            "exclude": "*://chat.*.com/*,*://*/questions/*,*://*/questions/ask",
+            "exclude": "*://chat.*.com/*,*://*/questions/ask",
             "feature_packs": ["major_ui", "key_feature", "power_user"]
         }, {
             "name": "isQuestionHot",
@@ -78,14 +72,6 @@
                 "desc": "Use 12-hour format?"
             }]
          }, {
-            "name": "markEmployees",
-            "desc": "Adds the Stack Exchange logo after employee names to make them stand out",
-            "meta": "https://meta.stackexchange.com/q/246678",
-            "match": "",
-            "exclude": "*://chat.*.com/*,SE1.0,*://*/questions/ask",
-            "feature_packs": ["major_ui", "key_feature", "power_user"],
-            "usesApi": true
-        }, {
             "name": "metaChatBlogStackExchangeButton",
             "desc": "Show meta and chat buttons on hover of a site under the site switcher button",
             "meta": "https://meta.stackexchange.com/q/256183",
@@ -106,12 +92,6 @@
             "meta": "",
             "match": "",
             "exclude": "*://chat.*.com/*"
-        }, {
-            "name": "spoilerTip",
-            "desc": "Differentiate spoilers from empty blockquotes",
-            "meta": "https://meta.stackexchange.com/q/104085",
-            "match": "*://*/questions/*,*://*/review*",
-            "exclude": "SE1.0,*://*/questions/ask,*://*/questions/tagged*,*://*/questions/greatest-hits*"
         }, {
             "name": "standOutDupeCloseMigrated",
             "desc": "Add highlighted tags to closed/on hold/duplicate/migrated questions on question lists and review",
@@ -166,6 +146,13 @@
             "extended_description": "When clicking on an image that is hosted on Stack Exchange's imgur account, a modal will open showing a larger version of the image. If you still want to open the image in a new tab, there is a 'source' link in the modal.",
             "meta": "",
             "match": "*://*/questions/*,*://*/review/*",
+            "exclude": "*://*/questions/ask,*://*/questions/tagged*,*://*/questions/greatest-hits*"
+        }, {
+            "name": "addAnswerCountToQuestionHeader",
+            "desc": "Add the post's answer count under the question title",
+            "extended_description": "Add the number of answers the current question has underneath the question header, next to the existing active dates and view count.",
+            "meta": "",
+            "match": "*://*/questions/*",
             "exclude": "*://*/questions/ask,*://*/questions/tagged*,*://*/questions/greatest-hits*"
         }],
         "Comments": [{
@@ -282,12 +269,6 @@
             "match": "*://*/questions/*,*://*/review*",
             "exclude": "SE1.0,*://*/questions/tagged*,*://*/questions/greatest-hits*"
         }, {
-            "name": "titleEditDiff",
-            "desc": "Make title edits show separately rather than merged in edit suggestions",
-            "meta": "https://meta.stackexchange.com/q/135710",
-            "match": "*://*.*/review/suggested-edits*",
-            "exclude": ""
-        }, {
             "name": "inlineEditorEverywhere",
             "desc": "Inline editor regardless of reputation",
             "extended_description": "Enables the inline editor on all sites, even if you don't have 2k rep there yet. Note: this feature may not work on Firefox.",
@@ -305,14 +286,14 @@
             "name": "flagPercentages",
             "desc": "Show flagging percentages for each type in the Flag Summary",
             "meta": "",
-            "match": "*://*/users/*",
+            "match": "*://*/users/flag-summary/*",
             "exclude": "*://chat.*.com/*,SE1.0",
             "feature_packs": ["power_user"]
         }, {
             "name": "flagPercentageBar",
             "desc": "Show the total percentage of helpful flags as a coloured bar on the Flag Summary Page",
             "meta": "https://meta.stackoverflow.com/q/310881",
-            "match": "*://*/users/*",
+            "match": "*://*/users/flag-summary/*",
             "exclude": "*://chat.*.com/*,SE1.0",
             "feature_packs": ["power_user"]
         }],
@@ -321,7 +302,7 @@
             "desc": "Hide the Community Bulletin module",
             "meta": "",
             "match": "",
-            "exclude": "*://chat.*.com/*"
+            "exclude": "*://chat.*.com/*,*://*/users/*"
         }, {
             "name": "hideJustHotMetaPosts",
             "desc": "Hide just the 'Hot Meta Posts' sections in the Community Bulletin",
@@ -468,13 +449,13 @@
             "desc": "Change 'share' link to format of [post-name](url)",
             "extended_description": "When you click 'share' under a post, this will convert the URL given to a markdown-friendly version, with the post name as the link text. This feature also automatically copies the converted string to your clipboard",
             "meta": "https://meta.stackexchange.com/q/126544",
-            "match": "*://*/questions/*,*://*/review*",
+            "match": "*://*/questions/*",
             "exclude": "SE1.0,*://*/questions/ask,*://*/questions/tagged*,*://*/questions/greatest-hits*"
         }, {
             "name": "sortByBountyAmount",
             "desc": "Add an option to filter bounties by their amount",
             "meta": "https://meta.stackexchange.com/q/7753",
-            "match": "",
+            "match": "*://*/questions",
             "exclude": "*://*/users/*,*://chat.*.com/*,SE1.0,*://*/questions/*,*://*/review*"
         }, {
             "name": "warnNotLoggedIn",
@@ -513,7 +494,7 @@
             "name": "showMetaReviewCount",
             "desc": "Add how many reviews are available on Meta to the main site review page",
             "meta": "",
-            "match": "*://*/review",
+            "match": "*://*/review$",
             "exclude": "*://meta.*.com/*"
         }, {
             "name": "copyCode",
@@ -521,12 +502,6 @@
             "meta": "",
             "match": "*://*/questions/*,*://*/review*",
             "exclude": "*://*/questions/ask,*://*/questions/tagged*,*://*/questions/greatest-hits*"
-        }, {
-            "name": "dailyReviewBar",
-            "desc": "Add a progress bar showing how many reviews you have left in the day",
-            "meta": "",
-            "match": "*://*/review*",
-            "exclude": ""
         }, {
             "name": "openLinksInNewTab",
             "desc": "Open any links to the specified sites in a new tab by default",
@@ -556,4 +531,3 @@
         }]
     }
 }
-

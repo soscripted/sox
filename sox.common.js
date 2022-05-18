@@ -1,8 +1,10 @@
+/* globals CHAT, StackExchange, jQuery */
 (function(sox, $) {
   'use strict';
   const SOX_SETTINGS = 'SOXSETTINGS';
   const commonInfo = JSON.parse(GM_getResourceText('common'));
   const lastVersionInstalled = GM_getValue('SOX-lastVersionInstalled');
+  var hookAjaxObject = {};
 
   sox.info = {
     version: (typeof GM_info !== 'undefined' ? GM_info.script.version : 'unknown'),
@@ -49,7 +51,11 @@
   let Stack;
   if (location.href.indexOf('github.com') === -1) { //need this so it works on FF -- CSP blocks window.eval() it seems
     Chat = (typeof window.CHAT === 'undefined' ? window.eval('typeof CHAT != \'undefined\' ? CHAT : undefined') : CHAT);
-    Stack = (typeof Chat === 'undefined' ? (typeof StackExchange === 'undefined' ? window.eval('if (typeof StackExchange != "undefined") StackExchange') : (StackExchange || window.StackExchange)) : undefined);
+    Stack = (typeof Chat === 'undefined'
+             ? (typeof StackExchange === 'undefined'
+                ? window.eval('if (typeof StackExchange != "undefined") StackExchange')
+                : (StackExchange || window.StackExchange))
+             : undefined);
   }
 
   sox.Stack = Stack;
@@ -91,15 +97,13 @@
       return settings === undefined ? undefined : JSON.parse(settings);
     },
     save: function(settings) {
-      GM_setValue(SOX_SETTINGS, typeof settings === 'string' ? settings : JSON.stringify(settings)); //if importing, it will already be a string so don't stringify the string!
+      // If importing, it will already be a string so there's no need to stringify it
+      GM_setValue(SOX_SETTINGS, typeof settings === 'string' ? settings : JSON.stringify(settings));
     },
     reset: function() {
       const keys = GM_listValues();
       sox.debug(keys);
-      for (let i = 0; i < keys.length; i++) {
-        const key = keys[i];
-        GM_deleteValue(key);
-      }
+      keys.forEach(key => GM_deleteValue(key));
     },
     get accessToken() {
       const accessToken = GM_getValue('SOX-accessToken', false);
@@ -149,10 +153,9 @@
       use.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', `#sox_${name}`);
       svg.appendChild(use);
 
-      if (css) $(svg).css(css);
       svg.classList.add('sox-sprite');
       svg.classList.add(`sox-sprite-${name}`);
-      return $(svg);
+      return svg;
     },
   };
 
@@ -257,36 +260,29 @@
       }
       sox.debug(`API: Sending request to URL: '${queryURL}'`);
 
-      $.ajax({
-        type: 'get',
-        url: queryURL,
-        success: function(d) {
-          if (d.backoff) {
-            sox.error('SOX Error: BACKOFF: ' + d.backoff);
-          } else if (d.error_id == 502) {
-            sox.error('THROTTLE VIOLATION', d);
-          } else if (d.error_id == 403) {
-            sox.warn('Access token invalid! Opening window to get new one');
-            window.open('https://stackexchange.com/oauth/dialog?client_id=7138&scope=no_expiry&redirect_uri=http://soscripted.github.io/sox/');
-            alert('Your access token is no longer valid. A window has been opened to request a new one.');
+      fetch(queryURL).then(apiResponse => apiResponse.json()).then(responseJson => {
+        if (responseJson.backoff) {
+          sox.error('SOX Error: BACKOFF: ' + responseJson.backoff);
+        } else if (responseJson.error_id == 502) {
+          sox.error('THROTTLE VIOLATION', responseJson);
+        } else if (responseJson.error_id == 403) {
+          sox.warn('Access token invalid! Opening window to get new one');
+          window.open('https://stackexchange.com/oauth/dialog?client_id=7138&scope=no_expiry&redirect_uri=http://soscripted.github.io/sox/');
+          alert('Your access token is no longer valid. A window has been opened to request a new one.');
+        } else {
+          if (useCache) {
+            responseJson.items.forEach(item => {
+              item.sox_request_time = new Date().getTime();
+              finalItems.push(item);
+              endpointCache.push(item);
+            });
+            GM_setValue('SOX-apiCache', JSON.stringify(apiCache));
+            sox.debug('API: saving new cache', apiCache);
           } else {
-            if (useCache) {
-              d.items.forEach(item => {
-                item.sox_request_time = new Date().getTime();
-                finalItems.push(item);
-                endpointCache.push(item);
-              });
-              GM_setValue('SOX-apiCache', JSON.stringify(apiCache));
-              sox.debug('API: saving new cache', apiCache);
-            } else {
-              finalItems = d.items;
-            }
-            callback(finalItems);
+            finalItems = responseJson.items;
           }
-        },
-        error: function(a, b, c) {
-          sox.error('SOX Error: ' + b + ' ' + c);
-        },
+          callback(finalItems);
+        }
       });
     },
     observe: function (targets, elements, callback) {
@@ -340,7 +336,7 @@
     },
     newElement: function(type, elementDetails) {
       const extras = {};
-      const allowed = ['text', 'checkbox', 'radio', 'textarea', 'span'];
+      const allowed = ['text', 'checkbox', 'radio', 'textarea', 'span', 'div', 'a'];
 
       if (allowed.indexOf(type) != -1) {
         if (type == 'text') {
@@ -384,50 +380,56 @@
       return siteMatch ? siteMatch[1] : null;
     },
     createModal: function (params) {
-      const $dialog = $('<aside/>', {
-        'class': 's-modal js-modal-overlay js-modal-close js-stacks-managed-popup js-fades-with-aria-hidden sox-custom-dialog',
-        'role': 'dialog',
-        'aria-hidden': false,
-      });
-      if (params.css) $dialog.css(params.css);
-      if (params.id) $dialog.attr('id', params.id);
-      const $dialogInnerContainer = $('<div/>', {
-        'class': 's-modal--dialog js-modal-dialog ',
-        'style': 'min-width: 568px;',// top: 227.736px; left: 312.653px;',
-      });
-      if (params.css) $dialogInnerContainer.css(params.css);
-      const $header = $('<h1/>', {
-        'class': 's-modal--header fs-headline1 fw-bold mr48 js-first-tabbable sox-custom-dialog-header',
-        'html': params.header,
-      });
-      const $mainContent = $('<div/>', {
-        'class': 's-modal--body sox-custom-dialog-content',
-      });
-      if (params.html) $mainContent.html(params.html);
-      const $closeButton = $('<button/>', {
-        'class': 's-modal--close s-btn s-btn__muted js-modal-close js-last-tabbable',
-        'click': () => $('.sox-custom-dialog').remove(),
-      }).append($('<svg aria-hidden="true" class="svg-icon m0 iconClearSm" width="14" height="14" viewBox="0 0 14 14"><path d="M12 3.41L10.59 2 7 5.59 3.41 2 2 3.41 5.59 7 2 10.59 3.41 12 7 8.41 10.59 12 12 10.59 8.41 7z"></path></svg>'));
+      const closeButtonSvg = `<svg aria-hidden="true" class="svg-icon m0 iconClearSm" width="14" height="14" viewBox="0 0 14 14">
+                                <path d="M12 3.41L10.59 2 7 5.59 3.41 2 2 3.41 5.59 7 2 10.59 3.41 12 7 8.41 10.59 12 12 10.59 8.41 7z"></path>
+                              </svg>`;
 
-      $dialogInnerContainer.append($header).append($mainContent).append($closeButton);
-      $dialog.append($dialogInnerContainer);
+      const dialog = document.createElement('aside');
+      dialog.className = 's-modal js-modal-overlay js-modal-close js-stacks-managed-popup js-fades-with-aria-hidden sox-custom-dialog';
+      dialog.role = 'dialog';
+      dialog.ariaHidden = false;
+      if (params.id) dialog.id = params.id;
 
-      return $dialog;
+      const dialogInnerContainer = document.createElement('div');
+      dialogInnerContainer.className = 's-modal--dialog js-modal-dialog';
+      dialogInnerContainer.style.minWidth = '568px'; // top: 227.736px; left: 312.653px;
+
+      // if (params.css) $dialog.css(params.css)
+      // if (params.css) $dialogInnerContainer.css(params.css);
+
+      const header = document.createElement('h1');
+      header.className = 's-modal--header fs-headline1 fw-bold mr48 js-first-tabbable sox-custom-dialog-header';
+      header.innerHTML = params.header;
+      const mainContent = document.createElement('div');
+      mainContent.className = 's-modal--body sox-custom-dialog-content';
+      if (params.html) mainContent.innerHTML = params.html;
+
+      const closeButton = document.createElement('button');
+      closeButton.className = 's-modal--close s-btn s-btn__muted js-modal-close js-last-tabbable';
+      closeButton.onclick = () => document.querySelector('.sox-custom-dialog').remove();
+      closeButton.insertAdjacentHTML('beforeend', closeButtonSvg);
+
+      dialogInnerContainer.appendChild(header);
+      dialogInnerContainer.appendChild(mainContent);
+      dialogInnerContainer.appendChild(closeButton);
+      dialog.appendChild(dialogInnerContainer);
+
+      return dialog;
     },
     addButtonToHelpMenu: function (params) {
-      const $li = $('<li/>');
-      const $a = $('<a/>', {
-        'href': 'javascript:void(0)',
-        'id': params.id,
-        'text': `SOX: ${params.linkText}`,
-      });
-      const $span = $('<span/>', {
-        'class': 'item-summary',
-        'text': params.summary,
-      });
-      $li.on('click', params.click);
-      $li.append($a.append($span));
-      $('.topbar-dialog.help-dialog.js-help-dialog > .modal-content ul').append($li);
+      const liElement = document.createElement('li');
+      const anchor = document.createElement('a');
+      anchor.href = 'javascript:void(0)';
+      anchor.id = params.id;
+      anchor.innerText = `SOX: ${params.linkText}`;
+      const span = document.createElement('span');
+      span.className = 'item-summary';
+      span.innerText = params.summary;
+
+      liElement.addEventListener('click', params.click);
+      anchor.appendChild(span);
+      liElement.appendChild(anchor);
+      document.querySelector('.topbar-dialog.help-dialog.js-help-dialog .modal-content ul').appendChild(liElement);
     },
     surroundSelectedText: function(textarea, start, end) {
       // same wrapper code on either side (`$...$`)
@@ -480,6 +482,27 @@
 
       sox.Stack.MarkdownEditor.refreshAllPreviews();
     },
+    getCssProperty: function(element, propertyValue) {
+      return window.getComputedStyle(element).getPropertyValue(propertyValue);
+    },
+    runAjaxHooks: function() {
+      let originalOpen = XMLHttpRequest.prototype.open;
+      XMLHttpRequest.prototype.open = function() {
+        this.addEventListener('load', function() {
+          for (const key in hookAjaxObject) {
+            if (this.responseURL.match(new RegExp(key))) hookAjaxObject[key](); // if the URL matches the regex, then execute the respective function
+          }
+        });
+        originalOpen.apply(this, arguments);
+      }
+    },
+    addAjaxListener: function(regexToMatch, functionToExecute) {
+      if (!regexToMatch) { // all information has been inserted in hookAjaxObject
+        sox.helpers.runAjaxHooks();
+        return;
+      }
+      hookAjaxObject[regexToMatch] = functionToExecute;
+    },
   };
 
   sox.site = {
@@ -493,9 +516,9 @@
     currentApiParameter: sox.helpers.getSiteNameFromLink(location.href),
     get name() {
       if (Chat) {
-        return $('#footer-logo a').attr('title');
+        return document.querySelector('#footer-logo a').title;
       } else { //using StackExchange object doesn't give correct name (eg. `Biology` is called `Biology Stack Exchange` in the object)
-        return $('.js-topbar-dialog-corral .modal-content.current-site-container .current-site-link div').attr('title');
+        return document.querySelector('.js-topbar-dialog-corral .modal-content.current-site-container .current-site-link div').title;
       }
     },
 
@@ -507,7 +530,7 @@
           return this.types.meta;
         } else {
           // check if site is in beta or graduated
-          if ($('.beta-title').length > 0) {
+          if (document.querySelector('.beta-title')) {
             return this.types.beta;
           } else {
             return this.types.main;
@@ -517,10 +540,10 @@
       return null;
     },
     get icon() {
-      return 'favicon-' + $('.current-site a:not([href*=\'meta\']) .site-icon').attr('class').split('favicon-')[1];
+      return 'favicon-' + document.querySelector('.current-site a:not([href*=\'meta\']) .site-icon').className.split('favicon-')[1];
     },
-    url: location.hostname, //e.g. "meta.stackexchange.com"
-    href: location.href, //e.g. "https://meta.stackexchange.com/questions/blah/blah"
+    url: location.hostname, // e.g. "meta.stackexchange.com"
+    href: location.href, // e.g. "https://meta.stackexchange.com/questions/blah/blah"
   };
 
   sox.location = {
@@ -537,9 +560,11 @@
     matchWithPattern: function(pattern, urlToMatchWith) { //commented version @ https://jsfiddle.net/shub01/t90kx2dv/
       if (pattern == 'SE1.0') { //SE.com && Area51.SE.com special checking
         if (urlToMatchWith) {
-          if (urlToMatchWith.match(/https?:\/\/stackexchange\.com\/?/) || (sox.location.matchWithPattern('*://area51.stackexchange.com/*') && sox.site.href.indexOf('.meta.') === -1)) return true;
+          if (urlToMatchWith.match(/https?:\/\/stackexchange\.com\/?/)
+              || (sox.location.matchWithPattern('*://area51.stackexchange.com/*') && sox.site.href.indexOf('.meta.') === -1)) return true;
         } else {
-          if (location.href.match(/https?:\/\/stackexchange\.com\/?/) || (sox.location.matchWithPattern('*://area51.stackexchange.com/*') && sox.site.href.indexOf('.meta.') === -1)) return true;
+          if (location.href.match(/https?:\/\/stackexchange\.com\/?/) ||
+              (sox.location.matchWithPattern('*://area51.stackexchange.com/*') && sox.site.href.indexOf('.meta.') === -1)) return true;
         }
         return false;
       }
@@ -590,8 +615,8 @@
       if (sox.site.type == sox.site.types.chat) {
         return Chat.RoomUsers.current().name;
       } else {
-        const $uname = $('.top-bar div.gravatar-wrapper-24'); //used to be $('body > div.topbar > div > div.topbar-links > a > div.gravatar-wrapper-24');
-        return ($uname.length ? $uname.attr('title') : false);
+        const username = document.querySelector('.s-topbar--item.s-user-card .s-avatar');
+        return (username ? username.title : '');
       }
     },
     get loggedIn() {
