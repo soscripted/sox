@@ -970,7 +970,7 @@
 
       const diamond = document.createElement('a');
       diamond.id = 'metaNewQuestionAlertButton';
-      diamond.className = 'sox-settings-button -s-topbar--item';
+      diamond.className = 'sox-settings-button s-topbar--item';
       diamond.title = 'Moderator inbox (recent meta questions)';
 
       const diamondSvg = sox.sprites.getSvg('diamond');

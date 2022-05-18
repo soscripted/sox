@@ -280,7 +280,7 @@
       // create sox settings button
       const $soxSettingsButton = $('<a/>', {
         id: 'soxSettingsButton',
-        'class': 'sox-settings-button -s-topbar--item',
+        'class': 'sox-settings-button s-topbar--item',
         title: 'Change SOX settings',
         href: '#',
         click: function(e) {
