@@ -497,11 +497,10 @@
       }
     },
     addAjaxListener: function(regexToMatch, functionToExecute) {
-      if (!regexToMatch) { // all information has been inserted in hookAjaxObject
-        sox.helpers.runAjaxHooks();
-        return;
+      if (regexToMatch) {
+        hookAjaxObject[regexToMatch] = functionToExecute;
       }
-      hookAjaxObject[regexToMatch] = functionToExecute;
+      sox.helpers.runAjaxHooks();
     },
   };
 
