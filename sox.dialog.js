@@ -219,14 +219,17 @@
       });
 
       $soxSettingsToggle.on('click', function() {
-        const $icon = $(this).find('i');
-
-        const checked = $icon.hasClass('fas');
+        const $icon = $(this).find('svg');
+        const checked = $icon.hasClass('sox-sprite-checked_box');
 
         if (checked) {
-          $icon.removeClass('fas').addClass('far');
+          $(this).find('.sox-sprite-checked-box').hide();
+          $(this).find('.sox-sprite-unchecked-box').show();
+          $icon.removeClass('sox-sprite-checked_box').addClass('sox-sprite-unchecked_box');
         } else {
-          $icon.removeClass('far').addClass('fas');
+          $(this).find('.sox-sprite-unchecked-box').hide();
+          $(this).find('.sox-sprite-checked-box').show();
+          $icon.removeClass('sox-sprite-unchecked_box').addClass('sox-sprite-checked_box');
         }
 
         $soxSettingsDialogFeatures.find('input').prop('checked', !checked);
