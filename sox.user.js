@@ -3,7 +3,7 @@
 // @namespace    https://github.com/soscripted/sox
 // @homepage     https://github.com/soscripted/sox
 // @homepageURL  https://github.com/soscripted/sox
-// @version      2.8.1 DEV
+// @version      2.8.2 DEV
 // @description  Extra optional features for Stack Overflow and Stack Exchange sites
 // @contributor  ᴉʞuǝ (https://stackoverflow.com/users/1454538/, https://github.com/mezmi)
 // @contributor  ᔕᖺᘎᕊ (https://stackexchange.com/users/4337810/, https://github.com/shu8)
@@ -178,13 +178,11 @@
       throw ('SOX: There was an error while attempting to initialize the SOX Settings Dialog, please report this on GitHub.\n' + e);
     }
 
-    window.onload = () => {
-      if (sox.settings.available) {
-        if (document.hasFocus && document.hasFocus()) {
-          runFeatures(settings, featureInfo);
-        } else {
-          window.addEventListener('focus', () => runFeatures(settings, featureInfo), { once: true });
-        }
+    if (sox.settings.available) {
+      if (document.hasFocus && document.hasFocus()) {
+        runFeatures(settings, featureInfo);
+      } else {
+        window.addEventListener('focus', () => runFeatures(settings, featureInfo), { once: true });
       }
     }
 
