@@ -25,7 +25,7 @@ Note: This project has no relation to Stack Overflow or Stack Exchange; it is si
     - Official Version: <kbd>[install](https://github.com/soscripted/sox/raw/v2.8.0/sox.user.js)</kbd>. <kbd>[view source](https://github.com/soscripted/sox/blob/v2.8.0/sox.user.js)</kbd>
     - Development Version: <kbd>[install](https://github.com/soscripted/sox/raw/dev/sox.user.js)</kbd>. <kbd>[view source](https://github.com/soscripted/sox/blob/dev/sox.user.js)</kbd>
 
-3. Go to any site in the Stack Exchange Network (e.g. [Super User](http://superuser.com/) or [Stack Overflow](http://stackoverflow.com/)). You will automatically be asked to choose and save your settings. A toggle button (gears icon) will be added to your topbar where you can change these later on:
+3. Go to any site in the Stack Exchange Network (e.g. [Super User](http://superuser.com/) or [Stack Overflow](http://stackoverflow.com/)) (reload if already opened) and confirm the dialog asking you to get an access token. This will open a new page where you can authorize SOX, and can be closed once your access token is saved. A toggle button (gears icon) will be added to your topbar. Click and review and save the settings
 
 ![newdialog](https://i.stack.imgur.com/q93pM.jpg)
 
