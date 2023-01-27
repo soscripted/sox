@@ -360,7 +360,13 @@
 
       // add dialog to corral and sox button to topbar
       $soxSettingsButton.append($icon);
-      $('.s-topbar--item.s-user-card').parent().after($('<li/>').append($soxSettingsButton));
+      const $loggedInTopbarTarget = $('.s-topbar--item.s-user-card');
+      const $loggedOutTopbarTarget = $(".s-topbar--item.js-help-button");
+      if ($loggedInTopbarTarget.length) {
+        $loggedInTopbarTarget.parent().after($('<li/>').append($soxSettingsButton));
+      } else {
+        $loggedOutTopbarTarget.parent().before($('<li/>').append($soxSettingsButton));
+      }
 
       $soxSettingsDialog.css({
         'top': $('.top-bar').height(),
