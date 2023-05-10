@@ -500,7 +500,11 @@
       if (regexToMatch) {
         hookAjaxObject[regexToMatch] = functionToExecute;
       }
-      sox.helpers.runAjaxHooks();
+
+      // Only override the XMLHttpRequest.prototype.open function once (after adding the first regex-function mapping)
+      if (Object.keys(hookAjaxObject).length <= 1) {
+        sox.helpers.runAjaxHooks();
+      }
     },
   };
 
