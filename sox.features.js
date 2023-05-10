@@ -1608,7 +1608,8 @@
     hideCommunityBulletin: function() {
       // Description: Hides the Community Bulletin module from the sidebar
 
-      document.querySelector('#sidebar .s-sidebarwidget').remove();
+      const element = document.querySelector('#sidebar .s-sidebarwidget');
+      if (element.innerText.contains('The Overflow Blog')) element.remove();
     },
 
     hideJustHotMetaPosts: function() {
