@@ -1371,7 +1371,7 @@
       function setAuthorName(node) {
         //for https://github.com/soscripted/sox/issues/347
         const prependToMessage = Object.keys(settings).length !== 0 ? settings.addNameBeforeMessageOrAtTop : false;
-        const link = node.firstElementChild.href;
+        const link = node.querySelector('a').href;
         if (!link) return;
         let id;
         const matches = {
