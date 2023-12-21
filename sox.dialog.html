@@ -25,22 +25,22 @@
         </div>
     </div>
     <div id="sox-settings-dialog-actions">
-        <input class="s-btn s-btn__primary s-btn__sm" id="sox-settings-dialog-save" type="submit" value="Save Changes">
-        <a class="action s-btn s-btn__secondary s-btn__sm" id="sox-settings-dialog-reset" title="reset SOX (deletes everything, including your settings and access token)">Reset</a>
-        <a class="action s-btn s-btn__secondary s-btn__sm" id="sox-settings-dialog-report" title="report issue on Github" target="_blank" href="https://github.com/soscripted/sox/issues/new">Report Issue</a>
-        <a class="action s-btn s-btn__secondary s-btn__sm" id="sox-settings-dialog-debugging">Enable Debugging</a>
-        <a class="action" id="sox-settings-dialog-access-token" title="request a new access token">
-            <svg role="img" class="sox-sprite sox-sprite-key"> <use xlink:href="#sox_key"> </use> </svg>
-        </a>
-        <a class="action" id="sox-settings-export" title="export/copy feature settings">
-            <svg role="img" class="sox-sprite sox-sprite-export"> <use xlink:href="#sox_export"> </use> </svg>
+        <a class="action" id="sox-settings-dialog-check-toggle" title="toggle all features on/off">
+            <svg role="img" class="sox-sprite sox-sprite-checked-box"><use xlink:href="#sox_checked_box"/></svg>
+            <svg role="img" style="display:none" class="sox-sprite sox-sprite-unchecked-box"><use xlink:href="#sox_unchecked_box"/></svg>
         </a>
         <a class="action" id="sox-settings-import" title="import/paste feature settings">
-            <svg role="img" class="sox-sprite sox-sprite-import"> <use xlink:href="#sox_import"> </use> </svg>
+            <svg role="img" class="sox-sprite sox-sprite-import"><use xlink:href="#sox_import"/></svg>
         </a>
-        <a class="action" id="sox-settings-dialog-check-toggle" title="toggle all features on/off">
-            <svg role="img" class="sox-sprite sox-sprite-checked-box"> <use xlink:href="#sox_checked_box"> </use> </svg>
-            <svg role="img" style="display:none" class="sox-sprite sox-sprite-unchecked-box"> <use xlink:href="#sox_unchecked_box"> </use> </svg>
+        <a class="action" id="sox-settings-export" title="export/copy feature settings">
+            <svg role="img" class="sox-sprite sox-sprite-export"><use xlink:href="#sox_export"/></svg>
         </a>
+        <a class="action" id="sox-settings-dialog-access-token" title="request a new access token">
+            <svg role="img" class="sox-sprite sox-sprite-key"><use xlink:href="#sox_key"/></svg>
+        </a>
+        <a class="s-btn s-btn__secondary s-btn__sm" id="sox-settings-dialog-debugging">Enable Debugging</a>
+        <a class="s-btn s-btn__secondary s-btn__sm" id="sox-settings-dialog-report" title="report issue on Github" target="_blank" href="https://github.com/soscripted/sox/issues/new">Report Issue</a>
+        <a class="s-btn s-btn__secondary s-btn__sm" id="sox-settings-dialog-reset" title="reset SOX (deletes everything, including your settings and access token)">Reset</a>
+        <button type="button" class="s-btn s-btn__primary s-btn__sm" id="sox-settings-dialog-save">Save Changes</button>
     </div>
 </div>
