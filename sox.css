@@ -78,17 +78,18 @@
 }
 
 #sox-settings-dialog-actions {
-    height: 40px;
+    margin-top: 8px;
     padding: 0 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 #sox-settings-dialog-save {
     margin-left: 5px;
-    float: right;
 }
 
 #sox-settings-dialog-actions .action {
-    float: right;
     padding: 13px 11px;
 }
 
