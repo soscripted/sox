@@ -159,7 +159,7 @@
             "desc": "Customize the appearance of the tools page on Stack Overflow",
             "extended_description": "This page is accessible to users who have earned 10 000 reputation on Stack Overflow",
             "meta": "",
-            "match": "https://stackoverflow.com/tools",
+            "match": "https://*/tools",
             "exclude": "",
             "settings": [{
                 "id": "listCount",
