@@ -154,6 +154,30 @@
             "meta": "",
             "match": "*://*/questions/*",
             "exclude": "*://*/questions/ask,*://*/questions/tagged*,*://*/questions/greatest-hits*"
+        }, {
+            "name": "customizeToolsPageLists",
+            "desc": "Customize the appearance of the tools page on Stack Overflow",
+            "extended_description": "This page is accessible to users who have earned 10 000 reputation on Stack Overflow",
+            "meta": "",
+            "match": "https://stackoverflow.com/tools",
+            "exclude": "",
+            "settings": [{
+                "id": "listCount",
+                "type": "text",
+                "desc": "Number of items to show in delete/undelete vote lists"
+            }, {
+                "id": "filterInvalid",
+                "type": "checkbox",
+                "desc": "Exclude items you are unable to vote on from delete/undelete lists"
+            }, {
+                "id": "filterTypeQuestions",
+                "type": "checkbox",
+                "desc": "Exclude questions from delete/undelete lists"
+            }, {
+                "id": "filterTypeAnswers",
+                "type": "checkbox",
+                "desc": "Exclude answers from delete/undelete lists"
+            }]
         }],
         "Comments": [{
             "name": "autoShowCommentImages",
