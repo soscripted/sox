@@ -758,7 +758,7 @@
           const href = anchor.href;
           const parent = anchor.parentNode;
 
-          if (parent && href && (/i(\.stack)?\.imgur\.com/.test(href))) {
+          if (parent && href && (/i(\.stack)?\.imgur\.com|i\.sstatic\.net/.test(href))) {
             if (!parent.querySelectorAll('img[src="' + href + '"]').length) {
               // DO NOT USE innerHTML -- it *removes* the old DOM and inserts a new one (https://stackoverflow.com/a/23539150),
               // meaning it won't work for multiple imgur links in the same comment. See https://github.com/soscripted/sox/issues/360
