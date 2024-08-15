@@ -178,13 +178,11 @@
       throw ('SOX: There was an error while attempting to initialize the SOX Settings Dialog, please report this on GitHub.\n' + e);
     }
 
-    window.onload = () => {
-      if (sox.settings.available) {
-        if (document.hasFocus && document.hasFocus()) {
-          runFeatures(settings, featureInfo);
-        } else {
-          window.addEventListener('focus', () => runFeatures(settings, featureInfo), { once: true });
-        }
+    if (sox.settings.available) {
+      if (document.hasFocus && document.hasFocus()) {
+        runFeatures(settings, featureInfo);
+      } else {
+        window.addEventListener('focus', () => runFeatures(settings, featureInfo), { once: true });
       }
     }
 

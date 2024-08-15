@@ -1371,7 +1371,7 @@
       function setAuthorName(node) {
         //for https://github.com/soscripted/sox/issues/347
         const prependToMessage = Object.keys(settings).length !== 0 ? settings.addNameBeforeMessageOrAtTop : false;
-        const link = node.firstElementChild.href;
+        const link = node.querySelector('a').href;
         if (!link) return;
         let id;
         const matches = {
@@ -1411,12 +1411,11 @@
           // https://github.com/soscripted/sox/issues/233
 
           const author = (link.indexOf('/suggested-edits/') > -1 ? items[0].proposing_user.display_name : items[0].owner.display_name);
-          const unescapedAuthor = new DOMParser(author, 'text/html').body.innerText;
+          const unescapedAuthor = new DOMParser().parseFromString(author, 'text/html').documentElement.textContent;
 
           const authorElement = document.createElement('span');
           authorElement.className = 'sox-notification-author';
           authorElement.innerText = (prependToMessage ? '' : ' by ') + unescapedAuthor + (prependToMessage ? ': ' : ''); // https://github.com/soscripted/sox/issues/347
-
 
           const header = node.querySelector('.item-header');
           const type = header.querySelector('.item-type').cloneNode(true);
@@ -1428,7 +1427,7 @@
             //fix conflict with soup fix mse207526 - https://github.com/vyznev/soup/blob/master/SOUP.user.js#L489
             header.innerHTML = '';
             header.appendChild(type);
-            header.appendChild(author);
+            header.appendChild(authorElement);
             header.appendChild(creation);
           }
         });
@@ -1438,7 +1437,7 @@
       const PROCESSED_CLASS = 'sox-authorNameAdded';
       const MAX_PROCESSED_AT_ONCE = 20;
 
-      sox.helpers.addAjaxListener('\\/topbar\\/inbox', () => {
+      sox.helpers.addAjaxListener('\/topbar\/inbox', () => {
         const inboxDialog = document.getElementsByClassName(inboxClass)[0];
         let eligibleElements = [...inboxDialog.querySelectorAll('.inbox-item')];
         eligibleElements = eligibleElements.slice(0, MAX_PROCESSED_AT_ONCE);
@@ -1609,7 +1608,8 @@
     hideCommunityBulletin: function() {
       // Description: Hides the Community Bulletin module from the sidebar
 
-      document.querySelector('#sidebar .s-sidebarwidget').remove();
+      const element = document.querySelector('#sidebar .s-sidebarwidget');
+      if (element.innerText.contains('The Overflow Blog')) element.remove();
     },
 
     hideJustHotMetaPosts: function() {

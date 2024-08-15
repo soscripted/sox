@@ -497,11 +497,14 @@
       }
     },
     addAjaxListener: function(regexToMatch, functionToExecute) {
-      if (!regexToMatch) { // all information has been inserted in hookAjaxObject
-        sox.helpers.runAjaxHooks();
-        return;
+      if (regexToMatch) {
+        hookAjaxObject[regexToMatch] = functionToExecute;
       }
-      hookAjaxObject[regexToMatch] = functionToExecute;
+
+      // Only override the XMLHttpRequest.prototype.open function once (after adding the first regex-function mapping)
+      if (Object.keys(hookAjaxObject).length <= 1) {
+        sox.helpers.runAjaxHooks();
+      }
     },
   };
 
