@@ -187,7 +187,7 @@
     }
 
     //custom events....
-    sox.helpers.observe([...document.getElementsByClassName('post-layout')], '.new_comment, .comment, .comment-text', node => {
+    sox.helpers.observe([...document.getElementsByClassName('comments')], '.new_comment, .comment, .comment-text', node => {
       sox.debug('sox-new-comment event triggered');
       document.dispatchEvent(new CustomEvent('sox-new-comment', { detail: node }))
     });
