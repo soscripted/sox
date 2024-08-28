@@ -290,26 +290,11 @@
       if (!targets || (Array.isArray(targets) && !targets.length)) return;
 
       const observer = new MutationObserver(throttle(mutations => {
-        for (let i = 0; i < mutations.length; i++) {
-          const mutation = mutations[i];
-          const target = mutation.target;
-          const addedNodes = mutation.addedNodes;
-
-          if (addedNodes) {
-            for (let n = 0; n < addedNodes.length; n++) {
-              if ($(addedNodes[n]).find(elements).length) {
-                sox.debug('fire: node: ', addedNodes[n]);
-                callback(target);
-                return;
-              }
-            }
-          }
-
-          if ($(target).is(elements)) { //TODO: maybe add OR to find subelements for childList events?
-            callback(target);
-            sox.debug('fire: target: ', target);
-            return;
-          }
+        const foundTarget = $(targets).find(elements);
+        if (foundTarget.length) {
+          sox.debug('fire: target', foundTarget)
+          callback(foundTarget)
+          return;
         }
       }, 1500));
 
@@ -317,21 +302,10 @@
         for (let i = 0; i < targets.length; i++) {
           const target = targets[i];
           if (!target) continue;
-
-          observer.observe(target, {
-            attributes: true,
-            childList: true,
-            characterData: true,
-            subtree: true,
-          });
+          observer.observe(target, {childList: true,subtree: true});
         }
       } else {
-        observer.observe(targets, {
-          attributes: true,
-          childList: true,
-          characterData: true,
-          subtree: true,
-        });
+        observer.observe(targets, {childList: true,subtree: true});
       }
     },
     newElement: function(type, elementDetails) {
