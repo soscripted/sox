@@ -3,7 +3,7 @@
 // @namespace    https://github.com/soscripted/sox
 // @homepage     https://github.com/soscripted/sox
 // @homepageURL  https://github.com/soscripted/sox
-// @version      2.8.10 DEV
+// @version      2.8.11 DEV
 // @description  Extra optional features for Stack Overflow and Stack Exchange sites
 // @contributor  ᴉʞuǝ (https://stackoverflow.com/users/1454538/, https://github.com/mezmi)
 // @contributor  ᔕᖺᘎᕊ (https://stackexchange.com/users/4337810/, https://github.com/shu8)
@@ -200,12 +200,14 @@
       }
     );
 
-    sox.helpers.observe(document.getElementById('content'), '.js-review-task', node => {
-      sox.debug('sox-new-review-post-appeared event triggered');
-      document.dispatchEvent(
-        new CustomEvent("sox-new-review-post-appeared", { detail: node })
-      );
-    });
+    if (sox.location.matchWithPattern('*://*/review*')) {
+      sox.helpers.observe(document.getElementById('content'), '.js-review-task', node => {
+        sox.debug('sox-new-review-post-appeared event triggered');
+        document.dispatchEvent(
+          new CustomEvent("sox-new-review-post-appeared", { detail: node })
+        );
+      });
+    }
 
     const chatBody = document.getElementById('chat-body');
     if (chatBody) {
