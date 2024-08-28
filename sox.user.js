@@ -187,19 +187,24 @@
     }
 
     //custom events....
-    sox.helpers.observe([...document.getElementsByClassName('post-layout')], '.new_comment, .comment, .comments, .comment-text', node => {
+    sox.helpers.observe([...document.getElementsByClassName('post-layout')], '.new_comment, .comment, .comment-text', node => {
       sox.debug('sox-new-comment event triggered');
-      $(document).trigger('sox-new-comment', [node]);
+      document.dispatchEvent(new CustomEvent('sox-new-comment', { detail: node }))
     });
 
-    sox.helpers.observe(document.body, 'textarea[id^="wmd-input"]', node => {
-      sox.debug('sox-edit-window event triggered');
-      $(document).trigger('sox-edit-window', [node]);
-    });
+    sox.helpers.observe(
+      [...document.querySelectorAll(".postcell, .post-editor")], 'textarea[id^="wmd-input"], textarea[id="js-stacks-editor-content"]',
+      (node) => {
+        sox.debug("sox-edit-window event triggered");
+        document.dispatchEvent(new CustomEvent('sox-edit-window', { detail: node }))
+      }
+    );
 
-    sox.helpers.observe(document.body, '.reviewable-post, .review-content', node => {
+    sox.helpers.observe(document.getElementById('content'), '.js-review-task', node => {
       sox.debug('sox-new-review-post-appeared event triggered');
-      $(document).trigger('sox-new-review-post-appeared', [node]);
+      document.dispatchEvent(
+        new CustomEvent("sox-new-review-post-appeared", { detail: node })
+      );
     });
 
     const chatBody = document.getElementById('chat-body');

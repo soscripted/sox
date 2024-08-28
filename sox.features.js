@@ -70,7 +70,7 @@
       }
 
       copyLinks();
-      window.addEventListener('sox-new-comment', copyLinks);
+      document.addEventListener('sox-new-comment', copyLinks);
     },
 
     highlightQuestions: function() {
@@ -140,7 +140,7 @@
       }
 
       color();
-      window.addEventListener('sox-new-comment', color);
+      document.addEventListener('sox-new-comment', color);
     },
 
     kbdAndBullets: function() {
@@ -204,7 +204,7 @@
         }
       }
 
-      window.addEventListener('sox-edit-window', loopAndAddHandlers);
+      document.addEventListener('sox-edit-window', loopAndAddHandlers);
 
       loopAndAddHandlers();
 
@@ -420,7 +420,7 @@
       });
 
       addCheckboxes();
-      window.addEventListener('sox-edit-window', addCheckboxes);
+      document.addEventListener('sox-edit-window', addCheckboxes);
     },
 
     shareLinksPrivacy: function() {
@@ -544,7 +544,7 @@
 
       addReplyLinks();
 
-      window.addEventListener('sox-new-comment', addReplyLinks);
+      document.addEventListener('sox-new-comment', addReplyLinks);
       window.addEventListener('sox-new-review-post-appeared', addReplyLinks);
     },
 
@@ -770,7 +770,7 @@
 
       setTimeout(showImages, 2000); // setTimeout needed because FF refuses to load the feature on page load and does it before so the comment isn't detected.
 
-      window.addEventListener('sox-new-comment', showImages);
+      document.addEventListener('sox-new-comment', showImages);
       window.addEventListener('sox-new-review-post-appeared', showImages);
     },
 
@@ -1357,7 +1357,7 @@
       }
 
       //event listener for adding the sbs toggle button for posting new questions or answers
-      window.addEventListener('sox-edit-window', () => {
+      document.addEventListener('sox-edit-window', () => {
         const target = [...document.querySelectorAll('.question, .answer')].filter(post => !post.querySelector('.sox-sbs-toggle'))[0];
         if (!target) return;
         SBS(target.querySelector('textarea'));
@@ -1861,7 +1861,7 @@
           sox.debug('quickAuthorInfo userDetailsFromAPI', userDetailsFromAPI);
           addLastSeen(userDetailsFromAPI);
 
-          window.addEventListener('sox-new-comment', () => { // make sure it doesn't disappear when adding a new comment!
+          document.addEventListener('sox-new-comment', () => { // make sure it doesn't disappear when adding a new comment!
             addLastSeen(userDetailsFromAPI);
           });
         });
@@ -2267,7 +2267,7 @@
         });
       }
 
-      window.addEventListener('sox-edit-window', startLoop);
+      document.addEventListener('sox-edit-window', startLoop);
       startLoop();
     },
 
@@ -2279,7 +2279,7 @@
         setTimeout(() => [...document.querySelectorAll('.comment')].forEach(comment => comment.classList.add('sox-onlyShowCommentActionsOnHover')), 100);
       }
 
-      window.addEventListener('sox-new-comment', addCSS);
+      document.addEventListener('sox-new-comment', addCSS);
       addCSS();
     },
 
