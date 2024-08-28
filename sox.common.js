@@ -296,16 +296,16 @@
           callback(foundTarget)
           return;
         }
-      }, 1500));
+      }, 5000));
 
       if (Array.isArray(targets)) {
         for (let i = 0; i < targets.length; i++) {
           const target = targets[i];
           if (!target) continue;
-          observer.observe(target, {childList: true,subtree: true});
+          observer.observe(target, {childList: true, subtree: true});
         }
       } else {
-        observer.observe(targets, {childList: true,subtree: true});
+        observer.observe(targets, {childList: true, subtree: true});
       }
     },
     newElement: function(type, elementDetails) {
