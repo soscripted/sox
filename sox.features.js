@@ -2328,13 +2328,14 @@
     hideWelcomeBackMessage: function() {
       // Description: Hide the 'welcome back...don't forget to vote' message when visiting a site after a while
 
-      function removeMessage(el) {
+      function removeMessage() {
+        const el = document.getElementById("overlay-header");
         if (!el || !el.innerText.match(/welcome back/gi)) return;
         el.remove();
       }
 
-      sox.helpers.observe(document.body, '#overlay-header', el => removeMessage(el));
-      removeMessage(document.getElementById('overlay-header'));
+      sox.helpers.observe(document.body, "#overlay-header", removeMessage);
+      removeMessage();
     },
 
     addOnTopicLinkToSiteSwitcher: function() {
