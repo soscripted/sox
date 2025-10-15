@@ -28,9 +28,8 @@
       // Array of HTML strings that will be displayed as `li` items if the user has installed a new version.
       const changes = [
         "Fix bugs in various features due to SE layout changes",
-        "Add feature to add answer count to question header",
-        "Behind-the-scenes performance improvements (e.g., reduce usage of jQuery for efficiency - thanks @double-beep!)",
-        'Deprecate "align badges by their class on user profile pages" feature (now natively implemented!)',
+        "Behind-the-scenes performance improvements (e.g., with MutationObservers)",
+        'Auto-show comment images for sstatic.net images too - thanks @SmartManoj!',
         'Deprecate "differentiate spoilers from empty blockquotes" (now native!)',
       ];
 
