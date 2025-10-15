@@ -3,7 +3,7 @@
 // @namespace    https://github.com/soscripted/sox
 // @homepage     https://github.com/soscripted/sox
 // @homepageURL  https://github.com/soscripted/sox
-// @version      2.9.0
+// @version      2.9.0 DEV
 // @description  Extra optional features for Stack Overflow and Stack Exchange sites
 // @contributor  ᴉʞuǝ (https://stackoverflow.com/users/1454538/, https://github.com/mezmi)
 // @contributor  ᔕᖺᘎᕊ (https://stackexchange.com/users/4337810/, https://github.com/shu8)
@@ -31,16 +31,16 @@
 // @require      https://api.stackexchange.com/js/2.0/all.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery-timeago/1.5.3/jquery.timeago.min.js
 
-// @require      https://cdn.jsdelivr.net/gh/soscripted/sox@master/sox.common.js
-// @require      https://cdn.jsdelivr.net/gh/soscripted/sox@master/sox.github.js
-// @require      https://cdn.jsdelivr.net/gh/soscripted/sox@master/sox.dialog.js
-// @require      https://cdn.jsdelivr.net/gh/soscripted/sox@master/sox.features.js
+// @require      https://cdn.jsdelivr.net/gh/soscripted/sox@dev/sox.common.js
+// @require      https://cdn.jsdelivr.net/gh/soscripted/sox@dev/sox.github.js
+// @require      https://cdn.jsdelivr.net/gh/soscripted/sox@dev/sox.dialog.js
+// @require      https://cdn.jsdelivr.net/gh/soscripted/sox@dev/sox.features.js
 
-// @resource     css https://cdn.jsdelivr.net/gh/soscripted/sox@master/sox.css
-// @resource     dialog https://cdn.jsdelivr.net/gh/soscripted/sox@master/sox.dialog.html
-// @resource     featuresJSON https://cdn.jsdelivr.net/gh/soscripted/sox@master/sox.features.info.json
-// @resource     common https://cdn.jsdelivr.net/gh/soscripted/sox@master/sox.common.info.json
-// @resource     sprites https://cdn.jsdelivr.net/gh/soscripted/sox@master/sox.sprites.svg
+// @resource     css https://cdn.jsdelivr.net/gh/soscripted/sox@dev/sox.css
+// @resource     dialog https://cdn.jsdelivr.net/gh/soscripted/sox@dev/sox.dialog.html
+// @resource     featuresJSON https://cdn.jsdelivr.net/gh/soscripted/sox@dev/sox.features.info.json
+// @resource     common https://cdn.jsdelivr.net/gh/soscripted/sox@dev/sox.common.info.json
+// @resource     sprites https://cdn.jsdelivr.net/gh/soscripted/sox@dev/sox.sprites.svg
 
 // @grant        GM_setValue
 // @grant        GM_getValue
