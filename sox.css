@@ -32,29 +32,29 @@
     font-size: 14px;
 }
 
-#sox-settings-dialog #search-container {
+#sox-settings-dialog #sox-search-container {
     min-height: 0;
     width: 570px;
     left: 10px;
 }
 
-#sox-settings-dialog #search-container .sox-sprite-search {
+#sox-settings-dialog #sox-search-container .sox-sprite-search {
     width: 20px;
     height: 20px;
     top: 5px;
 }
 
-#sox-settings-dialog:not(.new-topbar) #search-container .sox-sprite-search {
+#sox-settings-dialog:not(.new-topbar) #sox-search-container .sox-sprite-search {
     position: relative;
     left: -485px;
 }
 
-#sox-settings-dialog.new-topbar #search-container .sox-sprite-search {
+#sox-settings-dialog.new-topbar #sox-search-container .sox-sprite-search {
     position: relative;
     left: -485px;
 }
 
-#sox-settings-dialog #search-container #search {
+#sox-settings-dialog #sox-search-container #sox-search {
     max-width: 90%;
 }
 

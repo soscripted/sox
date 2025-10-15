@@ -20,7 +20,7 @@
       const $soxSettingsNewAccessTokenButton = $soxSettingsDialog.find('#sox-settings-dialog-access-token');
       const $soxSettingsToggle = $soxSettingsDialog.find('#sox-settings-dialog-check-toggle');
       const $soxSettingsClose = $soxSettingsDialog.find('#sox-settings-dialog-close');
-      const $searchBox = $soxSettingsDialog.find('#search');
+      const $searchBox = $soxSettingsDialog.find('#sox-search');
       const $importSettingsButton = $soxSettingsDialog.find('#sox-settings-import');
       const $exportSettingsButton = $soxSettingsDialog.find('#sox-settings-export');
       const $featurePackButtons = $soxSettingsDialog.find('.sox-settings-dialog-feature-pack');
@@ -290,7 +290,7 @@
           $('#sox-settings-dialog').toggle();
           if ($soxSettingsDialog.is(':visible')) {
             $(this).addClass('is-selected');
-            $soxSettingsDialog.find('#search').focus();
+            $soxSettingsDialog.find('#sox-search').focus();
             $soxSettingsDialog.css('right', 'calc(95vw - ' + $(e.target).offset().left + 'px)');
           } else {
             $(this).removeClass('is-selected');
