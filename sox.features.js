@@ -420,7 +420,7 @@
       });
 
       addCheckboxes();
-      document.addEventListener('sox-edit-window', addCheckboxes);
+      sox.helpers.addAjaxListener('\\/posts\\/\\d+\\/edit', () => setTimeout(addCheckboxes, 500));
     },
 
     shareLinksPrivacy: function() {
