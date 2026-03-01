@@ -204,8 +204,6 @@
       if (page) queryParams.push(`page=${page}`);
       queryParams.push(`sort=${sort}`);
       queryParams.push(`site=${sitename}`);
-      queryParams.push(`key=${sox.info.apikey}`);
-      queryParams.push(`access_token=${sox.settings.accessToken}`);
       const queryString = queryParams.join('&');
 
       let finalItems = [];
@@ -260,7 +258,7 @@
       }
       sox.debug(`API: Sending request to URL: '${queryURL}'`);
 
-      fetch(queryURL).then(apiResponse => apiResponse.json()).then(responseJson => {
+      fetch(queryURL, {headers: {Authorization: `Bearer ${sox.settings.accessToken}`}}).then(apiResponse => apiResponse.json()).then(responseJson => {
         if (responseJson.backoff) {
           sox.error('SOX Error: BACKOFF: ' + responseJson.backoff);
         } else if (responseJson.error_id == 502) {
