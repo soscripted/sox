@@ -1315,12 +1315,15 @@
         setTimeout(() => {
           if (jNode.closest('.post-editor').find('.sox-sbs-toggle').length) return; //don't add again if already exists
 
-          const sbsBtn = `<li class="wmd-button sox-sbs-toggle" title="side-by-side-editing" style="left: 500px;width: 170px;">
-                          <div id="wmd-sbs-button${toAppend}" style="background-image: none;">SBS</div></li>`;
-          jNode.after(sbsBtn);
+          const insertTarget = jNode.closest('.wmd-button-list-item');
+          const sbsBtn = $(`<li class="wmd-button-list-item sox-sbs-toggle">
+                            <button type="button" class="wmd-button" id="wmd-sbs-button${toAppend}" title="side-by-side-editing" aria-label="side-by-side-editing">SBS</button>
+                          </li>`);
+
+          (insertTarget.length ? insertTarget : jNode).after(sbsBtn);
 
           //add click listener to sbsBtn
-          jNode.next().on('click', () => {
+          sbsBtn.find('button').on('click', () => {
             startSBS(toAppend);
           });
 
