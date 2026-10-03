@@ -664,9 +664,9 @@
 
       function questionMatchesCriteria(revisionObject) {
         return revisionObject.comment // there's comment, post was not created at that revision
-        && !revisionObject.comment.includes('<b>Post Closed</b> as &quot;') // post is not closed
-        && !revisionObject.comment.includes('<b>Removed from Hot Network Questions</b> by') // post has not been removed from HNQ
-        && revisionObject.comment === '<b></b> ' && new Date().getTime() / 1000 - revisionObject.creation_date <= 259200; // question is HNQ AND not 3 days old
+        && !revisionObject.comment.includes('Post Closed') // post is not closed
+        && !revisionObject.comment.includes('Removed from Hot Network Questions') // post has not been removed from HNQ
+        && revisionObject.comment === '<strong></strong> ' && new Date().getTime() / 1000 - revisionObject.creation_date <= 259200; // question is HNQ AND not 3 days old
       }
 
       if (sox.location.on('/questions/')) {
