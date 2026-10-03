@@ -36,6 +36,7 @@
     min-height: 0;
     width: 570px;
     left: 10px;
+    margin: 10px 0;
 }
 
 #sox-settings-dialog #sox-search-container .sox-sprite-search {
@@ -56,6 +57,7 @@
 
 #sox-settings-dialog #sox-search-container #sox-search {
     max-width: 90%;
+    padding-left: 30px;
 }
 
 #sox-settings-dialog-features {
