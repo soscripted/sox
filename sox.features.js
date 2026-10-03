@@ -45,19 +45,21 @@
       // Test on e.g. https://meta.stackexchange.com/questions/125439/
 
       function copyLinks() {
-        [...document.querySelectorAll('.js-show-link')].forEach(element => {
-          if (element.classList.contains('sox-copyCommentsLinkClone')) { // Don't run on already cloned elements
+        const soxClass = 'sox-copyCommentsLinkClone';
+        [...document.querySelectorAll(`.js-show-link:not(.${soxClass})`)].forEach(element => {
+          const container = element.parentElement && element.parentElement.parentElement;
+          if (!container || container.querySelector(`.${soxClass}`)) {
             return;
           }
 
           const btnToAdd = element.cloneNode(true);
-          btnToAdd.classList.add('sox-copyCommentsLinkClone');
+          btnToAdd.classList.add(soxClass);
           btnToAdd.addEventListener('click', event => {
             event.preventDefault();
             btnToAdd.style.display = 'none';
           });
 
-          element.parentElement.parentElement.prepend(btnToAdd);
+          container.prepend(btnToAdd);
           element.addEventListener('click', () => { btnToAdd.style.display = 'none'; }); // also hide the clone when the other button is clicked!
 
           const addCommentLink = element.parentElement.querySelector('.js-add-link');
