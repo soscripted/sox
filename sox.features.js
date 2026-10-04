@@ -647,21 +647,23 @@
     isQuestionHot: function() {
       // Description: For adding some text to questions that are in the hot network questions list
 
+      const soxClass = 'sox-hot';
       function getHotDiv(className) {
         const divToReturn = document.createElement('div');
         divToReturn.title = 'SOX: this is a hot network question!';
-        divToReturn.className = `sox-hot ${className || ''}`;
+        divToReturn.className = `${soxClass} ${className || ''}`;
         divToReturn.appendChild(sox.sprites.getSvg('hot'));
         return divToReturn;
       }
 
       function addHotText() {
-        if (document.getElementsByClassName('sox-hot').length) return;
+        if (document.getElementsByClassName(soxClass).length) return;
         document.getElementById('question-header').prepend(getHotDiv());
       }
 
       function addHotTextInSummary(summaryElement) {
-        summaryElement.querySelector('.summary h3').prepend(getHotDiv('question-list'));
+        if (summaryElement.getElementsByClassName(soxClass).length) return;
+        summaryElement.querySelector('h3').prepend(getHotDiv('question-list'));
       }
 
       function questionMatchesCriteria(revisionObject) {
@@ -702,7 +704,7 @@
           // In both cases, we return an array with the ids of the HNQs. Then, the icons are added where necessary
 
           results.filter(result => questionMatchesCriteria(result))
-                 .forEach(item => sox.location.on('/questions') ? addHotText() : addHotTextInSummary(document.querySelector(`#question-summary-${item.post_id}`)));
+                 .forEach(item => sox.location.on('/questions/') ? addHotText() : addHotTextInSummary(document.querySelector(`#question-summary-${item.post_id}`)));
         });
       }
     },
