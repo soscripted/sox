@@ -3,14 +3,14 @@
 // @namespace    https://github.com/soscripted/sox
 // @homepage     https://github.com/soscripted/sox
 // @homepageURL  https://github.com/soscripted/sox
-// @version      2.9.9 DEV
+// @version      2.9.10 DEV
 // @description  Extra optional features for Stack Overflow and Stack Exchange sites
 // @contributor  ᴉʞuǝ (https://stackoverflow.com/users/1454538/, https://github.com/mezmi)
 // @contributor  ᔕᖺᘎᕊ (https://stackexchange.com/users/4337810/, https://github.com/shu8)
 // @contributor  Sir-Cumference (https://stackexchange.com/users/4119142/, https://github.com/Sir-Cumference)
 // @contributor  GaurangTandon (https://github.com/GaurangTandon)
 // @contributor  double-beep (https://stackexchange.com/users/14688437/double-beep, https://github.com/double-beep)
-// @updateURL    https://cdn.jsdelivr.net/gh/soscripted/sox@dev/sox.user.js
+// @updateURL    https://cdn.jsdelivr.net/gh/soscripted/sox@master/sox.user.js
 
 // @match        https://*.stackoverflow.com/*
 // @match        https://*.stackexchange.com/*
