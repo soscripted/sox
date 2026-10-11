@@ -1335,8 +1335,8 @@
 
           //add click listeners for "Save Edits" and "cancel" buttons
           // - also gets added to the "Post New Question" and "Post New Answer" button as an innocuous (I think) side effect
-          $('#post-editor' + toAppend).siblings('.form-submit').children().on('click', function() {
-            if ($(this).parent().siblings('.sbs-on').length) { //sbs was on, so turn it off
+          $(`#submit-button${toAppend}, .cancel-edit, #post-editor${toAppend} ~ .form-submit > *`).on('click', function() {
+            if ($('#wmd-preview' + toAppend).hasClass('sbs-on')) { //sbs was on, so turn it off
               startSBS(toAppend);
             }
           });
