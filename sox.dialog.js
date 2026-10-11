@@ -28,9 +28,8 @@
       // Array of HTML strings that will be displayed as `li` items if the user has installed a new version.
       const changes = [
         "Fix bugs in various features due to SE layout changes",
-        "Behind-the-scenes performance improvements (e.g., with MutationObservers)",
-        'Auto-show comment images for sstatic.net images too - thanks @SmartManoj!',
-        'Deprecate "differentiate spoilers from empty blockquotes" (now native!)',
+        "Fix SE API Authorization method",
+        'Deprecate dev version in favour of single version which will receive all updates immediately',
       ];
 
       function addCategory(name) {
