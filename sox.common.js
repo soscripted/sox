@@ -590,8 +590,8 @@
       if (sox.site.type == sox.site.types.chat) {
         return Chat.RoomUsers.current().name;
       } else {
-        const username = document.querySelector('.s-topbar--item.s-user-card .s-avatar');
-        return (username ? username.title : '');
+        const username = document.querySelector(".s-topbar--item.s-user-card .s-avatar img");
+        return username?.getAttribute("alt").split("'s user avatar")[0] ?? '';
       }
     },
     get loggedIn() {
